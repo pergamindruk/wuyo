@@ -145,12 +145,16 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 1.25rem;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: transform, border-color, background-color;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-4px);
+  border-color: rgba(255, 235, 82, 0.3);
+  transform: translateY(-4px) translateZ(0);
+  background: rgba(45, 44, 38, 0.8);
   box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
