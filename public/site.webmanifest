@@ -1,0 +1,22 @@
+{
+    "name": "Wuyo – Dobra Grafa",
+    "short_name": "Wuyo",
+    "description": "Nowoczesne strony internetowe, identyfikacja wizualna i design premium.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0f",
+    "theme_color": "#FFEB52",
+    "lang": "pl",
+    "icons": [
+        {
+            "src": "/wuyo-dobra-grafa-logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/wuyo-dobra-grafa-logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

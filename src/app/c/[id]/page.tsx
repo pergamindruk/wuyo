@@ -1,0 +1,88 @@
+import fs from 'fs'
+import path from 'path'
+import { notFound } from 'next/navigation'
+import { CheckCircle2, Circle } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
+
+async function getProjectData(id: string) {
+    const projectsPath = path.join(process.cwd(), 'projects.json')
+    if (!fs.existsSync(projectsPath)) return null
+    try {
+        const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf-8'))
+        return projects.find((p: any) => p.id === id) || null
+    } catch {
+        return null
+    }
+}
+
+export default async function ClientPortalPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = await params
+    const project = await getProjectData(resolvedParams.id)
+
+    if (!project) {
+        return notFound()
+    }
+
+    const phases = [
+        { name: 'Opracowanie Koncepcji', status: 'Briefing', threshold: 10 },
+        { name: 'Szkic i Architektura', status: 'Koncept', threshold: 40 },
+        { name: 'Wdrażanie Poprawek', status: 'Poprawki', threshold: 75 },
+        { name: 'Finalizacja Projektu', status: 'Finał', threshold: 100 },
+    ]
+
+    return (
+        <div className="min-h-screen bg-zinc-950 font-sans text-white py-20 px-4">
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-16">
+                    <div className="w-16 h-16 rounded-2xl bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold text-3xl mx-auto mb-6 shadow-[0_0_30px_#facc1540]">
+                        W
+                    </div>
+                    <h2 className="text-yellow-400 font-bold tracking-widest text-sm uppercase mb-2">Prywatna Strefa Klienta</h2>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.client}</h1>
+                    <p className="text-zinc-400 text-lg">Twój projekt: <span className="text-white font-medium">{project.name}</span></p>
+                </div>
+
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-3xl p-8 md:p-12 shadow-2xl backdrop-blur-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-zinc-800">
+                        <div className="h-full bg-yellow-400 shadow-[0_0_20px_#facc15]" style={{ width: `${project.progress}%`, transition: 'width 1s ease-in-out' }}></div>
+                    </div>
+
+                    <h3 className="text-2xl font-bold mb-8">Postęp prac realizacyjnych</h3>
+
+                    <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-800 before:to-transparent">
+
+                        {phases.map((phase, idx) => {
+                            const isCompleted = project.progress >= phase.threshold
+                            const isCurrent = project.status === phase.status
+
+                            return (
+                                <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 ${isCompleted ? 'bg-yellow-400 border-yellow-900/30 text-zinc-900' : 'bg-zinc-900 border-zinc-800 text-zinc-600'} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-xl z-10 transition-colors`}>
+                                        {isCompleted ? <CheckCircle2 size={18} /> : <Circle size={10} />}
+                                    </div>
+                                    <div className={`w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-4 rounded-xl border ${isCurrent ? 'bg-zinc-800/80 border-yellow-400/50 shadow-[0_0_20px_#facc1510]' : isCompleted ? 'bg-zinc-900/80 border-zinc-700/50 opacity-80' : 'bg-transparent border-transparent opacity-40'} transition-all`}>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h4 className={`font-bold ${isCurrent ? 'text-yellow-400' : 'text-white'}`}>{phase.name}</h4>
+                                        </div>
+                                        <p className="text-sm text-zinc-400">
+                                            {isCurrent ? 'Trwają prace nad tym etapem.' : isCompleted ? 'Etap zakończony pomyślnie.' : 'Etap oczekuje w kolejce.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+
+                    <div className="mt-16 bg-zinc-950 p-6 rounded-2xl border border-zinc-800 text-center">
+                        <h4 className="text-yellow-400 font-bold mb-2">Potrzebujesz wrzucić uwagi lub materiały?</h4>
+                        <p className="text-zinc-400 text-sm mb-4">Przygotowujemy dla Ciebie specjalny dysk na pliki i panel zgłaszania poprawek, niedługo pojawi się w tym miejscu.</p>
+                        <a href="mailto:kontakt@wuyo.pl" className="inline-block px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors font-medium text-sm">
+                            Na ten moment, wyślij nam maila
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
