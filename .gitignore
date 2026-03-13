@@ -4,7 +4,6 @@ public/logotypy/
 do portfolio/
 *.pdf
 *.log
-*.json
 *.txt
 *.ai
 *.js
@@ -14,3 +13,12 @@ ikonki/
 logo*.png
 tsconfig.tsbuildinfo
 .vscode/
+
+# Keep essential JSONs
+!package.json
+!tsconfig.json
+!components.json
+!projects.json
+!calendar.json
+!ewidencja.json
+!leads.json
