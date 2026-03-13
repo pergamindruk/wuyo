@@ -1,10 +1,16 @@
 .next/
 node_modules/
+public/logotypy/
 do portfolio/
-public/logotypy/
-
-public/logotypy/
-node_modules/
-.next/
-/do portfolio/
-
+*.pdf
+*.log
+*.json
+*.txt
+*.ai
+*.js
+!next.config.mjs
+!postcss.config.mjs
+ikonki/
+logo*.png
+tsconfig.tsbuildinfo
+.vscode/
