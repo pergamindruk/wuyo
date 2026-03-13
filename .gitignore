@@ -1,6 +1,6 @@
 .next/
 node_modules/
-public/logotypy/
+public/logotypy/*
 do portfolio/
 *.pdf
 *.log
@@ -14,14 +14,6 @@ logo*.png
 tsconfig.tsbuildinfo
 .vscode/
 
-# Security: Never push environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env*.local
-
 # Keep essential JSONs
 !package.json
 !tsconfig.json
@@ -30,3 +22,17 @@ tsconfig.tsbuildinfo
 !calendar.json
 !ewidencja.json
 !leads.json
+
+# --- RESTORE ESSENTIAL UI IMAGES ---
+# Allow the main logo from both paths (root and public)
+!/logo_wuya2.png
+!/public/logo_wuya2.png
+
+# Allow specific partner logos in the bloated folder
+!/public/logotypy/czysta-gablota-logo-realizacja.png
+!/public/logotypy/admar-logo-realizacja.png
+!/public/logotypy/pergamin-logo-realizacja.png
+
+# Allow footer icons directory
+!/public/ikonki/
+!/public/ikonki/*
