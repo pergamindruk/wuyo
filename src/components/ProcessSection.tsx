@@ -91,10 +91,8 @@ export function ProcessSection() {
                                 gradientOpacity={0.15}
                                 gradientSize={400}
                             >
-                                {/* Glow effect on hover */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                                <div className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-gold mb-5 group-hover:scale-110 group-hover:from-gold/20 transition-all duration-300 relative z-10">
+                                <div className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-gold mb-5 group-hover:scale-110 group-hover:from-gold/20 transition-all duration-300 relative z-10 overflow-hidden">
                                     {step.icon}
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-2 relative z-10">

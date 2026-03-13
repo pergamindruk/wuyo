@@ -70,7 +70,8 @@ export function MagicCard({
 
   return (
     <div
-      className={cn("group relative rounded-[inherit]", className)}
+      className={cn("group relative rounded-[inherit] overflow-hidden", className)}
+      style={{ transform: "translateZ(0)" }}
       onPointerMove={handlePointerMove}
       onPointerLeave={reset}
       onPointerEnter={reset}
