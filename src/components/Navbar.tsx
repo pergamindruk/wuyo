@@ -80,7 +80,6 @@ export function Navbar() {
                             fill
                             className="object-contain object-left"
                             priority
-                            unoptimized
                         />
                     </a>
                 </div>

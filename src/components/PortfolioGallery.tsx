@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
@@ -7,23 +8,14 @@ import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 const categories = ["Wszystkie", "Logotypy/Branding", "Do druku", "Strony Internetowe", "Social media"];
 
 const projects = [
-    // NOWE OKŁADKI KATEGORII (na 1 pozycjach filtra)
-    { id: 1, title: "Projekt Etykiet", category: "Do druku", image: "/projekt-etykiet.png" },
+    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.png" },
+    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.png" },
+    { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.png" },
+    { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.png" },
+    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.png" },
     { id: 101, title: "Projektowanie Logo", category: "Logotypy/Branding", image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2670&auto=format&fit=crop" },
-    { id: 102, title: "Materiały do Druku", category: "Do druku", image: "https://images.unsplash.com/photo-1561571994-3c61c554181a?q=80&w=2670&auto=format&fit=crop" },
     { id: 103, title: "Design Stron WWW", category: "Strony Internetowe", image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=2670&auto=format&fit=crop" },
     { id: 104, title: "Grafika Social Media", category: "Social media", image: "https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=2670&auto=format&fit=crop" },
-
-    // STARSZE REALIZACJE POSIADAJĄCE PRZYKŁROBKI
-    { id: 2, title: "Strona dla Dewelopera", category: "Strony Internetowe", image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2672&auto=format&fit=crop" },
-    { id: 3, title: "Katalog Produktowy", category: "Do druku", image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2670&auto=format&fit=crop" },
-    { id: 4, title: "Logo Startupu", category: "Logotypy/Branding", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2670&auto=format&fit=crop" },
-    { id: 5, title: "Platforma e-commerce", category: "Strony Internetowe", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" },
-    { id: 6, title: "Wizytówki Premium", category: "Do druku", image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2712&auto=format&fit=crop" },
-    { id: 7, title: "Kampania Social Media", category: "Social media", image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=2574&auto=format&fit=crop" },
-    { id: 8, title: "Identyfikacja Kawiarni", category: "Logotypy/Branding", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2647&auto=format&fit=crop" },
-    { id: 9, title: "Opakowania Kosmetyków", category: "Do druku", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=2400&auto=format&fit=crop" },
-    { id: 10, title: "Aplikacja Mobilna", category: "Strony Internetowe", image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2670&auto=format&fit=crop" },
 ];
 
 export function PortfolioGallery() {
@@ -126,9 +118,11 @@ export function PortfolioGallery() {
                                 onClick={() => openLightbox(index)}
                                 className="group relative rounded-2xl overflow-hidden cursor-zoom-in bg-navy-light border border-white/5 break-inside-avoid mb-6 inline-block w-full"
                             >
-                                <img
+                                <Image
                                     src={project.image}
                                     alt={project.title}
+                                    width={800}
+                                    height={1000}
                                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
                                 />
                                 {/* Center Zoom Icon */}
@@ -203,14 +197,12 @@ export function PortfolioGallery() {
                             className="w-full max-w-5xl max-h-[85vh] relative flex flex-col items-center justify-center cursor-default"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <motion.img
+                            <Image
                                 key={selectedImageIndex}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.2 }}
                                 src={visibleProjects[selectedImageIndex].image}
                                 alt={visibleProjects[selectedImageIndex].title}
+                                width={1920}
+                                height={1080}
                                 className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl border border-white/10"
                             />
 

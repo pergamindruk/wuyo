@@ -9,7 +9,7 @@ export function Footer() {
                 <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
                     <div className="space-y-6">
                         <Link href="/" className="relative block h-16 w-56 md:h-24 md:w-80 transition-opacity duration-300 hover:opacity-80">
-                            <Image src="/logo_wuya2.png" alt="WUYO" fill className="object-contain object-left" unoptimized />
+                            <Image src="/logo_wuya2.png" alt="WUYO" fill className="object-contain object-left" />
                         </Link>
                         <p className="text-white/50 text-xs sm:text-sm max-w-sm leading-relaxed">
                             Wuyo – Twój strategiczny partner w designie. Zamieniam dobre pomysły w marki, które zarabiają i wyróżniają się na tle konkurencji.
@@ -61,12 +61,12 @@ export function Footer() {
                     <p>&copy; 2026 Wuyo – Dobra Grafa.</p>
 
                     <div className="flex items-center gap-4 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">
-                        <Image src="/ikonki/ikona-adobe-photoshop.png" alt="Photoshop" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
-                        <Image src="/ikonki/ikona-adobe-illustrator.png" alt="Illustrator" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
-                        <Image src="/ikonki/ikona-adobe-indesign.png" alt="InDesign" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
-                        <Image src="/ikonki/ikona-figma.png" alt="Figma" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
-                        <Image src="/ikonki/ikona-capcut.png" alt="CapCut" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
-                        <Image src="/ikonki/ikona-canva.png" alt="Canva" width={20} height={20} className="hover:scale-125 transition-transform duration-300" unoptimized />
+                        <Image src="/ikonki/ikona-adobe-photoshop.png" alt="Photoshop" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
+                        <Image src="/ikonki/ikona-adobe-illustrator.png" alt="Illustrator" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
+                        <Image src="/ikonki/ikona-adobe-indesign.png" alt="InDesign" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
+                        <Image src="/ikonki/ikona-figma.png" alt="Figma" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
+                        <Image src="/ikonki/ikona-capcut.png" alt="CapCut" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
+                        <Image src="/ikonki/ikona-canva.png" alt="Canva" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
                     </div>
 
                     <div className="flex gap-6">

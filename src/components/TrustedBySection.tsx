@@ -83,7 +83,6 @@ export function TrustedBySection() {
                                 alt={logo.alt}
                                 fill
                                 className="object-contain px-4 py-6"
-                                unoptimized
                             />
                         </div>
                     ))}
