@@ -88,10 +88,10 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
                     {services.map((service, i) => (
                         <AnimatedSection key={i} delay={i * 0.1}>
-                            <div className="glass-card p-8 md:p-10 h-full group hover:!bg-[#FFFBDB] transition-all duration-300">
-                                <div className="text-gold group-hover:text-navy transition-colors duration-300 mb-6">{service.icon}</div>
-                                <h3 className="text-xl font-bold text-white group-hover:text-navy transition-colors duration-300 mb-3">{service.title}</h3>
-                                <p className="text-white/50 group-hover:text-navy/80 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
+                            <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
+                                <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
+                                <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
+                                <p className="text-white/50 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
                             </div>
                         </AnimatedSection>
                     ))}
