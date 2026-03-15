@@ -116,19 +116,8 @@ export async function POST(req: NextRequest) {
             id: Math.random().toString(36).substring(7)
         };
 
-        const fs = require('fs');
-        const path = require('path');
-        const briefsPath = path.join(process.cwd(), "briefs.json");
-        let briefs = [];
-        if (fs.existsSync(briefsPath)) {
-            try {
-                briefs = JSON.parse(fs.readFileSync(briefsPath, "utf-8"));
-            } catch {
-                briefs = [];
-            }
-        }
-        briefs.push(briefRecord);
-        fs.writeFileSync(briefsPath, JSON.stringify(briefs, null, 2));
+        // Usunięto zapis do pliku JSON (niekompatybilne z Vercel)
+
 
         const pathNames: Record<string, string> = {
             branding: "Logo/Identyfikacja",

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import fs from "fs";
-import path from "path";
+
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -27,18 +26,8 @@ export async function POST(req: NextRequest) {
             source: "chatbot",
         };
 
-        // Zapisz lead do pliku JSON
-        const leadsPath = path.join(process.cwd(), "leads.json");
-        let leads: typeof lead[] = [];
-        if (fs.existsSync(leadsPath)) {
-            try {
-                leads = JSON.parse(fs.readFileSync(leadsPath, "utf-8"));
-            } catch {
-                leads = [];
-            }
-        }
-        leads.push(lead);
-        fs.writeFileSync(leadsPath, JSON.stringify(leads, null, 2));
+        // Usunięto zapis do pliku JSON (niekompatybilne z Vercel)
+
 
         // Wyślij email z powiadomieniem
         if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
