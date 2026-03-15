@@ -19,6 +19,12 @@ export async function getProjects() {
 
 export async function createProject(data: any) {
     const supabase = await createClient()
+    
+    // Debug: Sprawdź czy zmienne środowiskowe istnieją
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        console.error("❌ BRAK NEXT_PUBLIC_SUPABASE_URL w środowisku lokalnym!")
+    }
+
     const newProject = {
         id: Math.random().toString(36).substring(2, 12),
         name: data.name,
@@ -28,6 +34,8 @@ export async function createProject(data: any) {
         updates: []
     }
 
+    console.log("🚀 Próba zapisu projektu do Supabase:", newProject)
+
     const { data: inserted, error } = await supabase
         .from('projects')
         .insert([newProject])
@@ -35,10 +43,11 @@ export async function createProject(data: any) {
         .single()
 
     if (error) {
-        console.error('Error creating project:', error)
-        throw new Error('Nie udało się stworzyć projektu')
+        console.error('❌ BŁĄD SUPABASE:', error.message, error.details, error.hint)
+        throw new Error(`Błąd: ${error.message}`)
     }
 
+    console.log("✅ Projekt zapisany pomyślnie!")
     revalidatePath('/lab/projects')
     return inserted
 }
