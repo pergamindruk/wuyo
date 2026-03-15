@@ -3,13 +3,14 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, Layout, FileText, BarChart3, Hourglass } from 'lucide-react'
+import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Share2 } from 'lucide-react'
 
 const navItems = [
     { href: '/lab', label: 'Dashboard', icon: Home },
     { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
     { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
     { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
+    { href: '/lab/social-media', label: 'Social Media', icon: Share2 },
     { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
     { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },
     { href: '/lab/analytics', label: 'Harbor SEO', icon: BarChart3 },

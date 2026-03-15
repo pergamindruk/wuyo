@@ -1,19 +1,19 @@
-import fs from 'fs'
-import path from 'path'
+import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { CheckCircle2, Circle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 async function getProjectData(id: string) {
-    const projectsPath = path.join(process.cwd(), 'projects.json')
-    if (!fs.existsSync(projectsPath)) return null
-    try {
-        const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf-8'))
-        return projects.find((p: any) => p.id === id) || null
-    } catch {
-        return null
-    }
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return null
+    return data
 }
 
 export default async function ClientPortalPage({ params }: { params: Promise<{ id: string }> }) {

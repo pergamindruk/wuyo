@@ -1,49 +1,76 @@
 'use server'
 
-import fs from 'fs'
-import path from 'path'
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 
 export async function getProjects() {
-    const projectsPath = path.join(process.cwd(), 'projects.json')
-    if (!fs.existsSync(projectsPath)) {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error) {
+        console.error('Error fetching projects:', error)
         return []
     }
-    try {
-        return JSON.parse(fs.readFileSync(projectsPath, 'utf-8'))
-    } catch {
-        return []
-    }
+    return data
 }
 
 export async function createProject(data: any) {
-    const projects = await getProjects()
+    const supabase = await createClient()
     const newProject = {
         id: Math.random().toString(36).substring(2, 12),
         name: data.name,
         client: data.client,
-        status: 'Briefing', // Briefing, Koncept, Poprawki, Finał
+        status: 'Briefing',
         progress: 10,
-        createdAt: new Date().toISOString(),
         updates: []
     }
-    projects.push(newProject)
-    fs.writeFileSync(path.join(process.cwd(), 'projects.json'), JSON.stringify(projects, null, 2))
-    return newProject
+
+    const { data: inserted, error } = await supabase
+        .from('projects')
+        .insert([newProject])
+        .select()
+        .single()
+
+    if (error) {
+        console.error('Error creating project:', error)
+        throw new Error('Nie udało się stworzyć projektu')
+    }
+
+    revalidatePath('/lab/projects')
+    return inserted
 }
 
 export async function updateProjectStatus(id: string, status: string, progress: number) {
-    const projects = await getProjects()
-    const index = projects.findIndex((p: any) => p.id === id)
-    if (index > -1) {
-        projects[index].status = status
-        projects[index].progress = progress
-        fs.writeFileSync(path.join(process.cwd(), 'projects.json'), JSON.stringify(projects, null, 2))
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('projects')
+        .update({ status, progress })
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error updating project:', error)
+        throw new Error('Nie udało się zaktualizować statusu')
     }
+
+    revalidatePath('/lab/projects')
+    revalidatePath(`/c/${id}`)
 }
 
 export async function deleteProject(id: string) {
-    const projects = await getProjects()
-    const updated = projects.filter((p: any) => p.id !== id)
-    fs.writeFileSync(path.join(process.cwd(), 'projects.json'), JSON.stringify(updated, null, 2))
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error deleting project:', error)
+        throw new Error('Nie udało się usunąć projektu')
+    }
+
+    revalidatePath('/lab/projects')
     return true
 }

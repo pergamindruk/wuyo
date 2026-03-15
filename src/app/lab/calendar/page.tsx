@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { getCalendar, addCalendarEvent, updateEventStatus } from './actions'
-import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight } from 'lucide-react'
+import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
+import type { YtMetadata } from '../social-media/actions'
+import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
@@ -24,6 +26,14 @@ export default function CalendarLab() {
     // state kalendarza
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const [selectedDate, setSelectedDate] = useState(new Date())
+
+    // state publikacji
+    const [publishingPostId, setPublishingPostId] = useState<string | null>(null)
+    const [publishImageUrl, setPublishImageUrl] = useState('')
+    const [publishLoading, setPublishLoading] = useState(false)
+    const [publishFeedback, setPublishFeedback] = useState<{ success: boolean; message: string } | null>(null)
+    const [ytMetadata, setYtMetadata] = useState<YtMetadata | null>(null)
+    const [copiedYt, setCopiedYt] = useState(false)
 
     async function loadData() {
         setLoading(true)
@@ -50,6 +60,67 @@ export default function CalendarLab() {
     const handleUpdate = async (id: string, newStatus: string) => {
         await updateEventStatus(id, newStatus)
         loadData()
+    }
+
+    const openPublish = (id: string) => {
+        setPublishingPostId(id)
+        setPublishImageUrl('')
+        setPublishFeedback(null)
+        setYtMetadata(null)
+        setCopiedYt(false)
+    }
+
+    const closePublish = () => {
+        setPublishingPostId(null)
+        setPublishFeedback(null)
+        setYtMetadata(null)
+    }
+
+    const handlePublishIG = async (postId: string, caption: string) => {
+        if (!publishImageUrl.trim()) {
+            setPublishFeedback({ success: false, message: 'Podaj publiczny URL grafiki — Instagram wymaga obrazu.' })
+            return
+        }
+        setPublishLoading(true)
+        const res = await publishToInstagram(postId, publishImageUrl.trim(), caption)
+        setPublishLoading(false)
+        if (res.success) {
+            setPublishFeedback({ success: true, message: `Opublikowano na Instagram! ID: ${res.postId}` })
+            loadData()
+        } else {
+            setPublishFeedback({ success: false, message: res.error })
+        }
+    }
+
+    const handlePublishFB = async (postId: string, message: string) => {
+        setPublishLoading(true)
+        const res = await publishToFacebook(postId, message, publishImageUrl.trim() || undefined)
+        setPublishLoading(false)
+        if (res.success) {
+            setPublishFeedback({ success: true, message: `Opublikowano na Facebook! ID: ${res.postId}` })
+            loadData()
+        } else {
+            setPublishFeedback({ success: false, message: res.error })
+        }
+    }
+
+    const handleYtMetadata = async (topic: string, content: string) => {
+        setPublishLoading(true)
+        const res = await generateYouTubeMetadata(topic, content)
+        setPublishLoading(false)
+        if (res.success) {
+            setYtMetadata(res.data)
+            setPublishFeedback({ success: true, message: 'Metadane YouTube wygenerowane — skopiuj do YouTube Studio.' })
+        } else {
+            setPublishFeedback({ success: false, message: res.error })
+        }
+    }
+
+    const copyYtMetadata = (meta: YtMetadata) => {
+        const text = `Tytuł:\n${meta.title}\n\nOpis:\n${meta.description}\n\nTagi:\n${meta.tags.join(', ')}\n\nHashtagi:\n${meta.hashtags.join(' ')}`
+        navigator.clipboard.writeText(text)
+        setCopiedYt(true)
+        setTimeout(() => setCopiedYt(false), 2000)
     }
 
     const goalColors: any = {
@@ -246,6 +317,90 @@ export default function CalendarLab() {
                                                         {ev.content}
                                                     </ReactMarkdown>
                                                 </div>
+                                            </div>
+                                        )}
+
+                                        {/* ── Sekcja Publikacji ── */}
+                                        {ev.status !== 'Opublikowane' && (
+                                            <div className="border-t border-zinc-800/60 pt-4 mt-2">
+                                                {publishingPostId === ev.id ? (
+                                                    <div className="flex flex-col gap-3">
+                                                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Opublikuj na platformach</p>
+
+                                                        <input
+                                                            type="url"
+                                                            placeholder="URL grafiki (wymagane dla Instagram, opcjonalne dla FB)"
+                                                            value={publishImageUrl}
+                                                            onChange={e => setPublishImageUrl(e.target.value)}
+                                                            className="bg-zinc-950 border border-zinc-700 text-white text-xs rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2"
+                                                        />
+
+                                                        <div className="flex flex-wrap gap-2">
+                                                            <button
+                                                                onClick={() => handlePublishIG(ev.id, ev.content || ev.topic)}
+                                                                disabled={publishLoading}
+                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-opacity"
+                                                            >
+                                                                <Camera size={13} /> Instagram
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handlePublishFB(ev.id, ev.content || ev.topic)}
+                                                                disabled={publishLoading}
+                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
+                                                            >
+                                                                <Globe size={13} /> Facebook
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleYtMetadata(ev.topic, ev.content || ev.topic)}
+                                                                disabled={publishLoading}
+                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
+                                                            >
+                                                                <Play size={13} /> Metadane YT
+                                                            </button>
+                                                            <button
+                                                                onClick={closePublish}
+                                                                className="text-xs text-zinc-500 hover:text-white px-2 transition-colors"
+                                                            >
+                                                                Anuluj
+                                                            </button>
+                                                        </div>
+
+                                                        {publishLoading && (
+                                                            <p className="text-xs text-zinc-500 italic">Publikowanie...</p>
+                                                        )}
+
+                                                        {publishFeedback && (
+                                                            <p className={`text-xs font-medium ${publishFeedback.success ? 'text-green-400' : 'text-red-400'}`}>
+                                                                {publishFeedback.success ? '✓ ' : '✗ '}{publishFeedback.message}
+                                                            </p>
+                                                        )}
+
+                                                        {ytMetadata && (
+                                                            <div className="bg-zinc-950 border border-red-600/25 rounded-lg p-3 text-xs text-zinc-300 space-y-1.5">
+                                                                <div className="flex items-center justify-between mb-2">
+                                                                    <p className="text-red-400 font-bold flex items-center gap-1"><Play size={12}/> Metadane YouTube</p>
+                                                                    <button
+                                                                        onClick={() => copyYtMetadata(ytMetadata)}
+                                                                        className="flex items-center gap-1 text-zinc-500 hover:text-yellow-400 transition-colors"
+                                                                    >
+                                                                        <Copy size={12}/> {copiedYt ? 'Skopiowano!' : 'Kopiuj'}
+                                                                    </button>
+                                                                </div>
+                                                                <div><span className="text-zinc-500">Tytuł: </span>{ytMetadata.title}</div>
+                                                                <div><span className="text-zinc-500">Opis: </span>{ytMetadata.description}</div>
+                                                                <div><span className="text-zinc-500">Tagi: </span>{ytMetadata.tags?.join(', ')}</div>
+                                                                <div><span className="text-zinc-500">Hashtagi: </span>{ytMetadata.hashtags?.join(' ')}</div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => openPublish(ev.id)}
+                                                        className="flex items-center gap-2 text-xs text-zinc-500 hover:text-yellow-400 transition-colors py-1"
+                                                    >
+                                                        <Share2 size={13} /> Opublikuj na social media
+                                                    </button>
+                                                )}
                                             </div>
                                         )}
                                     </div>
