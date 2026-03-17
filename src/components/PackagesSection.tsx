@@ -103,12 +103,12 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                                 ))}
                             </ul>
 
-                            <button className={`w-full py-4 rounded-full font-semibold text-sm transition-all ${pkg.featured
+                            <Link href="#kontakt" className={`text-center block w-full py-4 rounded-full font-semibold text-sm transition-all ${pkg.featured
                                 ? 'btn-gold !rounded-full !w-full'
                                 : 'btn-outline !rounded-full !w-full'
                                 }`}>
                                 Wchodzę w to
-                            </button>
+                            </Link>
                         </div>
                     </AnimatedSection>
                 ))}

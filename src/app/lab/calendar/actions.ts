@@ -46,6 +46,7 @@ export async function addCalendarEvent(event: {
     format: string
     goal: string
     date: string
+    status?: string
     generateAI?: boolean
 }) {
     const supabase = await createClient()

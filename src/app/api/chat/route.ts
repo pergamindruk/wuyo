@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 // gemini-2.5-flash działa poprawnie na tym kluczu (lite zwracał błędy 429)
 const MODEL = "gemini-2.5-flash";
