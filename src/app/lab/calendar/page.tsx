@@ -62,9 +62,9 @@ export default function CalendarLab() {
         loadData()
     }
 
-    const openPublish = (id: string) => {
-        setPublishingPostId(id)
-        setPublishImageUrl('')
+    const openPublish = (ev: any) => {
+        setPublishingPostId(ev.id)
+        setPublishImageUrl(ev.image_url || '')
         setPublishFeedback(null)
         setYtMetadata(null)
         setCopiedYt(false)
@@ -395,7 +395,7 @@ export default function CalendarLab() {
                                                     </div>
                                                 ) : (
                                                     <button
-                                                        onClick={() => openPublish(ev.id)}
+                                                        onClick={() => openPublish(ev)}
                                                         className="flex items-center gap-2 text-xs text-zinc-500 hover:text-yellow-400 transition-colors py-1"
                                                     >
                                                         <Share2 size={13} /> Opublikuj na social media

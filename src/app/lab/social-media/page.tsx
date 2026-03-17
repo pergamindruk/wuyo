@@ -252,9 +252,20 @@ export default function SocialMediaPage() {
                                         : '—'}
                                 </span>
 
-                                {post.ig_post_id && (
+                                {post.ig_post_id && post.ig_post_id.startsWith('http') && (
                                     <a
-                                        href={`https://www.instagram.com/p/${post.ig_post_id}/`}
+                                        href={post.ig_post_id}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-zinc-600 hover:text-yellow-400 transition-colors"
+                                    >
+                                        <ExternalLink size={14} />
+                                    </a>
+                                )}
+
+                                {post.fb_post_id && post.fb_post_id.startsWith('http') && (
+                                    <a
+                                        href={post.fb_post_id}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-zinc-600 hover:text-yellow-400 transition-colors"

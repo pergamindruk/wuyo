@@ -5,6 +5,28 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const GRAPH_API_VERSION = 'v21.0'
 
+async function postGraph(
+    url: string,
+    body: Record<string, string>
+): Promise<any> {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: new URLSearchParams(body).toString(),
+    })
+    return await res.json()
+}
+
+async function getGraph(
+    url: string,
+    params: Record<string, string>
+): Promise<any> {
+    const u = new URL(url)
+    for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v)
+    const res = await fetch(u.toString(), { method: 'GET' })
+    return await res.json()
+}
+
 // Usuwa proste formatowanie Markdown przed wysłaniem do API platform
 function stripMarkdown(text: string): string {
     return text
@@ -42,6 +64,27 @@ export async function getPublishedPosts() {
 
 // ─── Instagram ────────────────────────────────────────────────────────────────
 
+async function waitForIgContainer(
+    userId: string,
+    containerId: string,
+    accessToken: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+    // IG potrafi zwrócić błąd, jeśli opublikujesz zanim container będzie gotowy.
+    // Krótki polling (max ~25s) stabilizuje publikację.
+    const deadline = Date.now() + 25_000
+    while (Date.now() < deadline) {
+        const status = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${containerId}`,
+            { fields: 'status_code', access_token: accessToken }
+        )
+        const code = status?.status_code as string | undefined
+        if (code === 'FINISHED') return { ok: true }
+        if (code === 'ERROR') return { ok: false, error: 'Instagram: błąd przetwarzania kontenera mediów' }
+        await new Promise(r => setTimeout(r, 1500))
+    }
+    return { ok: false, error: 'Instagram: timeout podczas przygotowania publikacji (spróbuj ponownie za chwilę)' }
+}
+
 export async function publishToInstagram(
     postId: string,
     imageUrl: string,
@@ -61,19 +104,14 @@ export async function publishToInstagram(
         const cleanCaption = stripMarkdown(caption)
 
         // Krok 1: Utwórz kontener mediów
-        const containerRes = await fetch(
+        const containerData = await postGraph(
             `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media`,
             {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    image_url: imageUrl,
-                    caption: cleanCaption,
-                    access_token: accessToken,
-                }),
+                image_url: imageUrl,
+                caption: cleanCaption,
+                access_token: accessToken,
             }
         )
-        const containerData = await containerRes.json()
         if (!containerData.id) {
             return {
                 success: false,
@@ -81,19 +119,19 @@ export async function publishToInstagram(
             }
         }
 
+        const wait = await waitForIgContainer(userId, containerData.id, accessToken)
+        if (!wait.ok) {
+            return { success: false, error: wait.error }
+        }
+
         // Krok 2: Opublikuj
-        const publishRes = await fetch(
+        const publishData = await postGraph(
             `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media_publish`,
             {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    creation_id: containerData.id,
-                    access_token: accessToken,
-                }),
+                creation_id: containerData.id,
+                access_token: accessToken,
             }
         )
-        const publishData = await publishRes.json()
         if (!publishData.id) {
             return {
                 success: false,
@@ -101,13 +139,20 @@ export async function publishToInstagram(
             }
         }
 
+        const mediaInfo = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${publishData.id}`,
+            { fields: 'permalink', access_token: accessToken }
+        )
+        const permalink: string | undefined = mediaInfo?.permalink
+
         // Zapisz wynik w Supabase
         const supabase = await createClient()
         await supabase
             .from('calendar_events')
             .update({
                 status: 'Opublikowane',
-                ig_post_id: publishData.id,
+                image_url: imageUrl,
+                ig_post_id: permalink || publishData.id,
                 published_at: new Date().toISOString(),
             })
             .eq('id', postId)
@@ -151,12 +196,7 @@ export async function publishToFacebook(
             body = { message: cleanMessage, access_token: accessToken }
         }
 
-        const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        })
-        const data = await res.json()
+        const data = await postGraph(endpoint, body)
 
         if (!data.id) {
             return {
@@ -165,12 +205,19 @@ export async function publishToFacebook(
             }
         }
 
+        const fbInfo = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${data.id}`,
+            { fields: 'permalink_url', access_token: accessToken }
+        )
+        const fbPermalink: string | undefined = fbInfo?.permalink_url
+
         const supabase = await createClient()
         await supabase
             .from('calendar_events')
             .update({
                 status: 'Opublikowane',
-                fb_post_id: data.id,
+                image_url: imageUrl ?? null,
+                fb_post_id: fbPermalink || data.id,
                 published_at: new Date().toISOString(),
             })
             .eq('id', postId)

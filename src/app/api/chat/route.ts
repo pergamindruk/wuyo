@@ -91,24 +91,38 @@ export async function POST(req: NextRequest) {
         }
 
         const data = await response.json();
+        
+        if (data.error) {
+            console.error("Gemini API error body:", data.error);
+            return NextResponse.json(
+                { error: "Ups, problem z AI. Spróbuj jeszcze raz!" },
+                { status: 500 }
+            );
+        }
+
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
         const leadMatch = responseText.match(/\[LEAD:([^:]+):([^\]]+)\]/);
         let lead = null;
         if (leadMatch) {
             lead = { name: leadMatch[1], email: leadMatch[2] };
-            fetch(`${req.nextUrl.origin}/api/lead`, {
+            // Fire and forget lead capture
+            const leadUrl = new URL("/api/lead", req.nextUrl.origin).toString();
+            fetch(leadUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(lead),
-            }).catch(console.error);
+            }).catch(err => console.error("Async lead capture failed:", err));
         }
 
         const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();
         return NextResponse.json({ message: cleanResponse, lead });
 
-    } catch (error) {
-        console.error("Chat API error:", error);
+    } catch (error: any) {
+        console.error("Chat API error details:", {
+            message: error.message,
+            stack: error.stack,
+        });
         return NextResponse.json(
             { error: "Ups, coś poszło nie tak. Spróbuj jeszcze raz!" },
             { status: 500 }
