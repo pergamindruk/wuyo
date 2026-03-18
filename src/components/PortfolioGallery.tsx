@@ -9,6 +9,7 @@ const categories = ["Wszystkie", "Logotypy/Branding", "Do druku", "Strony Intern
 
 const projects = [
     { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
+    { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp" },
     { id: 9, title: "Wuyo Lab (Panel CRM)", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp" },
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp" },
