@@ -10,12 +10,12 @@ const categories = ["Wszystkie", "Logotypy/Branding", "Do druku", "Strony Intern
 const projects = [
     { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
     { id: 9, title: "Wuyo Lab (Panel CRM)", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp" },
-    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.png" },
-    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.png" },
-    { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.png" },
-    { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.png" },
-    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.png" },
-    { id: 6, title: "Hoodie Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.png" },
+    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp" },
+    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp" },
+    { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.webp" },
+    { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.webp" },
+    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp" },
+    { id: 6, title: "Hoodie Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.webp" },
 
 ];
 

@@ -8,7 +8,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { HeroText } from "@/components/HeroText";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Palette, Layout, FileText, Share2, Box, Monitor } from "lucide-react";
+import { ArrowRight, Palette, Layout, FileText, Share2, Box, Monitor, MessageSquare, Clock, ShieldCheck } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
@@ -119,7 +119,7 @@ export default function Home() {
                     <AnimatedSection>
                         <div className="aspect-square bg-navy-light rounded-3xl flex items-center justify-center border border-white/5 overflow-hidden relative group">
                             <Image
-                                src="/MojeZdjecie.jpg"
+                                src="/MojeZdjecie.webp"
                                 alt="Wuyo - Twój graficzny ziomek"
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -128,15 +128,42 @@ export default function Home() {
                         </div>
                     </AnimatedSection>
                     <AnimatedSection delay={0.2}>
-                        <p className="eyebrow mb-4">kim jest Wuyo?</p>
+                        <p className="eyebrow mb-4">Kim jest Wuyo?</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
-                            Twój graficzny ziomek.
+                            Cześć, mam na imię Mateusz 😎
                         </h2>
-                        <div className="text-white/60 leading-relaxed mb-8 space-y-4">
-                            <p>Zapomnij o wielkich agencjach, gdzie jesteś tylko numerkiem w Excelu. Bez naciągania, czyste zasady. Wuyo to Twój graficzny ziomek. Zjadłem zęby na projektowaniu i gram w otwarte karty.</p>
-                            <p>Fundament biznesu musi być solidny.<br />Dla mnie robota ma sens tylko wtedy, gdy grafika na siebie zarabia. Projekt ma sprzedawać, a nie tylko ładnie wyglądać w moim portfolio. Szczery, uczciwy i zawsze na czas.</p>
+                        <div className="text-white/60 leading-relaxed mb-6 space-y-4 text-sm md:text-base">
+                            <p>Wzięło się od tego, że zawsze najpierw słucham, a potem podpowiadam. Znajomi mówili, że jestem jak taki „Wujo dobra rada” od spraw technicznych – i tak już zostało.</p>
+                            <p>Działam sam, więc nie uciekam przed Tobą w procedury i nie chowam się za sekretarką. Jak do mnie dzwonisz, to odbieram ja. Jak pytasz, czy coś ma sens – odpowiadam szczerze. Nie bawię się w agencyjne gierki, gdzie jesteś tylko kolejną pozycją na liście do odhaczenia.</p>
+                            <p className="text-white/90 font-medium text-lg pt-2">Co z tego masz? Spokój.</p>
+                            <p>Zamiast zasypywać Cię trudnymi słówkami, tłumaczę wszystko po ludzku. Moja robota ma po prostu ułatwiać Ci życie. Strona musi być tak zrobiona, żeby klient od razu wiedział, co robisz i jak Ci zapłacić. Koniec filozofii.</p>
                         </div>
-                        <Link href="#kontakt" className="btn-gradient inline-flex items-center gap-2">
+                        
+                        <div className="mt-8 mb-10">
+                            <p className="text-white font-bold mb-5">Zasady u Wuja:</p>
+                            <ul className="space-y-4">
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                    <MessageSquare className="text-gold shrink-0 mt-0.5" size={22} />
+                                    <div className="leading-snug">
+                                        <strong className="text-white block mb-1">Mówię jak jest.</strong> Jeśli Twój pomysł nie wypali – powiem Ci to prosto z mostu i poszukamy czegoś lepszego.
+                                    </div>
+                                </li>
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                    <Clock className="text-gold shrink-0 mt-0.5" size={22} />
+                                    <div className="leading-snug">
+                                        <strong className="text-white block mb-1">Słowo to świętość.</strong> Jak umawiamy się na konkretny dzień, to w ten dzień projekt jest u Ciebie.
+                                    </div>
+                                </li>
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                    <ShieldCheck className="text-gold shrink-0 mt-0.5" size={22} />
+                                    <div className="leading-snug">
+                                        <strong className="text-white block mb-1">Zero owijania w bawełnę.</strong> Wiesz dokładnie, za co płacisz bez ukrytych kosztów.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <Link href="#kontakt" className="btn-gradient inline-flex items-center justify-center gap-2 w-full md:w-auto">
                             Lecimy z tematem <ArrowRight size={18} />
                         </Link>
                     </AnimatedSection>

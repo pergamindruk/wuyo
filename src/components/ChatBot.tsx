@@ -130,7 +130,7 @@ export default function ChatBot() {
                                 <div className="flex items-center gap-3">
                                     <div className="relative">
                                         <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-800">
-                                            <img src="/Profilowe_wuyo.png" alt="Wuyo" className="w-full h-full object-cover" />
+                                            <img src="/Profilowe_wuyo.webp" alt="Wuyo" className="w-full h-full object-cover" />
                                         </div>
                                         <span
                                             className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black"
@@ -177,7 +177,7 @@ export default function ChatBot() {
                                             }
                                         >
                                             {msg.role === "assistant" ? (
-                                                <img src="/Profilowe_wuyo.png" alt="Wuyo" className="w-full h-full object-cover rounded-full" />
+                                                <img src="/Profilowe_wuyo.webp" alt="Wuyo" className="w-full h-full object-cover rounded-full" />
                                             ) : (
                                                 <User size={14} color="#fff" />
                                             )}
@@ -208,7 +208,7 @@ export default function ChatBot() {
                                         className="flex gap-2 items-center"
                                     >
                                         <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-gray-800">
-                                            <img src="/Profilowe_wuyo.png" alt="Wuyo" className="w-full h-full object-cover" />
+                                            <img src="/Profilowe_wuyo.webp" alt="Wuyo" className="w-full h-full object-cover" />
                                         </div>
                                         <div
                                             className="px-4 py-3 rounded-2xl rounded-tl-sm"
@@ -291,7 +291,7 @@ export default function ChatBot() {
             >
                 <div className="relative">
                     <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-800">
-                        <img src="/Profilowe_wuyo.png" alt="Chat" className="w-full h-full object-cover" />
+                        <img src="/Profilowe_wuyo.webp" alt="Chat" className="w-full h-full object-cover" />
                     </div>
                     <span className="absolute bottom-0 right-0 border-2 border-[#1a1a1a] w-3.5 h-3.5 rounded-full bg-green-500"></span>
                 </div>

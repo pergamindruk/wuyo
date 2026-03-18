@@ -77,7 +77,7 @@ export function Navbar() {
                             }`}
                     >
                         <Image
-                            src="/logo_wuya2.png"
+                            src="/logo_wuya2.webp"
                             alt="WUYO – Dobra Grafa logo"
                             fill
                             className="object-contain object-left"

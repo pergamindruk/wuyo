@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     creator: "Wuyo – Dobra Grafa",
     manifest: "/site.webmanifest",
     icons: {
-        icon: "/wuyo-dobra-grafa-logo.png",
-        apple: "/wuyo-dobra-grafa-logo.png",
+        icon: "/wuyo-dobra-grafa-logo.webp",
+        apple: "/wuyo-dobra-grafa-logo.webp",
     },
     other: {
         "theme-color": "#FFEB52",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         description: "Nowoczesne strony internetowe, identyfikacja wizualna i design premium. Sprawdź moje realizacje!",
         images: [
             {
-                url: "/wuyo-dobra-grafa-logo-kolorowe.png",
+                url: "/wuyo-dobra-grafa-logo-kolorowe.webp",
                 width: 1200,
                 height: 630,
                 alt: "Wuyo – Dobra Grafa – agencja stron internetowych i identyfikacji wizualnej",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
         description: "Nowoczesne strony internetowe, identyfikacja wizualna i design premium.",
-        images: ["/wuyo-dobra-grafa-logo-kolorowe.png"],
+        images: ["/wuyo-dobra-grafa-logo-kolorowe.webp"],
     },
     robots: {
         index: true,

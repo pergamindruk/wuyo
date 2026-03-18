@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Spotlight } from "@/components/ui/spotlight";
 
 const trustedLogos = [
-    { src: "/logotypy/czysta-gablota-logo-realizacja.png", alt: "Czysta Gablota" },
-    { src: "/logotypy/admar-logo-realizacja.png", alt: "ADMAR" },
-    { src: "/logotypy/pergamin-logo-realizacja.png", alt: "Pergamin" },
+    { src: "/logotypy/czysta-gablota-logo-realizacja.webp", alt: "Czysta Gablota" },
+    { src: "/logotypy/admar-logo-realizacja.webp", alt: "ADMAR" },
+    { src: "/logotypy/pergamin-logo-realizacja.webp", alt: "Pergamin" },
 ];
 
 export function TrustedBySection() {
