@@ -15,6 +15,7 @@ const projects = [
     { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.png" },
     { id: 6, title: "Hoodie Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.png" },
     { id: 7, title: "Projekt Wizytówki", category: "Do druku", image: "/realizacje/Business_Card.png" },
+    { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota_www.jpg" },
 
 ];
 
