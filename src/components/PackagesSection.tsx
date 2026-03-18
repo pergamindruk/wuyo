@@ -5,50 +5,47 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const packages = [
     {
-        name: "Start",
+        name: "Lokalny Start",
         price: "1 200 zł",
-        oldPrice: "1 800 zł",
-        desc: "Szybkie, skuteczne i nowoczesne wejście do sieci. Idealne na start, żeby pokazać się z najlepszej strony.",
+        desc: "Konkretna wizytówka dla kogoś, kto chce, żeby klienci z Rzeszowa w końcu znaleźli go w sieci. Bez zbędnych bajerów, za to z sensem.",
         image: "/tworzenie-stron-www-start.png",
         imageScale: "scale-100",
         features: [
-            "Indywidualny projekt (Zero szablonów!)",
-            "Błyskawiczne działanie (Next.js / React)",
-            "Podstawowa optymalizacja pod Google (SEO)",
-            "Zupełna responsywność (Wygląda super na telefonie)",
-            "Formularz kontaktowy i spięcie analityki",
+            "Projekt od zera – nie używam gotowych szablonów, które wyglądają jak tysiąc innych stron.",
+            "Szybkość, która nie irytuje – strona ładuje się natychmiast, więc nikt nie ucieknie do konkurencji.",
+            "Google Cię polubi – ustawiam podstawy tak, żebyś nie był niewidzialny w wyszukiwarce.",
+            "Śmiga na telefonach – bo umówmy się, większość Twoich klientów szuka Cię teraz na smartfonie.",
+            "Prosty kontakt – intuicyjny formularz i podpięte statystyki (żebyś wiedział, czy to działa).",
         ],
         featured: false,
     },
     {
         name: "Rozwój",
         price: "2 900 zł",
-        oldPrice: "3 800 zł",
-        desc: "Rozbudowana witryna, która buduje zaufanie i pracuje dla Ciebie 24/7 jako wirtualny handlowiec.",
+        desc: "Kiedy jedna strona to za mało, bo masz więcej do pokazania. Buduję miejsce, które zamiast tylko „wisieć w sieci”, pomaga Ci sprzedawać usługi.",
         image: "/tworzenie-stron-www-rozwoj.png",
         imageScale: "scale-100",
         features: [
-            "Strona główna + do 5 podstron (np. Oferta, O nas, Cennik)",
-            "Zaprojektowana pod sprzedaż i zbieranie leadów",
-            "Szybki, bezpieczny kod dbający o pozycję w wyszukiwarce",
-            "Podpięcie Analityki (Zobacz kto i kiedy wchodzi)",
-            "Miesiąc darmowej opieki technicznej na start",
+            "Strona główna + 5 podstron – masz miejsce na ofertę, cennik i opis tego, co robisz.",
+            "Projekt pod leady – układam treść tak, żeby ludzie zostawiali do siebie kontakt, a nie tylko oglądali obrazki.",
+            "Czysty i bezpieczny kod – nie instaluję śmieciowych wtyczek, które spowalniają stronę i psują pozycję w Google.",
+            "Pełna analityka – zobaczysz czarno na białym, kto do Ciebie zagląda i w co klika.",
+            "Miesiąc wsparcia w cenie – nie zostawiam Cię z tym samego. Przez pierwsze 30 dni pilnuję, żeby wszystko grało.",
         ],
         featured: true,
     },
     {
         name: "Kombajn",
         price: "4 500 zł",
-        oldPrice: "5 900 zł",
-        desc: "Pełna transformacja. Tworzę Twoją nową markę wizualną i wypuszczam w świat z potężną stroną WWW.",
+        desc: "Wchodzisz w temat na poważnie. Składam Ci wizerunek od podstaw, żebyś wyglądał jak lider w swojej branży, a nie amator.",
         image: "/tworzenie-stron-www-kombajn.png",
         imageScale: "scale-100",
         features: [
-            "Projekt spójnego wizerunku (Logo, księga znaku, kolory)",
-            "Zaawansowana strona pod proces sprzedaży i wizerunek",
-            "Maksymalna wydajność i szybkość wczytywania",
-            "Paka 5-ciu grafik na start by odpalić kampanię (FB/IG)",
-            "Pierwszeństwo wsparcia (Priorytet VIP w kontakcie)",
+            "Kompletny wizerunek – robię logo, dobieram kolory i czcionki. Wszystko spójne i profesjonalne.",
+            "Strona „z wyższej półki” – zaawansowany projekt, który od razu buduje zaufanie u dużych klientów.",
+            "Maksymalna wydajność – wyciskam ze strony tyle, ile się da, żeby była najszybsza w Twojej branży.",
+            "Pakiet grafik na start – dostajesz gotowce na FB i Instagram, żebyś mógł od razu odpalić reklamę i zacząć zarabiać.",
+            "Priorytet w kontakcie – Twoje sprawy lądują na górze mojej listy. Masz u mnie status VIP.",
         ],
         featured: false,
     },
@@ -58,9 +55,9 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
     return (
         <section id="pakiety" className={`relative ${className}`}>
             <AnimatedSection className="text-center mb-16 relative z-10">
-                <p className="eyebrow mb-4">Jasne zasady gry</p>
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Inwestycja w rozwój w sieci</h2>
-                <p className="text-white/50 max-w-xl mx-auto">Wybierz pakiet dopasowany do Twojego biznesu. Bez mydlenia oczu i ukrytych kosztów, za to z nowoczesną technologią, która naprawdę sprzedaje.</p>
+                <p className="eyebrow mb-4">Proste zasady, jasne ceny.</p>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Wybierz pakiet, który pasuje do tego, co teraz robisz.</h2>
+                <p className="text-white/50 max-w-xl mx-auto">Nie naciągam na funkcje, których nie potrzebujesz – dostajesz solidny kod i super szybką stronę 🙂</p>
             </AnimatedSection>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch relative z-10">
@@ -86,11 +83,6 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                             </div>
                             <div className="flex items-baseline gap-3 mb-4">
                                 <div className="text-3xl font-bold text-white">{pkg.price}</div>
-                                {pkg.oldPrice && (
-                                    <div className="text-lg text-white/40 line-through decoration-red-500/50 decoration-2">
-                                        {pkg.oldPrice}
-                                    </div>
-                                )}
                             </div>
                             <p className="text-white/50 text-sm leading-relaxed mb-8">{pkg.desc}</p>
 
