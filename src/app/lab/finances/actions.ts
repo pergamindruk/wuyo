@@ -3,29 +3,74 @@
 import fs from 'fs'
 import path from 'path'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 
 export async function getEwidencja() {
-    const ewidencjaPath = path.join(process.cwd(), 'ewidencja.json')
-    if (!fs.existsSync(ewidencjaPath)) return []
-    try {
-        return JSON.parse(fs.readFileSync(ewidencjaPath, 'utf-8'))
-    } catch {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('finances')
+        .select('*')
+        .order('created_at', { ascending: true })
+
+    if (error) {
+        console.error('Error fetching finances:', error)
         return []
     }
+    
+    return data.map((item: any) => ({
+        id: item.id,
+        documentType: item.document_type,
+        date: item.date,
+        clientInfo: item.client_info,
+        description: item.description,
+        amount: Number(item.amount)
+    }))
 }
 
 export async function addEwidencja(entry: any) {
-    const ewidencja = await getEwidencja()
-    entry.id = Math.random().toString(36).substring(7)
-    ewidencja.push(entry)
-    fs.writeFileSync(path.join(process.cwd(), 'ewidencja.json'), JSON.stringify(ewidencja, null, 2))
-    return entry
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('finances')
+        .insert([{
+            document_type: entry.documentType,
+            date: entry.date,
+            client_info: entry.clientInfo,
+            description: entry.description,
+            amount: entry.amount
+        }])
+        .select()
+        .single()
+
+    if (error) {
+        console.error('Error adding finance entry:', error)
+        return null
+    }
+
+    revalidatePath('/lab/finances')
+    return {
+        id: data.id,
+        documentType: data.document_type,
+        date: data.date,
+        clientInfo: data.client_info,
+        description: data.description,
+        amount: Number(data.amount)
+    }
 }
 
 export async function deleteEwidencja(id: string) {
-    const ewidencja = await getEwidencja()
-    const updated = ewidencja.filter((e: any) => e.id !== id)
-    fs.writeFileSync(path.join(process.cwd(), 'ewidencja.json'), JSON.stringify(updated, null, 2))
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('finances')
+        .delete()
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error deleting finance entry:', error)
+        return false
+    }
+    
+    revalidatePath('/lab/finances')
     return true
 }
 
