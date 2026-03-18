@@ -36,3 +36,5 @@ tsconfig.tsbuildinfo
 # Allow footer icons directory
 !/public/ikonki/
 !/public/ikonki/*
+
+.vercel

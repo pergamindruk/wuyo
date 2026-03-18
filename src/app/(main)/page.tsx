@@ -101,72 +101,70 @@ export default function Home() {
             {/* ═══════════════════════ PROCES ═══════════════════════ */}
             <ProcessSection />
 
-            {/* ═══════════════════════ REALIZACJE ═══════════════════════ */}
-            <PortfolioGallery />
+            {/* ═══════════════════════ REALIZACJE ══�            {/* ═══════════════════════ O NAS ═══════════════════════ */}
+            <section id="o-nas" className="py-20 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
 
-            {/* ═══════════════════════ PAKIETY ═══════════════════════ */}
-            <PackagesSection />
-
-            {/* ═══════════════════════ FAQ ═══════════════════════ */}
-            <FAQSection />
-
-            {/* ═══════════════════════ AUDYT ═══════════════════════ */}
-            <AuditSection />
-
-            {/* ═══════════════════════ O NAS ═══════════════════════ */}
-            <section id="o-nas" className="py-28 px-6 md:px-12">
-                <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <AnimatedSection>
-                        <div className="aspect-square bg-navy-light rounded-3xl flex items-center justify-center border border-white/5 overflow-hidden relative group">
-                            <Image
-                                src="/MojeZdjecie.webp"
-                                alt="Wuyo - Twój graficzny ziomek"
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-navy/40 via-transparent to-transparent pointer-events-none" />
-                        </div>
-                    </AnimatedSection>
-                    <AnimatedSection delay={0.2}>
-                        <p className="eyebrow mb-4">Kim jest Wuyo?</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
+                    {/* Nagłówek */}
+                    <AnimatedSection className="text-center mb-12">
+                        <p className="eyebrow mb-3">Kim jest Wuyo?</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                             Cześć, mam na imię Mateusz 😎
                         </h2>
-                        <div className="text-white/60 leading-relaxed mb-6 space-y-4 text-sm md:text-base">
-                            <p>Wzięło się od tego, że zawsze najpierw słucham, a potem podpowiadam. Znajomi mówili, że jestem jak taki „Wujo dobra rada” od spraw technicznych – i tak już zostało.</p>
-                            <p>Działam sam, więc nie uciekam przed Tobą w procedury i nie chowam się za sekretarką. Jak do mnie dzwonisz, to odbieram ja. Jak pytasz, czy coś ma sens – odpowiadam szczerze. Nie bawię się w agencyjne gierki, gdzie jesteś tylko kolejną pozycją na liście do odhaczenia.</p>
-                            <p className="text-white/90 font-medium text-lg pt-2">Co z tego masz? Spokój.</p>
-                            <p>Zamiast zasypywać Cię trudnymi słówkami, tłumaczę wszystko po ludzku. Moja robota ma po prostu ułatwiać Ci życie. Strona musi być tak zrobiona, żeby klient od razu wiedział, co robisz i jak Ci zapłacić. Koniec filozofii.</p>
-                        </div>
-                        
-                        <div className="mt-8 mb-10">
-                            <p className="text-white font-bold mb-5">Zasady u Wuja:</p>
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
-                                    <MessageSquare className="text-gold shrink-0 mt-0.5" size={22} />
-                                    <div className="leading-snug">
-                                        <strong className="text-white block mb-1">Mówię jak jest.</strong> Jeśli Twój pomysł nie wypali – powiem Ci to prosto z mostu i poszukamy czegoś lepszego.
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
-                                    <Clock className="text-gold shrink-0 mt-0.5" size={22} />
-                                    <div className="leading-snug">
-                                        <strong className="text-white block mb-1">Słowo to świętość.</strong> Jak umawiamy się na konkretny dzień, to w ten dzień projekt jest u Ciebie.
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
-                                    <ShieldCheck className="text-gold shrink-0 mt-0.5" size={22} />
-                                    <div className="leading-snug">
-                                        <strong className="text-white block mb-1">Zero owijania w bawełnę.</strong> Wiesz dokładnie, za co płacisz bez ukrytych kosztów.
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                    </AnimatedSection>
 
-                        <Link href="#kontakt" className="btn-gradient inline-flex items-center justify-center gap-2 w-full md:w-auto">
+                    {/* Zdjęcie + bio */}
+                    <AnimatedSection delay={0.15} className="flex flex-col sm:flex-row gap-8 items-start mb-12">
+                        <div className="w-full sm:w-44 shrink-0">
+                            <div className="aspect-square bg-navy-light rounded-2xl overflow-hidden relative group border border-white/5">
+                                <Image
+                                    src="/MojeZdjecie.webp"
+                                    alt="Wuyo - Mateusz"
+                                    fill
+                                    className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent pointer-events-none" />
+                            </div>
+                        </div>
+                        <div className="space-y-4 text-white/60 leading-relaxed text-sm">
+                            <p>Wzięło się od tego, że zawsze najpierw słucham, a potem podpowiadam. Znajomi mówili, że jestem jak taki „Wujo dobra rada" – i tak już zostało.</p>
+                            <p>Działam sam, bez sekretarek i procedur. Jak dzwonisz, odbieram ja. Nie bawię się w agencyjne gierki – u mnie jesteś partnerem, nie pozycją w Excelu.</p>
+                            <p>Zamiast trudnych słówek, gadam po ludzku. Moja robota ma po prostu ułatwiać Ci życie i sprawiać, że klienci będą wiedzieć jak Ci zapłacić. Koniec filozofii.</p>
+                            <p className="text-white/90 font-semibold text-base">Co z tego masz? Spokój.</p>
+                        </div>
+                    </AnimatedSection>
+
+                    {/* Zasady */}
+                    <AnimatedSection delay={0.3}>
+                        <p className="text-white font-bold mb-4">Zasady u Wuja:</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                            <div className="flex items-start gap-3 text-white/70 text-sm bg-white/5 p-4 rounded-2xl border border-white/5">
+                                <MessageSquare className="text-gold shrink-0 mt-0.5" size={18} />
+                                <div>
+                                    <strong className="text-white block mb-0.5">Mówię jak jest.</strong>
+                                    Bez owijania. Jeśli coś nie wypali – powiem od razu.
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3 text-white/70 text-sm bg-white/5 p-4 rounded-2xl border border-white/5">
+                                <Clock className="text-gold shrink-0 mt-0.5" size={18} />
+                                <div>
+                                    <strong className="text-white block mb-0.5">Słowo to świętość.</strong>
+                                    Termin to termin. Projekt jest na czas.
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3 text-white/70 text-sm bg-white/5 p-4 rounded-2xl border border-white/5">
+                                <ShieldCheck className="text-gold shrink-0 mt-0.5" size={18} />
+                                <div>
+                                    <strong className="text-white block mb-0.5">Jasne koszty.</strong>
+                                    Dokładnie wiesz, za co płacisz. Zero niespodzianek.
+                                </div>
+                            </div>
+                        </div>
+                        <Link href="#kontakt" className="btn-gold px-8 py-4 rounded-full font-bold text-sm inline-flex items-center gap-2">
                             Lecimy z tematem <ArrowRight size={18} />
                         </Link>
                     </AnimatedSection>
+
                 </div>
             </section>
 
