@@ -15,9 +15,7 @@ const projects = [
     { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.png" },
     { id: 6, title: "Hoodie Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.png" },
     { id: 7, title: "Projekt Wizytówki", category: "Do druku", image: "/realizacje/Business_Card.png" },
-    { id: 101, title: "Projektowanie Logo", category: "Logotypy/Branding", image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2670&auto=format&fit=crop" },
-    { id: 103, title: "Design Stron WWW", category: "Strony Internetowe", image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=2670&auto=format&fit=crop" },
-    { id: 104, title: "Grafika Social Media", category: "Social media", image: "https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=2670&auto=format&fit=crop" },
+
 ];
 
 export function PortfolioGallery() {
