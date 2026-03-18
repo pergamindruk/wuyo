@@ -8,13 +8,13 @@ import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 const categories = ["Wszystkie", "Logotypy/Branding", "Do druku", "Strony Internetowe", "Social media", "Odzież/Gadżety"];
 
 const projects = [
+    { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.png" },
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.png" },
     { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.png" },
     { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.png" },
     { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.png" },
     { id: 6, title: "Hoodie Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.png" },
-    { id: 7, title: "Projekt Wizytówki", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
     { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota_www.jpg" },
 
 ];
