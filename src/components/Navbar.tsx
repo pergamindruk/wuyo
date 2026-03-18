@@ -36,11 +36,12 @@ export function Navbar() {
         };
 
         if (pathname === "/") {
-            // Jesteśmy już na stronie głównej – scroll po zamknięciu menu
+            // Jesteśmy już na stronie głównej – zaktualizuj hash i scrolluj
+            window.history.pushState(null, "", `/#${sectionId}`);
             setTimeout(scrollToSection, 300);
         } else {
-            // Inny URL – najpierw navigate, potem scroll
-            router.push("/");
+            // Inny URL – zaktualizuj URL i nawiguj
+            router.push(`/#${sectionId}`, { scroll: false });
             setTimeout(scrollToSection, 600);
         }
     };
@@ -49,9 +50,10 @@ export function Navbar() {
         e.preventDefault();
         setIsMobileMenuOpen(false);
         if (pathname === "/") {
+            window.history.pushState(null, "", "/");
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
-            router.push("/");
+            router.push("/", { scroll: false });
             setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 300);
         }
     };
