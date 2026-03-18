@@ -29,9 +29,9 @@ tsconfig.tsbuildinfo
 !/public/logo_wuya2.png
 
 # Allow specific partner logos in the bloated folder
-!/public/logotypy/czysta-gablota-logo-realizacja.png
-!/public/logotypy/admar-logo-realizacja.png
-!/public/logotypy/pergamin-logo-realizacja.png
+!/public/logotypy/czysta-gablota-logo-realizacja.webp
+!/public/logotypy/admar-logo-realizacja.webp
+!/public/logotypy/pergamin-logo-realizacja.webp
 
 # Allow footer icons directory
 !/public/ikonki/
