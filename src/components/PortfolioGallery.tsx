@@ -3,13 +3,21 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ZoomIn, ExternalLink } from "lucide-react";
 
 const categories = ["Wszystkie", "Logotypy/Branding", "Do druku", "Strony Internetowe", "Social media", "Odzież/Gadżety"];
 
-const projects = [
+type Project = {
+    id: number;
+    title: string;
+    category: string;
+    image: string;
+    demoUrl?: string;
+};
+
+const projects: Project[] = [
     { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
-    { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp" },
+    { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", demoUrl: "https://www.czystagablota.pl" },
     { id: 9, title: "Wuyo Lab (Panel CRM)", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp" },
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp" },
@@ -210,7 +218,18 @@ export function PortfolioGallery() {
 
                             <div className="mt-6 text-center">
                                 <h3 className="text-2xl font-bold text-white mb-2">{visibleProjects[selectedImageIndex].title}</h3>
-                                <div className="text-gold text-sm font-bold uppercase tracking-wider">{visibleProjects[selectedImageIndex].category}</div>
+                                <div className="text-gold text-sm font-bold uppercase tracking-wider mb-2">{visibleProjects[selectedImageIndex].category}</div>
+                                {visibleProjects[selectedImageIndex].demoUrl && (
+                                    <a
+                                        href={visibleProjects[selectedImageIndex].demoUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 mt-3 px-6 py-2 border border-gold text-gold rounded-full hover:bg-gold hover:text-navy-dark transition-all text-sm font-semibold shadow-[0_0_10px_rgba(255,215,0,0.2)] hover:shadow-[0_0_20px_rgba(255,215,0,0.5)]"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        Zobacz stronę online <ExternalLink size={16} />
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </motion.div>
