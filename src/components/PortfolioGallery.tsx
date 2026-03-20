@@ -16,7 +16,8 @@ type Project = {
 };
 
 const projects: Project[] = [
-    { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.png" },
+    { id: 11, title: "Projekt Etykiet", category: "Odzież/Gadżety", image: "/realizacje/projekt-etykiet.webp" },
+    { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp" },
     { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
     { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", demoUrl: "https://www.czystagablota.pl" },
     { id: 9, title: "Wuyo Lab (Panel CRM)", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp" },

@@ -114,20 +114,29 @@ export default function Home() {
             <AuditSection />
 
             {/* ═══════════════════════ O NAS ═══════════════════════ */}
-            <section id="o-nas" className="py-28 px-6 md:px-12">
-                <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <AnimatedSection className="h-full">
-                        <div className="w-full h-full min-h-[400px] lg:min-h-[650px] aspect-[3/4] lg:aspect-auto bg-navy-light rounded-3xl flex items-center justify-center border border-white/5 overflow-hidden relative group">
-                            <Image
-                                src="/MojeZdjecie.webp"
-                                alt="Wuyo - Twój graficzny ziomek"
-                                fill
-                                className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent pointer-events-none" />
+            <section id="o-nas" className="py-28 px-6 md:px-12 relative overflow-hidden">
+                <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+                <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-center relative z-10">
+                    {/* Left: Avatar / Portrait */}
+                    <AnimatedSection className="w-full flex justify-center lg:justify-end">
+                        <div className="relative w-64 h-64 md:w-80 md:h-80 group">
+                            {/* Decorative Glow */}
+                            <div className="absolute inset-0 bg-gold/20 blur-[50px] rounded-full scale-110 group-hover:scale-125 transition-transform duration-700" />
+                            {/* Image Container */}
+                            <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                                <Image
+                                    src="/MojeZdjecie.webp"
+                                    alt="Wuyo - Twój graficzny ziomek"
+                                    fill
+                                    className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/50 to-transparent pointer-events-none" />
+                            </div>
                         </div>
                     </AnimatedSection>
-                    <AnimatedSection delay={0.2}>
+
+                    {/* Right: Text Content */}
+                    <AnimatedSection delay={0.2} className="max-w-2xl mx-auto lg:mx-0">
                         <p className="eyebrow mb-4">Kim jest Wuyo?</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
                             Cześć, mam na imię Mateusz 😎
@@ -142,19 +151,19 @@ export default function Home() {
                         <div className="mt-8 mb-10">
                             <p className="text-white font-bold mb-5">Zasady u Wuja:</p>
                             <ul className="space-y-4">
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5 hover:border-gold/30 transition-colors">
                                     <MessageSquare className="text-gold shrink-0 mt-0.5" size={22} />
                                     <div className="leading-snug">
                                         <strong className="text-white block mb-1">Mówię jak jest.</strong> Jeśli Twój pomysł nie wypali – powiem Ci to prosto z mostu i poszukamy czegoś lepszego.
                                     </div>
                                 </li>
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5 hover:border-gold/30 transition-colors">
                                     <Clock className="text-gold shrink-0 mt-0.5" size={22} />
                                     <div className="leading-snug">
                                         <strong className="text-white block mb-1">Słowo to świętość.</strong> Jak umawiamy się na konkretny dzień, to w ten dzień projekt jest u Ciebie.
                                     </div>
                                 </li>
-                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5">
+                                <li className="flex items-start gap-4 text-white/70 text-sm md:text-base bg-white/5 p-4 rounded-xl border border-white/5 hover:border-gold/30 transition-colors">
                                     <ShieldCheck className="text-gold shrink-0 mt-0.5" size={22} />
                                     <div className="leading-snug">
                                         <strong className="text-white block mb-1">Zero owijania w bawełnę.</strong> Wiesz dokładnie, za co płacisz bez ukrytych kosztów.
