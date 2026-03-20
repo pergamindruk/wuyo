@@ -10,16 +10,20 @@ export async function POST(req: NextRequest) {
         }
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: process.env.EMAIL_HOST || "smtp.gmail.com",
+            port: parseInt(process.env.EMAIL_PORT || "465"),
+            secure: true,
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
+                user: process.env.EMAIL_USER || process.env.GMAIL_USER,
+                pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
             },
         });
 
+        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
+
         await transporter.sendMail({
-            from: `"Wuyo Audyt" <${process.env.GMAIL_USER}>`,
-            to: process.env.LEAD_EMAIL ?? process.env.GMAIL_USER,
+            from: `"Wuyo Audyt" <${fromEmail}>`,
+            to: process.env.LEAD_EMAIL ?? fromEmail,
             replyTo: email,
             subject: `🔍 Nowe zgłoszenie do Audytu Bez Znieczulenia`,
             html: `

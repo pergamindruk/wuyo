@@ -103,10 +103,12 @@ export async function POST(req: NextRequest) {
         }
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: process.env.EMAIL_HOST || "smtp.gmail.com",
+            port: parseInt(process.env.EMAIL_PORT || "465"),
+            secure: true, // SSL/TLS for SEOHost is usually on port 465
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
+                user: process.env.EMAIL_USER || process.env.GMAIL_USER,
+                pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
             },
         });
 
@@ -125,9 +127,11 @@ export async function POST(req: NextRequest) {
             quick: "Szybkie zapytanie",
         };
 
+        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
+
         await transporter.sendMail({
-            from: `"Wuyo Brief" <${process.env.GMAIL_USER}>`,
-            to: process.env.LEAD_EMAIL ?? process.env.GMAIL_USER,
+            from: `"Wuyo Brief" <${fromEmail}>`,
+            to: process.env.LEAD_EMAIL || fromEmail,
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data),

@@ -3,10 +3,12 @@ import nodemailer from "nodemailer";
 
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.EMAIL_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.EMAIL_PORT || "465"),
+    secure: true,
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: process.env.EMAIL_USER || process.env.GMAIL_USER,
+        pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
     },
 });
 
@@ -26,14 +28,13 @@ export async function POST(req: NextRequest) {
             source: "chatbot",
         };
 
-        // Usunięto zapis do pliku JSON (niekompatybilne z Vercel)
-
+        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
 
         // Wyślij email z powiadomieniem
-        if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+        if (fromEmail && (process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS)) {
             await transporter.sendMail({
-                from: `"Wuyo Chatbot" <${process.env.GMAIL_USER}>`,
-                to: process.env.LEAD_EMAIL,
+                from: `"Wuyo Chatbot" <${fromEmail}>`,
+                to: process.env.LEAD_EMAIL || fromEmail,
                 subject: `🔥 Nowy lead z chatbota: ${name}`,
                 html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #fff; border-radius: 12px;">
