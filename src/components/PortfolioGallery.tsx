@@ -16,10 +16,10 @@ type Project = {
 };
 
 const projects: Project[] = [
-    { id: 13, title: "Billboard Domosfera – Mockup", category: "Do druku", image: "/realizacje/domosfera-billboard.png" },
-    { id: 12, title: "Billboard Wege – Mockup", category: "Do druku", image: "/realizacje/billboard-wege.png" },
+    { id: 13, title: "Billboard Domosfera – Mockup", category: "Do druku", image: "/realizacje/domosfera-billboard.webp" },
+    { id: 12, title: "Billboard Wege – Mockup", category: "Do druku", image: "/realizacje/billboard-wege.webp" },
     { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp" },
-    { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.png" },
+    { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp" },
     { id: 7, title: "Wizytówka Premium (Mockup)", category: "Do druku", image: "/realizacje/business-card-mockup.webp" },
     { id: 8, title: "Gablota WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", demoUrl: "https://www.czystagablota.pl" },
     { id: 9, title: "Wuyo Lab (Panel CRM)", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp" },
