@@ -16,6 +16,7 @@ type Project = {
 };
 
 const projects: Project[] = [
+    { id: 13, title: "Billboard Domosfera – Mockup", category: "Do druku", image: "/realizacje/domosfera-billboard.png" },
     { id: 12, title: "Billboard Wege – Mockup", category: "Do druku", image: "/realizacje/billboard-wege.png" },
     { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp" },
     { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.png" },
