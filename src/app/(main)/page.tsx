@@ -114,7 +114,7 @@ export default function Home() {
             <AuditSection />
 
             {/* ═══════════════════════ O NAS ═══════════════════════ */}
-            <section id="o-nas" className="py-28 px-6 md:px-12 relative overflow-hidden">
+            <section id="o-mnie" className="py-28 px-6 md:px-12 relative overflow-hidden">
                 <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-center relative z-10">
                     {/* Left: Avatar / Portrait */}

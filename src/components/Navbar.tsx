@@ -97,7 +97,7 @@ export function Navbar() {
                             Portfolio
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="/#o-nas" onClick={(e) => handleAnchorClick(e, "o-nas")} className="relative group transition-colors hover:text-white">
+                        <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="relative group transition-colors hover:text-white">
                             O mnie
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
@@ -146,7 +146,7 @@ export function Navbar() {
                         <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
                             <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Główna</a>
                             <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Portfolio</a>
-                            <a href="/#o-nas" onClick={(e) => handleAnchorClick(e, "o-nas")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</a>
+                            <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</a>
                             <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Oferta</a>
                             <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
