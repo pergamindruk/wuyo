@@ -40,7 +40,7 @@ export function TrustedBySection() {
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
                     Marki, które zyskały przewagę 🚀
                 </h2>
-                <p className="text-white/50 text-sm max-w-xl mx-auto">Budowałem wizerunek dla firm, które wiedzą, po co inwestuje się w design.</p>
+
             </div>
 
             {/* Karuzela logotypów */}

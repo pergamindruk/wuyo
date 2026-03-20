@@ -36,13 +36,7 @@ const audienceOptions = [
     "Młodzi / Gen Z",
 ];
 
-const budgetOptions = [
-    "Do 1 000 zł",
-    "1 000 – 3 000 zł",
-    "3 000 – 6 000 zł",
-    "Powyżej 6 000 zł",
-    "Dogadamy się 😄",
-];
+
 
 export function ContactBrief() {
     const [path, setPath] = useState<Path>("quick");
@@ -286,17 +280,7 @@ export function ContactBrief() {
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="brief-label">Orientacyjny budżet</label>
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {budgetOptions.map((b) => (
-                                        <button key={b} onClick={() => setData((d) => ({ ...d, budget: b }))}
-                                            className={`px-4 py-2 text-sm rounded-full border transition-all ${data.budget === b ? "border-gold bg-gold/10 text-gold" : "border-white/10 text-white/50 hover:bg-white/5"}`}>
-                                            {b}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+
 
                             <div>
                                 <label className="brief-label">Coś jeszcze? Deadline? (opcjonalne)</label>
