@@ -28,7 +28,7 @@ const projects: Project[] = [
     { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.webp" },
     { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.webp" },
     { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp" },
-    { id: 6, title: "Projekt bluzy dla Czysta-Gablota", category: "Odzież/Gadżety", image: "/realizacje/bluza-czystagablota.webp" },
+    { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp" },
 
 ];
 
