@@ -7,7 +7,7 @@ export const packages = [
     {
         name: "Lokalny Start",
         price: "1 200 zł",
-        desc: "Konkretna wizytówka dla kogoś, kto chce, żeby klienci z Rzeszowa w końcu znaleźli go w sieci. Bez zbędnych bajerów, za to z sensem.",
+        desc: "Precyzyjne uderzenie. Solidna strona-wizytówka, która buduje zaufanie od pierwszego wejrzenia. Idealny start, by zaistnieć w sieci bez wstydu i kompromisów.",
         image: "/tworzenie-stron-www-start-v2.webp",
         imageScale: "scale-100",
         features: [
@@ -22,7 +22,7 @@ export const packages = [
     {
         name: "Rozwój",
         price: "2 900 zł",
-        desc: "Kiedy jedna strona to za mało, bo masz więcej do pokazania. Buduję miejsce, które zamiast tylko „wisieć w sieci”, pomaga Ci sprzedawać usługi.",
+        desc: "Twoje centrum dowodzenia w sieci. Projektuję pod konwersję, optymalizuję pod Google i daję Ci konkretne narzędzia, byś mógł realnie skalować swoją ofertę.",
         image: "/tworzenie-stron-www-rozwoj-v2.webp",
         imageScale: "scale-100",
         features: [
@@ -37,7 +37,7 @@ export const packages = [
     {
         name: "Kombajn",
         price: "4 500 zł",
-        desc: "Wchodzisz w temat na poważnie. Składam Ci wizerunek od podstaw, żebyś wyglądał jak lider w swojej branży, a nie amator.",
+        desc: "Standard bez kompromisów. Składam Twój wizerunek od fundamentów po najbardziej zaawansowane detale. To propozycja dla graczy, którzy wymagają pełnego wsparcia i klasy światowej.",
         image: "/tworzenie-stron-www-kombajn-v2.webp",
         imageScale: "scale-100",
         features: [
