@@ -115,7 +115,10 @@ export async function POST(req: NextRequest) {
             tls: {
                 ciphers: 'SSLv3', // Sometimes helps with handshake
                 rejectUnauthorized: false
-            }
+            },
+            requireTLS: true,
+            debug: true,
+            logger: true
         });
 
         const briefRecord = {
