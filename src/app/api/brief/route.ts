@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+// Technical update to trigger Vercel redeploy with new Env Vars
+
 interface BriefData {
     path: "branding" | "web" | "quick";
     companyName?: string;
