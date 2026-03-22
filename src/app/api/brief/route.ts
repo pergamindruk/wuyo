@@ -105,18 +105,11 @@ export async function POST(req: NextRequest) {
         }
 
         const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST || "mail.wuyo.pl", // Dynamic host for better SEOHost compatibility
-            port: 587, // STARTTLS port for SEOHost
-            secure: false, // TLS requires secure: false for port 587
+            service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD,
             },
-            tls: {
-                ciphers: 'SSLv3', // Sometimes helps with handshake
-                rejectUnauthorized: false
-            },
-            requireTLS: true,
             debug: true,
             logger: true
         });
