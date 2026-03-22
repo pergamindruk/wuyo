@@ -105,13 +105,16 @@ export async function POST(req: NextRequest) {
         }
 
         const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST || "smtp.gmail.com",
-            port: parseInt(process.env.EMAIL_PORT || "465"),
-            secure: true, // SSL/TLS for SEOHost is usually on port 465
+            host: process.env.EMAIL_HOST || "mail.wuyo.pl", // Dynamic host for better SEOHost compatibility
+            port: 465, // Force secure port for SEOHost
+            secure: true,
             auth: {
-                user: process.env.EMAIL_USER || process.env.GMAIL_USER,
-                pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
             },
+            tls: {
+                rejectUnauthorized: false // Helps with potential SSL issues on custom hosts
+            }
         });
 
         const briefRecord = {

@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     creator: "Wuyo – Dobra Grafa",
     manifest: "/site.webmanifest",
     icons: {
-        icon: "/wuyo-dobra-grafa-logo.webp",
-        apple: "/wuyo-dobra-grafa-logo.webp",
+        icon: "/favicon.png",
+        apple: "/favicon.png",
     },
     other: {
         "theme-color": "#FFEB52",
