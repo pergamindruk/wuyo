@@ -272,11 +272,24 @@ export function ContactBrief() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="brief-label">Imię *</label>
-                                    <input className="brief-input w-full" placeholder="Jak mam się do Ciebie zwracać?" value={data.name ?? ""} onChange={(e) => setData((d) => ({ ...d, name: e.target.value }))} />
+                                    <input 
+                                        className="brief-input w-full" 
+                                        placeholder="Jak mam się do Ciebie zwracać?" 
+                                        value={data.name || ""} 
+                                        onChange={(e) => setData(prev => ({ ...prev, name: e.target.value }))}
+                                        autoComplete="name"
+                                    />
                                 </div>
                                 <div>
                                     <label className="brief-label">E-mail *</label>
-                                    <input type="email" className="brief-input w-full" placeholder="Na jaki adres mam odpisać?" value={data.email ?? ""} onChange={(e) => setData((d) => ({ ...d, email: e.target.value }))} />
+                                    <input 
+                                        type="email" 
+                                        className="brief-input w-full" 
+                                        placeholder="Na jaki adres mam odpisać?" 
+                                        value={data.email || ""} 
+                                        onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))}
+                                        autoComplete="email"
+                                    />
                                 </div>
                             </div>
 
