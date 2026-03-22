@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
 
@@ -57,6 +57,16 @@ export function ContactBrief() {
             return { ...d, audience: arr.includes(a) ? arr.filter((x) => x !== a) : [...arr, a] };
         });
     };
+
+    // Automatyczne przewijanie do komunikatu o sukcesie
+    useEffect(() => {
+        if (submitted) {
+            const el = document.getElementById("kontakt");
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+    }, [submitted]);
 
     const handleSubmit = async () => {
         if (honeypot) return;

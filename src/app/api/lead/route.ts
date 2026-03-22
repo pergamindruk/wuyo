@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-
-
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "smtp.gmail.com",
-    port: parseInt(process.env.EMAIL_PORT || "465"),
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER || process.env.GMAIL_USER,
-        pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
-    },
-});
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
     try {
@@ -20,23 +10,34 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Brak danych" }, { status: 400 });
         }
 
-        const lead = {
-            id: Math.random().toString(36).substring(7),
-            name,
-            email,
-            timestamp: new Date().toISOString(),
-            source: "chatbot",
-        };
+        const supabase = await createClient();
+        const { error: dbError } = await supabase
+            .from('leads')
+            .insert([{
+                name,
+                email,
+                type: 'Chatbot',
+                details: 'Lead pozyskany przez chatbota AI.'
+            }]);
+
+        if (dbError) console.error("Database save error:", dbError);
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD,
+            },
+        });
 
         const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
 
         // Wyślij email z powiadomieniem
-        if (fromEmail && (process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS)) {
-            await transporter.sendMail({
-                from: `"Wuyo Chatbot" <${fromEmail}>`,
-                to: process.env.LEAD_EMAIL || fromEmail,
-                subject: `🔥 Nowy lead z chatbota: ${name}`,
-                html: `
+        await transporter.sendMail({
+            from: `"Wuyo Chatbot" <${fromEmail}>`,
+            to: process.env.LEAD_EMAIL || "kontakt@wuyo.pl",
+            subject: `🔥 Nowy lead z chatbota: ${name}`,
+            html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #fff; border-radius: 12px;">
             <h1 style="color: #FFD700; margin-bottom: 8px;">🔥 Nowy lead z chatbota!</h1>
             <p style="color: #aaa; margin-bottom: 24px;">Ktoś zostawił swoje dane w chatbocie na Twojej stronie.</p>
@@ -54,11 +55,10 @@ export async function POST(req: NextRequest) {
                 <td style="padding: 12px; background: #1a1a1a; border-radius: 0 0 8px 8px; color: #fff;">${new Date().toLocaleString("pl-PL")}</td>
               </tr>
             </table>
-            <p style="margin-top: 24px; color: #aaa; font-size: 14px;">Lead pochodzi z chatbota na stronie Wuyo.</p>
+            <p style="margin-top: 24px; color: #aaa; font-size: 14px;">Lead pochodzi z chatbota na stronie Wuyo. Został zapisany w panelu Laboratorium.</p>
           </div>
         `,
-            });
-        }
+        });
 
         return NextResponse.json({ success: true });
     } catch (error) {

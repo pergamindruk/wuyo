@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -106,13 +107,23 @@ export async function POST(req: NextRequest) {
         let lead = null;
         if (leadMatch) {
             lead = { name: leadMatch[1], email: leadMatch[2] };
-            // Fire and forget lead capture
+            
+            // 1. Zapisz bezpośrednio do bazy (niezawodne)
+            const supabase = await createClient();
+            await supabase.from('leads').insert([{
+                name: lead.name,
+                email: lead.email,
+                type: 'Chatbot',
+                details: 'Lead pozyskany przez chatbota AI.'
+            }]);
+
+            // 2. Wyślij powiadomienie mailowe (przez istniejące API lead)
             const leadUrl = new URL("/api/lead", req.nextUrl.origin).toString();
             fetch(leadUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(lead),
-            }).catch(err => console.error("Async lead capture failed:", err));
+            }).catch(err => console.error("Async lead email notification failed:", err));
         }
 
         const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();

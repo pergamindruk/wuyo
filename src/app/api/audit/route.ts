@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
     try {
@@ -9,14 +10,26 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
         }
 
+        const supabase = await createClient();
+        const { error: dbError } = await supabase
+            .from('leads')
+            .insert([{
+                name: 'Zgłoszenie Audytu',
+                email,
+                type: 'Audit',
+                details: `URL: ${url}`
+            }]);
+
+        if (dbError) console.error("Database save error (audit):", dbError);
+
         const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST || "smtp.gmail.com",
-            port: parseInt(process.env.EMAIL_PORT || "465"),
-            secure: true,
+            service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || process.env.GMAIL_USER,
-                pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD,
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD,
             },
+            debug: true,
+            logger: true
         });
 
         const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;

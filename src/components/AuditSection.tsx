@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { AlertTriangle, Check } from "lucide-react";
 
@@ -35,6 +35,16 @@ export function AuditSection() {
             setLoading(false);
         }
     };
+
+    // Automatyczne przewijanie do komunikatu o sukcesie
+    useEffect(() => {
+        if (submitted) {
+            const el = document.getElementById("audyt");
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+    }, [submitted]);
 
     return (
         <section id="audyt" className="py-24 px-6 md:px-12 relative overflow-hidden bg-navy-light/30 border-t border-white/5">

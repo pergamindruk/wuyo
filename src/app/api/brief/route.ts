@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { createClient } from "@/lib/supabase/server";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -114,13 +115,23 @@ export async function POST(req: NextRequest) {
             logger: true
         });
 
-        const briefRecord = {
-            ...data,
-            timestamp: new Date().toISOString(),
-            id: Math.random().toString(36).substring(7)
+        const supabase = await createClient();
+        const typeLabel: Record<string, string> = {
+            branding: 'Branding',
+            web: 'Strona WWW',
+            quick: 'Szybki Kontakt'
         };
 
-        // Usunięto zapis do pliku JSON (niekompatybilne z Vercel)
+        const { error: dbError } = await supabase
+            .from('leads')
+            .insert([{
+                name: data.name,
+                email: data.email,
+                type: typeLabel[data.path] || data.path,
+                details: `Budżet: ${data.budget || 'Brak'}. Notatka: ${data.note || 'Brak'}`
+            }]);
+
+        if (dbError) console.error("Database save error (brief):", dbError);
 
 
         const pathNames: Record<string, string> = {
