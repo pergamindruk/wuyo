@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
         await transporter.sendMail({
             from: `"Wuyo Audyt" <${fromEmail}>`,
-            to: process.env.LEAD_EMAIL ?? fromEmail,
+            to: "kontakt@wuyo.pl",
             replyTo: email,
             subject: `🔍 Nowe zgłoszenie do Audytu Bez Znieczulenia`,
             html: `

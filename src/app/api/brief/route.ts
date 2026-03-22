@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
 
         await transporter.sendMail({
             from: `"Wuyo Brief" <${fromEmail}>`,
-            to: process.env.LEAD_EMAIL || fromEmail,
+            to: "kontakt@wuyo.pl",
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data),
