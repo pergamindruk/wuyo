@@ -1,16 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2 } from 'lucide-react'
+import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle } from 'lucide-react'
 import { generateDocument, getEwidencja, deleteEwidencja } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 export default function FinancesLab() {
-    const [docType, setDocType] = useState('Rachunek za wykonaną usługę')
+    const defaultDocType = 'Faktura (zwolnienie z VAT na podst. art. 113 ust. 1 i 9 ustawy o VAT)'
+    const [docType, setDocType] = useState(defaultDocType)
     const [clientInfo, setClientInfo] = useState('')
     const [amount, setAmount] = useState('1500')
     const [description, setDescription] = useState('Wykonanie projektu strony internetowej One-Page')
+    const [saleDate, setSaleDate] = useState(new Date().toISOString().split('T')[0])
+    const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0])
 
     const [loading, setLoading] = useState(false)
     const [markdown, setMarkdown] = useState('')
@@ -32,7 +35,7 @@ export default function FinancesLab() {
         setError('')
         setMarkdown('')
 
-        const result = await generateDocument(docType, clientInfo, amount, description)
+        const result = await generateDocument(docType, clientInfo, amount, description, saleDate, issueDate)
         if (result.success && result.markdown) {
             setMarkdown(result.markdown)
             loadEwidencja()
@@ -42,19 +45,36 @@ export default function FinancesLab() {
         setLoading(false)
     }
 
-    // Oblicz kwotę z obecnego kwartału
-    const LIMIT = 10813.50
-    const currentQ = Math.floor((new Date().getMonth() + 3) / 3)
-    const currentYear = new Date().getFullYear()
+    // --- LIMIT MIESIĘCZNY I LOGIKA KALENDARZA 2026 ---
+    const selectedDateObj = new Date(saleDate)
+    const currentMonth = selectedDateObj.getMonth() // 0-11
+    const currentYear = selectedDateObj.getFullYear()
 
-    const currentQuarterSum = ewidencja.filter((e: any) => {
-        if (!e.date) return false;
-        const d = new Date(e.date)
-        const q = Math.floor((d.getMonth() + 3) / 3)
-        return d.getFullYear() === currentYear && q === currentQ
-    }).reduce((acc: number, val: any) => acc + (val.amount || 0), 0)
+    // Limity dla pierwszej i drugiej połowy roku
+    const LIMIT_H1 = 3604.50 // Styczeń - Czerwiec (75% z 4806)
+    const LIMIT_H2 = 3604.50 // Lipiec - Grudzień (do ew. aktualizacji, gdy ustawa zmieni minimalną)
+    const currentLimit = currentMonth < 6 ? LIMIT_H1 : LIMIT_H2
 
-    const progressPercent = Math.min(100, (currentQuarterSum / LIMIT) * 100)
+    // Sumowanie wpisów wyłącznie z aktualnie wybranego miesiąca i roku (na podstawie daty sprzedaży)
+    const currentMonthEwidencja = ewidencja
+        .filter((e: any) => {
+            if (!e.date) return false;
+            const d = new Date(e.date)
+            return d.getFullYear() === currentYear && d.getMonth() === currentMonth
+        })
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // sort by oldest
+
+    let runningTotal = 0;
+    const ewidencjaWithRunningTotal = currentMonthEwidencja.map((e, index) => {
+        runningTotal += e.amount;
+        return { ...e, lp: index + 1, runningTotal }
+    })
+
+    const progressPercent = Math.min(100, (runningTotal / currentLimit) * 100)
+    
+    // Miesiące po polsku do wyświetlenia
+    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"]
+    const monthLabel = `${monthNames[currentMonth]} ${currentYear}`
 
     const handlePrint = () => {
         window.print()
@@ -105,39 +125,70 @@ export default function FinancesLab() {
                 </div>
             </div>
 
-            {/* Monitorowanie Przychodów (Ewidencja) */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col md:flex-row gap-8 items-center justify-between print:hidden">
+            {/* Monitorowanie Przychodów (Ewidencja miesięczna) */}
+            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row gap-8 items-start justify-between print:hidden">
                 <div className="flex-1 w-full">
-                    <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2"><Wallet className="text-yellow-400" /> Przychód w tym kwartale (Q{currentQ} {currentYear})</h2>
+                    <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2"><Wallet className="text-yellow-400" /> Przychód w tym miesiącu ({monthLabel})</h2>
                     <div className="flex justify-between text-sm text-zinc-400 mb-2">
-                        <span>Wykorzystano limitu działalnośći</span>
-                        <span className="font-bold text-white">{currentQuarterSum.toFixed(2)} PLN / {LIMIT.toFixed(2)} PLN</span>
+                        <span>Wykorzystano limitu działalności</span>
+                        <span className="font-bold text-white">{runningTotal.toFixed(2)} PLN / {currentLimit.toFixed(2)} PLN</span>
                     </div>
                     <div className="w-full bg-zinc-950 rounded-full h-4 border border-zinc-800 overflow-hidden relative">
-                        <div className={`h-full transition-all duration-1000 ${progressPercent > 90 ? 'bg-red-500' : progressPercent > 70 ? 'bg-orange-500' : 'bg-green-500'}`} style={{ width: `${progressPercent}%` }}></div>
+                        <div className={`h-full transition-all duration-1000 ${progressPercent >= 100 ? 'bg-red-600' : progressPercent >= 80 ? 'bg-orange-500' : 'bg-green-500'}`} style={{ width: `${progressPercent}%` }}></div>
                     </div>
-                    {progressPercent > 90 && <p className="text-red-400 text-xs mt-2 mt-pfont-bold flex items-center gap-1"><Info size={14} /> Uważaj! Zbliżasz się do limitu działalności nierejestrowanej.</p>}
+                    {progressPercent >= 80 && progressPercent < 100 && (
+                        <p className="text-orange-400 text-xs mt-3 font-bold flex items-center gap-1"><Info size={14} /> Uważaj! Zbliżasz się do limitu działalności nierejestrowanej.</p>
+                    )}
+                    {progressPercent >= 100 && (
+                        <div className="mt-4 p-4 border border-red-500/30 bg-red-500/10 rounded-xl">
+                            <p className="text-red-500 text-sm font-bold flex items-center gap-2 uppercase tracking-wide"><AlertTriangle size={18} /> UWAGA! Przekroczyłeś limit.</p>
+                            <p className="text-red-400/90 text-xs mt-1">Zgodnie z prawem prowadzisz już działalność gospodarczą. Masz 7 dni na złożenie wniosku CEIDG-1 w celu jej sformalizowania.</p>
+                        </div>
+                    )}
+                    
+                    {/* Podsumowanie PIT-36 */}
+                    <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-400">
+                        <span className="block font-bold text-zinc-300 mb-1">Do zeznania rocznego (PIT-36 / Przychody z innych źródeł):</span>
+                        Suma uzyskana w miesiącu {monthLabel}: <span className="font-mono bg-zinc-950 px-2 py-0.5 rounded text-white">{runningTotal.toFixed(2)} zł</span>
+                    </div>
                 </div>
 
-                <div className="md:w-[45%] w-full bg-zinc-950 p-4 border border-zinc-800 rounded-xl overflow-y-auto max-h-[300px]">
-                    <p className="text-xs uppercase font-bold text-zinc-500 mb-2">Wpisy do Ewidencji (Q{currentQ} {currentYear})</p>
-                    {ewidencja.length === 0 ? (
-                        <p className="text-xs text-zinc-600">Brak wpisów. Zastosuj się do wygenerowania pierwszego rachunku.</p>
+                {/* Tabela Ewidencji w formacie US */}
+                <div className="xl:w-[50%] w-full bg-zinc-950 p-4 border border-zinc-800 rounded-xl overflow-x-auto">
+                    <p className="text-xs uppercase font-bold text-zinc-500 mb-3 flex items-center gap-2">
+                        <TrendingUp size={14} /> Uproszczona Ewidencja Sprzedaży ({monthLabel})
+                    </p>
+                    {ewidencjaWithRunningTotal.length === 0 ? (
+                        <p className="text-xs text-zinc-600 italic">Brak dokumentów datowanych na ten miesiąc.</p>
                     ) : (
-                        <ul className="space-y-2">
-                            {[...ewidencja].reverse().map((e: any, idx: number) => (
-                                <li key={e.id || idx} className="flex justify-between items-center text-xs gap-3 border-b border-zinc-800/50 pb-2 pt-2">
-                                    <span className="text-zinc-500 w-16 shrink-0">{e.date}</span>
-                                    <span className="text-zinc-300 w-full overflow-hidden text-ellipsis whitespace-nowrap" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</span>
-                                    <div className="flex items-center gap-4 shrink-0">
-                                        <span className="font-bold text-green-400">+{e.amount} zł</span>
-                                        <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors" title="Usuń z ewidencji">
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <table className="w-full text-left text-xs text-zinc-300">
+                            <thead className="text-zinc-500 border-b border-zinc-800">
+                                <tr>
+                                    <th className="font-normal py-2 font-mono">Lp.</th>
+                                    <th className="font-normal py-2">Data sprz.</th>
+                                    <th className="font-normal py-2">Dowód</th>
+                                    <th className="font-normal py-2">Kwota</th>
+                                    <th className="font-normal py-2 w-20">Narastająco</th>
+                                    <th className="font-normal py-2 w-8 text-center"><Trash2 size={12} className="inline opacity-50" /></th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-zinc-800/50">
+                                {[...ewidencjaWithRunningTotal].reverse().map((e: any) => (
+                                    <tr key={e.id} className="hover:bg-zinc-900/50 transition-colors">
+                                        <td className="py-2.5 font-mono text-zinc-500">{e.lp}.</td>
+                                        <td className="py-2.5">{e.date}</td>
+                                        <td className="py-2.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
+                                        <td className="py-2.5 font-bold text-green-400">+{e.amount} zł</td>
+                                        <td className="py-2.5 text-zinc-400">{e.runningTotal.toFixed(2)} zł</td>
+                                        <td className="py-2.5 text-right">
+                                            <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors" title="Usuń z ewidencji">
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     )}
                 </div>
             </div>
@@ -151,11 +202,21 @@ export default function FinancesLab() {
                         <div className="flex flex-col gap-2">
                             <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Rodzaj Dokumentu</label>
                             <select value={docType} onChange={e => setDocType(e.target.value)} className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5">
-                                <option value="Rachunek za wykonaną usługę">Rachunek Zwykły (Bez VAT)</option>
-                                <option value="Umowa o Dzieło">Umowa o Dzieło z Prawami Autorskimi</option>
-                                <option value="Protokół Zleceniodawczy">Protokół Odbiorczy (zakończenie projektu)</option>
-                                <option value="Faktura na żądanie nabywcy">Faktura (Zwolniona z VAT - limit 240k PLN)</option>
+                                <option value="Faktura (zwolnienie z VAT na podst. art. 113 ust. 1 i 9 ustawy o VAT)">Faktura (zwolnienie z VAT)</option>
+                                <option value="Umowa o Dzieło z przeniesieniem praw autorskich">Umowa o Dzieło z Prawami Autorskimi</option>
+                                <option value="Protokół Zleceniodawczy z przekazaniem">Protokół Odbiorczy (zakończenie projektu)</option>
                             </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-2">
+                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold" title="To determinuje przypisanie do miesiąca ewidencji">Data sprzedaży / dostawy</label>
+                                <input required value={saleDate} onChange={e => setSaleDate(e.target.value)} type="date" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Data wystawienia</label>
+                                <input required value={issueDate} onChange={e => setIssueDate(e.target.value)} type="date" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
+                            </div>
                         </div>
 
                         <div className="flex flex-col gap-2">

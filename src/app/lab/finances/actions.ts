@@ -76,7 +76,7 @@ export async function deleteEwidencja(id: string) {
 
 const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
 
-export async function generateDocument(documentType: string, clientInfo: string, amount: string, description: string) {
+export async function generateDocument(documentType: string, clientInfo: string, amount: string, description: string, saleDate: string, issueDate: string) {
     try {
         const kbPath = path.join(process.cwd(), 'src', 'app', 'lab', 'knowledge', 'nierejestrowana-2026.md')
         let knowledge = ''
@@ -96,13 +96,14 @@ export async function generateDocument(documentType: string, clientInfo: string,
         - Sprzedawca (Wystawca): Mateusz Machoś (WUYO Dobra Grafa)
         - Kwota transakcji (Do zapłaty): ${amount} PLN
         - Opis przedmiotu transakcji: ${description}
-        - Data wystawienia: ${new Date().toLocaleDateString('pl-PL')}
+        - Data wystawienia: ${issueDate}
+        - Data sprzedaży / wykonania usługi: ${saleDate}
         - Miejsce wystawienia: Rzeszów
 
         WYTYCZNE DLA GENERATORA (MUSISZ ICH DOKŁADNIE PRZESTRZEGAĆ):
         1. Zwróć TYLKO I WYŁĄCZNIE "czysty" kod Markdown (bez języka HTML naokoło, to ma być zwykły tekst formatowany na markown) reprezentujący dokument. ZERO WSTĘPÓW typu "Oto Twój rachunek:" ani żadnych podsumowań na końcu. Wynikiem zapytania ma być gotowy, sformatowany obszar wydruku.
         2. Układ dokumentu musi być estetyczny i w pełni profesjonalny:
-           - Rozpocznij od napisania z prawej strony symulowanego nagłówka w Markdown np: \`**Miejscowość:** Rzeszów  \n**Data:** ${new Date().toLocaleDateString('pl-PL')}\`.
+           - Rozpocznij od napisania z prawej strony symulowanego nagłówka w Markdown np: \`**Miejscowość:** Rzeszów  \n**Data wystawienia:** ${issueDate}  \n**Data sprzedaży:** ${saleDate}\`.
            - Duży Nagłówek np. \`# Rachunek nr ... / Umowa ...\`.
            - Sekcja SPRZEDAWCA: Tylko imię i nazwisko (Mateusz Machoś) ze znakiem WUYO (zgodnie z przepisami nie podajemy adresu i PESEL-u).
            - Sekcja NABYWCA: Dane podane przez użytkownika.
@@ -117,7 +118,7 @@ export async function generateDocument(documentType: string, clientInfo: string,
         // Dodaj wpis do ewidencji automatycznie w tle
         await addEwidencja({
             documentType,
-            date: new Date().toISOString().split('T')[0],
+            date: saleDate,
             clientInfo,
             description,
             amount: parseFloat(amount)
