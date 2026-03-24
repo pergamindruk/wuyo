@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Flame } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const packages = [
@@ -9,7 +9,7 @@ export const packages = [
         persona: "Dla freelancerów i rzemieślników, którzy chcą wyglądać profesjonalnie w sieci",
         price: "1 200 zł",
         desc: "Precyzyjne uderzenie. Solidna strona-wizytówka, która buduje zaufanie od pierwszego wejrzenia. Idealny start, by zaistnieć w sieci bez wstydu i kompromisów.",
-        image: "/tworzenie-stron-www-start-v2.webp",
+        image: "/tworzenie-stron-www-start-v3.png",
         imageScale: "scale-100",
         features: [
             "Projekt od zera – nie używam gotowych szablonów, które wyglądają jak tysiąc innych stron.",
@@ -26,7 +26,7 @@ export const packages = [
         persona: "Dla firm, które chcą generować zapytania i skalować ofertę",
         price: "2 900 zł",
         desc: "Twoje centrum dowodzenia w sieci. Projektuję pod konwersję, optymalizuję pod Google i daję Ci konkretne narzędzia, byś mógł realnie skalować swoją ofertę.",
-        image: "/tworzenie-stron-www-rozwoj-v2.webp",
+        image: "/tworzenie-stron-www-rozwoj-v3.png",
         imageScale: "scale-100",
         features: [
             "Strona główna + 5 podstron – masz miejsce na ofertę, cennik i opis tego, co robisz.",
@@ -43,7 +43,7 @@ export const packages = [
         persona: "Dla ambitnych marek, które chcą wyróżnić się kompletnym wizerunkiem",
         price: "4 500 zł",
         desc: "Standard bez kompromisów. Składam Twój wizerunek od fundamentów po najbardziej zaawansowane detale. To propozycja dla graczy, którzy wymagają pełnego wsparcia i klasy światowej.",
-        image: "/tworzenie-stron-www-kombajn-v2.webp",
+        image: "/tworzenie-stron-www-kombajn-v3.png",
         imageScale: "scale-100",
         features: [
             "Kompletny wizerunek – robię logo, dobieram kolory i czcionki. Wszystko spójne i profesjonalne.",
@@ -120,11 +120,14 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
 
             {/* Zakotwiczenie cenowe */}
             <AnimatedSection className="mt-12 text-center max-w-2xl mx-auto">
-                <div className="relative rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-8 py-6 overflow-hidden">
+                <div className="relative rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-6 py-5 md:px-8 md:py-6 overflow-hidden flex flex-col md:flex-row items-center justify-center gap-4">
                     <div className="absolute inset-0 bg-gradient-to-r from-gold/10 via-transparent to-gold/10 pointer-events-none" />
-                    <p className="text-white/80 text-sm md:text-base relative z-10">
+                    <div className="bg-gold/10 p-3 rounded-full relative z-10 shrink-0">
+                        <Flame className="text-gold animate-pulse" size={24} />
+                    </div>
+                    <p className="text-white/80 text-sm md:text-base relative z-10 text-center md:text-left">
                         Za analogiczny projekt agencja wystawia fakturę na{" "}
-                        <span className="text-gold font-bold">8&nbsp;000–15&nbsp;000 zł</span>.
+                        <span className="text-gold font-bold">8&nbsp;000–15&nbsp;000 zł</span>.<br className="hidden md:block" />
                         U&nbsp;Wuja dostajesz ten sam wynik w&nbsp;cenie, która nie boli.
                     </p>
                 </div>
