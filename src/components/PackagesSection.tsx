@@ -19,6 +19,7 @@ export const packages = [
             "Prosty kontakt – intuicyjny formularz i podpięte statystyki (żebyś wiedział, czy to działa).",
         ],
         featured: false,
+        cta: "Zaistniej w sieci",
     },
     {
         name: "Skalowanie",
@@ -35,6 +36,7 @@ export const packages = [
             "Miesiąc wsparcia w cenie – nie zostawiam Cię z tym samego. Przez pierwsze 30 dni pilnuję, żeby wszystko grało.",
         ],
         featured: true,
+        cta: "Zacznij skalować",
     },
     {
         name: "Pełna Marka",
@@ -51,6 +53,7 @@ export const packages = [
             "Priorytet w kontakcie – Twoje sprawy lądują na górze mojej listy. Masz u mnie status VIP.",
         ],
         featured: false,
+        cta: "Buduj pełną markę",
     },
 ];
 
@@ -108,7 +111,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                                 ? 'btn-gold !rounded-full !w-full'
                                 : 'btn-outline !rounded-full !w-full'
                                 }`}>
-                                Wchodzę w to
+                                {pkg.cta}
                             </Link>
                         </div>
                     </AnimatedSection>

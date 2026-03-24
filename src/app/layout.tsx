@@ -11,7 +11,7 @@ export const metadata: Metadata = {
         default: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
         template: "%s | Wuyo – Dobra Grafa",
     },
-    description: "Nowoczesne strony internetowe, identyfikacja wizualna i design premium. Wuyo – robię to dobrze, szybko i z duszą. Sprawdź moje realizacje!",
+    description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł. Termin murowany, cena bez niespodzianek.",
     keywords: ["strony internetowe", "web design", "portfolio", "freelancer", "Next.js", "grafika", "tworzenie stron www", "Rzeszów"],
     authors: [{ name: "Wuyo – Dobra Grafa", url: "https://wuyo.pl" }],
     creator: "Wuyo – Dobra Grafa",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl",
         siteName: "Wuyo – Dobra Grafa",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
-        description: "Nowoczesne strony internetowe, identyfikacja wizualna i design premium. Sprawdź moje realizacje!",
+        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł. Termin murowany, cena bez niespodzianek.",
         images: [
             {
                 url: "/wuyo-dobra-grafa-logo-kolorowe.webp",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
-        description: "Nowoczesne strony internetowe, identyfikacja wizualna i design premium.",
+        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł.",
         images: ["/wuyo-dobra-grafa-logo-kolorowe.webp"],
     },
     robots: {

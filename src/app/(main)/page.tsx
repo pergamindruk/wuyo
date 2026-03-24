@@ -17,32 +17,32 @@ export default function Home() {
     const services = [
         {
             icon: <Palette size={28} />,
-            title: "Logotypy i identyfikacja",
+            title: "Logotyp, który ludzie zapamiętają",
             desc: "Fundament Twojego biznesu. Robię loga, które nie wyglądają jak wygenerowane przez AI czy stworzone w Canva. Konkretny wektor, który ludzie zapamiętają, a Ty możesz użyć wszędzie.",
         },
         {
             icon: <Layout size={28} />,
-            title: "Kompletne strony WWW (od 1000 zł)",
+            title: "Strona, która sprzedaje za Ciebie",
             desc: "Wykodowane od zera na React/Next.js. Od szybkich stron One-Page po większe serwisy. Co to znaczy dla Ciebie? Kuloodporne bezpieczeństwo, techniczne SEO i prędkość, która zachwyca Google.",
         },
         {
             icon: <FileText size={28} />,
-            title: "Materiały drukowane",
+            title: "Druk, który robi wrażenie",
             desc: "Ulotki, katalogi, wizytówki, bannery – ta forma reklamy zawsze działa, postaw na prezencje - Wuyo zaprojektuje, Wuyo wydrukuje :)",
         },
         {
             icon: <Share2 size={28} />,
-            title: "Grafiki na social media",
+            title: "Social media, które zatrzymują scrollowanie",
             desc: "Wjeżdżam na pełnej na Twoje sociale. Karuzele, posty, rolki i miniatury, które zatrzymają scrollowanie i sprawią, że ludzie zaczną klikać.",
         },
         {
             icon: <Box size={28} />,
-            title: "Etykiety i opakowania",
+            title: "Opakowanie, które krzyczy 'kup mnie!'",
             desc: "Produkt musi się sprzedawać już na półce. Projektuję etykiety i opakowania, które krzyczą: 'kup mnie!'. Dobra grafa na pudełku to połowa sukcesu.",
         },
         {
             icon: <Monitor size={28} />,
-            title: "Wsparcie i doradztwo",
+            title: "Darmowa konsultacja, konkretny plan",
             desc: "Czujesz, że Twój wizerunek odstaje od konkurencji, a strona słabo sprzedaje? Przegadajmy to na darmowej konsultacji. Powiem Ci bez owijania w bawełnę co jest do poprawy i ułożę konkretny plan jak to naprawić.",
         },
     ];
@@ -146,6 +146,7 @@ export default function Home() {
                             <p>Działam sam, więc nie uciekam przed Tobą w procedury i nie chowam się za sekretarką. Jak do mnie dzwonisz, to odbieram ja. Jak pytasz, czy coś ma sens – odpowiadam szczerze. Nie bawię się w agencyjne gierki, gdzie jesteś tylko kolejną pozycją na liście do odhaczenia.</p>
                             <p className="text-white/90 font-medium text-lg pt-2">Co z tego masz? Spokój.</p>
                             <p>Zamiast zasypywać Cię trudnymi słówkami, tłumaczę wszystko po ludzku. Moja robota ma po prostu ułatwiać Ci życie. Strona musi być tak zrobiona, żeby klient od razu wiedział, co robisz i jak Ci zapłacić. Koniec filozofii.</p>
+                            <p className="mt-2"><Link href="#portfolio" className="text-gold hover:text-gold-light underline underline-offset-4 transition-colors font-medium">Sprawdź, jak to wygląda w praktyce →</Link></p>
                         </div>
                         
                         <div className="mt-8 mb-10">

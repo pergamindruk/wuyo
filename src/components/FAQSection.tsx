@@ -25,6 +25,10 @@ const faqs = [
     {
         question: "Ile zazwyczaj trwa projekt strony WWW?",
         answer: "Dla One-Page'a lecimy szybko – zwykle wyrabiam się w około tydzień od zebrania materiałów. Dużo zależy od tego, jak szybko dostarczysz mi treści, zdjęcia i jak sprawnie dajesz feedback. Żadnego bujania w chmurach – konkret praca."
+    },
+    {
+        question: "Skąd będę wiedział, na jakim etapie jest mój projekt?",
+        answer: "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie. Jak śledzenie paczki, tylko że działa. Zero zgadywania i pytania \"jak tam moje zlecenie?\"."
     }
 ];
 
