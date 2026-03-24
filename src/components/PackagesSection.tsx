@@ -116,10 +116,15 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
             </div>
 
             {/* Zakotwiczenie cenowe */}
-            <AnimatedSection className="mt-10 text-center">
-                <p className="text-white/30 text-sm max-w-xl mx-auto">
-                    Za analogiczny projekt agencja wystawia fakturę na 8 000–15 000 zł. U&nbsp;Wuja dostajesz ten sam wynik w&nbsp;cenie, która nie boli.
-                </p>
+            <AnimatedSection className="mt-12 text-center max-w-2xl mx-auto">
+                <div className="relative rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-8 py-6 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-gold/10 via-transparent to-gold/10 pointer-events-none" />
+                    <p className="text-white/80 text-sm md:text-base relative z-10">
+                        Za analogiczny projekt agencja wystawia fakturę na{" "}
+                        <span className="text-gold font-bold">8&nbsp;000–15&nbsp;000 zł</span>.
+                        U&nbsp;Wuja dostajesz ten sam wynik w&nbsp;cenie, która nie boli.
+                    </p>
+                </div>
             </AnimatedSection>
 
             {showButton && (

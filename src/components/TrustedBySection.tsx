@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, ShieldCheck, Undo2 } from "lucide-react";
+import { Clock, ShieldCheck, Eye } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import Image from "next/image";
 
@@ -22,9 +22,9 @@ const guarantees = [
         desc: "Kwota, którą Ci podam przed startem, to kwota na fakturze. Zero niespodzianek, zero \"dopłat za poprawki\".",
     },
     {
-        icon: <Undo2 size={28} />,
-        title: "Poprawki w cenie",
-        desc: "Pracuję nad projektem, aż powiesz WOW. Runda poprawek jest wliczona — bo Twoja satysfakcja to moja wizytówka.",
+        icon: <Eye size={28} />,
+        title: "Status realizacji online",
+        desc: "Dostajesz własny panel klienta, w którym na bieżąco widzisz postęp prac nad projektem. Bez zgadywania, bez pytania \"jak tam moje zlecenie?\".",
     },
 ];
 
