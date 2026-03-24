@@ -3,8 +3,8 @@
 import { motion, Variants } from "framer-motion";
 
 export function HeroText() {
-    const line1 = "Przestań straszyć klientów.";
-    const line2 = "Wjeżdża grafa, która sprzedaje";
+    const line1 = "Twoi klienci oceniają Cię w 3 sekundy.";
+    const line2 = "Zadbaj, żeby to co zobaczą, sprzedawało za Ciebie";
 
     const container: Variants = {
         hidden: { opacity: 1 },

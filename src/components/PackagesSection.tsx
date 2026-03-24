@@ -5,7 +5,8 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const packages = [
     {
-        name: "Lokalny Start",
+        name: "Solidny Start",
+        persona: "Dla freelancerów i rzemieślników, którzy chcą wyglądać profesjonalnie w sieci",
         price: "1 200 zł",
         desc: "Precyzyjne uderzenie. Solidna strona-wizytówka, która buduje zaufanie od pierwszego wejrzenia. Idealny start, by zaistnieć w sieci bez wstydu i kompromisów.",
         image: "/tworzenie-stron-www-start-v2.webp",
@@ -20,7 +21,8 @@ export const packages = [
         featured: false,
     },
     {
-        name: "Rozwój",
+        name: "Skalowanie",
+        persona: "Dla firm, które chcą generować zapytania i skalować ofertę",
         price: "2 900 zł",
         desc: "Twoje centrum dowodzenia w sieci. Projektuję pod konwersję, optymalizuję pod Google i daję Ci konkretne narzędzia, byś mógł realnie skalować swoją ofertę.",
         image: "/tworzenie-stron-www-rozwoj-v2.webp",
@@ -35,7 +37,8 @@ export const packages = [
         featured: true,
     },
     {
-        name: "Kombajn",
+        name: "Pełna Marka",
+        persona: "Dla ambitnych marek, które chcą wyróżnić się kompletnym wizerunkiem",
         price: "4 500 zł",
         desc: "Standard bez kompromisów. Składam Twój wizerunek od fundamentów po najbardziej zaawansowane detale. To propozycja dla graczy, którzy wymagają pełnego wsparcia i klasy światowej.",
         image: "/tworzenie-stron-www-kombajn-v2.webp",
@@ -84,7 +87,13 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                             <div className="flex items-baseline gap-3 mb-4">
                                 <div className="text-3xl font-bold text-white">{pkg.price}</div>
                             </div>
-                            <p className="text-white/50 text-sm leading-relaxed mb-8">{pkg.desc}</p>
+                            <p className="text-white/50 text-sm leading-relaxed mb-4">{pkg.desc}</p>
+                            {pkg.persona && (
+                                <p className="text-xs text-gold/70 font-medium mb-8 flex items-center gap-1.5">
+                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold/50" />
+                                    {pkg.persona}
+                                </p>
+                            )}
 
                             <ul className="space-y-3 mb-10 flex-grow">
                                 {pkg.features.map((feat, idx) => (
@@ -106,8 +115,15 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                 ))}
             </div>
 
+            {/* Zakotwiczenie cenowe */}
+            <AnimatedSection className="mt-10 text-center">
+                <p className="text-white/30 text-sm max-w-xl mx-auto">
+                    Za analogiczny projekt agencja wystawia fakturę na 8 000–15 000 zł. U&nbsp;Wuja dostajesz ten sam wynik w&nbsp;cenie, która nie boli.
+                </p>
+            </AnimatedSection>
+
             {showButton && (
-                <AnimatedSection className="mt-16 text-center">
+                <AnimatedSection className="mt-10 text-center">
                     <Link href="/cennik" className="btn-gold px-12 py-5 inline-flex items-center gap-2 font-bold text-lg text-navy uppercase tracking-widest shadow-[0_0_30px_rgba(255,235,82,0.4)] hover:shadow-[0_0_50px_rgba(255,235,82,0.6)] transition-all rounded-full hover:scale-105 active:scale-95">
                         Zobacz pełny Cennik
                     </Link>

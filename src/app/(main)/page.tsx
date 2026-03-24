@@ -61,7 +61,7 @@ export default function Home() {
                 <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true}>
                     <HeroText />
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
-                        Bierz w pakiecie i oszczędzaj. Grafika skrojona pod twoją markę.
+                        Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                         <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
