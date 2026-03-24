@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Youtube, Instagram, MessageCircle, Mail } from "lucide-react";
+import { Youtube, Instagram, Facebook, MessageCircle, Mail } from "lucide-react";
 
 export function Footer() {
     return (
@@ -30,8 +30,9 @@ export function Footer() {
                         <div>
                             <h4 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Znajdziesz mnie</h4>
                             <ul className="space-y-3 text-sm flex flex-col gap-2">
-                                <li><Link href="#" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Youtube size={18} className="group-hover:text-red-500 transition-colors" /> YouTube</Link></li>
-                                <li><Link href="#" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Instagram size={18} className="group-hover:text-pink-500 transition-colors" /> Instagram</Link></li>
+                                <li><Link href="https://www.youtube.com/@wuyo.dobra.grafa" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Youtube size={18} className="group-hover:text-red-500 transition-colors" /> YouTube</Link></li>
+                                <li><Link href="https://www.instagram.com/wuyo.dobra.grafa/" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Instagram size={18} className="group-hover:text-pink-500 transition-colors" /> Instagram</Link></li>
+                                <li><Link href="https://www.facebook.com/wuyo.dobra.grafa" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Facebook size={18} className="group-hover:text-blue-500 transition-colors" /> Facebook</Link></li>
                             </ul>
                         </div>
                         <div>

@@ -89,27 +89,27 @@ export function Navbar() {
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
                     <nav aria-label="Nawigacja główna" className="flex items-center gap-6 lg:gap-8 text-sm font-medium text-white/70">
-                        <a href="/" onClick={handleHomeClick} className="relative group transition-colors hover:text-white">
+                        <a href="/" onClick={handleHomeClick} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Główna
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="relative group transition-colors hover:text-white">
+                        <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Portfolio
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="relative group transition-colors hover:text-white">
+                        <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             O mnie
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <Link href="/cennik" className="relative group transition-colors hover:text-white">
+                        <Link href="/cennik" className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Cennik
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="relative group transition-colors hover:text-white">
+                        <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Oferta
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
-                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="relative group transition-colors hover:text-white">
+                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Kontakt
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
