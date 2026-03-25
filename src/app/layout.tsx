@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Syne } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], variable: "--font-syne" });
@@ -77,6 +79,8 @@ export default function RootLayout({
                     Przejdź do treści
                 </a>
                 {children}
+                <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
