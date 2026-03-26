@@ -82,7 +82,7 @@ export default function PricingPage() {
                             <p className="eyebrow mb-2">cennik</p>
                             <h1 className="text-3xl md:text-5xl font-bold text-white">Gramy w <span className="text-gold">otwarte karty</span>.</h1>
                             <p className="text-white/50 mt-3 max-w-xl text-sm md:text-base">
-                                Zero ukrytych kosztów. Klikasz to co potrzebujesz – i lecimy z tematem. Ceny netto.
+                                Zero niespodzianek na rachunku. Klikasz to, co potrzebujesz – i lecimy z tematem. Podane kwoty to ceny brutto (nie jestem płatnikiem VAT, wystawiam rachunek / fakturę bez VAT).
                             </p>
                         </div>
                         <Link href="/#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shrink-0 self-start md:self-auto shadow-[0_0_25px_rgba(255,235,82,0.25)]">
@@ -128,6 +128,7 @@ export default function PricingPage() {
                     <div className="md:col-span-2 bg-white/3 rounded-2xl border border-white/8 p-6">
                         <h3 className="text-white font-bold mb-3 text-base">Kilka słów o wycenach 📌</h3>
                         <ul className="space-y-2 text-white/50 text-sm">
+                            <li>• <strong className="text-white/80">Wszystkie podane kwoty to ceny brutto.</strong> Nie doliczam VAT-u, więc na rachunku nie będzie niespodzianek.</li>
                             <li>• Podane kwoty to <strong className="text-white/80">dolne widełki</strong> — finalny koszt zależy od zakresu i czasu realizacji.</li>
                             <li>• Przy <strong className="text-white/80">pakietach łączonych</strong> (np. logo + strona) zawsze staram się wyjść naprzeciw z rabatem.</li>
                             <li>• Każdą wycenę wysyłam <strong className="text-white/80">w ciągu 24 h</strong> od przesłania briefu – bez zbędnych formalności.</li>

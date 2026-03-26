@@ -64,6 +64,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                 <p className="eyebrow mb-4">Proste zasady, jasne ceny.</p>
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Wybierz pakiet, który pasuje do tego, co teraz robisz.</h2>
                 <p className="text-white/50 max-w-xl mx-auto">Nie naciągam na funkcje, których nie potrzebujesz – dostajesz solidny kod i super szybką stronę 🙂</p>
+                <p className="text-white/40 max-w-xl mx-auto mt-2 text-sm">* Wszystkie pakiety to ceny brutto (wystawiam rachunek / fakturę bez VAT).</p>
             </AnimatedSection>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch relative z-10">
