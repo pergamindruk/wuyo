@@ -222,7 +222,7 @@ export async function POST(req: NextRequest) {
 
         // Dodaj do Mailerlite
         try {
-            const mlRes = await fetch('https://api.mailerlite.com/api/subscribers', {
+            const mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
