@@ -75,14 +75,14 @@ export default function Home() {
                     {/* Social proof */}
                     <div className="flex items-center justify-center gap-4 sm:gap-6 mt-10 text-white/60 text-sm flex-wrap">
                         <span className="flex items-center gap-1.5">
-                            <span className="text-gold font-bold text-base">13+</span> zrealizowanych projektów
+                            <span className="text-gold font-bold text-base">156+</span> zrealizowanych projektów
                         </span>
                         <span className="hidden sm:block w-px h-4 bg-white/20" />
                         <span className="flex items-center gap-1.5">
-                            <span className="text-gold font-bold text-base">5+</span> branż
+                            <span className="text-gold font-bold text-base">46</span> branż
                         </span>
                         <span className="hidden sm:block w-px h-4 bg-white/20" />
-                        <span>Rzeszów i cała Polska</span>
+                        <span>Polska&nbsp;&amp;&nbsp;zagranica</span>
                     </div>
                 </AnimatedSection>
 
