@@ -19,7 +19,7 @@ const testimonials = [
     },
     {
         quote:
-            "Strona internetowa idealnie wpasowana w moje gusta :). Kazdy pyta mnie, kto ogarnial Ci stronę - polecam z czystym sumieniem",
+            "Strona internetowa idealnie wpasowana w moje gusta :). Każdy pyta mnie, kto ogarniał Ci stronę — polecam z czystym sumieniem",
         name: "Adam J.",
         role: "Detailer",
         company: "Czysta-Gablota AUTOSPA",
@@ -37,7 +37,7 @@ const testimonials = [
     },
     {
         quote:
-            "Komunikacja na poziomie — terminowo, konkretnie, z głową. Pierwsza propozycja wizytowki juz mi się spodobała",
+            "Komunikacja na poziomie — terminowo, konkretnie, z głową. Pierwsza propozycja wizytówki już mi się spodobała",
         name: "Marcin D.",
         role: "Właściciel",
         company: "Firma budowlana",

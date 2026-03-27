@@ -97,6 +97,67 @@ function buildHtml(d: BriefData): string {
     </html>`;
 }
 
+function buildAutoReply(d: BriefData): string {
+    const firstName = d.name?.split(" ")[0] ?? "Hej";
+    const serviceMap: Record<string, string> = {
+        branding: "logo i identyfikację wizualną",
+        web: "stronę internetową",
+        quick: "projekt",
+    };
+    const service = serviceMap[d.path] ?? "projekt";
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <body style="margin:0; padding:0; background:#f4f4f4; font-family: 'Segoe UI', Arial, sans-serif;">
+        <div style="max-width:560px; margin:30px auto; background:#111827; border-radius:16px; overflow:hidden; border:1px solid #1f2937;">
+
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #0f172a 100%); padding: 36px 40px; text-align:center;">
+                <p style="color: #d99e28; text-transform: uppercase; letter-spacing: 3px; font-size: 11px; margin: 0 0 10px 0; font-weight:700;">WUYO – Dobra Grafa</p>
+                <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight:800; line-height:1.3;">Brief dotarł! 🎉</h1>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 36px 40px;">
+                <p style="color: #e2e8f0; font-size: 16px; line-height: 1.7; margin: 0 0 16px 0;">
+                    Hej <strong style="color:#d99e28;">${firstName}</strong>!
+                </p>
+                <p style="color: #94a3b8; font-size: 15px; line-height: 1.8; margin: 0 0 16px 0;">
+                    Dostałem Twoje zapytanie o <strong style="color:#e2e8f0;">${service}</strong>. Przejrzę je dzisiaj i odezwę się z wyceną oraz propozycją kolejnych kroków.
+                </p>
+                <p style="color: #94a3b8; font-size: 15px; line-height: 1.8; margin: 0 0 28px 0;">
+                    Zazwyczaj odpowiadam w ciągu <strong style="color:#d99e28;">kilku godzin</strong>, najpóźniej do następnego ranka.
+                </p>
+
+                <!-- CTA box -->
+                <div style="background:#1e293b; border:1px solid #d99e28; border-radius:12px; padding:20px 24px; margin-bottom:28px;">
+                    <p style="color:#d99e28; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:0 0 6px 0;">Masz pytanie na już?</p>
+                    <p style="color:#e2e8f0; font-size:14px; margin:0 0 12px 0;">Napisz na WhatsApp — odpisuję szybciej niż na maila.</p>
+                    <a href="https://wa.me/48725182053" style="display:inline-block; background:#d99e28; color:#000; padding:10px 24px; border-radius:999px; text-decoration:none; font-weight:700; font-size:14px;">
+                        📱 WhatsApp: 725 182 053
+                    </a>
+                </div>
+
+                <!-- Footer note -->
+                <p style="color:#475569; font-size:13px; line-height:1.7; margin:0;">
+                    Do zobaczenia wkrótce!<br/>
+                    <strong style="color:#94a3b8;">Mateusz</strong> z WUYO
+                </p>
+            </div>
+
+            <!-- Bottom bar -->
+            <div style="padding:16px 40px; border-top:1px solid #1e293b; text-align:center;">
+                <p style="color:#374151; font-size:11px; margin:0;">
+                    <a href="https://wuyo.pl" style="color:#d99e28; text-decoration:none;">wuyo.pl</a>
+                    &nbsp;·&nbsp; Rzeszów & cała Polska
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>`;
+}
+
 export async function POST(req: NextRequest) {
     try {
         const data: BriefData = await req.json();
@@ -142,12 +203,21 @@ export async function POST(req: NextRequest) {
 
         const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
 
+        // Email do Mateusza
         await transporter.sendMail({
             from: `"Wuyo Brief" <${fromEmail}>`,
             to: "kontakt@wuyo.pl",
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data),
+        });
+
+        // Auto-reply do klienta
+        await transporter.sendMail({
+            from: `"Mateusz z WUYO" <${fromEmail}>`,
+            to: data.email,
+            subject: `Cześć ${data.name?.split(" ")[0] ?? ""}! Dostałem Twój brief 👋`,
+            html: buildAutoReply(data),
         });
 
         return NextResponse.json({ success: true });
