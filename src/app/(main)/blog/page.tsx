@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "identyfikacja-wizualna-firmy",
+        title: "Identyfikacja wizualna firmy — czym jest i ile kosztuje w 2026?",
+        excerpt: "Logo to dopiero początek. Tłumaczę czym jest identyfikacja wizualna, co powinna zawierać (z listą must-have), dlaczego mała firma potrzebuje jej bardziej niż korporacja — i ile to naprawdę kosztuje.",
+        date: "2026-03-27",
+        readTime: "8 min",
+        category: "Logo & Branding",
+    },
+    {
         slug: "strona-one-page-czy-multi-page",
         title: "Strona one-page czy multi-page? Konkretna odpowiedź dla Twojej firmy",
         excerpt: "One-page czy multi-page — każdy projektant powie \"to zależy\". Ja mówię od czego zależy: porównuję SEO, konwersję i koszty, i daję 5-pytaniowy test żebyś wiedział co wybrać.",
