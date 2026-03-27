@@ -3,6 +3,10 @@ import { Inter, Syne } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
+
+// Wstaw swój GA4 Measurement ID z https://analytics.google.com → Admin → Data Streams
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], variable: "--font-syne" });
@@ -10,8 +14,8 @@ const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600
 export const metadata: Metadata = {
     metadataBase: new URL("https://wuyo.pl"),
     title: {
-        default: "WUYO | Tworzenie Stron WWW & Identyfikacja Wizualna – Rzeszów i cała Polska",
-        template: "%s | WUYO – Tworzenie Stron WWW & Grafika",
+        default: "WUYO – Logo, Strony WWW & Grafika | Rzeszów",
+        template: "%s | WUYO – Dobra Grafa",
     },
     description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 1 200 zł.",
     keywords: ["tworzenie stron internetowych", "projektant graficzny", "identyfikacja wizualna", "logo design", "strony www Rzeszów", "web design Polska", "Next.js", "grafika reklamowa", "strony internetowe dla firm"],
@@ -113,6 +117,17 @@ export default function RootLayout({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
+                {GA_ID && (
+                    <>
+                        <Script
+                            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+                            strategy="afterInteractive"
+                        />
+                        <Script id="ga4-init" strategy="afterInteractive">
+                            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+                        </Script>
+                    </>
+                )}
             </head>
             <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Skip to content – ruch klawiaturowy (WCAG) */}

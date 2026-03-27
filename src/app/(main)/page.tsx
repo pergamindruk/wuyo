@@ -13,6 +13,61 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
 
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Ile to wszystko będzie kosztować?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gram w otwarte karty. Najważniejsze pakiety masz w Cenniku. Jeśli potrzebujesz czegoś nietypowego, napisz maila — wycenię dokładnie co do złotówki przed startem prac, bez niespodzianek na końcu.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Jak wygląda rozliczenie zapłaty?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Standardowo dzielimy sprawę na pół: 50% zaliczki przed otwarciem programów graficznych i 50% po zakończeniu projektu.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Co jeśli projekt mi nie wejdzie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zanim usiądę do projektowania, robimy solidny brief. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę — pracuję aż powiesz WOW!",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy dostanę pliki edytowalne i źródłowe?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak. Przekazuję wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Ile trwa projekt strony WWW?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dla strony One-Page zazwyczaj tydzień od zebrania materiałów. Dużo zależy od szybkości dostarczenia treści i feedbacku.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Skąd będę wiedział, na jakim etapie jest mój projekt?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie.",
+            },
+        },
+    ],
+};
+
 export default function Home() {
     const services = [
         {
@@ -51,6 +106,10 @@ export default function Home() {
 
     return (
         <main className="flex-1 w-full">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
             <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
