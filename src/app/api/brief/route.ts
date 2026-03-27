@@ -220,6 +220,28 @@ export async function POST(req: NextRequest) {
             html: buildAutoReply(data),
         });
 
+        // Dodaj do Mailerlite
+        try {
+            const mlRes = await fetch('https://api.mailerlite.com/api/subscribers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.MAILERLITE_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    fields: { name: data.name },
+                    groups: [process.env.MAILERLITE_GROUP_ID],
+                }),
+            });
+            if (!mlRes.ok) {
+                const mlErr = await mlRes.text();
+                console.error('Mailerlite error:', mlErr);
+            }
+        } catch (mlErr) {
+            console.error('Mailerlite fetch error:', mlErr);
+        }
+
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Brief API error:", error);
