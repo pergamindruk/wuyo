@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "jak-wybrac-projektanta-logo",
+        title: "Jak wybrać projektanta logo? 8 pytań zanim zapłacisz",
+        excerpt: "Rynek projektantów logo pełen jest szablonów i Canvy. Podaję Ci konkretną checklistę — 8 pytań które w 10 minut pokażą czy masz do czynienia z profesjonalistą czy z amatorem.",
+        date: "2026-03-27",
+        readTime: "7 min",
+        category: "Logo & Branding",
+    },
+    {
         slug: "identyfikacja-wizualna-firmy",
         title: "Identyfikacja wizualna firmy — czym jest i ile kosztuje w 2026?",
         excerpt: "Logo to dopiero początek. Tłumaczę czym jest identyfikacja wizualna, co powinna zawierać (z listą must-have), dlaczego mała firma potrzebuje jej bardziej niż korporacja — i ile to naprawdę kosztuje.",
