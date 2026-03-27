@@ -10,25 +10,25 @@ import { Quote } from "lucide-react";
 const testimonials = [
     {
         quote:
-            "Mateusz stworzył logo, które dokładnie odzwierciedla charakter mojej restauracji. Klienci często pytają o autora — wizytówka robiła swoją robotę jeszcze przed otwarciem.",
-        name: "Anna K.",
-        role: "Właścicielka",
-        company: "Restauracja — Rzeszów",
+            "Mateusz stworzył logo, które dokładnie odzwierciedla charakter mojej firmy. Polecam, trafia w gusta",
+        name: "Mirek K.",
+        role: "Właściciel",
+        company: "Firma Narzędziowa — Kraków",
         service: "Logo & Identyfikacja",
         // UZUPEŁNIJ: zmień na prawdziwe imię/firmę/cytat
     },
     {
         quote:
-            "Strona internetowa zaczęła generować leady już w pierwszym tygodniu po launchu. Inwestycja zwróciła się w dwa miesiące. Polecam każdemu, kto traktuje stronę poważnie.",
-        name: "Tomasz W.",
-        role: "CEO",
-        company: "Firma B2B — Podkarpacie",
+            "Strona internetowa idealnie wpasowana w moje gusta :). Kazdy pyta mnie, kto ogarnial Ci stronę - polecam z czystym sumieniem",
+        name: "Adam J.",
+        role: "Detailer",
+        company: "Czysta-Gablota AUTOSPA",
         service: "Strona WWW",
         // UZUPEŁNIJ: zmień na prawdziwe imię/firmę/cytat
     },
     {
         quote:
-            "Pełen profesjonalizm i zero lania wody. Dostałem pełen pakiet plików wektorowych, book marki i brand guidelines. Nie spodziewałem się aż tyle za tę cenę.",
+            "Pełen profesjonalizm. Dostałem pełen pakiet plików wektorowych, book marki i brand guidelines. Nie spodziewałem się aż tyle za tę cenę.",
         name: "Karolina M.",
         role: "Właścicielka",
         company: "Butik — Rzeszów",
@@ -37,11 +37,11 @@ const testimonials = [
     },
     {
         quote:
-            "Komunikacja na poziomie — terminowo, konkretnie, z głową. Logo spodobało się od pierwszego szkicu. Współpracujemy już przy kolejnych projektach.",
+            "Komunikacja na poziomie — terminowo, konkretnie, z głową. Pierwsza propozycja wizytowki juz mi się spodobała",
         name: "Marcin D.",
-        role: "Founder",
-        company: "Startup Tech — Polska",
-        service: "Logo & Branding",
+        role: "Właściciel",
+        company: "Firma budowlana",
+        service: "Wizytówka",
         // UZUPEŁNIJ: zmień na prawdziwe imię/firmę/cytat
     },
 ];
