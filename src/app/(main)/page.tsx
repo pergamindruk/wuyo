@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Sparkles, ChevronDown } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
 
@@ -274,6 +275,9 @@ export default function Home() {
                     </AnimatedSection>
                 </div>
             </section>
+
+            {/* ═══════════════════════ OPINIE ═══════════════════════ */}
+            <TestimonialsSection />
 
             {/* ═══════════════════════ KONTAKT / BRIEF ═══════════════════════ */}
             <ContactBrief />

@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "jak-napisac-brief-dla-projektanta",
+        title: "Jak napisać brief dla projektanta graficznego? Gotowy szablon 2026",
+        excerpt: "Brief to różnica między projektem, który trafił w dziesiątkę za pierwszym razem, a projektem, który przerabiasz cztery razy. Kompletna lista pytań + 7 błędów których unikać.",
+        date: "2026-03-27",
+        readTime: "8 min",
+        category: "Logo & Branding",
+    },
+    {
         slug: "jak-stworzyc-strone-internetowa-dla-firmy",
         title: "Jak stworzyć stronę internetową dla firmy? Kompletny przewodnik 2026",
         excerpt: "3 sposoby tworzenia strony (Wix, WordPress, Next.js), kiedy każdy ma sens, ile kosztują — i jak wybrać wykonawcę, który przyniesie Ci rzeczywisty zwrot z inwestycji.",

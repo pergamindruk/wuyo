@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, ArrowRight, Layers, FileText, Palette, Type } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 
 export const metadata: Metadata = {
     title: "Projektowanie Logo dla Firm | WUYO – Rzeszów i cała Polska",
@@ -342,6 +343,9 @@ export default function LogoPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Opinie */}
+            <TestimonialsSection />
 
             {/* Blog CTA */}
             <section className="py-16 px-6 md:px-12">

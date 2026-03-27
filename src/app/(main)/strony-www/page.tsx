@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, ArrowRight, Zap, Shield, Search, Smartphone } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 
 export const metadata: Metadata = {
     title: "Tworzenie Stron Internetowych dla Firm | WUYO – Rzeszów",
@@ -256,7 +257,7 @@ export default function StronyWwwPage() {
                                         {[
                                             { c: "Czas ładowania", a: "< 1s", b: "3–8s (zależy od pluginów)" },
                                             { c: "PageSpeed score", a: "90–100/100", b: "40–70/100 typowo" },
-                                            { c: "Bezpieczeństwo", a: "Brak backendu = brak atakó", b: "Cotygodniowe aktualizacje pluginów" },
+                                            { c: "Bezpieczeństwo", a: "Brak backendu = brak ataków", b: "Cotygodniowe aktualizacje pluginów" },
                                             { c: "SEO", a: "Wbudowane, spójne", b: "Plugin Yoast — zależy od konfiguracji" },
                                             { c: "Koszty utrzymania", a: "Hosting Vercel ~0 zł/mies.", b: "Hosting + SSL + domeny + pluginy premium" },
                                             { c: "Awarie / downtime", a: "Minimalne", b: "Aktualizacja pluginu może posypać stronę" },
@@ -365,6 +366,9 @@ export default function StronyWwwPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Opinie */}
+            <TestimonialsSection />
 
             {/* Blog CTA */}
             <section className="py-16 px-6 md:px-12">

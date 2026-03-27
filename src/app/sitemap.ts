@@ -77,6 +77,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
+            url: `${baseUrl}/blog/jak-napisac-brief-dla-projektanta`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.9,
+        },
+        {
             url: `${baseUrl}/polityka-prywatnosci`,
             lastModified: new Date(),
             changeFrequency: "yearly",

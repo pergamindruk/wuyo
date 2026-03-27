@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Spotlight } from "@/components/ui/spotlight";
 import { ArrowRight, CheckCircle, AlertCircle, Zap, DollarSign } from "lucide-react";
@@ -83,7 +82,7 @@ const faqSchema = {
       name: "Jak wybrać wykonawcę do stworzenia strony?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Sprawdź portfolio, przeczytaj recenzje, zapytaj o doświadczenie z Twoją branżą. Kluczowe: jasna umowa, harmonogram, forma wsparcia po lunch.",
+        text: "Sprawdź portfolio, przeczytaj recenzje, zapytaj o doświadczenie z Twoją branżą. Kluczowe: jasna umowa, harmonogram, forma wsparcia po launchu.",
       },
     },
     {
@@ -91,7 +90,7 @@ const faqSchema = {
       name: "Czy potrzebuję domeny i hostingu oprócz tworzenia strony?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tak. Domena (np. imienazwiska.pl): ~40-50 zł/rok. Hosting zależy od platformy: Wix/Tilda mają hosting w cenie, WordPress wymaga separate hostingu (~30-200 zł/mies).",
+        text: "Tak. Domena (np. imienazwiska.pl): ~40-50 zł/rok. Hosting zależy od platformy: Wix/Tilda mają hosting w cenie, WordPress wymaga osobnego hostingu (~30-200 zł/mies).",
       },
     },
   ],
@@ -143,7 +142,7 @@ export default function Page() {
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="bg-navy p-4 rounded-lg border border-gold/20">
               <div className="font-bold text-gold mb-2">1. Konstruktor (Wix, Tilda)</div>
-              <p className="text-white/60 text-sm">Najszybciej, najtaniej, minimal wiedzy technicznej</p>
+              <p className="text-white/60 text-sm">Najszybciej, najtaniej, minimum wiedzy technicznej</p>
             </div>
             <div className="bg-navy p-4 rounded-lg border border-gold/20">
               <div className="font-bold text-gold mb-2">2. WordPress</div>
@@ -219,7 +218,7 @@ export default function Page() {
                 <li className="flex gap-3">
                   <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-1" />
                   <span className="text-white/80">
-                    <strong>SEO słabsze:</strong> Zwykle gorsze optimizacje niż dedicated strony
+                    <strong>SEO słabsze:</strong> Zwykle gorsze optymalizacje niż strony dedykowane
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -231,14 +230,14 @@ export default function Page() {
                 <li className="flex gap-3">
                   <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-1" />
                   <span className="text-white/80">
-                    <strong>Performa:</strong> Stroma się ładuje wolniej (bloat)
+                    <strong>Performa:</strong> Strona się ładuje wolniej (bloat)
                   </span>
                 </li>
               </ul>
             </div>
 
             <p className="text-white/60 text-sm italic border-l-2 border-gold/40 pl-4">
-              <strong>Dla kogo?</strong> Startupem z mikro budżetem, portfolio artysty, wizytówka dla
+              <strong>Dla kogo?</strong> Startupy z mikro budżetem, portfolio artysty, wizytówka dla
               lokalnej firmy, landing page na kampanię.
             </p>
           </AnimatedSection>
@@ -269,7 +268,7 @@ export default function Page() {
                   </li>
                   <li className="flex gap-2 text-white/80">
                     <CheckCircle size={16} className="text-gold flex-shrink-0 mt-1" />
-                    <span>Huge ecosystem — 60k+ pluginów</span>
+                    <span>Ogromny ekosystem — 60k+ pluginów</span>
                   </li>
                   <li className="flex gap-2 text-white/80">
                     <CheckCircle size={16} className="text-gold flex-shrink-0 mt-1" />
@@ -295,7 +294,7 @@ export default function Page() {
                   </li>
                   <li className="flex gap-2 text-white/80">
                     <AlertCircle size={16} className="text-red-400 flex-shrink-0 mt-1" />
-                    <span>Zagrożenie bezpieczeństwa (nieostrożny plugin = hak)</span>
+                    <span>Zagrożenie bezpieczeństwa (nieostrożny plugin = atak)</span>
                   </li>
                   <li className="flex gap-2 text-white/80">
                     <AlertCircle size={16} className="text-red-400 flex-shrink-0 mt-1" />
@@ -382,7 +381,7 @@ export default function Page() {
                   <li className="flex gap-3">
                     <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-1" />
                     <span className="text-white/80">
-                      <strong>Utrzymanie:</strong> Potrzebujesz deweloper na telefon (gotowe wsparcie)
+                      <strong>Utrzymanie:</strong> Potrzebujesz dewelopera dostępnego na telefon
                     </span>
                   </li>
                   <li className="flex gap-3">
@@ -401,8 +400,8 @@ export default function Page() {
                 <h3 className="text-lg font-bold text-white">Kiedy Next.js ma sens dla Twojej firmy?</h3>
               </div>
               <ul className="space-y-2 text-white/80">
-                <li>✓ Planujesz skalowanie (chcesz organicznie rośnie)</li>
-                <li>✓ Konwersja to twój #1 KPI (każdy 1% = duża kasa)</li>
+                <li>✓ Planujesz skalowanie (chcesz organicznie rosnąć)</li>
+                <li>✓ Konwersja to Twój #1 KPI (każdy 1% = duża kasa)</li>
                 <li>✓ Branża ultra-konkurencyjna (potrzebujesz się wyróżniać)</li>
                 <li>✓ Masz budżet &gt;2 500 zł na początek + gotowość na utrzymanie</li>
                 <li>✓ Chcesz stronę, która będzie Ci pracować przez 5+ lat</li>
@@ -410,8 +409,8 @@ export default function Page() {
             </div>
 
             <p className="text-white/60 text-sm italic border-l-2 border-gold/40 pl-4">
-              <strong>Dla kogo?</strong> Agencjach, high-ticket usługach (coaching, consulting, design), SaaS,
-              e-commerce premium, firmy z ambicjami do 100k/mies organicznie.
+              <strong>Dla kogo?</strong> Agencje, usługi high-ticket (coaching, consulting, design), SaaS,
+              e-commerce premium, firmy z ambicjami na wzrost organiczny.
             </p>
           </AnimatedSection>
         </div>
@@ -589,7 +588,7 @@ export default function Page() {
                 },
                 {
                   q: "3. Co jest w cenie? Co to dodatkowe?",
-                  a: "Żaden\"zaskoczony\" koszt. Strona powinna mieć fixed price albo jasny scope zmian.",
+                  a: "Żaden \"zaskoczony\" koszt. Strona powinna mieć stałą cenę albo jasno określony zakres zmian.",
                 },
                 {
                   q: "4. Czy dostaję wsparcie po launchingu? Na ile?",
@@ -618,7 +617,7 @@ export default function Page() {
                 <li>✗ Obiecuje „ranking #1 w Google za 3 miesiące"</li>
                 <li>✗ Brak jasnego timescale — \"gotowe jak gotowe\"</li>
                 <li>✗ Komunikacja słaba — brak odpowiedzi w 24h</li>
-                <li>✗ Nie pyta o Twoim biznesie, od razu chce kod / kreator</li>
+                <li>✗ Nie pyta o Twoim biznesie — od razu chce startować bez analizy</li>
                 <li>✗ Nie podpisuje umowy</li>
               </ul>
             </div>
@@ -760,7 +759,7 @@ export default function Page() {
               },
               {
                 q: "Ile kosztuje domena i hosting poza tworzeniem strony?",
-                a: "Domena (~imienazwiska.pl): ~40-50 zł/rok. Hosting: Wix/Tilda mają hosting w cenie, WordPress wymaga separate hostingu (~30-200 zł/mies).",
+                a: "Domena (~imienazwiska.pl): ~40-50 zł/rok. Hosting: Wix/Tilda mają hosting w cenie, WordPress wymaga osobnego hostingu (~30-200 zł/mies).",
               },
             ].map((item, idx) => (
               <details
