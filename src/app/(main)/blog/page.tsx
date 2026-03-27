@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "jak-stworzyc-strone-internetowa-dla-firmy",
+        title: "Jak stworzyć stronę internetową dla firmy? Kompletny przewodnik 2026",
+        excerpt: "3 sposoby tworzenia strony (Wix, WordPress, Next.js), kiedy każdy ma sens, ile kosztują — i jak wybrać wykonawcę, który przyniesie Ci rzeczywisty zwrot z inwestycji.",
+        date: "2026-03-27",
+        readTime: "12 min",
+        category: "Strony WWW",
+    },
+    {
         slug: "jak-wybrac-projektanta-logo",
         title: "Jak wybrać projektanta logo? 8 pytań zanim zapłacisz",
         excerpt: "Rynek projektantów logo pełen jest szablonów i Canvy. Podaję Ci konkretną checklistę — 8 pytań które w 10 minut pokażą czy masz do czynienia z profesjonalistą czy z amatorem.",
