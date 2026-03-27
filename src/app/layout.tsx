@@ -10,11 +10,11 @@ const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600
 export const metadata: Metadata = {
     metadataBase: new URL("https://wuyo.pl"),
     title: {
-        default: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
-        template: "%s | Wuyo – Dobra Grafa",
+        default: "WUYO | Tworzenie Stron WWW & Identyfikacja Wizualna – Rzeszów i cała Polska",
+        template: "%s | WUYO – Tworzenie Stron WWW & Grafika",
     },
-    description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł. Termin murowany, cena bez niespodzianek.",
-    keywords: ["strony internetowe", "web design", "portfolio", "freelancer", "Next.js", "grafika", "tworzenie stron www", "Rzeszów"],
+    description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 1 200 zł.",
+    keywords: ["tworzenie stron internetowych", "projektant graficzny", "identyfikacja wizualna", "logo design", "strony www Rzeszów", "web design Polska", "Next.js", "grafika reklamowa", "strony internetowe dla firm"],
     authors: [{ name: "Wuyo – Dobra Grafa", url: "https://wuyo.pl" }],
     creator: "Wuyo – Dobra Grafa",
     manifest: "/site.webmanifest",

@@ -19,7 +19,7 @@ export const packages = [
             "Prosty kontakt – intuicyjny formularz i podpięte statystyki (żebyś wiedział, czy to działa).",
         ],
         featured: false,
-        cta: "Zaistniej w sieci",
+        cta: "Wyróżnij się od konkurencji",
     },
     {
         name: "Skalowanie",

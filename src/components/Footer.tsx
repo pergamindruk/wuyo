@@ -67,7 +67,6 @@ export function Footer() {
                         <Image src="/ikonki/ikona-adobe-indesign.webp" alt="InDesign" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
                         <Image src="/ikonki/ikona-figma.webp" alt="Figma" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
                         <Image src="/ikonki/ikona-capcut.webp" alt="CapCut" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
-                        <Image src="/ikonki/ikona-canva.webp" alt="Canva" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
                     </div>
 
                     <div className="flex gap-6">
