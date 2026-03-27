@@ -41,6 +41,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
+            url: `${baseUrl}/blog/strona-one-page-czy-multi-page`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.9,
+        },
+        {
             url: `${baseUrl}/polityka-prywatnosci`,
             lastModified: new Date(),
             changeFrequency: "yearly",

@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "strona-one-page-czy-multi-page",
+        title: "Strona one-page czy multi-page? Konkretna odpowiedź dla Twojej firmy",
+        excerpt: "One-page czy multi-page — każdy projektant powie \"to zależy\". Ja mówię od czego zależy: porównuję SEO, konwersję i koszty, i daję 5-pytaniowy test żebyś wiedział co wybrać.",
+        date: "2026-03-27",
+        readTime: "7 min",
+        category: "Strony WWW",
+    },
+    {
         slug: "ile-kosztuje-strona-internetowa",
         title: "Ile kosztuje strona internetowa dla firmy w 2026?",
         excerpt: "Od 500 zł za szablon po 50 000 zł+ za aplikację webową — ceny stron są wszędzie. Tłumaczę co naprawdę decyduje o cenie, kiedy one-page wystarczy i ile powinieneś zapłacić za swoją stronę.",
