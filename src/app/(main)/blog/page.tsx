@@ -18,6 +18,14 @@ export const metadata: Metadata = {
 
 export const posts = [
     {
+        slug: "ile-kosztuje-strona-internetowa",
+        title: "Ile kosztuje strona internetowa dla firmy w 2026?",
+        excerpt: "Od 500 zł za szablon po 50 000 zł+ za aplikację webową — ceny stron są wszędzie. Tłumaczę co naprawdę decyduje o cenie, kiedy one-page wystarczy i ile powinieneś zapłacić za swoją stronę.",
+        date: "2026-03-27",
+        readTime: "8 min",
+        category: "Strony WWW",
+    },
+    {
         slug: "ile-kosztuje-logo",
         title: "Ile kosztuje logo w 2026? Uczciwy cennik projektanta",
         excerpt: "Od 100 zł w Canva po 50 000 zł w dużej agencji — rozpiętość cen za logo jest ogromna. Tłumaczę co tak naprawdę wpływa na cenę i ile powinieneś zapłacić za logo dla swojej firmy.",

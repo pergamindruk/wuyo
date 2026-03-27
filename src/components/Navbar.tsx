@@ -90,16 +90,8 @@ export function Navbar() {
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
                     <nav aria-label="Nawigacja główna" className="flex items-center gap-6 lg:gap-8 text-sm font-medium text-white/70">
-                        <a href="/" onClick={handleHomeClick} className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Główna
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </a>
                         <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Portfolio
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            O mnie
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <Link href="/cennik" className="relative group transition-colors hover:text-white whitespace-nowrap">
@@ -114,14 +106,6 @@ export function Navbar() {
                             Blog
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Oferta
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Kontakt
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </a>
                     </nav>
                 </div>
 
@@ -157,14 +141,10 @@ export function Navbar() {
                         className="fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
                     >
                         <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
-                            <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Główna</a>
                             <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Portfolio</a>
-                            <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</a>
                             <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
                             <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
-                            <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Oferta</a>
-                            <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
                         </nav>
                         <div className="mt-10 mx-auto">
                             <a
