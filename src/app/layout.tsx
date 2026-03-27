@@ -65,6 +65,9 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "https://wuyo.pl",
     },
+    verification: {
+        google: "wGuZz4Ws_-z7QaM1H_Y6kmS_i7kgYVnUxadeldIEEyw",
+    },
 };
 
 const jsonLd = {
