@@ -110,6 +110,10 @@ export function Navbar() {
                             Druk
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
+                        <Link href="/blog" className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            Blog
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
                         <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Oferta
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
@@ -158,6 +162,7 @@ export function Navbar() {
                             <a href="/#o-mnie" onClick={(e) => handleAnchorClick(e, "o-mnie")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</a>
                             <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
+                            <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
                             <a href="/#oferta" onClick={(e) => handleAnchorClick(e, "oferta")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Oferta</a>
                             <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
                         </nav>
