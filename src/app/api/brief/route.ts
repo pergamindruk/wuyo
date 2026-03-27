@@ -226,6 +226,7 @@ export async function POST(req: NextRequest) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'Authorization': `Bearer ${process.env.MAILERLITE_API_KEY}`,
                 },
                 body: JSON.stringify({
@@ -236,7 +237,9 @@ export async function POST(req: NextRequest) {
             });
             if (!mlRes.ok) {
                 const mlErr = await mlRes.text();
-                console.error('Mailerlite error:', mlErr);
+                console.error('Mailerlite error:', mlRes.status, mlErr);
+            } else {
+                console.log('Mailerlite: subscriber added OK');
             }
         } catch (mlErr) {
             console.error('Mailerlite fetch error:', mlErr);
