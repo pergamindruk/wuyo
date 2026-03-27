@@ -63,6 +63,44 @@ export const metadata: Metadata = {
     },
 };
 
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "name": "WUYO – Dobra Grafa",
+    "alternateName": "WUYO",
+    "description": "Projektowanie stron WWW, logo i identyfikacja wizualna. React/Next.js, mobile-first, techniczne SEO.",
+    "url": "https://wuyo.pl",
+    "logo": "https://wuyo.pl/logo_wuya2.webp",
+    "image": "https://wuyo.pl/logo_wuya2.webp",
+    "founder": {
+        "@type": "Person",
+        "name": "Mateusz Machoś",
+        "jobTitle": "Graphic Designer & Web Developer",
+    },
+    "areaServed": [
+        { "@type": "City", "name": "Rzeszów" },
+        { "@type": "Country", "name": "Polska" },
+    ],
+    "serviceType": [
+        "Web Design",
+        "Graphic Design",
+        "Brand Identity",
+        "Logo Design",
+        "Social Media Graphics",
+    ],
+    "priceRange": "800–5000 PLN",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Rzeszów",
+        "addressCountry": "PL",
+    },
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "availableLanguage": "Polish",
+    },
+};
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -70,6 +108,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="pl" className="scroll-smooth">
+            <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+            </head>
             <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Skip to content – ruch klawiaturowy (WCAG) */}
                 <a

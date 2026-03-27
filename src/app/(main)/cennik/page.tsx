@@ -3,9 +3,26 @@ import { ArrowLeft } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { PackagesSection } from "@/components/PackagesSection";
 
-export const metadata = {
-    title: "Cennik | Wuyo – Dobra Grafa",
-    description: "Pełen cennik usług graficznych i web designu. Skrojone na miarę pakiety dla Twojej marki bez ukrytych kosztów.",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Cennik usług graficznych i webowych | WUYO – Rzeszów",
+    description: "Transparentne ceny: logotyp od 800 zł, strona one-page od 1 200 zł, identyfikacja wizualna od 2 500 zł. Bez ukrytych kosztów — wycena = cena końcowa.",
+    openGraph: {
+        title: "Cennik | WUYO – Dobra Grafa",
+        description: "Pełen cennik usług graficznych, web design i social media. Skrojone na miarę pakiety bez ukrytych kosztów.",
+        images: ["/logo_wuya2.webp"],
+        url: "https://wuyo.pl/cennik",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Cennik | WUYO – Dobra Grafa",
+        description: "Transparentne ceny usług graficznych i webowych. Logotyp od 800 zł, strona od 1 200 zł.",
+        images: ["/logo_wuya2.webp"],
+    },
+    alternates: {
+        canonical: "https://wuyo.pl/cennik",
+    },
 };
 
 const pricing = [

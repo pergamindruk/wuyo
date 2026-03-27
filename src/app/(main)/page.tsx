@@ -8,7 +8,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { HeroText } from "@/components/HeroText";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Palette, Layout, FileText, Share2, Box, Monitor, MessageSquare, Clock, ShieldCheck } from "lucide-react";
+import { ArrowRight, Palette, Layout, FileText, Share2, Box, Sparkles, ChevronDown } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
@@ -41,9 +41,9 @@ export default function Home() {
             desc: "Produkt musi się sprzedawać już na półce. Projektuję etykiety i opakowania, które krzyczą: 'kup mnie!'. Dobra grafa na pudełku to połowa sukcesu.",
         },
         {
-            icon: <Monitor size={28} />,
-            title: "Darmowa konsultacja, konkretny plan",
-            desc: "Czujesz, że Twój wizerunek odstaje od konkurencji, a strona słabo sprzedaje? Przegadajmy to na darmowej konsultacji. Powiem Ci bez owijania w bawełnę co jest do poprawy i ułożę konkretny plan jak to naprawić.",
+            icon: <Sparkles size={28} />,
+            title: "Animacje i motion design",
+            desc: "Statyka to przeszłość. Tworzę animowane bannery, intro do rolek i mikro-interakcje na stronę, które wyróżnią Twoją markę na tle konkurencji.",
         },
     ];
 
@@ -71,7 +71,26 @@ export default function Home() {
                             <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10 w-full text-center">Portfolio</span>
                         </Link>
                     </div>
+
+                    {/* Social proof */}
+                    <div className="flex items-center justify-center gap-4 sm:gap-6 mt-10 text-white/60 text-sm flex-wrap">
+                        <span className="flex items-center gap-1.5">
+                            <span className="text-gold font-bold text-base">13+</span> zrealizowanych projektów
+                        </span>
+                        <span className="hidden sm:block w-px h-4 bg-white/20" />
+                        <span className="flex items-center gap-1.5">
+                            <span className="text-gold font-bold text-base">5+</span> branż
+                        </span>
+                        <span className="hidden sm:block w-px h-4 bg-white/20" />
+                        <span>Rzeszów i cała Polska</span>
+                    </div>
                 </AnimatedSection>
+
+                {/* Scroll indicator */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 animate-bounce">
+                    <span className="text-xs tracking-widest uppercase">Odkryj więcej</span>
+                    <ChevronDown size={18} />
+                </div>
             </section>
 
             {/* ═══════════════════════ OFERTA ═══════════════════════ */}
@@ -91,7 +110,7 @@ export default function Home() {
                             <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
                                 <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
                                 <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
-                                <p className="text-white/50 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
+                                <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
                             </div>
                         </AnimatedSection>
                     ))}
@@ -126,7 +145,7 @@ export default function Home() {
                             <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
                                 <Image
                                     src="/MojeZdjecie.webp"
-                                    alt="Wuyo - Twój graficzny ziomek"
+                                    alt="Mateusz Machoś – założyciel WUYO, projektant graficzny i web developer z Rzeszowa"
                                     fill
                                     className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-110"
                                 />
@@ -155,21 +174,21 @@ export default function Home() {
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">1</div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">Szybki brief</strong>
-                                        <p className="text-white/50 text-sm leading-relaxed pr-4">Ustalamy w 15 minut, czego brakuje w Twoim biznesie. Zbieram konkrety i szukam najlepszego rozwiązania.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Ustalamy w 15 minut, czego brakuje w Twoim biznesie. Zbieram konkrety i szukam najlepszego rozwiązania.</p>
                                     </div>
                                 </li>
                                 <li className="relative flex items-start gap-5">
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">2</div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">Projekt i kodowanie</strong>
-                                        <p className="text-white/50 text-sm leading-relaxed pr-4">Po akceptacji propozycji przejmuję stery. Tworzę design, piszę kod, a Ty spokojnie obserwujesz postępy na żywo.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Po akceptacji propozycji przejmuję stery. Tworzę design, piszę kod, a Ty spokojnie obserwujesz postępy na żywo.</p>
                                     </div>
                                 </li>
                                 <li className="relative flex items-start gap-5">
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-gold/10 border border-gold/40 shadow-[0_0_15px_rgba(255,235,82,0.3)] flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">3</div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">Mamy to! Gotowy produkt</strong>
-                                        <p className="text-white/50 text-sm leading-relaxed pr-4">Odbierasz gotową maszynę, która od pierwszego dnia zarabia i buduje przewagę w Twojej branży.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz gotową maszynę, która od pierwszego dnia zarabia i buduje przewagę w Twojej branży.</p>
                                     </div>
                                 </li>
                             </ul>

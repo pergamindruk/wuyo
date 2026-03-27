@@ -90,6 +90,10 @@ const config: Config = {
 				shimmer: "shimmer 8s infinite",
 			},
 			keyframes: {
+				'trusted-scroll': {
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(-50%)' },
+				},
 				fadeInUp: {
 					'0%': {
 						opacity: '0',

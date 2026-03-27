@@ -17,7 +17,7 @@ export default async function LabLayout({
 
     return (
         <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans flex flex-col md:flex-row">
-            <Sidebar />
+            <Sidebar userEmail={user.email} />
 
             {/* Main Content Area */}
             <main className="flex-1 p-6 lg:p-10 overflow-y-auto md:h-screen print:p-0 print:m-0 print:overflow-visible">

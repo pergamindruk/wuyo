@@ -23,18 +23,29 @@ export default async function LabDashboard() {
 
     // Analyze status for Mentor
     let mentorMessage = "System działa poprawnie. Oczekuję na nowe zdarzenia."
+    let mentorCTALabel = "Przejdź do AI Studio"
+    let mentorCTAHref = "/lab/ai-studio"
+
     if (leads.length > 0) {
-        mentorMessage = `Cześć! Widzę, że masz w skrzynce **${leads.length} nieodpowiedzianych zapytań** (leadów/briefów). Może skoczymy do AI Studio, by szybko przygotować dla nich wyceny?`
+        mentorMessage = `Cześć! Widzę, że masz w skrzynce ${leads.length} nieodpowiedzianych zapytań (leadów/briefów). Może skoczymy do AI Studio, by szybko przygotować dla nich wyceny?`
+        mentorCTALabel = "Przejdź do AI Studio"
+        mentorCTAHref = "/lab/ai-studio"
     } else if (projects.length > 0) {
-        const activeProjects = projects.filter((p: any) => p.progress < 100)
-        mentorMessage = `Cześć! Pracujesz obecnie nad **${activeProjects.length} projektami**. Pamiętaj, żeby regularnie podbijać statusy w Portalu Klienta, aby klienci byli na bieżąco!`
+        const activeProjects = projects.filter((p: { progress: number }) => p.progress < 100)
+        mentorMessage = `Cześć! Pracujesz obecnie nad ${activeProjects.length} projektami. Pamiętaj, żeby regularnie podbijać statusy w Portalu Klienta, aby klienci byli na bieżąco!`
+        mentorCTALabel = "Otwórz Portal Klienta"
+        mentorCTAHref = "/lab/projects"
     }
 
     // Nadpisanie kalendarzem jeśli brakuje postów
-    const unposted = calendar.filter((c: any) => c.status !== 'Opublikowane')
+    const unposted = calendar.filter((c: { status: string }) => c.status !== 'Opublikowane')
     if (unposted.length > 0 && leads.length === 0) {
         mentorMessage = `Mamy w kalendarzu zaplanowane posty (${unposted.length} szt.), które nie zostały opublikowane. Skocz do AI Studio by wygenerować ich treść i zrealizować plan uwzględniając marketing na rok 2026!`
+        mentorCTALabel = "Generuj treści"
+        mentorCTAHref = "/lab/ai-studio"
     }
+
+    const activeProjectsCount = projects.filter((p: { progress: number }) => p.progress < 100).length
 
     return (
         <div className="flex flex-col gap-8">
@@ -63,13 +74,13 @@ export default async function LabDashboard() {
                 <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl relative overflow-hidden">
                     <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-transparent blur-xl"></div>
                     <div className="relative z-10 flex justify-between items-start">
-                        <h2 className="text-zinc-400 font-medium mb-1">Status Systemu (AI)</h2>
+                        <h2 className="text-zinc-400 font-medium mb-1">Aktywne projekty</h2>
                         <Bot size={20} className="text-yellow-500" />
                     </div>
-                    <p className="text-4xl font-bold text-zinc-300">ON</p>
+                    <p className="text-4xl font-bold text-yellow-400">{activeProjectsCount}</p>
                     <p className="text-sm text-yellow-500/80 mt-2 flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
-                        Optymalne warunki
+                        AI System aktywny
                     </p>
                 </div>
             </div>
@@ -86,11 +97,12 @@ export default async function LabDashboard() {
                         </div>
                         <h2 className="text-xl font-bold text-white">Raport od AI Mentora</h2>
                     </div>
-                    <p className="text-zinc-300 mb-6 max-w-2xl leading-relaxed" dangerouslySetInnerHTML={{ __html: mentorMessage.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>') }}>
+                    <p className="text-zinc-300 mb-6 max-w-2xl leading-relaxed">
+                        {mentorMessage}
                     </p>
                     <div className="flex gap-3">
-                        <Link href="/lab/ai-studio" className="bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-medium px-5 py-2 rounded-lg transition-colors text-sm shadow-lg shadow-yellow-500/20 text-center flex items-center justify-center">
-                            Przejdź do AI Studio
+                        <Link href={mentorCTAHref} className="bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-medium px-5 py-2 rounded-lg transition-colors text-sm shadow-lg shadow-yellow-500/20 text-center flex items-center justify-center">
+                            {mentorCTALabel}
                         </Link>
                     </div>
                 </div>

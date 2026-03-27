@@ -80,6 +80,7 @@ export function Navbar() {
                             src="/logo_wuya2.webp"
                             alt="WUYO – Dobra Grafa logo"
                             fill
+                            sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 384px"
                             className="object-contain object-left"
                             priority
                         />

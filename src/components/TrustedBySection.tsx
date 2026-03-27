@@ -40,7 +40,7 @@ export function TrustedBySection() {
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
                         Twarde zasady, nie&nbsp;obietnice
                     </h2>
-                    <p className="text-white/50 max-w-xl mx-auto">
+                    <p className="text-white/60 max-w-xl mx-auto">
                         Dopiero rozkręcam firmę — więc każdy projekt to moja najlepsza wizytówka. Dlatego daję Ci gwarancje czarno na białym.
                     </p>
                 </AnimatedSection>
@@ -53,7 +53,7 @@ export function TrustedBySection() {
                                     {g.icon}
                                 </div>
                                 <h3 className="text-lg font-bold text-white mb-3">{g.title}</h3>
-                                <p className="text-white/50 text-sm leading-relaxed">{g.desc}</p>
+                                <p className="text-white/60 text-sm leading-relaxed">{g.desc}</p>
                             </div>
                         </AnimatedSection>
                     ))}
@@ -74,40 +74,18 @@ export function TrustedBySection() {
                     after:absolute after:right-0 after:top-0 after:w-24 after:h-full after:bg-gradient-to-l after:from-navy-dark after:to-transparent after:z-10
                     group"
                 >
-                    <style dangerouslySetInnerHTML={{
-                        __html: `
-                        @keyframes trusted-scroll {
-                            from { transform: translateX(0); }
-                            to   { transform: translateX(-50%); }
-                        }
-                        .trusted-track {
-                            animation: trusted-scroll 40s linear infinite;
-                        }
-                        .group:hover .trusted-track {
-                            animation-play-state: paused;
-                        }
-                        .neon-logo:hover img {
-                            filter: grayscale(0) brightness(1.1);
-                            opacity: 1;
-                        }
-                        .neon-logo img {
-                            filter: grayscale(1) brightness(0.5);
-                            opacity: 0.45;
-                            transition: filter 0.4s ease, opacity 0.4s ease;
-                        }
-                    `}} />
-
-                    <div className="flex items-center w-max trusted-track gap-16 py-6">
+                    <div className="flex items-center w-max animate-[trusted-scroll_40s_linear_infinite] group-hover:[animation-play-state:paused] gap-16 py-6">
                         {[...allLogos, ...allLogos].map((logo, i) => (
                             <div
                                 key={i}
-                                className="neon-logo relative flex items-center justify-center h-28 w-44 md:w-52 shrink-0 cursor-default"
+                                className="relative flex items-center justify-center h-28 w-44 md:w-52 shrink-0 cursor-default"
                             >
                                 <Image
                                     src={logo.src}
                                     alt={logo.alt}
                                     fill
-                                    className="object-contain px-4 py-6"
+                                    sizes="(max-width: 768px) 176px, 208px"
+                                    className="object-contain px-4 py-6 grayscale brightness-50 opacity-45 transition-all duration-400 hover:grayscale-0 hover:brightness-110 hover:opacity-100"
                                 />
                             </div>
                         ))}

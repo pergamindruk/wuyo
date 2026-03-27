@@ -5,18 +5,28 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Share2 } from 'lucide-react'
 
-const navItems = [
-    { href: '/lab', label: 'Dashboard', icon: Home },
-    { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
-    { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
-    { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
-    { href: '/lab/social-media', label: 'Social Media', icon: Share2 },
-    { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
-    { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },
-    { href: '/lab/analytics', label: 'Harbor SEO', icon: BarChart3 },
+const navGroups = [
+    {
+        label: 'Zarządzanie',
+        items: [
+            { href: '/lab', label: 'Dashboard', icon: Home },
+            { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
+            { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
+            { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },
+        ],
+    },
+    {
+        label: 'Narzędzia',
+        items: [
+            { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
+            { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
+            { href: '/lab/social-media', label: 'Social Media', icon: Share2 },
+            { href: '/lab/analytics', label: 'Harbor SEO', icon: BarChart3 },
+        ],
+    },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ userEmail }: { userEmail?: string }) {
     const [isOpen, setIsOpen] = useState(false)
     const pathname = usePathname()
 
@@ -56,35 +66,55 @@ export default function Sidebar() {
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 print:hidden
             `}>
-                <div className="hidden md:flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold">
-                        W
+                <div className="hidden md:flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold">
+                            W
+                        </div>
+                        <span className="font-bold text-xl tracking-tight text-white">WUYO Lab</span>
                     </div>
-                    <span className="font-bold text-xl tracking-tight text-white">WUYO Lab</span>
+                    {userEmail && (
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/50">
+                            <div className="w-8 h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center text-yellow-400 text-sm font-bold shrink-0">
+                                {userEmail[0].toUpperCase()}
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="text-white text-xs font-medium truncate">WUYO Studio</p>
+                                <p className="text-zinc-500 text-xs truncate">{userEmail}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                <nav className="flex flex-col gap-1 flex-grow">
-                    {navItems.map((item) => {
-                        const Icon = item.icon
-                        const isActive = pathname === item.href
+                <nav className="flex flex-col gap-5 flex-grow">
+                    {navGroups.map((group) => (
+                        <div key={group.label}>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 px-3 mb-2">{group.label}</p>
+                            <div className="flex flex-col gap-1">
+                                {group.items.map((item) => {
+                                    const Icon = item.icon
+                                    const isActive = pathname === item.href
 
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={closeMenu}
-                                className={`
-                                    flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all
-                                    ${isActive
-                                        ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
-                                        : 'text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent'}
-                                `}
-                            >
-                                <Icon size={18} />
-                                {item.label}
-                            </Link>
-                        )
-                    })}
+                                    return (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={closeMenu}
+                                            className={`
+                                                flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all
+                                                ${isActive
+                                                    ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
+                                                    : 'text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent'}
+                                            `}
+                                        >
+                                            <Icon size={18} />
+                                            {item.label}
+                                        </Link>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    ))}
                 </nav>
 
                 <div className="mt-auto border-t border-zinc-800/50 pt-6">
