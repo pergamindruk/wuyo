@@ -53,7 +53,7 @@ export default function Home() {
         <main className="flex-1 w-full">
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
-            <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 md:pt-56 lg:pt-64 overflow-hidden">
+            <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
                 <MouseSpotlight />
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
                 <Spotlight className="top-10 left-full md:right-40 md:top-20" fill="white" />
@@ -87,9 +87,8 @@ export default function Home() {
                 </AnimatedSection>
 
                 {/* Scroll indicator */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 animate-bounce">
-                    <span className="text-xs tracking-widest uppercase">Odkryj więcej</span>
-                    <ChevronDown size={18} />
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/30 animate-bounce pointer-events-none">
+                    <ChevronDown size={20} />
                 </div>
             </section>
 
