@@ -331,13 +331,18 @@ export default function IleKosztujeLogoPage() {
                             <p className="text-white/60 mb-8 max-w-lg mx-auto text-sm">
                                 Opisz w kilku zdaniach czym się zajmuje Twoja firma i dla kogo. Dostaniesz wycenę co do złotówki — bez niespodzianek.
                             </p>
-                            <Link
-                                href="/#kontakt"
-                                className="btn-gold px-10 py-4 inline-flex items-center gap-3 group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]"
-                            >
-                                <span className="font-bold text-navy text-lg">Wyślij zapytanie</span>
-                                <ArrowRight size={20} className="text-navy group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Link
+                                    href="/#kontakt"
+                                    className="btn-gold px-10 py-4 inline-flex items-center gap-3 group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]"
+                                >
+                                    <span className="font-bold text-navy text-lg">Wyślij zapytanie</span>
+                                    <ArrowRight size={20} className="text-navy group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                <Link href="/logo" className="px-10 py-4 rounded-full font-bold inline-flex items-center gap-2 border border-gold/40 text-gold hover:bg-gold/10 transition-colors">
+                                    Zobacz ofertę logo <ArrowRight size={18} />
+                                </Link>
+                            </div>
                         </div>
                     </AnimatedSection>
 
@@ -360,8 +365,8 @@ export default function IleKosztujeLogoPage() {
                             <Link href="/blog" className="inline-flex items-center gap-2 text-white/50 hover:text-gold transition-colors text-sm">
                                 <ArrowLeft size={16} /> Wróć do bloga
                             </Link>
-                            <Link href="/cennik" className="inline-flex items-center gap-2 text-gold font-medium hover:gap-3 transition-all text-sm">
-                                Pełny cennik <ArrowRight size={16} />
+                            <Link href="/logo" className="inline-flex items-center gap-2 text-gold font-medium hover:gap-3 transition-all text-sm">
+                                Oferta projektowania logo <ArrowRight size={16} />
                             </Link>
                         </div>
                     </AnimatedSection>

@@ -22,9 +22,10 @@ export function Footer() {
                             <ul className="space-y-3 text-sm">
                                 <li><Link href="/" className="text-white/60 hover:text-white transition-colors">Główna</Link></li>
                                 <li><Link href="/#portfolio" className="text-white/60 hover:text-white transition-colors">Portfolio</Link></li>
-                                <li><Link href="/#pakiety" className="text-white/60 hover:text-white transition-colors">Cennik</Link></li>
-                                <li><Link href="/#oferta" className="text-white/60 hover:text-white transition-colors">Oferta</Link></li>
-                                <li><Link href="/#o-nas" className="text-white/60 hover:text-white transition-colors">O mnie</Link></li>
+                                <li><Link href="/logo" className="text-white/60 hover:text-white transition-colors">Projektowanie logo</Link></li>
+                                <li><Link href="/strony-www" className="text-white/60 hover:text-white transition-colors">Strony internetowe</Link></li>
+                                <li><Link href="/druk" className="text-white/60 hover:text-white transition-colors">Druk & papeteria</Link></li>
+                                <li><Link href="/cennik" className="text-white/60 hover:text-white transition-colors">Cennik</Link></li>
                             </ul>
                         </div>
                         <div>

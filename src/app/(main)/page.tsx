@@ -74,31 +74,37 @@ export default function Home() {
             icon: <Palette size={28} />,
             title: "Logotyp, który ludzie zapamiętają",
             desc: "Fundament Twojego biznesu. Robię loga, które nie wyglądają jak wygenerowane przez AI czy stworzone w Canva. Konkretny wektor, który ludzie zapamiętają, a Ty możesz użyć wszędzie.",
+            href: "/logo",
         },
         {
             icon: <Layout size={28} />,
             title: "Strona, która sprzedaje za Ciebie",
             desc: "Wykodowane od zera na React/Next.js. Od szybkich stron One-Page po większe serwisy. Co to znaczy dla Ciebie? Kuloodporne bezpieczeństwo, techniczne SEO i prędkość, która zachwyca Google.",
+            href: "/strony-www",
         },
         {
             icon: <FileText size={28} />,
             title: "Druk, który robi wrażenie",
             desc: "Wizytówki, ulotki, vouchery, katalogi, bannery — projektuję i drukuję. Zamawiasz gotowy projekt albo komplet z wydrukiem. Prosta sprawa, jedno miejsce.",
+            href: "/druk",
         },
         {
             icon: <Share2 size={28} />,
             title: "Social media, które zatrzymują scrollowanie",
             desc: "Wjeżdżam na pełnej na Twoje sociale. Karuzele, posty, rolki i miniatury, które zatrzymają scrollowanie i sprawią, że ludzie zaczną klikać.",
+            href: null,
         },
         {
             icon: <Box size={28} />,
             title: "Opakowanie, które krzyczy 'kup mnie!'",
             desc: "Produkt musi się sprzedawać już na półce. Projektuję etykiety i opakowania, które krzyczą: 'kup mnie!'. Dobra grafa na pudełku to połowa sukcesu.",
+            href: null,
         },
         {
             icon: <Sparkles size={28} />,
             title: "Animacje i motion design",
             desc: "Statyka to przeszłość. Tworzę animowane bannery, intro do rolek i mikro-interakcje na stronę, które wyróżnią Twoją markę na tle konkurencji.",
+            href: null,
         },
     ];
 
@@ -165,11 +171,20 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
                     {services.map((service, i) => (
                         <AnimatedSection key={i} delay={i * 0.1}>
-                            <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
-                                <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
-                                <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
-                            </div>
+                            {service.href ? (
+                                <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
+                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
+                                    <h3 className="text-xl font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3">{service.title}</h3>
+                                    <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm mb-4">{service.desc}</p>
+                                    <span className="inline-flex items-center gap-1 text-gold text-xs font-bold group-hover:gap-2 transition-all">Dowiedz się więcej <ArrowRight size={12} /></span>
+                                </Link>
+                            ) : (
+                                <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
+                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
+                                    <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
+                                    <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
+                                </div>
+                            )}
                         </AnimatedSection>
                     ))}
                 </div>

@@ -592,12 +592,14 @@ export default function ArticlePage() {
                             <p className="text-white/60 max-w-xl mx-auto mb-8 leading-relaxed">
                                 Bezpłatna konsultacja — opisz czym się zajmujesz, skąd przychodzą Twoi klienci i jaki masz budżet. Dostaniesz konkretną rekomendację, nie ofertę sprzedażową.
                             </p>
-                            <a
-                                href="/#kontakt"
-                                className="btn-gold px-8 py-3 rounded-full font-bold inline-block"
-                            >
-                                Porozmawiajmy o Twojej stronie
-                            </a>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <a href="/#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold inline-block">
+                                    Porozmawiajmy o Twojej stronie
+                                </a>
+                                <Link href="/strony-www" className="px-8 py-3 rounded-full font-bold inline-block border border-gold/40 text-gold hover:bg-gold/10 transition-colors">
+                                    Zobacz ofertę stron
+                                </Link>
+                            </div>
                         </div>
                     </AnimatedSection>
 

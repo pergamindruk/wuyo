@@ -610,8 +610,8 @@ export default function ArticlePage() {
                                 <a href="/#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold inline-block">
                                     Zamów identyfikację wizualną
                                 </a>
-                                <Link href="/cennik" className="px-8 py-3 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
-                                    Zobacz cennik
+                                <Link href="/logo" className="px-8 py-3 rounded-full font-bold inline-block border border-gold/40 text-gold hover:bg-gold/10 transition-colors">
+                                    Zobacz ofertę logo
                                 </Link>
                             </div>
                         </div>
