@@ -17,19 +17,19 @@ type Project = {
 };
 
 const projects: Project[] = [
-    { id: 13, title: "Billboard Domosfera", category: "Do druku", image: "/realizacje/domosfera-billboard.webp", desc: "Deweloper nieruchomości · kampania outdoorowa przed sezonem letnim" },
-    { id: 12, title: "Billboard Wege", category: "Do druku", image: "/realizacje/billboard-wege.webp", desc: "Restauracja roślinna · reklama wielkosformatowa" },
+    { id: 13, title: "Billboard Domosfera", category: "Do druku", image: "/realizacje/domosfera-billboard.webp", desc: "Dystrybucja drzwi, okien i bram · projekt dużego billboardu" },
+    { id: 12, title: "Billboard Wege", category: "Do druku", image: "/realizacje/billboard-wege.webp", desc: "Dom kultury · plakat promujący spotkania Wege Pogadanki" },
     { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp", desc: "Produkty spożywcze · etykiety gotowe do druku offset" },
     { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp", desc: "Usługi profesjonalne · elegancka wizytówka jednostronna" },
-    { id: 7, title: "Wizytówka Premium", category: "Do druku", image: "/realizacje/business-card-mockup.webp", desc: "Klient premium · projekt z efektem złocenia" },
-    { id: 8, title: "Czysta Gablota – Strona WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", desc: "Mycie okien Rzeszów · strona generująca zapytania od dnia 1", demoUrl: "https://www.czystagablota.pl" },
+    { id: 7, title: "Wizytówka Premium", category: "Do druku", image: "/realizacje/business-card-mockup.webp", desc: "Klient premium · projekt wizytówki" },
+    { id: 8, title: "Czysta Gablota – Strona WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", desc: "Detailing · strona generująca zapytania od dnia 1", demoUrl: "https://www.czystagablota.pl" },
     { id: 9, title: "Wuyo Lab – Panel CRM", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp", desc: "Własny projekt · panel do zarządzania projektami i klientami" },
-    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "Firma budowlana ADMAR · branding na flotę pojazdów" },
-    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", desc: "Firma sprzątająca · spójna identyfikacja wizualna" },
+    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "ADMAR · projekt naklejki" },
+    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", desc: "Detailing · spójna identyfikacja wizualna" },
     { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.webp", desc: "Firma technologiczna · identyfikacja wizualna od zera" },
     { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.webp", desc: "Firma technologiczna · brand book i prezentacja dla inwestorów" },
-    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp", desc: "Firma sprzątająca · wariant premium z lakierem UV" },
-    { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Odzież firmowa · projekt na odzież roboczą dla zespołu" },
+    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp", desc: "Detailing · wizytówka" },
+    { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej" },
 ];
 
 export function PortfolioGallery() {
