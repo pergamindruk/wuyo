@@ -28,7 +28,7 @@ export default function Home() {
         {
             icon: <FileText size={28} />,
             title: "Druk, który robi wrażenie",
-            desc: "Ulotki, katalogi, wizytówki, bannery – ta forma reklamy zawsze działa, postaw na prezencje - Wuyo zaprojektuje, Wuyo wydrukuje :)",
+            desc: "Wizytówki, ulotki, vouchery, katalogi, bannery — projektuję i drukuję. Zamawiasz gotowy projekt albo komplet z wydrukiem. Prosta sprawa, jedno miejsce.",
         },
         {
             icon: <Share2 size={28} />,
