@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle } from 'lucide-react'
-import { generateDocument, getEwidencja, deleteEwidencja } from './actions'
+import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock } from 'lucide-react'
+import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -98,10 +98,30 @@ export default function FinancesLab() {
     }
 
     const handleDeleteEwidencja = async (id: string) => {
-        if (confirm('Na pewno usunąć ten dowód sprzedaży z systemu? Zmieni to twój limit ewidencji na Pasku Postępu.')) {
+        if (confirm('Na pewno usunac ten dowod sprzedazy z systemu?')) {
             await deleteEwidencja(id)
             loadEwidencja()
         }
+    }
+
+    const handlePaymentToggle = async (id: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'Zaplacona' ? 'Wystawiona' : 'Zaplacona'
+        await updatePaymentStatus(id, newStatus)
+        loadEwidencja()
+    }
+
+    // Auto-mark overdue (14 days)
+    const getDisplayStatus = (item: any) => {
+        if (item.paymentStatus === 'Zaplacona') return 'Zaplacona'
+        const daysSince = Math.floor((Date.now() - new Date(item.date).getTime()) / (1000 * 60 * 60 * 24))
+        if (daysSince > 14 && item.paymentStatus !== 'Zaplacona') return 'Przeterminowana'
+        return item.paymentStatus || 'Wystawiona'
+    }
+
+    const paymentStatusConfig: Record<string, { bg: string; text: string; border: string }> = {
+        Wystawiona: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20' },
+        Zaplacona: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
+        Przeterminowana: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
     }
 
     return (
@@ -165,28 +185,43 @@ export default function FinancesLab() {
                             <thead className="text-zinc-500 border-b border-zinc-800">
                                 <tr>
                                     <th className="font-normal py-2 font-mono">Lp.</th>
-                                    <th className="font-normal py-2">Data sprz.</th>
-                                    <th className="font-normal py-2">Dowód</th>
+                                    <th className="font-normal py-2">Data</th>
+                                    <th className="font-normal py-2">Dowod</th>
                                     <th className="font-normal py-2">Kwota</th>
-                                    <th className="font-normal py-2 w-20">Narastająco</th>
+                                    <th className="font-normal py-2">Status</th>
+                                    <th className="font-normal py-2 w-20">Narastajaco</th>
                                     <th className="font-normal py-2 w-8 text-center"><Trash2 size={12} className="inline opacity-50" /></th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-zinc-800/50">
-                                {[...ewidencjaWithRunningTotal].reverse().map((e: any) => (
-                                    <tr key={e.id} className="hover:bg-zinc-900/50 transition-colors">
-                                        <td className="py-2.5 font-mono text-zinc-500">{e.lp}.</td>
-                                        <td className="py-2.5">{e.date}</td>
-                                        <td className="py-2.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px] pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
-                                        <td className="py-2.5 font-bold text-green-400">+{e.amount} zł</td>
-                                        <td className="py-2.5 text-zinc-400">{e.runningTotal.toFixed(2)} zł</td>
-                                        <td className="py-2.5 text-right">
-                                            <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors" title="Usuń z ewidencji">
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {[...ewidencjaWithRunningTotal].reverse().map((e: any) => {
+                                    const displayStatus = getDisplayStatus(e)
+                                    const pCfg = paymentStatusConfig[displayStatus] || paymentStatusConfig.Wystawiona
+                                    return (
+                                        <tr key={e.id} className="hover:bg-zinc-900/50 transition-colors group">
+                                            <td className="py-2.5 font-mono text-zinc-500">{e.lp}.</td>
+                                            <td className="py-2.5">{e.date}</td>
+                                            <td className="py-2.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
+                                            <td className="py-2.5 font-bold text-green-400">+{e.amount} zl</td>
+                                            <td className="py-2.5">
+                                                <button
+                                                    onClick={() => handlePaymentToggle(e.id, displayStatus)}
+                                                    className={`${pCfg.bg} ${pCfg.text} ${pCfg.border} border px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
+                                                    title={displayStatus === 'Zaplacona' ? 'Kliknij aby cofnac' : 'Kliknij aby oznaczyc jako zaplacone'}
+                                                >
+                                                    {displayStatus === 'Zaplacona' ? <Check size={10} /> : displayStatus === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
+                                                    {displayStatus}
+                                                </button>
+                                            </td>
+                                            <td className="py-2.5 text-zinc-400">{e.runningTotal.toFixed(2)} zl</td>
+                                            <td className="py-2.5 text-right">
+                                                <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100" title="Usun z ewidencji">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     )}

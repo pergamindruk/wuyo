@@ -24,7 +24,9 @@ export async function getEwidencja() {
         date: item.date,
         clientInfo: item.client_info,
         description: item.description,
-        amount: Number(item.amount)
+        amount: Number(item.amount),
+        paymentStatus: item.payment_status || 'Wystawiona',
+        createdAt: item.created_at,
     }))
 }
 
@@ -70,6 +72,27 @@ export async function deleteEwidencja(id: string) {
         return false
     }
     
+    revalidatePath('/lab/finances')
+    return true
+}
+
+export async function updatePaymentStatus(id: string, status: string) {
+    const validStatuses = ['Wystawiona', 'Zaplacona', 'Przeterminowana']
+    if (!validStatuses.includes(status)) {
+        throw new Error(`Nieprawidlowy status platnosci: ${status}`)
+    }
+
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('finances')
+        .update({ payment_status: status })
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error updating payment status:', error)
+        throw new Error('Nie udalo sie zaktualizowac statusu platnosci')
+    }
+
     revalidatePath('/lab/finances')
     return true
 }
