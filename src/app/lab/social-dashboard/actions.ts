@@ -360,6 +360,7 @@ export async function addDashboardToCalendar(content: string, platform: string, 
             date,
             status: 'Zaplanowane',
             generateAI: false,
+            content,
         })
         if (!result) return { success: false as const, error: 'Nie udalo sie dodac do kalendarza' }
         return { success: true as const, eventId: result.id }

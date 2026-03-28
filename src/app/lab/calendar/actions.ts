@@ -48,6 +48,7 @@ export async function addCalendarEvent(event: {
     date: string
     status?: string
     generateAI?: boolean
+    content?: string
 }) {
     const supabase = await createClient()
 
@@ -73,8 +74,8 @@ export async function addCalendarEvent(event: {
             format: event.format,
             goal: event.goal,
             date: event.date,
-            status: 'Szkic',
-            content: content ?? null,
+            status: event.status ?? 'Szkic',
+            content: content ?? event.content ?? null,
         })
         .select()
         .single()
