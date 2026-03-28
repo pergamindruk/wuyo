@@ -19,22 +19,16 @@ export async function getProjects() {
 
 export async function createProject(data: any) {
     const supabase = await createClient()
-    
-    // Debug: Sprawdź czy zmienne środowiskowe istnieją
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-        console.error("❌ BRAK NEXT_PUBLIC_SUPABASE_URL w środowisku lokalnym!")
-    }
 
+    const now = new Date().toISOString()
     const newProject = {
         id: Math.random().toString(36).substring(2, 12),
         name: data.name,
         client: data.client,
         status: 'Briefing',
         progress: 10,
-        updates: []
+        updates: [{ date: now, status: 'Briefing', progress: 10, note: 'Projekt utworzony' }],
     }
-
-    console.log("🚀 Próba zapisu projektu do Supabase:", newProject)
 
     const { data: inserted, error } = await supabase
         .from('projects')
@@ -43,25 +37,40 @@ export async function createProject(data: any) {
         .single()
 
     if (error) {
-        console.error('❌ BŁĄD SUPABASE:', error.message, error.details, error.hint)
-        throw new Error(`Błąd: ${error.message}`)
+        console.error('Supabase insert error:', error.message)
+        throw new Error(`Blad: ${error.message}`)
     }
 
-    console.log("✅ Projekt zapisany pomyślnie!")
     revalidatePath('/lab/projects')
     return inserted
 }
 
-export async function updateProjectStatus(id: string, status: string, progress: number) {
+export async function updateProjectStatus(id: string, status: string, progress: number, note?: string) {
     const supabase = await createClient()
+
+    // Fetch current updates array
+    const { data: current } = await supabase
+        .from('projects')
+        .select('updates')
+        .eq('id', id)
+        .single()
+
+    const updates = Array.isArray(current?.updates) ? current.updates : []
+    updates.push({
+        date: new Date().toISOString(),
+        status,
+        progress,
+        note: note || undefined,
+    })
+
     const { error } = await supabase
         .from('projects')
-        .update({ status, progress })
+        .update({ status, progress, updates })
         .eq('id', id)
 
     if (error) {
         console.error('Error updating project:', error)
-        throw new Error('Nie udało się zaktualizować statusu')
+        throw new Error('Nie udalo sie zaktualizowac statusu')
     }
 
     revalidatePath('/lab/projects')
@@ -77,7 +86,7 @@ export async function deleteProject(id: string) {
 
     if (error) {
         console.error('Error deleting project:', error)
-        throw new Error('Nie udało się usunąć projektu')
+        throw new Error('Nie udalo sie usunac projektu')
     }
 
     revalidatePath('/lab/projects')
