@@ -3,6 +3,52 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { writeFile, readdir, readFile } from 'fs/promises'
 import path from 'path'
+import { addCalendarEvent } from '../calendar/actions'
+
+// ─── Graph API helpers (self-contained to avoid 'use server' export issues) ───
+const GRAPH_API_VERSION = 'v21.0'
+
+async function postGraph(url: string, body: Record<string, string>) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: new URLSearchParams(body).toString(),
+    })
+    return await res.json()
+}
+
+async function getGraph(url: string, params: Record<string, string>) {
+    const u = new URL(url)
+    for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v)
+    const res = await fetch(u.toString(), { method: 'GET' })
+    return await res.json()
+}
+
+function stripMarkdown(text: string): string {
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/#{1,6}\s/g, '')
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .trim()
+}
+
+async function waitForIgContainer(userId: string, containerId: string, accessToken: string) {
+    const deadline = Date.now() + 25_000
+    while (Date.now() < deadline) {
+        const status = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${containerId}`,
+            { fields: 'status_code', access_token: accessToken }
+        )
+        const code = status?.status_code as string | undefined
+        if (code === 'FINISHED') return { ok: true as const }
+        if (code === 'ERROR') return { ok: false as const, error: 'Instagram: blad przetwarzania kontenera mediow' }
+        await new Promise(r => setTimeout(r, 1500))
+    }
+    return { ok: false as const, error: 'Instagram: timeout (sprobuj ponownie)' }
+}
 
 const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
 const OUTPUT_DIR = path.join(process.cwd(), 'output')
@@ -239,6 +285,232 @@ export async function getOutputFile(filename: string) {
         const safe = path.basename(filename)
         const content = await readFile(path.join(OUTPUT_DIR, safe), 'utf-8')
         return content
+    } catch {
+        return null
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 1] Zapis edytowanego pliku
+// ═══════════════════════════════════════════════════════
+export async function saveOutputFile(filename: string, content: string) {
+    try {
+        const safe = path.basename(filename)
+        await writeFile(path.join(OUTPUT_DIR, safe), content)
+        return { success: true }
+    } catch (error: unknown) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 2] Publish na FB (bez calendar_events)
+// ═══════════════════════════════════════════════════════
+export async function publishDashboardToFB(message: string, imageUrl?: string) {
+    const accessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+    const pageId = process.env.FACEBOOK_PAGE_ID
+
+    if (!accessToken || !pageId) {
+        return { success: false as const, error: 'Brak konfiguracji Facebook. Dodaj FACEBOOK_PAGE_ACCESS_TOKEN i FACEBOOK_PAGE_ID do .env.local' }
+    }
+
+    try {
+        const cleanMessage = stripMarkdown(message)
+
+        let endpoint: string
+        let body: Record<string, string>
+
+        if (imageUrl) {
+            endpoint = `https://graph.facebook.com/${GRAPH_API_VERSION}/${pageId}/photos`
+            body = { url: imageUrl, caption: cleanMessage, access_token: accessToken }
+        } else {
+            endpoint = `https://graph.facebook.com/${GRAPH_API_VERSION}/${pageId}/feed`
+            body = { message: cleanMessage, access_token: accessToken }
+        }
+
+        const data = await postGraph(endpoint, body)
+
+        if (!data.id) {
+            return { success: false as const, error: `Facebook: ${data.error?.message || 'Blad publikacji'}` }
+        }
+
+        const fbInfo = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${data.id}`,
+            { fields: 'permalink_url', access_token: accessToken }
+        )
+
+        return { success: true as const, postId: data.id, permalink: fbInfo?.permalink_url || null }
+    } catch (e: unknown) {
+        return { success: false as const, error: (e as Error).message }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 2] Publish na IG (bez calendar_events)
+// ═══════════════════════════════════════════════════════
+export async function publishDashboardToIG(imageUrl: string, caption: string) {
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
+    const userId = process.env.INSTAGRAM_USER_ID
+
+    if (!accessToken || !userId) {
+        return { success: false as const, error: 'Brak konfiguracji Instagram. Dodaj INSTAGRAM_ACCESS_TOKEN i INSTAGRAM_USER_ID do .env.local' }
+    }
+
+    try {
+        const cleanCaption = stripMarkdown(caption)
+
+        const containerData = await postGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media`,
+            { image_url: imageUrl, caption: cleanCaption, access_token: accessToken }
+        )
+
+        if (!containerData.id) {
+            return { success: false as const, error: `Instagram: ${containerData.error?.message || 'Blad tworzenia media container'}` }
+        }
+
+        const wait = await waitForIgContainer(userId, containerData.id, accessToken)
+        if (!wait.ok) {
+            return { success: false as const, error: wait.error }
+        }
+
+        const publishData = await postGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media_publish`,
+            { creation_id: containerData.id, access_token: accessToken }
+        )
+
+        if (!publishData.id) {
+            return { success: false as const, error: `Instagram: ${publishData.error?.message || 'Blad publikacji'}` }
+        }
+
+        const mediaInfo = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${publishData.id}`,
+            { fields: 'permalink', access_token: accessToken }
+        )
+
+        return { success: true as const, postId: publishData.id, permalink: mediaInfo?.permalink || null }
+    } catch (e: unknown) {
+        return { success: false as const, error: (e as Error).message }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 4a] A/B Hook — generuj wariant
+// ═══════════════════════════════════════════════════════
+export async function generateHookVariant(originalHook: string) {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        const prompt = `${WUYO_CONTEXT}
+
+Oto hook na post social media: "${originalHook}"
+
+Wygeneruj ALTERNATYWNY hook na ten sam temat. Zmień kąt ataku, użyj innej emocji lub struktury.
+Hook musi zatrzymać scroll — max 15 słów. Zero slopu.
+
+Odpowiedz TYLKO hookiem — jedna linia, bez cudzysłowów, bez wyjaśnień.`
+
+        const result = await model.generateContent(prompt)
+        return { success: true as const, data: result.response.text().trim() }
+    } catch (error: unknown) {
+        return { success: false as const, error: error instanceof Error ? error.message : String(error) }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 4b] Hashtag Bank (file-based)
+// ═══════════════════════════════════════════════════════
+const HASHTAG_FILE = path.join(OUTPUT_DIR, 'hashtags.json')
+
+type Hashtag = { tag: string; category: string; useCount: number }
+
+export async function getHashtags(): Promise<Hashtag[]> {
+    try {
+        const raw = await readFile(HASHTAG_FILE, 'utf-8')
+        return JSON.parse(raw) as Hashtag[]
+    } catch {
+        return []
+    }
+}
+
+export async function addHashtag(tag: string, category: string = 'general') {
+    const hashtags = await getHashtags()
+    const clean = tag.startsWith('#') ? tag : `#${tag}`
+    if (hashtags.some(h => h.tag === clean)) return { success: false, error: 'Hashtag juz istnieje' }
+    hashtags.push({ tag: clean, category, useCount: 0 })
+    await writeFile(HASHTAG_FILE, JSON.stringify(hashtags, null, 2))
+    return { success: true }
+}
+
+export async function removeHashtag(tag: string) {
+    const hashtags = await getHashtags()
+    const filtered = hashtags.filter(h => h.tag !== tag)
+    await writeFile(HASHTAG_FILE, JSON.stringify(filtered, null, 2))
+    return { success: true }
+}
+
+export async function incrementHashtagUse(tag: string) {
+    const hashtags = await getHashtags()
+    const found = hashtags.find(h => h.tag === tag)
+    if (found) found.useCount++
+    await writeFile(HASHTAG_FILE, JSON.stringify(hashtags, null, 2))
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 4c] Integracja z kalendarzem
+// ═══════════════════════════════════════════════════════
+export async function addDashboardToCalendar(content: string, platform: string, date: string) {
+    try {
+        const topic = content.slice(0, 80).replace(/[#*\n]/g, ' ').trim()
+        const result = await addCalendarEvent({
+            topic,
+            platform,
+            format: 'Post z grafiką',
+            goal: 'Zaangażowanie',
+            date,
+            status: 'Zaplanowane',
+            generateAI: false,
+        })
+        if (!result) return { success: false as const, error: 'Nie udalo sie dodac do kalendarza' }
+        return { success: true as const, eventId: result.id }
+    } catch (error: unknown) {
+        return { success: false as const, error: error instanceof Error ? error.message : String(error) }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [Moduł 4d] Analytics — Insights z FB/IG
+// ═══════════════════════════════════════════════════════
+export async function getFBPostInsights(fbPostId: string) {
+    const accessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+    if (!accessToken) return null
+
+    try {
+        const data = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${fbPostId}`,
+            { fields: 'likes.summary(true),comments.summary(true),shares', access_token: accessToken }
+        )
+        return {
+            likes: data?.likes?.summary?.total_count ?? 0,
+            comments: data?.comments?.summary?.total_count ?? 0,
+            shares: data?.shares?.count ?? 0,
+        }
+    } catch {
+        return null
+    }
+}
+
+export async function getIGPostInsights(igMediaId: string) {
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
+    if (!accessToken) return null
+
+    try {
+        const data = await getGraph(
+            `https://graph.facebook.com/${GRAPH_API_VERSION}/${igMediaId}`,
+            { fields: 'like_count,comments_count', access_token: accessToken }
+        )
+        return {
+            likes: data?.like_count ?? 0,
+            comments: data?.comments_count ?? 0,
+        }
     } catch {
         return null
     }
