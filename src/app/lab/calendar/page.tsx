@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getCalendar, addCalendarEvent, updateEventStatus } from './actions'
 import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
 import type { YtMetadata } from '../social-media/actions'
-import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy } from 'lucide-react'
+import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
@@ -323,6 +323,29 @@ export default function CalendarLab() {
                                         {/* ── Sekcja Publikacji ── */}
                                         {ev.status !== 'Opublikowane' && (
                                             <div className="border-t border-zinc-800/60 pt-4 mt-2">
+                                                {/* LinkedIn — brak auto-publish */}
+                                                {(ev.platform || '').toLowerCase().includes('linkedin') && (
+                                                    <div className="flex items-start gap-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg mb-3">
+                                                        <Linkedin size={16} className="text-blue-400 shrink-0 mt-0.5" />
+                                                        <div className="text-xs text-zinc-400">
+                                                            <p className="font-bold text-blue-400 mb-1">LinkedIn — kopiuj i wklej recznie</p>
+                                                            <p>LinkedIn API wymaga zatwierdzenia firmy. Skopiuj tresc i opublikuj przez linkedin.com.</p>
+                                                            {ev.content && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        navigator.clipboard.writeText(ev.content)
+                                                                        setPublishFeedback({ success: true, message: 'Tresc skopiowana do schowka!' })
+                                                                        setPublishingPostId(ev.id)
+                                                                    }}
+                                                                    className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
+                                                                >
+                                                                    <Copy size={12} /> Kopiuj tresc
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {publishingPostId === ev.id ? (
                                                     <div className="flex flex-col gap-3">
                                                         <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Opublikuj na platformach</p>

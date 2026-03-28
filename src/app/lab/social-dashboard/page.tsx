@@ -13,7 +13,7 @@ import {
     ChevronDown, ChevronUp, Zap, Copy, Check, Pencil, Save,
     Globe, Camera, X, ExternalLink, Send, Hash, Plus, Trash2,
     CalendarPlus, BarChart3, RefreshCw, ArrowRight, Bold, Italic,
-    Heading2, List, ListOrdered, Eye, Smartphone,
+    Heading2, List, ListOrdered, Eye, Smartphone, Linkedin,
 } from 'lucide-react'
 
 // ═══════════════════════════════════════════════════════
@@ -743,6 +743,19 @@ export default function SocialDashboardPage() {
                             Publikuj na IG
                         </button>
 
+                        <button onClick={() => {
+                                const content = editMode ? editContent : result
+                                if (content) {
+                                    navigator.clipboard.writeText(content)
+                                    setCopied(true)
+                                    setTimeout(() => setCopied(false), 2000)
+                                }
+                            }}
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white font-bold text-sm transition-all shadow-lg shadow-sky-700/20"
+                            title="LinkedIn nie obsługuje auto-publikacji — skopiuj treść i wklej ręcznie">
+                            <Linkedin size={16} /> Kopiuj dla LinkedIn
+                        </button>
+
                         <button onClick={() => setShowCalendar(!showCalendar)}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${showCalendar ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}>
                             <CalendarPlus size={16} /> Do kalendarza
@@ -769,7 +782,7 @@ export default function SocialDashboardPage() {
                                 <label className="text-zinc-500 text-xs mb-1 block">Platforma</label>
                                 <select value={calPlatform} onChange={e => setCalPlatform(e.target.value)}
                                     className="bg-zinc-900 border border-zinc-700 text-white text-sm rounded-lg px-3 py-2">
-                                    <option>Facebook</option><option>Instagram</option><option>Obie</option>
+                                    <option>Facebook</option><option>Instagram</option><option>LinkedIn</option><option>Obie</option>
                                 </select>
                             </div>
                             <button onClick={handleAddToCalendar} disabled={!calDate}
