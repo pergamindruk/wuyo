@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Share2 } from 'lucide-react'
+import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Share2, Zap } from 'lucide-react'
 
 const navGroups = [
     {
@@ -20,6 +20,7 @@ const navGroups = [
         items: [
             { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
             { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
+            { href: '/lab/social-dashboard', label: 'Social Dashboard', icon: Zap },
             { href: '/lab/social-media', label: 'Social Media', icon: Share2 },
             { href: '/lab/analytics', label: 'Harbor SEO', icon: BarChart3 },
         ],
