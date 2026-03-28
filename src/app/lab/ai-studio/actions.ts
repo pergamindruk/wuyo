@@ -1,49 +1,117 @@
 'use server'
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 
-// Inicjalizacja Gemini API
 const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
+
+// ─── Content Generator ───────────────────────────────────────
 
 export async function generateContent(topic: string, platform: string) {
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-        const prompt = `Jesteś ekspertem ds. marketingu i copywritingu z roku 2026 dla marki WUYO (tworzenie stron internetowych premium, UI/UX, identyfikacja wizualna, grafika "Dobra Grafa"). Masz świadomość najnowszych trendów, algorytmów i standardów technologicznych.
-    Ton marki: nowoczesny, lekko hakerski, pewny siebie, premium, konkretny (unikaj lania wody, używaj technicznego, ale zrozumiałego żargonu, stawiaj na jakość i oszczędność w pakiecie).
-    
-    Zadanie: Napisz angażujący post na platformę: ${platform}, na temat: "${topic}".
-    Użyj odpowiedniego formatowania dla tej platformy (np. akapity, hasztagi, ewentualnie emoji, ale bez przesady). Wpis ma zachęcić do interakcji lub pokazania ekspertyzy WUYO.`
+        const prompt = `Jestes ekspertem ds. marketingu i copywritingu z roku 2026 dla marki WUYO (tworzenie stron internetowych premium, UI/UX, identyfikacja wizualna, grafika "Dobra Grafa"). Masz swiadomosc najnowszych trendow, algorytmow i standardow technologicznych.
+    Ton marki: nowoczesny, lekko hakerski, pewny siebie, premium, konkretny (unikaj lania wody, uzywaj technicznego, ale zrozumialego zargonu, stawiaj na jakosc i oszczednosc w pakiecie).
+
+    Zadanie: Napisz angazujacy post na platforme: ${platform}, na temat: "${topic}".
+    Uzyj odpowiedniego formatowania dla tej platformy (np. akapity, hasztagi, ewentualnie emoji, ale bez przesady). Wpis ma zachecic do interakcji lub pokazania ekspertyzy WUYO.`
 
         const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const output = result.response.text()
+
+        // Auto-save to history
+        await saveGeneration('content', { topic, platform }, output)
+
+        return { success: true, data: output }
     } catch (error: any) {
         console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udało się wygenerować treści. Błąd: ' + (error.message || JSON.stringify(error)) }
+        return { success: false, error: 'Nie udalo sie wygenerowac tresci. Blad: ' + (error.message || JSON.stringify(error)) }
     }
 }
 
+// ─── Quote Analyzer ──────────────────────────────────────────
+
 export async function generateQuote(clientMessage: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }) // Fallback na flash z powodu limitów Pro
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-        const prompt = `Jesteś głównym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa"). Masz pełną wiedzę o najnowocześniejszych standardach wyceny, technologiach i oczekiwaniach biznesowych klientów premium.
-    Oto wiadomość od potencjalnego klienta z zapytaniem o projekt:
-    
+        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa"). Masz pelna wiedze o najnowoczesniejszych standardach wyceny, technologiach i oczekiwaniach biznesowych klientow premium.
+    Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
+
     "${clientMessage}"
-    
-    Zadanie: Przeanalizuj to zapytanie i przygotuj odpowiedź dla właściciela WUYO. Odpowiedź ma zawierać:
-    1. **Krótkie streszczenie:** Czego dokładnie chce klient i na czym mu zależy (wymagania techniczne/wizualne).
-    2. **Sugerowany pakiet:** (Wybierz najbardziej pasujący z naszej oferty: Strona One-Page, Strona Multi-Page, Sklep E-Commerce, czy może identyfikacja wizualna).
-    3. **Estymacja wyceny:** (Podaj widełki cenowe, żeby właściciel wiedział od czego zacząć negocjacje - pamiętaj, że jesteśmy butikową agencją premium - wyceniaj konkretnie, ale solidnie).
-    4. **Szkic Odpowiedzi:** (Zaproponuj gotowy tekst profesjonalnej, ale "luźnej i z pazurem" odpowiedzi do klienta, gotowy do skopiowania i edycji).
-    
-    Sformatuj odpowiedź czytelnym Markdownem, używaj boldów, list.`
+
+    Zadanie: Przeanalizuj to zapytanie i przygotuj odpowiedz dla wlasciciela WUYO. Odpowiedz ma zawierac:
+    1. **Krotkie streszczenie:** Czego dokladnie chce klient i na czym mu zalezy (wymagania techniczne/wizualne).
+    2. **Sugerowany pakiet:** (Wybierz najbardziej pasujacy z naszej oferty: Strona One-Page, Strona Multi-Page, Sklep E-Commerce, czy moze identyfikacja wizualna).
+    3. **Estymacja wyceny:** (Podaj widelki cenowe, zeby wlasciciel wiedzial od czego zaczac negocjacje - pamietaj, ze jestesmy butikowa agencja premium - wyceniaj konkretnie, ale solidnie).
+    4. **Szkic Odpowiedzi:** (Zaproponuj gotowy tekst profesjonalnej, ale "luznej i z pazurem" odpowiedzi do klienta, gotowy do skopiowania i edycji).
+
+    Sformatuj odpowiedz czytelnym Markdownem, uzywaj boldow, list.`
 
         const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const output = result.response.text()
+
+        // Auto-save to history
+        await saveGeneration('quote', { clientMessage }, output)
+
+        return { success: true, data: output }
     } catch (error: any) {
         console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udało się wygenerować estymacji wyceny. Błąd: ' + (error.message || JSON.stringify(error)) }
+        return { success: false, error: 'Nie udalo sie wygenerowac estymacji wyceny. Blad: ' + (error.message || JSON.stringify(error)) }
     }
+}
+
+// ─── History (ai_generations table) ──────────────────────────
+
+async function saveGeneration(type: 'content' | 'quote', inputData: Record<string, any>, output: string) {
+    try {
+        const supabase = await createClient()
+        await supabase.from('ai_generations').insert({
+            type,
+            input_data: inputData,
+            output,
+        })
+    } catch (e) {
+        console.error('saveGeneration error:', e)
+    }
+}
+
+export async function getGenerations(limit = 20) {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('ai_generations')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+    if (error) {
+        console.error('getGenerations error:', error)
+        return []
+    }
+
+    return data.map((g: any) => ({
+        id: g.id,
+        type: g.type as 'content' | 'quote',
+        inputData: g.input_data,
+        output: g.output,
+        createdAt: g.created_at,
+    }))
+}
+
+export async function deleteGeneration(id: string) {
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('ai_generations')
+        .delete()
+        .eq('id', id)
+
+    if (error) {
+        console.error('deleteGeneration error:', error)
+        throw new Error('Nie udalo sie usunac wpisu')
+    }
+
+    revalidatePath('/lab/ai-studio')
+    return true
 }
