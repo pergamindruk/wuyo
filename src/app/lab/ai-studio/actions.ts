@@ -63,6 +63,24 @@ export async function generateQuote(clientMessage: string) {
     }
 }
 
+// ─── Pipeline: Create project from quote ─────────────────────
+
+export async function createProjectFromQuote(clientName: string, projectName: string, leadId?: string) {
+    const { createProject } = await import('../projects/actions')
+    const project = await createProject({ name: projectName, client: clientName })
+
+    if (leadId) {
+        try {
+            const { updateLeadStatus } = await import('../crm/actions')
+            await updateLeadStatus(leadId, 'Wycena')
+        } catch (e) {
+            console.error('Failed to update lead status:', e)
+        }
+    }
+
+    return project
+}
+
 // ─── History (ai_generations table) ──────────────────────────
 
 async function saveGeneration(type: 'content' | 'quote', inputData: Record<string, any>, output: string) {
