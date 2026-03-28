@@ -102,3 +102,36 @@ export async function updateEventContent(id: string, content: string) {
         .update({ content })
         .eq('id', id)
 }
+
+export async function schedulePost(eventId: string, scheduledAt: string) {
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('calendar_events')
+        .update({
+            scheduled_at: scheduledAt,
+            status: 'Zaplanowane',
+        })
+        .eq('id', eventId)
+
+    if (error) {
+        console.error('schedulePost error:', error)
+        throw new Error('Nie udalo sie zaplanowac publikacji')
+    }
+    return true
+}
+
+export async function getScheduledPosts() {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+        .from('calendar_events')
+        .select('*')
+        .eq('status', 'Zaplanowane')
+        .not('scheduled_at', 'is', null)
+        .order('scheduled_at', { ascending: true })
+
+    if (error) {
+        console.error('getScheduledPosts error:', error)
+        return []
+    }
+    return data || []
+}
