@@ -1,11 +1,9 @@
 'use server'
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { writeFile, readdir, readFile } from 'fs/promises'
-import path from 'path'
 import { addCalendarEvent } from '../calendar/actions'
 
-// ─── Graph API helpers (self-contained to avoid 'use server' export issues) ───
+// ─── Graph API helpers ────────────────────────────────
 const GRAPH_API_VERSION = 'v21.0'
 
 async function postGraph(url: string, body: Record<string, string>) {
@@ -50,12 +48,8 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
     return { ok: false as const, error: 'Instagram: timeout (sprobuj ponownie)' }
 }
 
+// ─── AI setup ─────────────────────────────────────────
 const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
-const OUTPUT_DIR = path.join(process.cwd(), 'output')
-
-function timestamp() {
-    return new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
-}
 
 const WUYO_CONTEXT = `Jesteś Wuyo Social Engine — autonomicznym systemem automatyzacji social media dla marki WUYO.pl.
 WUYO to butikowa agencja premium: strony internetowe, identyfikacja wizualna, grafika ("Dobra Grafa"), druk.
@@ -100,13 +94,9 @@ Odpowiedz w formacie:
 Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable.`
 
         const result = await model.generateContent(prompt)
-        const content = result.response.text()
-        const filename = `MAP_${timestamp()}.md`
-        await writeFile(path.join(OUTPUT_DIR, filename), `# [MAP] Research Trendów — ${new Date().toLocaleDateString('pl-PL')}\n\n${content}`)
-        return { success: true, data: content, filename }
+        return { success: true, data: result.response.text() }
     } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error)
-        return { success: false, error: msg }
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
 }
 
@@ -116,7 +106,6 @@ Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable.`
 export async function runNAIL(context?: string) {
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-
         const extraContext = context ? `\n\nDodatkowy kontekst od użytkownika: "${context}"` : ''
 
         const prompt = `${WUYO_CONTEXT}${extraContext}
@@ -148,13 +137,9 @@ ZASADY:
 - Język: potoczny-profesjonalny, nie korporacyjny`
 
         const result = await model.generateContent(prompt)
-        const content = result.response.text()
-        const filename = `NAIL_${timestamp()}.md`
-        await writeFile(path.join(OUTPUT_DIR, filename), `# [NAIL] Strategia & Hooki — ${new Date().toLocaleDateString('pl-PL')}\n\n${content}`)
-        return { success: true, data: content, filename }
+        return { success: true, data: result.response.text() }
     } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error)
-        return { success: false, error: msg }
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
 }
 
@@ -198,13 +183,9 @@ ZASADY:
 - Wszystko w estetyce WUYO: dark mode, gold accents, minimalizm premium`
 
         const result = await model.generateContent(prompt)
-        const content = result.response.text()
-        const filename = `EXECUTE_${timestamp()}.md`
-        await writeFile(path.join(OUTPUT_DIR, filename), `# [EXECUTE] Gotowe Copy — ${new Date().toLocaleDateString('pl-PL')}\n\n**Pomysł źródłowy:** ${postIdea}\n\n${content}`)
-        return { success: true, data: content, filename }
+        return { success: true, data: result.response.text() }
     } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error)
-        return { success: false, error: msg }
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
 }
 
@@ -253,51 +234,7 @@ Odpowiedz w formacie:
 Bądź BRUTALNIE szczery. Zero dyplomacji. Konkretne, actionable feedback.`
 
         const result = await model.generateContent(prompt)
-        const content = result.response.text()
-        const filename = `WD40_${timestamp()}.md`
-        await writeFile(path.join(OUTPUT_DIR, filename), `# [WD-40] Analiza & Wyostrzanie — ${new Date().toLocaleDateString('pl-PL')}\n\n${content}`)
-        return { success: true, data: content, filename }
-    } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error)
-        return { success: false, error: msg }
-    }
-}
-
-// ═══════════════════════════════════════════════════════
-// Lista plików w /output
-// ═══════════════════════════════════════════════════════
-export async function getOutputFiles() {
-    try {
-        const files = await readdir(OUTPUT_DIR)
-        const mdFiles = files.filter(f => f.endsWith('.md')).sort().reverse()
-        return mdFiles.map(f => ({
-            name: f,
-            type: f.split('_')[0] as 'MAP' | 'NAIL' | 'EXECUTE' | 'WD40',
-            date: f.replace(/^[A-Z0-9]+_/, '').replace('.md', '').replace(/-/g, ':').slice(0, 16).replace('T', ' '),
-        }))
-    } catch {
-        return []
-    }
-}
-
-export async function getOutputFile(filename: string) {
-    try {
-        const safe = path.basename(filename)
-        const content = await readFile(path.join(OUTPUT_DIR, safe), 'utf-8')
-        return content
-    } catch {
-        return null
-    }
-}
-
-// ═══════════════════════════════════════════════════════
-// [Moduł 1] Zapis edytowanego pliku
-// ═══════════════════════════════════════════════════════
-export async function saveOutputFile(filename: string, content: string) {
-    try {
-        const safe = path.basename(filename)
-        await writeFile(path.join(OUTPUT_DIR, safe), content)
-        return { success: true }
+        return { success: true, data: result.response.text() }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
@@ -316,7 +253,6 @@ export async function publishDashboardToFB(message: string, imageUrl?: string) {
 
     try {
         const cleanMessage = stripMarkdown(message)
-
         let endpoint: string
         let body: Record<string, string>
 
@@ -329,7 +265,6 @@ export async function publishDashboardToFB(message: string, imageUrl?: string) {
         }
 
         const data = await postGraph(endpoint, body)
-
         if (!data.id) {
             return { success: false as const, error: `Facebook: ${data.error?.message || 'Blad publikacji'}` }
         }
@@ -363,21 +298,17 @@ export async function publishDashboardToIG(imageUrl: string, caption: string) {
             `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media`,
             { image_url: imageUrl, caption: cleanCaption, access_token: accessToken }
         )
-
         if (!containerData.id) {
             return { success: false as const, error: `Instagram: ${containerData.error?.message || 'Blad tworzenia media container'}` }
         }
 
         const wait = await waitForIgContainer(userId, containerData.id, accessToken)
-        if (!wait.ok) {
-            return { success: false as const, error: wait.error }
-        }
+        if (!wait.ok) return { success: false as const, error: wait.error }
 
         const publishData = await postGraph(
             `https://graph.facebook.com/${GRAPH_API_VERSION}/${userId}/media_publish`,
             { creation_id: containerData.id, access_token: accessToken }
         )
-
         if (!publishData.id) {
             return { success: false as const, error: `Instagram: ${publishData.error?.message || 'Blad publikacji'}` }
         }
@@ -413,45 +344,6 @@ Odpowiedz TYLKO hookiem — jedna linia, bez cudzysłowów, bez wyjaśnień.`
     } catch (error: unknown) {
         return { success: false as const, error: error instanceof Error ? error.message : String(error) }
     }
-}
-
-// ═══════════════════════════════════════════════════════
-// [Moduł 4b] Hashtag Bank (file-based)
-// ═══════════════════════════════════════════════════════
-const HASHTAG_FILE = path.join(OUTPUT_DIR, 'hashtags.json')
-
-type Hashtag = { tag: string; category: string; useCount: number }
-
-export async function getHashtags(): Promise<Hashtag[]> {
-    try {
-        const raw = await readFile(HASHTAG_FILE, 'utf-8')
-        return JSON.parse(raw) as Hashtag[]
-    } catch {
-        return []
-    }
-}
-
-export async function addHashtag(tag: string, category: string = 'general') {
-    const hashtags = await getHashtags()
-    const clean = tag.startsWith('#') ? tag : `#${tag}`
-    if (hashtags.some(h => h.tag === clean)) return { success: false, error: 'Hashtag juz istnieje' }
-    hashtags.push({ tag: clean, category, useCount: 0 })
-    await writeFile(HASHTAG_FILE, JSON.stringify(hashtags, null, 2))
-    return { success: true }
-}
-
-export async function removeHashtag(tag: string) {
-    const hashtags = await getHashtags()
-    const filtered = hashtags.filter(h => h.tag !== tag)
-    await writeFile(HASHTAG_FILE, JSON.stringify(filtered, null, 2))
-    return { success: true }
-}
-
-export async function incrementHashtagUse(tag: string) {
-    const hashtags = await getHashtags()
-    const found = hashtags.find(h => h.tag === tag)
-    if (found) found.useCount++
-    await writeFile(HASHTAG_FILE, JSON.stringify(hashtags, null, 2))
 }
 
 // ═══════════════════════════════════════════════════════

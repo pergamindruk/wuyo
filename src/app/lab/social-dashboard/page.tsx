@@ -3,15 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
     runMAP, runNAIL, runEXECUTE, runWD40,
-    getOutputFiles, getOutputFile, saveOutputFile,
     publishDashboardToFB, publishDashboardToIG,
     generateHookVariant,
-    getHashtags, addHashtag, removeHashtag, incrementHashtagUse,
     addDashboardToCalendar,
     getFBPostInsights, getIGPostInsights,
 } from './actions'
 import {
-    Map, Crosshair, Rocket, Wrench, FileText, Clock, Loader2,
+    Map, Crosshair, Rocket, Wrench, Clock, Loader2,
     ChevronDown, ChevronUp, Zap, Copy, Check, Pencil, Save,
     Globe, Camera, X, ExternalLink, Send, Hash, Plus, Trash2,
     CalendarPlus, BarChart3, RefreshCw, ArrowRight, Bold, Italic,
@@ -21,11 +19,33 @@ import {
 // ═══════════════════════════════════════════════════════
 // Types & Config
 // ═══════════════════════════════════════════════════════
-type OutputFile = { name: string; type: 'MAP' | 'NAIL' | 'EXECUTE' | 'WD40'; date: string }
+type OutputEntry = { id: string; type: 'MAP' | 'NAIL' | 'EXECUTE' | 'WD40'; content: string; date: string }
 type ActiveOp = 'MAP' | 'NAIL' | 'EXECUTE' | 'WD40' | null
 type PublishStatus = 'idle' | 'publishing-fb' | 'publishing-ig' | 'done'
 type PipelineStep = 0 | 1 | 2 | 3 | 4
 type Hashtag = { tag: string; category: string; useCount: number }
+
+// ─── localStorage helpers ─────────────────────────────
+const STORAGE_KEY = 'wuyo_social_outputs'
+const HASHTAG_KEY = 'wuyo_hashtags'
+
+function loadOutputs(): OutputEntry[] {
+    if (typeof window === 'undefined') return []
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') } catch { return [] }
+}
+function saveOutput(entry: OutputEntry) {
+    const all = loadOutputs()
+    all.unshift(entry)
+    if (all.length > 50) all.length = 50
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+}
+function loadHashtags(): Hashtag[] {
+    if (typeof window === 'undefined') return []
+    try { return JSON.parse(localStorage.getItem(HASHTAG_KEY) || '[]') } catch { return [] }
+}
+function saveHashtags(tags: Hashtag[]) {
+    localStorage.setItem(HASHTAG_KEY, JSON.stringify(tags))
+}
 
 const OP_CONFIG = {
     MAP: {
@@ -217,11 +237,9 @@ export default function SocialDashboardPage() {
     const [activeOp, setActiveOp] = useState<ActiveOp>(null)
     const [loading, setLoading] = useState(false)
     const [result, setResult] = useState<string | null>(null)
-    const [resultFile, setResultFile] = useState<string | null>(null)
     const [inputText, setInputText] = useState('')
-    const [outputFiles, setOutputFiles] = useState<OutputFile[]>([])
+    const [outputs, setOutputs] = useState<OutputEntry[]>([])
     const [historyOpen, setHistoryOpen] = useState(false)
-    const [viewingFile, setViewingFile] = useState<string | null>(null)
     const [copied, setCopied] = useState(false)
 
     // Editor state (M1)
@@ -260,8 +278,8 @@ export default function SocialDashboardPage() {
     const [analytics, setAnalytics] = useState<{ likes: number; comments: number; shares?: number } | null>(null)
     const [analyticsLoading, setAnalyticsLoading] = useState(false)
 
-    useEffect(() => { getOutputFiles().then(setOutputFiles) }, [result])
-    useEffect(() => { getHashtags().then(setHashtags) }, [])
+    useEffect(() => { setOutputs(loadOutputs()) }, [result])
+    useEffect(() => { setHashtags(loadHashtags()) }, [])
 
     // ─── Markdown toolbar insert ──────────────────────
     const insertMd = useCallback((before: string, after: string = '') => {
@@ -281,8 +299,6 @@ export default function SocialDashboardPage() {
         setActiveOp(op)
         setLoading(true)
         setResult(null)
-        setResultFile(null)
-        setViewingFile(null)
         setEditMode(false)
         setPublishStatus('idle')
         setPublishedLinks({})
@@ -306,12 +322,8 @@ export default function SocialDashboardPage() {
 
         if (res.success && res.data) {
             setResult(res.data)
-            setResultFile(res.filename || null)
-            // Pipeline: parse hooks from NAIL
-            if (op === 'NAIL') {
-                const hooks = parseNailHooks(res.data)
-                setNailHooks(hooks)
-            }
+            saveOutput({ id: Date.now().toString(), type: op, content: res.data, date: new Date().toLocaleString('pl-PL') })
+            if (op === 'NAIL') setNailHooks(parseNailHooks(res.data))
         } else {
             setResult('Blad: ' + (res.error || 'Nieznany'))
         }
@@ -347,9 +359,10 @@ export default function SocialDashboardPage() {
     }
 
     // ─── View file from history ───────────────────────
-    const handleViewFile = async (filename: string) => {
-        const content = await getOutputFile(filename)
-        if (content) { setViewingFile(filename); setResult(content); setActiveOp(filename.split('_')[0] as ActiveOp); setEditMode(false) }
+    const handleViewOutput = (entry: OutputEntry) => {
+        setResult(entry.content)
+        setActiveOp(entry.type)
+        setEditMode(false)
     }
 
     // ─── Copy to clipboard ───────────────────────────
@@ -359,9 +372,7 @@ export default function SocialDashboardPage() {
     }
 
     // ─── Save edited file ────────────────────────────
-    const handleSave = async () => {
-        if (!resultFile) return
-        await saveOutputFile(resultFile, editContent)
+    const handleSave = () => {
         setResult(editContent)
         setEditMode(false)
     }
@@ -407,19 +418,23 @@ export default function SocialDashboardPage() {
 
     // ─── Hashtag insert ──────────────────────────────
     const handleInsertHashtag = (tag: string) => {
-        if (editMode) { setEditContent(prev => prev + ' ' + tag); incrementHashtagUse(tag) }
+        if (editMode) setEditContent(prev => prev + ' ' + tag)
     }
 
-    const handleAddHashtag = async () => {
+    const handleAddHashtag = () => {
         if (!newHashtag.trim()) return
-        await addHashtag(newHashtag.trim())
+        const clean = newHashtag.trim().startsWith('#') ? newHashtag.trim() : `#${newHashtag.trim()}`
+        if (hashtags.some(h => h.tag === clean)) return
+        const updated = [...hashtags, { tag: clean, category: 'general', useCount: 0 }]
+        setHashtags(updated)
+        saveHashtags(updated)
         setNewHashtag('')
-        setHashtags(await getHashtags())
     }
 
-    const handleRemoveHashtag = async (tag: string) => {
-        await removeHashtag(tag)
-        setHashtags(await getHashtags())
+    const handleRemoveHashtag = (tag: string) => {
+        const updated = hashtags.filter(h => h.tag !== tag)
+        setHashtags(updated)
+        saveHashtags(updated)
     }
 
     // ─── Calendar add ────────────────────────────────
@@ -606,15 +621,12 @@ export default function SocialDashboardPage() {
                             {activeOp && (() => { const Icon = OP_CONFIG[activeOp].icon; return <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${OP_CONFIG[activeOp].color} flex items-center justify-center`}><Icon size={16} className="text-white" /></div> })()}
                             <div>
                                 <h2 className="text-white font-bold text-sm">
-                                    {editMode ? 'Edytor' : viewingFile ? viewingFile : `Wynik: ${activeOp && OP_CONFIG[activeOp].title}`}
+                                    {editMode ? 'Edytor' : `Wynik: ${activeOp && OP_CONFIG[activeOp].title}`}
                                 </h2>
-                                {resultFile && !viewingFile && !editMode && (
-                                    <p className="text-zinc-600 text-xs flex items-center gap-1"><FileText size={10} /> {resultFile}</p>
-                                )}
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            {!editMode && resultFile && (
+                            {!editMode && (
                                 <button onClick={() => { setEditMode(true); setEditContent(result!) }}
                                     className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all">
                                     <Pencil size={12} /> Edytuj
@@ -830,24 +842,24 @@ export default function SocialDashboardPage() {
                     <div className="flex items-center gap-3">
                         <Clock size={18} className="text-zinc-500" />
                         <span className="text-white font-bold text-sm">Historia operacji</span>
-                        <span className="text-zinc-600 text-xs">({outputFiles.length} plikow)</span>
+                        <span className="text-zinc-600 text-xs">({outputs.length})</span>
                     </div>
                     {historyOpen ? <ChevronUp size={16} className="text-zinc-500" /> : <ChevronDown size={16} className="text-zinc-500" />}
                 </button>
                 {historyOpen && (
                     <div className="border-t border-zinc-800 divide-y divide-zinc-800/50 max-h-[300px] overflow-y-auto">
-                        {outputFiles.length === 0 ? (
-                            <p className="px-6 py-4 text-zinc-600 text-sm italic">Brak wygenerowanych plikow. Uruchom pierwsza operacje.</p>
-                        ) : outputFiles.map((file) => {
-                            const cfg = OP_CONFIG[file.type]
+                        {outputs.length === 0 ? (
+                            <p className="px-6 py-4 text-zinc-600 text-sm italic">Brak wygenerowanych wynikow. Uruchom pierwsza operacje.</p>
+                        ) : outputs.map((entry) => {
+                            const cfg = OP_CONFIG[entry.type]
                             return (
-                                <button key={file.name} onClick={() => handleViewFile(file.name)}
+                                <button key={entry.id} onClick={() => handleViewOutput(entry)}
                                     className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-zinc-800/30 transition-colors">
                                     <div className={`w-7 h-7 rounded-lg ${cfg?.bg || 'bg-zinc-800'} flex items-center justify-center`}>
                                         {cfg && (() => { const Icon = cfg.icon; return <Icon size={14} className={cfg.text} /> })()}
                                     </div>
-                                    <div className="flex-1 min-w-0"><p className="text-sm text-zinc-300 font-medium truncate">{file.name}</p></div>
-                                    <span className="text-xs text-zinc-600 shrink-0">{file.date}</span>
+                                    <div className="flex-1 min-w-0"><p className="text-sm text-zinc-300 font-medium truncate">{cfg?.title} — {entry.content.slice(0, 60)}...</p></div>
+                                    <span className="text-xs text-zinc-600 shrink-0">{entry.date}</span>
                                 </button>
                             )
                         })}
