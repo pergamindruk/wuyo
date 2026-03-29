@@ -15,6 +15,8 @@ import {
     CalendarPlus, BarChart3, RefreshCw, ArrowRight, Bold, Italic,
     Heading2, List, ListOrdered, Eye, Smartphone, Linkedin,
 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 // ═══════════════════════════════════════════════════════
 // Types & Config
@@ -74,32 +76,6 @@ const OP_CONFIG = {
     },
 }
 
-// ═══════════════════════════════════════════════════════
-// Markdown formatter
-// ═══════════════════════════════════════════════════════
-function formatMarkdown(text: string): string {
-    return text
-        .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-white mt-6 mb-2">$1</h3>')
-        .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-yellow-400 mt-8 mb-3 pb-2 border-b border-zinc-800">$2</h2>'.replace('$2', '$1'))
-        .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-black text-white mt-6 mb-4">$1</h1>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em class="text-zinc-300">$1</em>')
-        .replace(/^- (.+)$/gm, '<li class="text-zinc-300 ml-4 list-disc">$1</li>')
-        .replace(/^(\d+)\. (.+)$/gm, '<li class="text-zinc-300 ml-4 list-decimal">$2</li>')
-        .replace(/\|(.+)\|/g, (match) => {
-            const cells = match.split('|').filter(Boolean).map(c => c.trim())
-            if (cells.every(c => c.match(/^[-:]+$/))) return ''
-            const isHeader = cells.some(c => c.startsWith('**') || c === 'Kryterium')
-            const tag = isHeader ? 'th' : 'td'
-            const cls = isHeader
-                ? 'class="px-3 py-2 text-left text-xs font-bold text-zinc-400 uppercase tracking-wider bg-zinc-800/50"'
-                : 'class="px-3 py-2 text-sm text-zinc-300 border-t border-zinc-800"'
-            return `<tr>${cells.map(c => `<${tag} ${cls}>${c}</${tag}>`).join('')}</tr>`
-        })
-        .replace(/(<tr>.*<\/tr>\n?)+/g, (m) => `<table class="w-full border border-zinc-800 rounded-lg overflow-hidden my-4">${m}</table>`)
-        .replace(/---/g, '<hr class="border-zinc-800 my-6" />')
-        .replace(/\n/g, '<br/>')
-}
 
 // Parse hooks from NAIL output
 function parseNailHooks(text: string): string[] {
@@ -702,13 +678,19 @@ export default function SocialDashboardPage() {
                                 </div>
                                 <div className="p-4 overflow-y-auto max-h-[500px]">
                                     <PhonePreview platform={previewPlatform} content={editContent} />
-                                    <div className="mt-4 text-sm text-zinc-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: formatMarkdown(editContent) }} />
+                                    <div className="mt-4 text-sm text-zinc-300 leading-relaxed prose prose-invert prose-sm max-w-none prose-headings:text-white prose-h2:text-yellow-400 prose-strong:text-white prose-table:border prose-table:border-zinc-800">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{editContent}</ReactMarkdown>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ) : (
                         /* Read-only result */
-                        <div className="p-6 text-sm text-zinc-300 leading-relaxed max-h-[600px] overflow-y-auto prose-invert" dangerouslySetInnerHTML={{ __html: formatMarkdown(result!) }} />
+                        <div className="p-6 max-h-[600px] overflow-y-auto">
+                            <div className="text-sm text-zinc-300 leading-relaxed prose prose-invert prose-sm max-w-none prose-headings:text-white prose-h2:text-yellow-400 prose-strong:text-white prose-table:border prose-table:border-zinc-800">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{result!}</ReactMarkdown>
+                            </div>
+                        </div>
                     )}
                 </div>
             )}

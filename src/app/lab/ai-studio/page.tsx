@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { generateContent, generateQuote, getGenerations, deleteGeneration, createProjectFromQuote } from './actions'
 import { Bot, PenTool, Calculator, Send, Clock, Trash2, RotateCcw, Copy, Check, FolderPlus } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 type Generation = {
     id: string
@@ -269,7 +271,7 @@ function AIStudioInner() {
                             )}
                         </div>
 
-                        <div className="text-zinc-300 text-sm whitespace-pre-wrap leading-relaxed">
+                        <div className="text-zinc-300 text-sm leading-relaxed">
                             {loading ? (
                                 <div className="flex flex-col items-center justify-center gap-3 mt-20 text-zinc-500">
                                     <div className="w-6 h-6 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin" />
@@ -277,7 +279,9 @@ function AIStudioInner() {
                                 </div>
                             ) : result ? (
                                 <>
-                                    <div dangerouslySetInnerHTML={{ __html: result.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>') }} />
+                                    <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-headings:text-white prose-strong:text-white prose-table:border prose-table:border-zinc-700">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
+                                    </div>
 
                                     {/* Pipeline: Create Project button */}
                                     {activeTab === 'quote' && showCreateProject && !projectCreated && (

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import type { Project } from '@/lib/types'
 
 export async function getProjects() {
     const supabase = await createClient()
@@ -17,7 +18,7 @@ export async function getProjects() {
     return data
 }
 
-export async function createProject(data: any) {
+export async function createProject(data: Pick<Project, 'name' | 'client'>) {
     const supabase = await createClient()
 
     const now = new Date().toISOString()

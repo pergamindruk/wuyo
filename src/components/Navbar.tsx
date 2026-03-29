@@ -7,6 +7,9 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
+const SCROLL_DELAY_SAME_PAGE = 300; // czas na aktualizację DOM przed scrollem
+const SCROLL_DELAY_CROSS_PAGE = 600; // czas na załadowanie nowej strony przed scrollem
+
 export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -38,11 +41,11 @@ export function Navbar() {
         if (pathname === "/") {
             // Jesteśmy już na stronie głównej – zaktualizuj hash i scrolluj
             window.history.pushState(null, "", `/#${sectionId}`);
-            setTimeout(scrollToSection, 300);
+            setTimeout(scrollToSection, SCROLL_DELAY_SAME_PAGE);
         } else {
             // Inny URL – zaktualizuj URL i nawiguj
             router.push(`/#${sectionId}`, { scroll: false });
-            setTimeout(scrollToSection, 600);
+            setTimeout(scrollToSection, SCROLL_DELAY_CROSS_PAGE);
         }
     };
 
@@ -54,7 +57,7 @@ export function Navbar() {
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
             router.push("/", { scroll: false });
-            setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 300);
+            setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), SCROLL_DELAY_SAME_PAGE);
         }
     };
 

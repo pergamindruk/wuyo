@@ -73,12 +73,15 @@ export const metadata: Metadata = {
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
+    "@id": "https://wuyo.pl/#business",
     "name": "WUYO – Dobra Grafa",
     "alternateName": "WUYO",
     "description": "Projektowanie stron WWW, logo i identyfikacja wizualna. React/Next.js, mobile-first, techniczne SEO.",
     "url": "https://wuyo.pl",
     "logo": "https://wuyo.pl/logo_wuya2.webp",
-    "image": "https://wuyo.pl/logo_wuya2.webp",
+    "image": ["https://wuyo.pl/logo_wuya2.webp"],
+    "email": "kontakt@wuyo.pl",
+    "telephone": "+48725182053",
     "founder": {
         "@type": "Person",
         "name": "Mateusz Machoś",
@@ -105,7 +108,14 @@ const jsonLd = {
         "@type": "ContactPoint",
         "contactType": "customer service",
         "availableLanguage": "Polish",
+        "email": "kontakt@wuyo.pl",
+        "telephone": "+48725182053",
     },
+    "sameAs": [
+        "https://www.facebook.com/wuyo.dobra.grafa",
+        "https://www.instagram.com/wuyo.pl/",
+        "https://www.youtube.com/@wuyo.dobra.grafa",
+    ],
 };
 
 export default function RootLayout({

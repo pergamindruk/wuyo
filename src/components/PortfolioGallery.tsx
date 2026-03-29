@@ -197,7 +197,7 @@ export function PortfolioGallery() {
 
                         {/* Prev button */}
                         <button
-                            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/10 p-3 rounded-full transition-all z-50"
+                            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 p-3 rounded-full transition-all z-50"
                             onClick={showPrevImage}
                         >
                             <ChevronLeft size={32} />
@@ -205,7 +205,7 @@ export function PortfolioGallery() {
 
                         {/* Next button */}
                         <button
-                            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/10 p-3 rounded-full transition-all z-50"
+                            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 p-3 rounded-full transition-all z-50"
                             onClick={showNextImage}
                         >
                             <ChevronRight size={32} />
@@ -229,7 +229,7 @@ export function PortfolioGallery() {
                                 <h3 className="text-2xl font-bold text-white mb-2">{visibleProjects[selectedImageIndex].title}</h3>
                                 <div className="text-gold text-sm font-bold uppercase tracking-wider mb-1">{visibleProjects[selectedImageIndex].category}</div>
                                 {visibleProjects[selectedImageIndex].desc && (
-                                    <p className="text-white/50 text-sm mb-2">{visibleProjects[selectedImageIndex].desc}</p>
+                                    <p className="text-white/60 text-sm mb-2">{visibleProjects[selectedImageIndex].desc}</p>
                                 )}
                                 {visibleProjects[selectedImageIndex].demoUrl && (
                                     <a

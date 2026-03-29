@@ -63,7 +63,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
             <AnimatedSection className="text-center mb-16 relative z-10">
                 <p className="eyebrow mb-4">Proste zasady, jasne ceny.</p>
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Wybierz pakiet, który pasuje do tego, co teraz robisz.</h2>
-                <p className="text-white/50 max-w-xl mx-auto">Nie naciągam na funkcje, których nie potrzebujesz – dostajesz solidny kod i super szybką stronę 🙂</p>
+                <p className="text-white/60 max-w-xl mx-auto">Nie naciągam na funkcje, których nie potrzebujesz – dostajesz solidny kod i super szybką stronę 🙂</p>
                 <p className="text-white/40 max-w-xl mx-auto mt-2 text-sm">* Wszystkie pakiety to ceny brutto (wystawiam rachunek / fakturę bez VAT).</p>
             </AnimatedSection>
 
@@ -91,7 +91,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                             <div className="flex items-baseline gap-3 mb-4">
                                 <div className="text-3xl font-bold text-white">{pkg.price}</div>
                             </div>
-                            <p className="text-white/50 text-sm leading-relaxed mb-4">{pkg.desc}</p>
+                            <p className="text-white/60 text-sm leading-relaxed mb-4">{pkg.desc}</p>
                             {pkg.persona && (
                                 <p className="text-xs text-gold/70 font-medium mb-8 flex items-center gap-1.5">
                                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold/50" />

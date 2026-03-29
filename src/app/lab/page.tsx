@@ -6,6 +6,7 @@ import { getProjects } from './projects/actions'
 import { getCalendar } from './calendar/actions'
 import { getAlerts } from './actions'
 import { Bot, Play, Inbox, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
 
 export default async function LabDashboard() {
     const supabase = await createClient()
@@ -64,8 +65,14 @@ export default async function LabDashboard() {
         success: 'border-l-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10',
     }
 
+    const avgProgress = projects.length > 0
+        ? Math.round(projects.reduce((sum: number, p: { progress: number }) => sum + (p.progress ?? 0), 0) / projects.length)
+        : 0
+
     return (
         <div className="flex flex-col gap-8">
+            <DashboardAlerts alerts={alerts} />
+
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Witaj z powrotem w Laboratorium!</h1>
                 <p className="text-zinc-400">Twoj panel dowodzenia jest aktywny. Co dzisiaj optymalizujemy?</p>
@@ -97,16 +104,28 @@ export default async function LabDashboard() {
                         <h2 className="text-zinc-400 font-medium mb-1 group-hover:text-zinc-300">Skrzynka Odbiorcza</h2>
                         <Inbox size={20} className="text-zinc-600 group-hover:text-yellow-400" />
                     </div>
-                    <p className="text-4xl font-bold text-yellow-400">{leads.length}</p>
-                    <p className="text-sm text-zinc-500 mt-2">Aktywne leady i briefy</p>
+                    {leads.length > 0 ? (
+                        <p className="text-4xl font-bold text-yellow-400">{leads.length}</p>
+                    ) : (
+                        <p className="text-2xl font-bold text-zinc-600 mt-1">—</p>
+                    )}
+                    <p className="text-sm text-zinc-500 mt-2">
+                        {leads.length > 0 ? 'Aktywne leady i briefy' : 'Brak nowych leadów'}
+                    </p>
                 </Link>
                 <Link href="/lab/projects" className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl hover:border-white/20 transition-colors group">
                     <div className="flex justify-between items-start">
                         <h2 className="text-zinc-400 font-medium mb-1 group-hover:text-zinc-300">Strefy Klienta</h2>
                         <Play size={20} className="text-zinc-600 group-hover:text-white" />
                     </div>
-                    <p className="text-4xl font-bold text-white">{projects.length}</p>
-                    <p className="text-sm text-zinc-500 mt-2">Dostarczane projekty</p>
+                    {projects.length > 0 ? (
+                        <p className="text-4xl font-bold text-white">{projects.length}</p>
+                    ) : (
+                        <p className="text-2xl font-bold text-zinc-600 mt-1">—</p>
+                    )}
+                    <p className="text-sm text-zinc-500 mt-2">
+                        {projects.length > 0 ? 'Dostarczane projekty' : 'Brak aktywnych projektów'}
+                    </p>
                 </Link>
                 <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl relative overflow-hidden">
                     <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-transparent blur-xl" />
@@ -114,7 +133,28 @@ export default async function LabDashboard() {
                         <h2 className="text-zinc-400 font-medium mb-1">Aktywne projekty</h2>
                         <Bot size={20} className="text-yellow-500" />
                     </div>
-                    <p className="text-4xl font-bold text-yellow-400 relative z-10">{activeProjectsCount}</p>
+                    {activeProjectsCount > 0 ? (
+                        <>
+                            <p className="text-4xl font-bold text-yellow-400 relative z-10">{activeProjectsCount}</p>
+                            <div className="mt-3 relative z-10">
+                                <div className="flex justify-between text-xs text-zinc-500 mb-1">
+                                    <span>Średni postęp</span>
+                                    <span>{avgProgress}%</span>
+                                </div>
+                                <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                                        style={{ width: `${avgProgress}%` }}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-2xl font-bold text-zinc-600 mt-1 relative z-10">—</p>
+                            <p className="text-sm text-zinc-600 mt-2 relative z-10">Brak projektów w toku</p>
+                        </>
+                    )}
                     <p className="text-sm text-yellow-500/80 mt-2 flex items-center gap-1 relative z-10">
                         <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
                         AI System aktywny

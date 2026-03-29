@@ -2,8 +2,10 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import type { Lead } from '@/lib/types'
 
 const VALID_STATUSES = ['Nowy', 'Kontakt', 'Wycena', 'Zamkniety', 'Utracony'] as const
+type ValidStatus = typeof VALID_STATUSES[number]
 
 export async function getLeads() {
     const supabase = await createClient()
@@ -17,15 +19,15 @@ export async function getLeads() {
         return []
     }
 
-    return data.map((l: any) => ({
-        id: l.id,
-        name: l.name,
-        email: l.email,
-        date: new Date(l.created_at).toLocaleString('pl-PL'),
-        rawDate: l.created_at,
-        type: l.type,
-        details: l.details,
-        status: l.status || 'Nowy',
+    return data.map((l: Record<string, unknown>): Lead => ({
+        id: l.id as string,
+        name: l.name as string,
+        email: l.email as string,
+        date: new Date(l.created_at as string).toLocaleString('pl-PL'),
+        rawDate: l.created_at as string,
+        type: (l.type as string) ?? '',
+        details: (l.details as string) ?? '',
+        status: (l.status as ValidStatus) || 'Nowy',
     }))
 }
 
@@ -55,15 +57,15 @@ export async function getFilteredLeads(
         return []
     }
 
-    return data.map((l: any) => ({
-        id: l.id,
-        name: l.name,
-        email: l.email,
-        date: new Date(l.created_at).toLocaleString('pl-PL'),
-        rawDate: l.created_at,
-        type: l.type,
-        details: l.details,
-        status: l.status || 'Nowy',
+    return data.map((l: Record<string, unknown>): Lead => ({
+        id: l.id as string,
+        name: l.name as string,
+        email: l.email as string,
+        date: new Date(l.created_at as string).toLocaleString('pl-PL'),
+        rawDate: l.created_at as string,
+        type: (l.type as string) ?? '',
+        details: (l.details as string) ?? '',
+        status: (l.status as ValidStatus) || 'Nowy',
     }))
 }
 

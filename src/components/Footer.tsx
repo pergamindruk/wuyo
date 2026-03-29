@@ -11,7 +11,7 @@ export function Footer() {
                         <Link href="/" className="relative block h-16 w-56 md:h-24 md:w-80 transition-opacity duration-300 hover:opacity-80">
                             <Image src="/logo_wuya2.webp" alt="WUYO" fill className="object-contain object-left" />
                         </Link>
-                        <p className="text-white/50 text-xs sm:text-sm max-w-sm leading-relaxed">
+                        <p className="text-white/60 text-xs sm:text-sm max-w-sm leading-relaxed">
                             Wuyo – Twój strategiczny partner w designie. Zamieniam dobre pomysły w marki, które zarabiają i wyróżniają się na tle konkurencji.
                         </p>
                     </div>
@@ -71,7 +71,7 @@ export function Footer() {
                     </div>
 
                     <div className="flex gap-6">
-                        <Link href="/polityka-prywatnosci" className="hover:text-white/50 transition-colors">Polityka prywatności</Link>
+                        <Link href="/polityka-prywatnosci" className="hover:text-white/60 transition-colors">Polityka prywatności</Link>
                     </div>
                 </div>
             </div>

@@ -119,7 +119,7 @@ export function ContactBrief() {
                 <div className="text-center mb-12">
                     <p className="eyebrow mb-4">Wyślij brief</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Zacznijmy tworzyć wizerunek, który sprzedaje</h2>
-                    <p className="text-white/50 max-w-xl mx-auto">
+                    <p className="text-white/60 max-w-xl mx-auto">
                         Zaznacz opcje w poniższym briefie i zróbmy ten pierwszy krok. Dopracowana marka czeka na Ciebie na wciągnięcie ręki!
                     </p>
                 </div>
@@ -224,7 +224,7 @@ export function ContactBrief() {
                                             <div className="flex flex-wrap gap-2">
                                                 {audienceOptions.map((a) => (
                                                     <button key={a} onClick={() => toggleAudience(a)}
-                                                        className={`px-4 py-2 rounded-xl border text-sm transition-all ${(data.audience ?? []).includes(a) ? "border-gold bg-gold/10 text-gold" : "border-white/10 text-white/50 hover:bg-white/5 hover:text-white"}`}>
+                                                        className={`px-4 py-2 rounded-xl border text-sm transition-all ${(data.audience ?? []).includes(a) ? "border-gold bg-gold/10 text-gold" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white"}`}>
                                                         {a}
                                                     </button>
                                                 ))}

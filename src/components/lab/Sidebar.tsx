@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap } from 'lucide-react'
 
@@ -39,9 +40,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
             {/* Mobile Header */}
             <div className="md:hidden flex items-center justify-between bg-zinc-900 border-b border-zinc-800 p-4 sticky top-0 z-50 print:hidden">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold">
-                        W
-                    </div>
+                    <Image src="/wuyo-dobra-grafa-logo-biale.webp" alt="WUYO" width={32} height={32} className="object-contain" />
                     <span className="font-bold text-lg tracking-tight text-white">WUYO Lab</span>
                 </div>
                 <button

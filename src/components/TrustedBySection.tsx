@@ -3,12 +3,7 @@
 import { Clock, ShieldCheck, Eye } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import Image from "next/image";
-
-const trustedLogos = [
-    { src: "/logotypy/czysta-gablota-logo-realizacja.webp", alt: "Czysta Gablota" },
-    { src: "/logotypy/admar-logo-realizacja.webp", alt: "ADMAR" },
-    { src: "/logotypy/pergamin-logo-realizacja.webp", alt: "Pergamin" },
-];
+import { trustedClients } from "@/data/clients";
 
 const guarantees = [
     {
@@ -29,8 +24,6 @@ const guarantees = [
 ];
 
 export function TrustedBySection() {
-    const allLogos = [...trustedLogos, ...trustedLogos, ...trustedLogos, ...trustedLogos];
-
     return (
         <section className="py-20 px-6 md:px-12 relative overflow-hidden">
             {/* ═══════ GWARANCJE ═══════ */}
@@ -60,36 +53,35 @@ export function TrustedBySection() {
                 </div>
             </div>
 
-            {/* ═══════ KARUZELA LOGOTYPÓW ═══════ */}
+            {/* ═══════ REALIZACJE – statyczny grid ═══════ */}
             <div className="border-t border-white/5 pt-12 relative">
-                <AnimatedSection className="text-center mb-8">
+                <AnimatedSection className="text-center mb-10">
                     <p className="eyebrow mb-3">realizacje</p>
                     <h3 className="text-xl md:text-2xl font-bold text-white">
-                        Marki, które już ogarniamy 🚀
+                        Marki, które już ogarniamy
                     </h3>
                 </AnimatedSection>
 
-                <div className="relative w-full overflow-hidden
-                    before:absolute before:left-0 before:top-0 before:w-24 before:h-full before:bg-gradient-to-r before:from-navy-dark before:to-transparent before:z-10
-                    after:absolute after:right-0 after:top-0 after:w-24 after:h-full after:bg-gradient-to-l after:from-navy-dark after:to-transparent after:z-10
-                    group"
-                >
-                    <div className="flex items-center w-max animate-[trusted-scroll_40s_linear_infinite] group-hover:[animation-play-state:paused] gap-16 py-6">
-                        {[...allLogos, ...allLogos].map((logo, i) => (
-                            <div
-                                key={i}
-                                className="relative flex items-center justify-center h-28 w-44 md:w-52 shrink-0 cursor-default"
-                            >
-                                <Image
-                                    src={logo.src}
-                                    alt={logo.alt}
-                                    fill
-                                    sizes="(max-width: 768px) 176px, 208px"
-                                    className="object-contain px-4 py-6 grayscale brightness-50 opacity-45 transition-all duration-400 hover:grayscale-0 hover:brightness-110 hover:opacity-100"
-                                />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    {trustedClients.map((client, i) => (
+                        <AnimatedSection key={i} delay={i * 0.12}>
+                            <div className="glass-card p-6 flex flex-col items-center text-center gap-4 group hover:border-gold/20 transition-all duration-300">
+                                <div className="relative w-32 h-16">
+                                    <Image
+                                        src={client.src}
+                                        alt={client.alt}
+                                        fill
+                                        sizes="128px"
+                                        className="object-contain grayscale brightness-50 opacity-50 group-hover:grayscale-0 group-hover:brightness-110 group-hover:opacity-100 transition-all duration-400"
+                                    />
+                                </div>
+                                <div>
+                                    <p className="text-white font-bold text-sm mb-1">{client.name}</p>
+                                    <p className="text-white/60 text-xs leading-relaxed">{client.desc}</p>
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                        </AnimatedSection>
+                    ))}
                 </div>
             </div>
         </section>

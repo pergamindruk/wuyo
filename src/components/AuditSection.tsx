@@ -69,7 +69,7 @@ export function AuditSection() {
                                 <Check size={24} color="#000" />
                             </div>
                             <p className="text-white font-semibold text-lg">Git! Dostałem Twoje zgłoszenie 🎉</p>
-                            <p className="text-white/50 text-sm">Audyt wyślę na <span className="text-gold">{email}</span> — zazwyczaj w ciągu 24–48 h.</p>
+                            <p className="text-white/60 text-sm">Audyt wyślę na <span className="text-gold">{email}</span> — zazwyczaj w ciągu 24–48 h.</p>
                         </div>
                     ) : (
                         <form

@@ -1,6 +1,7 @@
 import React from 'react'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/lab/Sidebar'
+import { Toaster } from 'sonner'
 
 export default async function LabLayout({
     children,
@@ -23,6 +24,7 @@ export default async function LabLayout({
             <main className="flex-1 p-6 lg:p-10 overflow-y-auto md:h-screen print:p-0 print:m-0 print:overflow-visible">
                 {children}
             </main>
+            <Toaster position="bottom-right" theme="dark" richColors />
         </div>
     )
 }

@@ -123,7 +123,7 @@ export function ProcessSection() {
                             {/* Process dot on the line */}
                             <div className="relative shrink-0 mt-6 z-20">
                                 <div className="w-12 h-12 rounded-full bg-navy border-2 border-white/10 flex items-center justify-center transition-all duration-300 group-hover:border-gold group-hover:shadow-[0_0_15px_rgba(255,235,82,0.3)] bg-navy-dark">
-                                    <span className="text-sm font-bold text-white/50 group-hover:text-gold transition-colors">
+                                    <span className="text-sm font-bold text-white/60 group-hover:text-gold transition-colors">
                                         {index + 1}
                                     </span>
                                 </div>

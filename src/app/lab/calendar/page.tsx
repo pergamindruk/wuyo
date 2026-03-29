@@ -5,13 +5,14 @@ import { getCalendar, addCalendarEvent, updateEventStatus } from './actions'
 import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
 import type { YtMetadata } from '../social-media/actions'
 import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check } from 'lucide-react'
+import type { CalendarEvent } from '@/lib/types'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 
 export default function CalendarLab() {
-    const [events, setEvents] = useState<any[]>([])
+    const [events, setEvents] = useState<CalendarEvent[]>([])
     const [loading, setLoading] = useState(true)
 
     // formularz dodawania
@@ -38,7 +39,7 @@ export default function CalendarLab() {
     async function loadData() {
         setLoading(true)
         const data = await getCalendar()
-        setEvents(data.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()))
+        setEvents((data as CalendarEvent[]).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()))
         setLoading(false)
     }
 
@@ -62,7 +63,7 @@ export default function CalendarLab() {
         loadData()
     }
 
-    const openPublish = (ev: any) => {
+    const openPublish = (ev: CalendarEvent) => {
         setPublishingPostId(ev.id)
         setPublishImageUrl(ev.image_url || '')
         setPublishFeedback(null)
@@ -333,7 +334,7 @@ export default function CalendarLab() {
                                                             {ev.content && (
                                                                 <button
                                                                     onClick={() => {
-                                                                        navigator.clipboard.writeText(ev.content)
+                                                                        navigator.clipboard.writeText(ev.content ?? '')
                                                                         setPublishFeedback({ success: true, message: 'Tresc skopiowana do schowka!' })
                                                                         setPublishingPostId(ev.id)
                                                                     }}
