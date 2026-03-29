@@ -1,6 +1,8 @@
 import { login, signup } from './actions'
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ message?: string }> }) {
+    const { message } = await searchParams
+
     return (
         <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
@@ -11,6 +13,12 @@ export default function LoginPage() {
                     <h1 className="text-2xl font-bold text-white mb-2">Autoryzacja Wymagana</h1>
                     <p className="text-zinc-400 text-sm">Zaloguj się do panelu WUYO Lab</p>
                 </div>
+
+                {message && (
+                    <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+                        {message.replace(/_/g, ' ')}
+                    </div>
+                )}
 
                 <form action={login} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
