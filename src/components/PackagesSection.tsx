@@ -108,7 +108,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                                 ))}
                             </ul>
 
-                            <Link href="#kontakt" className={`text-center block w-full py-4 rounded-full font-semibold text-sm transition-all ${pkg.featured
+                            <Link href={`/?pakiet=${encodeURIComponent(pkg.name)}#kontakt`} className={`text-center block w-full py-4 rounded-full font-semibold text-sm transition-all ${pkg.featured
                                 ? 'btn-gold !rounded-full !w-full'
                                 : 'btn-outline !rounded-full !w-full'
                                 }`}>

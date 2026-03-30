@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
+import { packages } from "@/components/PackagesSection";
 
 /* ─ Linki kontaktowe ─ */
 const WA_LINK = "https://wa.me/48725182053";
@@ -45,6 +47,28 @@ export function ContactBrief() {
     const [submitted, setSubmitted] = useState(false);
     const [sending, setSending] = useState(false);
     const [error, setError] = useState("");
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        const pakiet = searchParams.get("pakiet");
+        if (pakiet) {
+            const found = packages.find((p) => p.name === pakiet);
+            const priceStr = found ? ` (${found.price})` : "";
+            switchPath("quick");
+            setData((prev) => ({
+                ...prev,
+                path: "quick",
+                quickMessage: `Cześć! Interesuje mnie pakiet \u201E${pakiet}\u201D${priceStr}. Chciałbym dowiedzieć się więcej i omówić szczegóły.`,
+            }));
+            setTimeout(() => {
+                const el = document.getElementById("kontakt");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
+            router.replace("/#kontakt", { scroll: false });
+        }
+    }, [searchParams]);
 
     const switchPath = (p: Path) => {
         setPath(p);
