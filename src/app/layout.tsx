@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne } from "next/font/google";
-import localFont from "next/font/local";
+import { Inter, Syne, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -11,8 +10,9 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], variable: "--font-syne" });
-const avaMeridian = localFont({
-    src: "../../public/fonts/ava_meridian/Ava Meridian.otf",
+const cormorant = Cormorant_Garamond({
+    subsets: ["latin", "latin-ext"],
+    weight: ["300", "400", "500", "600", "700"],
     variable: "--font-ava-meridian",
     display: "swap",
 });
@@ -148,7 +148,7 @@ export default function RootLayout({
                     </>
                 )}
             </head>
-            <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${avaMeridian.variable} font-sans antialiased bg-zinc-950`}>
+            <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${cormorant.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Skip to content – ruch klawiaturowy (WCAG) */}
                 <a
                     href="#main-content"
