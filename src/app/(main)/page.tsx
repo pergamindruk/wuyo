@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { PortfolioGallery } from "@/components/PortfolioGallery";
 import { ProcessSection } from "@/components/ProcessSection";
 import { AuditSection } from "@/components/AuditSection";
@@ -13,6 +14,7 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
+import { StatsCounter } from "@/components/StatsCounter";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -124,6 +126,16 @@ export default function Home() {
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
                 <Spotlight className="top-10 left-full md:right-40 md:top-20" fill="white" />
 
+                {/* Dekoracyjne tło — signature WUYO */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden>
+                    <span
+                        className="font-black text-white/[0.028] tracking-tighter -rotate-6"
+                        style={{ fontSize: "clamp(8rem,22vw,20rem)", fontFamily: "var(--font-ava-meridian)" }}
+                    >
+                        WUYO
+                    </span>
+                </div>
+
                 <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true}>
                     <HeroText />
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
@@ -138,18 +150,8 @@ export default function Home() {
                         </Link>
                     </div>
 
-                    {/* Social proof */}
-                    <div className="flex items-center justify-center gap-4 sm:gap-6 mt-10 text-white/60 text-sm flex-wrap">
-                        <span className="flex items-center gap-1.5">
-                            <span className="text-gold font-bold text-base">156+</span> zrealizowanych projektów
-                        </span>
-                        <span className="hidden sm:block w-px h-4 bg-white/20" />
-                        <span className="flex items-center gap-1.5">
-                            <span className="text-gold font-bold text-base">46</span> branż
-                        </span>
-                        <span className="hidden sm:block w-px h-4 bg-white/20" />
-                        <span>Polska&nbsp;&amp;&nbsp;zagranica</span>
-                    </div>
+                    {/* Social proof — animated counters */}
+                    <StatsCounter />
                 </AnimatedSection>
 
                 {/* Scroll indicator */}
@@ -169,19 +171,35 @@ export default function Home() {
                     </h2>
                 </AnimatedSection>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto relative z-10">
                     {services.map((service, i) => (
-                        <AnimatedSection key={i} delay={i * 0.1}>
+                        <AnimatedSection
+                            key={i}
+                            delay={i * 0.08}
+                            className={i < 2 ? "lg:col-span-2" : "lg:col-span-1"}
+                        >
                             {service.href ? (
                                 <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
-                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                    <h3 className="text-xl font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3">{service.title}</h3>
+                                    <div
+                                        className="font-black text-gold/25 group-hover:text-gold/50 transition-colors duration-500 mb-6 leading-none select-none"
+                                        style={{ fontSize: i < 2 ? "4.5rem" : "3.5rem", fontFamily: "var(--font-ava-meridian)", lineHeight: 1 }}
+                                        aria-hidden
+                                    >
+                                        {String(i + 1).padStart(2, "0")}
+                                    </div>
+                                    <h3 className={`font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3 ${i < 2 ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
                                     <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm mb-4">{service.desc}</p>
                                     <span className="inline-flex items-center gap-1 text-gold text-xs font-bold group-hover:gap-2 transition-all">Dowiedz się więcej <ArrowRight size={12} /></span>
                                 </Link>
                             ) : (
                                 <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
-                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
+                                    <div
+                                        className="font-black text-gold/25 group-hover:text-gold/50 transition-colors duration-500 mb-6 leading-none select-none"
+                                        style={{ fontSize: "3rem", fontFamily: "var(--font-ava-meridian)" }}
+                                        aria-hidden
+                                    >
+                                        {String(i + 1).padStart(2, "0")}
+                                    </div>
                                     <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
                                     <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
                                 </div>
@@ -280,7 +298,9 @@ export default function Home() {
             <TestimonialsSection />
 
             {/* ═══════════════════════ KONTAKT / BRIEF ═══════════════════════ */}
-            <ContactBrief />
+            <Suspense fallback={null}>
+                <ContactBrief />
+            </Suspense>
 
             {/* ═══════════════════════ ZAUFALI MI ═══════════════════════ */}
             <TrustedBySection />

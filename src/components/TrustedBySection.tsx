@@ -2,8 +2,6 @@
 
 import { Clock, ShieldCheck, Eye } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
-import Image from "next/image";
-import { trustedClients } from "@/data/clients";
 
 const guarantees = [
     {
@@ -53,37 +51,6 @@ export function TrustedBySection() {
                 </div>
             </div>
 
-            {/* ═══════ REALIZACJE – statyczny grid ═══════ */}
-            <div className="border-t border-white/5 pt-12 relative">
-                <AnimatedSection className="text-center mb-10">
-                    <p className="eyebrow mb-3">realizacje</p>
-                    <h3 className="text-xl md:text-2xl font-bold text-white">
-                        Marki, które już ogarniamy
-                    </h3>
-                </AnimatedSection>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    {trustedClients.map((client, i) => (
-                        <AnimatedSection key={i} delay={i * 0.12}>
-                            <div className="glass-card p-6 flex flex-col items-center text-center gap-4 group hover:border-gold/20 transition-all duration-300">
-                                <div className="relative w-32 h-16">
-                                    <Image
-                                        src={client.src}
-                                        alt={client.alt}
-                                        fill
-                                        sizes="128px"
-                                        className="object-contain grayscale brightness-50 opacity-50 group-hover:grayscale-0 group-hover:brightness-110 group-hover:opacity-100 transition-all duration-400"
-                                    />
-                                </div>
-                                <div>
-                                    <p className="text-white font-bold text-sm mb-1">{client.name}</p>
-                                    <p className="text-white/60 text-xs leading-relaxed">{client.desc}</p>
-                                </div>
-                            </div>
-                        </AnimatedSection>
-                    ))}
-                </div>
-            </div>
         </section>
     );
 }
