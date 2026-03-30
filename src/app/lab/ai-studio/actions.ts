@@ -37,16 +37,45 @@ export async function generateQuote(clientMessage: string) {
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
-        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa"). Masz pelna wiedze o najnowoczesniejszych standardach wyceny, technologiach i oczekiwaniach biznesowych klientow premium.
+        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku (Epson L18050 A3+, ploter tnacy Cameo 5, laminator, gilotyna) - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
     Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
 
     "${clientMessage}"
 
+    CENNIK REFERENCYJNY WUYO (brutto, 2026, rynek rzeszowski):
+
+    DRUK wlasny (projekt + druk lacznie, ceny calkowite dla klienta):
+    - Wizytowki 500 szt. (dwustronne): 200-250 zl/set
+    - Ulotki A6 500 szt.: 250-300 zl/set
+    - Ulotki A5 500 szt.: 300-370 zl/set
+    - Plakat A3 (1 szt.): 60-100 zl
+    - Vouchery 500 szt.: 200-280 zl/set
+    Adaptacje/warianty tego samego projektu: 50% ceny zestawu bazowego.
+    Rabat pakietowy przy 4+ pozycjach dla jednej marki: -10-15% od sumy.
+
+    PROJEKT GRAFICZNY (bez druku):
+    - Logo: od 800 zl (baza), od 1000 zl (pelne)
+    - Identyfikacja wizualna: od 2500 zl
+    - Wizytowka (sam projekt): 120-180 zl
+    - Ulotka (sam projekt): 150-220 zl
+    - Rollup/Banner (sam projekt): 300-400 zl
+
+    STRONY WWW:
+    - One-Page: 1200 zl
+    - Multi-Page: 2900 zl
+    - E-commerce: wycena ind. (min. 5000 zl)
+
+    SOCIAL MEDIA / DIGITAL:
+    - Social Media Kit: od 1200 zl
+    - Karuzela IG/LinkedIn: od 150 zl/post
+    - Pitch Deck: od 600 zl
+    - Szablon newslettera: od 300 zl
+
     Zadanie: Przeanalizuj to zapytanie i przygotuj odpowiedz dla wlasciciela WUYO. Odpowiedz ma zawierac:
-    1. **Krotkie streszczenie:** Czego dokladnie chce klient i na czym mu zalezy (wymagania techniczne/wizualne).
-    2. **Sugerowany pakiet:** (Wybierz najbardziej pasujacy z naszej oferty: Strona One-Page, Strona Multi-Page, Sklep E-Commerce, czy moze identyfikacja wizualna).
-    3. **Estymacja wyceny:** (Podaj widelki cenowe, zeby wlasciciel wiedzial od czego zaczac negocjacje - pamietaj, ze jestesmy butikowa agencja premium - wyceniaj konkretnie, ale solidnie).
-    4. **Szkic Odpowiedzi:** (Zaproponuj gotowy tekst profesjonalnej, ale "luznej i z pazurem" odpowiedzi do klienta, gotowy do skopiowania i edycji).
+    1. **Krotkie streszczenie:** Czego dokladnie chce klient i na czym mu zalezy.
+    2. **Sugerowany pakiet / pozycje z oferty:** Dopasuj konkretne pozycje z cennika.
+    3. **Estymacja wyceny:** Podaj konkretne kwoty (nie "od X") dla kazdej pozycji oraz lacznie. Jesli kilka elementow dla jednej marki - uwzglednij rabat pakietowy i zaznacz adaptacje. Wyceny musza byc zakorzenione w powyzszym cenniku - nie wymyslaj wyzsZych kwot.
+    4. **Szkic odpowiedzi do klienta:** Gotowy tekst w stylu WUYO (konkretny, "luzny z pazurem", bez lania wody), gotowy do skopiowania i edycji.
 
     Sformatuj odpowiedz czytelnym Markdownem, uzywaj boldow, list.`
 
