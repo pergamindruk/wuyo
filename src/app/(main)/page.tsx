@@ -180,26 +180,14 @@ export default function Home() {
                         >
                             {service.href ? (
                                 <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
-                                    <div
-                                        className="font-black text-gold/25 group-hover:text-gold/50 transition-colors duration-500 mb-6 leading-none select-none"
-                                        style={{ fontSize: i < 2 ? "4.5rem" : "3.5rem", fontFamily: "var(--font-ava-meridian)", lineHeight: 1 }}
-                                        aria-hidden
-                                    >
-                                        {String(i + 1).padStart(2, "0")}
-                                    </div>
+                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
                                     <h3 className={`font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3 ${i < 2 ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
                                     <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm mb-4">{service.desc}</p>
                                     <span className="inline-flex items-center gap-1 text-gold text-xs font-bold group-hover:gap-2 transition-all">Dowiedz się więcej <ArrowRight size={12} /></span>
                                 </Link>
                             ) : (
                                 <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
-                                    <div
-                                        className="font-black text-gold/25 group-hover:text-gold/50 transition-colors duration-500 mb-6 leading-none select-none"
-                                        style={{ fontSize: "3rem", fontFamily: "var(--font-ava-meridian)" }}
-                                        aria-hidden
-                                    >
-                                        {String(i + 1).padStart(2, "0")}
-                                    </div>
+                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
                                     <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
                                     <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
                                 </div>
