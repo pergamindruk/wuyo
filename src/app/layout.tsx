@@ -8,8 +8,8 @@ import Script from "next/script";
 // Wstaw swój GA4 Measurement ID z https://analytics.google.com → Admin → Data Streams
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 
-const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
-const syne = Syne({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], variable: "--font-syne" });
+const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
+const syne = Syne({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-syne", display: "swap" });
 const goldman = Goldman({
     subsets: ["latin"],
     weight: ["400", "700"],
