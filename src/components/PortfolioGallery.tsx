@@ -19,6 +19,7 @@ type Project = {
     title: string;
     category: string;
     image: string;
+    images?: string[];
     desc?: string;
     demoUrl?: string;
     year?: string;
@@ -38,6 +39,7 @@ const projects: Project[] = [
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", desc: "Detailing · spójna identyfikacja wizualna", year: "2024" },
     { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp", desc: "Detailing · wizytówka", year: "2024" },
     { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej", year: "2024" },
+    { id: 14, title: "Gama Ubezpieczeń – Materiały firmowe", category: "Do druku", image: "/realizacje/gama-ubezpieczen.webp", images: ["/realizacje/gama-ubezpieczen-mockup1.webp", "/realizacje/gama-ubezpieczen-mockup2.webp"], desc: "Biuro ubezpieczeń · ulotka, strona informacyjna, wizytówka", year: "2025" },
 ];
 
 export function PortfolioGallery() {
@@ -46,6 +48,7 @@ export function PortfolioGallery() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [visibleCount, setVisibleCount] = useState(9);
     const [fullscreenSrc, setFullscreenSrc] = useState<string | null>(null);
+    const [drawerActiveImg, setDrawerActiveImg] = useState<string | null>(null);
     const tabsContainerRef = useRef<HTMLDivElement>(null);
     const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [indicator, setIndicator] = useState({ left: 0, width: 0 });
@@ -77,6 +80,7 @@ export function PortfolioGallery() {
 
     const openPanel = (project: Project) => {
         setSelectedProject(project);
+        setDrawerActiveImg(project.image);
         document.body.style.overflow = "hidden";
     };
 
@@ -304,7 +308,7 @@ export function PortfolioGallery() {
                             {/* Project image */}
                             <div className="relative w-full shrink-0 bg-navy group/img" style={{ aspectRatio: "16/10" }}>
                                 <Image
-                                    src={selectedProject.image}
+                                    src={drawerActiveImg || selectedProject.image}
                                     alt={selectedProject.title}
                                     fill
                                     className="object-contain p-6"
@@ -312,7 +316,7 @@ export function PortfolioGallery() {
                                 />
                                 {/* Fullscreen button */}
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); setFullscreenSrc(selectedProject.image); }}
+                                    onClick={(e) => { e.stopPropagation(); setFullscreenSrc(drawerActiveImg || selectedProject.image); }}
                                     className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-lg bg-navy-dark/70 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-navy-dark/90 transition-all opacity-0 group-hover/img:opacity-100"
                                     title="Pełna rozdzielczość"
                                 >
@@ -321,6 +325,25 @@ export function PortfolioGallery() {
                                 {/* Fade into panel bg */}
                                 <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#1e1d19] to-transparent pointer-events-none" />
                             </div>
+
+                            {/* Thumbnail gallery */}
+                            {selectedProject.images && selectedProject.images.length > 0 && (
+                                <div className="flex gap-2 px-4 py-3 bg-[#1a1916] shrink-0 overflow-x-auto hide-scrollbar">
+                                    {[selectedProject.image, ...selectedProject.images].map((src, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => setDrawerActiveImg(src)}
+                                            className={`relative w-20 h-14 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${
+                                                (drawerActiveImg || selectedProject.image) === src
+                                                    ? "border-gold"
+                                                    : "border-white/10 hover:border-white/30"
+                                            }`}
+                                        >
+                                            <Image src={src} alt={`${selectedProject.title} ${i + 1}`} fill className="object-cover" sizes="80px" />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Content */}
                             <div className="flex-1 overflow-y-auto p-8">
