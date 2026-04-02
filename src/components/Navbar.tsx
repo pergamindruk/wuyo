@@ -109,6 +109,10 @@ export function Navbar() {
                             Blog
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
+                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            Kontakt
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+                        </a>
                     </nav>
                 </div>
 
@@ -119,7 +123,7 @@ export function Navbar() {
                         onClick={(e) => handleAnchorClick(e, "kontakt")}
                         className="hidden md:inline-flex btn-gold px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_0_15px_rgba(255,235,82,0.15)] hover:shadow-[0_0_25px_rgba(255,235,82,0.3)]"
                     >
-                        Zbuduj wizerunek
+                        Napisz do mnie
                     </a>
 
                     <button
@@ -148,6 +152,7 @@ export function Navbar() {
                             <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
                             <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
+                            <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
                         </nav>
                         <div className="mt-10 mx-auto">
                             <a
@@ -155,7 +160,7 @@ export function Navbar() {
                                 onClick={(e) => handleAnchorClick(e, "kontakt")}
                                 className="btn-gold px-8 py-3 text-sm rounded-full"
                             >
-                                Zbuduj mój wizerunek
+                                Napisz do mnie
                             </a>
                         </div>
                     </motion.div>
