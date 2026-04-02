@@ -3,8 +3,10 @@
 import { motion, Variants } from "framer-motion";
 
 export function HeroText() {
-    const line1 = "Twoi klienci oceniają Cię w 3 sekundy.";
-    const line2 = "Zadbaj, żeby to co zobaczą, sprzedawało za Ciebie";
+    const line1 = "Twoi klienci";
+    const line2 = "oceniają Cię w 3 sekundy";
+    const line3 = "Zadbaj, żeby to co zobaczą,";
+    const line4 = "sprzedawało za Ciebie";
 
     const container: Variants = {
         hidden: { opacity: 1 },
@@ -26,6 +28,18 @@ export function HeroText() {
         }
     };
 
+    const renderWords = (line: string, keyPrefix: string, className: string) =>
+        line.split(" ").map((word, i) => (
+            <span key={`${keyPrefix}-${i}`} className="overflow-hidden inline-block mr-[0.25em] pb-1">
+                <motion.span variants={item} className={`inline-block origin-bottom-left ${className}`}>
+                    {word}
+                </motion.span>
+            </span>
+        ));
+
+    const whiteStyle = "";
+    const goldStyle = "bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent uppercase font-bold";
+
     return (
         <motion.h1
             variants={container}
@@ -34,34 +48,16 @@ export function HeroText() {
             className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8 text-white tracking-tight flex flex-col items-center"
         >
             <div className="flex flex-wrap justify-center">
-                {line1.split(" ").map((word, i) => (
-                    <span key={`line1-${i}`} className="overflow-hidden inline-block mr-[0.25em] pb-1">
-                        <motion.span variants={item} className="inline-block origin-bottom-left">
-                            {word}
-                        </motion.span>
-                    </span>
-                ))}
+                {renderWords(line1, "line1", whiteStyle)}
             </div>
-            <div className="flex flex-wrap justify-center mt-2 items-baseline">
-                {line2.split(" ").map((word, i) => (
-                    <span key={`line2-${i}`} className="overflow-hidden inline-block mr-[0.25em] pb-2">
-                        <motion.span
-                            variants={item}
-                            className="inline-block origin-bottom-left bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent uppercase font-bold"
-                        >
-                            {word}
-                        </motion.span>
-                    </span>
-                ))}
-                <span className="overflow-hidden inline-block pb-2">
-                    <motion.span
-                        variants={item}
-                        className="inline-block origin-bottom-left uppercase font-bold"
-                        style={{ color: "#FFFBDB" }}
-                    >
-                        .
-                    </motion.span>
-                </span>
+            <div className="flex flex-wrap justify-center">
+                {renderWords(line2, "line2", whiteStyle)}
+            </div>
+            <div className="flex flex-wrap justify-center mt-2">
+                {renderWords(line3, "line3", goldStyle)}
+            </div>
+            <div className="flex flex-wrap justify-center">
+                {renderWords(line4, "line4", goldStyle)}
             </div>
         </motion.h1>
     );
