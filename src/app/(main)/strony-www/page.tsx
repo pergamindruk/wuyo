@@ -75,7 +75,7 @@ const packages = [
             "Optymalizacja obrazów (WebP/AVIF)",
             "Deploy na Vercel (darmowy hosting)",
         ],
-        time: "1–2 tygodnie",
+        time: "tydzień",
         highlight: false,
     },
     {
@@ -91,7 +91,7 @@ const packages = [
             "Sitemap + robots.txt",
             "Google Search Console setup",
         ],
-        time: "3–5 tygodni",
+        time: "2–3 tygodnie",
         highlight: true,
     },
     {
