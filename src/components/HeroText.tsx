@@ -20,17 +20,17 @@ export function HeroText() {
     };
 
     const item: Variants = {
-        hidden: { y: "130%", rotate: 2 },
+        hidden: { y: 16, opacity: 0 },
         show: {
-            y: "0%",
-            rotate: 0,
+            y: 0,
+            opacity: 1,
             transition: { type: "spring", stiffness: 80, damping: 15, mass: 1 }
         }
     };
 
     const renderWords = (line: string, keyPrefix: string, className: string) =>
         line.split(" ").map((word, i) => (
-            <span key={`${keyPrefix}-${i}`} className="overflow-hidden inline-block mr-[0.25em] pb-1">
+            <span key={`${keyPrefix}-${i}`} className="inline-block mr-[0.25em] pb-1">
                 <motion.span variants={item} className={`inline-block origin-bottom-left ${className}`}>
                     {word}
                 </motion.span>

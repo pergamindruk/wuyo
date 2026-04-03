@@ -136,7 +136,7 @@ export default function Home() {
                     </span>
                 </div>
 
-                <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true}>
+                <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true} hero={true}>
                     <HeroText />
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
                         Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.

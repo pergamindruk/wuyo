@@ -9,17 +9,22 @@ interface AnimatedSectionProps {
     id?: string;
     delay?: number;
     animateOnMount?: boolean;
+    /** Tryb hero: startuje z opacity:1 (widoczny od razu dla LCP), animuje tylko Y */
+    hero?: boolean;
 }
 
-export function AnimatedSection({ children, className = "", id, delay = 0, animateOnMount = false }: AnimatedSectionProps) {
+export function AnimatedSection({ children, className = "", id, delay = 0, animateOnMount = false, hero = false }: AnimatedSectionProps) {
+    const initial = hero ? { opacity: 1, y: 20 } : { opacity: 0, y: 50 };
+    const target = hero ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 };
+
     const animationProps = animateOnMount
-        ? { animate: { opacity: 1, y: 0 } }
-        : { whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-100px" } };
+        ? { animate: target }
+        : { whileInView: target, viewport: { once: true, margin: "-100px" } };
 
     return (
         <motion.section
             id={id}
-            initial={{ opacity: 0, y: 50 }}
+            initial={initial}
             {...animationProps}
             transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
             className={`w-full ${className}`}
