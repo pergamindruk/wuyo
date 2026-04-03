@@ -35,20 +35,14 @@ export const MouseSpotlight = () => {
         };
     }, [mouseX, mouseY, isMouse]);
 
+    const background = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255, 235, 82, 0.035), transparent 80%)`;
+
     if (!isMouse) return null;
 
     return (
         <motion.div
             className="pointer-events-none fixed inset-0 z-30"
-            style={{
-                background: useMotionTemplate`
-            radial-gradient(
-              600px circle at ${mouseX}px ${mouseY}px,
-              rgba(255, 235, 82, 0.035),
-              transparent 80%
-            )
-          `,
-            }}
+            style={{ background }}
         />
     );
 };
