@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter",
 const syne = Syne({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-syne", display: "swap" });
 const goldman = Goldman({
     subsets: ["latin"],
-    weight: ["400", "700"],
+    weight: ["700"],
     variable: "--font-ava-meridian",
     display: "swap",
 });

@@ -1,16 +1,26 @@
 "use client";
 
 import { useMotionValue, useMotionTemplate, motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const MouseSpotlight = () => {
+    const [isMouse, setIsMouse] = useState(false);
+
+    useEffect(() => {
+        const mql = window.matchMedia("(pointer: fine)");
+        setIsMouse(mql.matches);
+        const handler = (e: MediaQueryListEvent) => setIsMouse(e.matches);
+        mql.addEventListener("change", handler);
+        return () => mql.removeEventListener("change", handler);
+    }, []);
+
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
     const rafId = useRef<number | null>(null);
 
     useEffect(() => {
+        if (!isMouse) return;
         const handleMouseMove = (e: MouseEvent) => {
-            // Throttle przez requestAnimationFrame – jeden update na klatkę animacji max
             if (rafId.current !== null) return;
             rafId.current = requestAnimationFrame(() => {
                 mouseX.set(e.clientX);
@@ -23,7 +33,9 @@ export const MouseSpotlight = () => {
             window.removeEventListener("mousemove", handleMouseMove);
             if (rafId.current) cancelAnimationFrame(rafId.current);
         };
-    }, [mouseX, mouseY]);
+    }, [mouseX, mouseY, isMouse]);
+
+    if (!isMouse) return null;
 
     return (
         <motion.div

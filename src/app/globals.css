@@ -144,11 +144,20 @@ body {
   background: rgba(38, 37, 32, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 1.25rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0);
-  will-change: transform, border-color, background-color;
+}
+
+@media (min-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@media (max-width: 767px) {
+  .glass-card {
+    background: rgba(38, 37, 32, 0.85);
+  }
 }
 
 .glass-card:hover {
@@ -316,4 +325,23 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 8px;
+}
+
+/* Mobile performance: hide heavy SVG spotlights, reduce glow blur */
+@media (max-width: 767px) {
+  .animate-spotlight {
+    display: none !important;
+  }
+  .hero-glow {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+    opacity: 0.3;
+  }
+  .section-glow {
+    width: 200px;
+    height: 100px;
+    filter: blur(40px);
+    opacity: 0.15;
+  }
 }
