@@ -12,11 +12,7 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Sparkles, ChevronDown } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import dynamic from "next/dynamic";
-
-const Spotlight = dynamic(() => import("@/components/ui/spotlight").then(m => ({ default: m.Spotlight })), { ssr: false });
-const MouseSpotlight = dynamic(() => import("@/components/ui/mouse-spotlight").then(m => ({ default: m.MouseSpotlight })), { ssr: false });
-const StatsCounter = dynamic(() => import("@/components/StatsCounter").then(m => ({ default: m.StatsCounter })), { ssr: false });
+import { HeroClientEffects, HeroStats } from "@/components/HeroClientEffects";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -124,9 +120,7 @@ export default function Home() {
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
             <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
-                <MouseSpotlight />
-                <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
-                <Spotlight className="top-10 left-full md:right-40 md:top-20" fill="white" />
+                <HeroClientEffects />
 
                 {/* Dekoracyjne tło — signature WUYO */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden>
@@ -153,7 +147,7 @@ export default function Home() {
                     </div>
 
                     {/* Social proof — animated counters */}
-                    <StatsCounter />
+                    <HeroStats />
                 </AnimatedSection>
 
                 {/* Scroll indicator */}
