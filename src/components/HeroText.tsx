@@ -1,64 +1,48 @@
-"use client";
+import React from "react";
 
-import { motion, Variants } from "framer-motion";
+const words = [
+    { text: "Twoi", line: 1, style: "white" },
+    { text: "klienci", line: 1, style: "white" },
+    { text: "oceniają", line: 2, style: "white" },
+    { text: "Cię", line: 2, style: "white" },
+    { text: "w", line: 2, style: "white" },
+    { text: "3", line: 2, style: "white" },
+    { text: "sekundy", line: 2, style: "white" },
+    { text: "Zadbaj,", line: 3, style: "gold" },
+    { text: "żeby", line: 3, style: "gold" },
+    { text: "to", line: 3, style: "gold" },
+    { text: "co", line: 3, style: "gold" },
+    { text: "zobaczą,", line: 3, style: "gold" },
+    { text: "sprzedawało", line: 4, style: "gold" },
+    { text: "za", line: 4, style: "gold" },
+    { text: "Ciebie", line: 4, style: "gold" },
+];
+
+const goldClass = "bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent uppercase font-bold";
 
 export function HeroText() {
-    const line1 = "Twoi klienci";
-    const line2 = "oceniają Cię w 3 sekundy";
-    const line3 = "Zadbaj, żeby to co zobaczą,";
-    const line4 = "sprzedawało za Ciebie";
-
-    const container: Variants = {
-        hidden: { opacity: 1 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.1,
-            }
-        }
-    };
-
-    const item: Variants = {
-        hidden: { y: 16, opacity: 0 },
-        show: {
-            y: 0,
-            opacity: 1,
-            transition: { type: "spring", stiffness: 80, damping: 15, mass: 1 }
-        }
-    };
-
-    const renderWords = (line: string, keyPrefix: string, className: string) =>
-        line.split(" ").map((word, i) => (
-            <span key={`${keyPrefix}-${i}`} className="inline-block mr-[0.25em] pb-1">
-                <motion.span variants={item} className={`inline-block origin-bottom-left ${className}`}>
-                    {word}
-                </motion.span>
-            </span>
-        ));
-
-    const whiteStyle = "";
-    const goldStyle = "bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent uppercase font-bold";
+    const lines = [1, 2, 3, 4];
 
     return (
-        <motion.h1
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8 text-white tracking-tight flex flex-col items-center"
-        >
-            <div className="flex flex-wrap justify-center">
-                {renderWords(line1, "line1", whiteStyle)}
-            </div>
-            <div className="flex flex-wrap justify-center">
-                {renderWords(line2, "line2", whiteStyle)}
-            </div>
-            <div className="flex flex-wrap justify-center mt-2">
-                {renderWords(line3, "line3", goldStyle)}
-            </div>
-            <div className="flex flex-wrap justify-center">
-                {renderWords(line4, "line4", goldStyle)}
-            </div>
-        </motion.h1>
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8 text-white tracking-tight flex flex-col items-center">
+            {lines.map((lineNum) => (
+                <div key={lineNum} className={`flex flex-wrap justify-center${lineNum >= 3 ? " mt-2" : ""}`}>
+                    {words
+                        .filter((w) => w.line === lineNum)
+                        .map((w, i) => {
+                            const globalIdx = words.filter((x) => x.line < lineNum).length + i;
+                            return (
+                                <span
+                                    key={i}
+                                    className={`inline-block mr-[0.25em] pb-1 hero-word${w.style === "gold" ? ` ${goldClass}` : ""}`}
+                                    style={{ animationDelay: `${globalIdx * 0.08}s` }}
+                                >
+                                    {w.text}
+                                </span>
+                            );
+                        })}
+                </div>
+            ))}
+        </h1>
     );
 }
