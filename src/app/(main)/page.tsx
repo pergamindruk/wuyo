@@ -12,9 +12,11 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Sparkles, ChevronDown } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { Spotlight } from "@/components/ui/spotlight";
-import { MouseSpotlight } from "@/components/ui/mouse-spotlight";
-import { StatsCounter } from "@/components/StatsCounter";
+import dynamic from "next/dynamic";
+
+const Spotlight = dynamic(() => import("@/components/ui/spotlight").then(m => ({ default: m.Spotlight })), { ssr: false });
+const MouseSpotlight = dynamic(() => import("@/components/ui/mouse-spotlight").then(m => ({ default: m.MouseSpotlight })), { ssr: false });
+const StatsCounter = dynamic(() => import("@/components/StatsCounter").then(m => ({ default: m.StatsCounter })), { ssr: false });
 
 const faqSchema = {
     "@context": "https://schema.org",
