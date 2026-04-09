@@ -35,7 +35,7 @@ export function HeroText() {
                                 <span
                                     key={i}
                                     className={`inline-block mr-[0.25em] pb-1 hero-word${w.style === "gold" ? ` ${goldClass}` : ""}`}
-                                    style={{ animationDelay: `${globalIdx * 0.08}s` }}
+                                    style={{ animationDelay: `${globalIdx * 0.04}s` }}
                                 >
                                     {w.text}
                                 </span>

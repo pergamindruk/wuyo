@@ -3,13 +3,12 @@
 @tailwind utilities;
 
 @keyframes heroWordIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(16px); }
+  to   { transform: translateY(0); }
 }
 
 .hero-word {
-  opacity: 0;
-  animation: heroWordIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroWordIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @layer utilities {

@@ -14,7 +14,7 @@ const goldman = Goldman({
     subsets: ["latin"],
     weight: ["700"],
     variable: "--font-ava-meridian",
-    display: "swap",
+    display: "optional",
 });
 
 export const metadata: Metadata = {
