@@ -38,59 +38,58 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
     return (
         <>
             {/* Mobile Header */}
-            <div className="md:hidden flex items-center justify-between bg-zinc-900 border-b border-zinc-800 p-4 sticky top-0 z-50 print:hidden">
-                <div className="flex items-center gap-3">
-                    <Image src="/wuyo-dobra-grafa-logo-biale.webp" alt="WUYO" width={32} height={32} className="object-contain" />
-                    <span className="font-bold text-lg tracking-tight text-white">WUYO Lab</span>
+            <div className="md:hidden flex items-center justify-between bg-zinc-950 border-b border-zinc-800/60 px-4 py-3 sticky top-0 z-50 print:hidden">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold text-xs">W</div>
+                    <span className="font-heading font-bold text-base tracking-tight text-white">WUYO Lab</span>
                 </div>
                 <button
                     onClick={toggleMenu}
-                    className="p-2 text-zinc-400 hover:text-white transition-colors"
+                    className="p-1.5 text-zinc-500 hover:text-white transition-colors"
                 >
-                    {isOpen ? <X size={24} /> : <Menu size={24} />}
+                    {isOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
             </div>
 
             {/* Backdrop for Mobile */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] md:hidden transition-opacity"
+                    className="fixed inset-0 bg-black/70 z-[60] md:hidden"
                     onClick={closeMenu}
                 />
             )}
 
-            {/* Sidebar Overlay (Mobile & Desktop) */}
+            {/* Sidebar */}
             <aside className={`
-                fixed inset-y-0 left-0 z-[70] w-64 bg-zinc-900 border-r border-zinc-800 p-6 flex flex-col gap-8 transition-transform duration-300 ease-in-out
+                fixed inset-y-0 left-0 z-[70] w-60 bg-zinc-950 border-r border-zinc-800/60 px-4 py-6 flex flex-col gap-7 transition-transform duration-200 ease-in-out
                 md:relative md:translate-x-0 md:z-auto
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 print:hidden
             `}>
-                <div className="hidden md:flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold">
-                            W
-                        </div>
-                        <span className="font-bold text-xl tracking-tight text-white">WUYO Lab</span>
+                {/* Logo */}
+                <div className="hidden md:flex flex-col gap-5">
+                    <div className="flex items-center gap-2.5 px-2">
+                        <div className="w-6 h-6 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold text-xs shrink-0">W</div>
+                        <span className="font-heading font-bold text-base tracking-tight text-white">WUYO Lab</span>
                     </div>
                     {userEmail && (
-                        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/50">
-                            <div className="w-8 h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center text-yellow-400 text-sm font-bold shrink-0">
+                        <div className="flex items-center gap-2.5 px-2 py-2 border-b border-zinc-800/60">
+                            <div className="w-7 h-7 rounded border border-yellow-400/20 flex items-center justify-center text-yellow-400/80 text-xs font-bold shrink-0 bg-yellow-400/5">
                                 {userEmail[0].toUpperCase()}
                             </div>
                             <div className="overflow-hidden">
-                                <p className="text-white text-xs font-medium truncate">WUYO Studio</p>
-                                <p className="text-zinc-500 text-xs truncate">{userEmail}</p>
+                                <p className="text-white text-xs font-semibold truncate leading-tight">WUYO Studio</p>
+                                <p className="text-zinc-600 text-[10px] truncate">{userEmail}</p>
                             </div>
                         </div>
                     )}
                 </div>
 
-                <nav className="flex flex-col gap-5 flex-grow">
+                <nav className="flex flex-col gap-6 flex-grow">
                     {navGroups.map((group) => (
                         <div key={group.label}>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 px-3 mb-2">{group.label}</p>
-                            <div className="flex flex-col gap-1">
+                            <p className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-700 px-2 mb-1.5">{group.label}</p>
+                            <div className="flex flex-col gap-0.5">
                                 {group.items.map((item) => {
                                     const Icon = item.icon
                                     const isActive = pathname === item.href
@@ -101,13 +100,13 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                                             href={item.href}
                                             onClick={closeMenu}
                                             className={`
-                                                flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all
+                                                flex items-center gap-2.5 px-2 py-2 text-[13px] font-medium rounded-md transition-all
                                                 ${isActive
-                                                    ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20'
-                                                    : 'text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent'}
+                                                    ? 'text-yellow-400 bg-yellow-400/5'
+                                                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900'}
                                             `}
                                         >
-                                            <Icon size={18} />
+                                            <Icon size={15} className={isActive ? 'text-yellow-400' : 'text-zinc-600'} />
                                             {item.label}
                                         </Link>
                                     )
@@ -117,10 +116,10 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                     ))}
                 </nav>
 
-                <div className="mt-auto border-t border-zinc-800/50 pt-6">
+                <div className="border-t border-zinc-800/60 pt-4">
                     <form action="/auth/signout" method="post">
-                        <button className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-400/5 rounded-lg transition-colors group">
-                            <LogOut size={18} className="group-hover:rotate-12 transition-transform" />
+                        <button className="flex w-full items-center gap-2.5 px-2 py-2 text-[13px] font-medium text-zinc-600 hover:text-red-400 hover:bg-red-400/5 rounded-md transition-colors">
+                            <LogOut size={15} />
                             Wyloguj się
                         </button>
                     </form>
