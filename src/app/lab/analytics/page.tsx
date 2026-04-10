@@ -180,6 +180,9 @@ export default function AnalyticsLab() {
                                 <AlertTriangle size={18} className="text-yellow-500 mt-0.5 shrink-0" />
                                 <div>
                                     <p className="text-sm text-yellow-400/90 font-medium">Dane symulowane</p>
+                                    {analytics?.debugError && (
+                                        <p className="text-xs text-red-400 mt-1 font-mono bg-zinc-900 px-2 py-1 rounded">{analytics.debugError}</p>
+                                    )}
                                     <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
                                         Dodaj <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_API_TOKEN</code> i <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_PROJECT_ID</code> do zmiennych srodowiskowych Vercel, aby zobaczyc prawdziwe dane z wuyo.pl.
                                     </p>

@@ -8,6 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
 
 export type AnalyticsData = {
     available: boolean
+    debugError?: string
     pageViews?: number
     visitors?: number
     topPages?: { page: string; views: number }[]
@@ -20,7 +21,7 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
     const teamId = process.env.VERCEL_TEAM_ID
 
     if (!token || !projectId) {
-        return { available: false }
+        return { available: false, debugError: `Brak zmiennych: ${!token ? 'VERCEL_API_TOKEN ' : ''}${!projectId ? 'VERCEL_PROJECT_ID' : ''}` }
     }
 
     try {
@@ -39,8 +40,9 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
         )
 
         if (!pvRes.ok) {
-            console.error('Vercel Analytics API error:', pvRes.status, await pvRes.text())
-            return { available: false }
+            const errText = await pvRes.text()
+            console.error('Vercel Analytics API error:', pvRes.status, errText)
+            return { available: false, debugError: `API ${pvRes.status}: ${errText.slice(0, 200)}` }
         }
 
         const pvData = await pvRes.json()
@@ -75,9 +77,9 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
             topPages,
             topReferrers,
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Vercel Analytics fetch error:', error)
-        return { available: false }
+        return { available: false, debugError: `Exception: ${error?.message || String(error)}` }
     }
 }
 
