@@ -25,26 +25,22 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
     }
 
     try {
-        const now = new Date()
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-        const fromISO = sevenDaysAgo.toISOString()
-        const toISO = now.toISOString()
+        const nowMs = Date.now()
+        const sevenDaysAgoMs = nowMs - 7 * 24 * 60 * 60 * 1000
         const baseUrl = 'https://vercel.com/api/web/insights'
         const teamParam = teamId ? `&teamId=${teamId}` : ''
+        const commonParams = `projectId=${projectId}&from=${sevenDaysAgoMs}&to=${nowMs}&environment=production&filter=%7B%7D${teamParam}`
 
-        // Fetch page views
+        // Fetch page views by path
         const pvRes = await fetch(
-            `${baseUrl}/stats/path?projectId=${projectId}&from=${fromISO}&to=${toISO}&limit=10&environment=production${teamParam}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-                next: { revalidate: 3600 },
-            }
+            `${baseUrl}/stats/path?${commonParams}&limit=10`,
+            { headers: { Authorization: `Bearer ${token}` }, next: { revalidate: 3600 } }
         )
 
         if (!pvRes.ok) {
             const errText = await pvRes.text()
             console.error('Vercel Analytics API error:', pvRes.status, errText)
-            return { available: false, debugError: `API ${pvRes.status}: ${errText.slice(0, 200)}` }
+            return { available: false, debugError: `API ${pvRes.status}: ${errText.slice(0, 300)}` }
         }
 
         const pvData = await pvRes.json()
@@ -56,11 +52,8 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
 
         // Fetch referrers
         const refRes = await fetch(
-            `${baseUrl}/stats/referrer?projectId=${projectId}&from=${fromISO}&to=${toISO}&limit=5&environment=production${teamParam}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-                next: { revalidate: 3600 },
-            }
+            `${baseUrl}/stats/referrer?${commonParams}&limit=5`,
+            { headers: { Authorization: `Bearer ${token}` }, next: { revalidate: 3600 } }
         )
 
         let topReferrers: { referrer: string; views: number }[] = []
