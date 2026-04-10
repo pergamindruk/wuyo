@@ -25,14 +25,16 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
     }
 
     try {
-        const now = Date.now()
-        const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000
+        const now = new Date()
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        const fromISO = sevenDaysAgo.toISOString()
+        const toISO = now.toISOString()
         const baseUrl = 'https://vercel.com/api/web/insights'
         const teamParam = teamId ? `&teamId=${teamId}` : ''
 
         // Fetch page views
         const pvRes = await fetch(
-            `${baseUrl}/stats/path?projectId=${projectId}&from=${sevenDaysAgo}&to=${now}&limit=10${teamParam}`,
+            `${baseUrl}/stats/path?projectId=${projectId}&from=${fromISO}&to=${toISO}&limit=10&environment=production${teamParam}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 next: { revalidate: 3600 },
@@ -54,7 +56,7 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
 
         // Fetch referrers
         const refRes = await fetch(
-            `${baseUrl}/stats/referrer?projectId=${projectId}&from=${sevenDaysAgo}&to=${now}&limit=5${teamParam}`,
+            `${baseUrl}/stats/referrer?projectId=${projectId}&from=${fromISO}&to=${toISO}&limit=5&environment=production${teamParam}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 next: { revalidate: 3600 },
