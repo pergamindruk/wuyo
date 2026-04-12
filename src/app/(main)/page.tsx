@@ -9,10 +9,10 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { HeroText } from "@/components/HeroText";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Palette, Layout, FileText, Share2, Box, Sparkles, ChevronDown } from "lucide-react";
+import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats } from "@/components/HeroClientEffects";
+import { HeroClientEffects, HeroStats, ScrollIndicator } from "@/components/HeroClientEffects";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -101,12 +101,6 @@ export default function Home() {
             desc: "Produkt musi się sprzedawać już na półce. Projektuję etykiety i opakowania, które krzyczą: 'kup mnie!'. Dobra grafa na pudełku to połowa sukcesu.",
             href: null,
         },
-        {
-            icon: <Sparkles size={28} />,
-            title: "Animacje i motion design",
-            desc: "Statyka to przeszłość. Tworzę animowane bannery, intro do rolek i mikro-interakcje na stronę, które wyróżnią Twoją markę na tle konkurencji.",
-            href: null,
-        },
     ];
 
 
@@ -146,14 +140,27 @@ export default function Home() {
                         </Link>
                     </div>
 
+                    {/* Mini social proof */}
+                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-8">
+                        <span className="text-sm text-white/45">
+                            <span className="text-gold font-bold">156+</span> projektów
+                        </span>
+                        <span className="text-white/20 hidden sm:inline">·</span>
+                        <span className="text-sm text-white/45">
+                            <span className="text-gold font-bold">46</span> branż
+                        </span>
+                        <span className="text-white/20 hidden sm:inline">·</span>
+                        <span className="text-sm text-white/45">
+                            <span className="text-gold font-bold">Rzeszów</span> i cała Polska
+                        </span>
+                    </div>
+
                     {/* Social proof — animated counters */}
                     <HeroStats />
                 </AnimatedSection>
 
                 {/* Scroll indicator */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/30 animate-bounce pointer-events-none">
-                    <ChevronDown size={20} />
-                </div>
+                <ScrollIndicator />
             </section>
 
             {/* ═══════════════════════ OFERTA ═══════════════════════ */}
@@ -191,6 +198,18 @@ export default function Home() {
                         </AnimatedSection>
                     ))}
                 </div>
+
+                {/* CTA pod gridem */}
+                <AnimatedSection className="mt-10 max-w-6xl mx-auto relative z-10">
+                    <div className="rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <p className="text-white/80 text-base font-medium text-center sm:text-left">
+                            Nie wiesz od czego zacząć? Napisz — dostaniesz konkretny plan działania w 24h.
+                        </p>
+                        <Link href="#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shrink-0 shadow-[0_0_20px_rgba(255,235,82,0.25)]">
+                            Napisz do mnie →
+                        </Link>
+                    </div>
+                </AnimatedSection>
             </section>
 
             {/* ═══════════════════════ PROCES ═══════════════════════ */}
