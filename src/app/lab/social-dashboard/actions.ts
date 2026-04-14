@@ -1,6 +1,6 @@
 'use server'
 
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Anthropic from '@anthropic-ai/sdk'
 import { addCalendarEvent } from '../calendar/actions'
 
 // ─── Graph API helpers ────────────────────────────────
@@ -49,7 +49,17 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
 }
 
 // ─── AI setup ─────────────────────────────────────────
-const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' })
+
+async function askClaude(prompt: string): Promise<string> {
+    const msg = await anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2048,
+        messages: [{ role: 'user', content: prompt }],
+    })
+    const block = msg.content[0]
+    return block.type === 'text' ? block.text : ''
+}
 
 const WUYO_CONTEXT = `Jesteś Wuyo Social Engine — autonomicznym systemem automatyzacji social media dla marki WUYO.pl.
 WUYO to butikowa agencja premium: strony internetowe, identyfikacja wizualna, grafika ("Dobra Grafa"), druk.
@@ -63,7 +73,7 @@ Rok: 2026. Masz świadomość najnowszych trendów i algorytmów.`
 // ═══════════════════════════════════════════════════════
 export async function runMAP() {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        // model via Claude
 
         const prompt = `${WUYO_CONTEXT}
 
@@ -93,8 +103,8 @@ Odpowiedz w formacie:
 
 Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable.`
 
-        const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const data = await askClaude(prompt)
+        return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
@@ -105,7 +115,7 @@ Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable.`
 // ═══════════════════════════════════════════════════════
 export async function runNAIL(context?: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        // model via Claude
         const extraContext = context ? `\n\nDodatkowy kontekst od użytkownika: "${context}"` : ''
 
         const prompt = `${WUYO_CONTEXT}${extraContext}
@@ -136,8 +146,8 @@ ZASADY:
 - Każdy post musi mieć jasny cel biznesowy (lead, trust, authority)
 - Język: potoczny-profesjonalny, nie korporacyjny`
 
-        const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const data = await askClaude(prompt)
+        return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
@@ -148,7 +158,7 @@ ZASADY:
 // ═══════════════════════════════════════════════════════
 export async function runEXECUTE(postIdea: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        // model via Claude
 
         const prompt = `${WUYO_CONTEXT}
 
@@ -182,8 +192,8 @@ ZASADY:
 - Prompty do grafik muszą być precyzyjne i szczegółowe
 - Wszystko w estetyce WUYO: dark mode, gold accents, minimalizm premium`
 
-        const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const data = await askClaude(prompt)
+        return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
@@ -194,7 +204,7 @@ ZASADY:
 // ═══════════════════════════════════════════════════════
 export async function runWD40(recentContent: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        // model via Claude
 
         const prompt = `${WUYO_CONTEXT}
 
@@ -233,8 +243,8 @@ Odpowiedz w formacie:
 
 Bądź BRUTALNIE szczery. Zero dyplomacji. Konkretne, actionable feedback.`
 
-        const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
+        const data = await askClaude(prompt)
+        return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
@@ -329,7 +339,7 @@ export async function publishDashboardToIG(imageUrl: string, caption: string) {
 // ═══════════════════════════════════════════════════════
 export async function generateHookVariant(originalHook: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        // model via Claude
         const prompt = `${WUYO_CONTEXT}
 
 Oto hook na post social media: "${originalHook}"
@@ -339,8 +349,8 @@ Hook musi zatrzymać scroll — max 15 słów. Zero slopu.
 
 Odpowiedz TYLKO hookiem — jedna linia, bez cudzysłowów, bez wyjaśnień.`
 
-        const result = await model.generateContent(prompt)
-        return { success: true as const, data: result.response.text().trim() }
+        const data = await askClaude(prompt)
+        return { success: true as const, data: data.trim() }
     } catch (error: unknown) {
         return { success: false as const, error: error instanceof Error ? error.message : String(error) }
     }
@@ -366,6 +376,173 @@ export async function addDashboardToCalendar(content: string, platform: string, 
         return { success: true as const, eventId: result.id }
     } catch (error: unknown) {
         return { success: false as const, error: error instanceof Error ? error.message : String(error) }
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// [BATCH] — Generuj Tydzień (3×FB + 3×IG → Kalendarz)
+// ═══════════════════════════════════════════════════════
+
+export type WeeklyBatchStep =
+    | { step: 'map'; label: 'Research trendów...' }
+    | { step: 'nail'; label: 'Generowanie hooków...' }
+    | { step: 'execute'; label: string }
+    | { step: 'calendar'; label: 'Zapisuję do kalendarza...' }
+    | { step: 'done'; label: 'Gotowe!' }
+
+export type WeeklyBatchResult = {
+    success: true
+    created: number
+    dates: string[]
+    posts: Array<{ hook: string; date: string; fbId?: string; igId?: string }>
+    errors: string[]
+} | {
+    success: false
+    error: string
+}
+
+// Oblicza datę najbliższego wystąpienia danego dnia tygodnia (target: 1=pon, 3=śr, 5=pt)
+function getNextWeekday(target: number): string {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+    let diff = target - dayOfWeek
+    if (diff <= 0) diff += 7
+    const d = new Date(today)
+    d.setDate(d.getDate() + diff)
+    return d.toISOString().split('T')[0]
+}
+
+export async function generateWeeklyBatch(contextHint?: string): Promise<WeeklyBatchResult> {
+    try {
+        // ── KROK 1: MAP (skrócony) ────────────────────────────────────────────
+        const mapText = await askClaude(`${WUYO_CONTEXT}
+${contextHint ? `\nDodatkowy kontekst od właściciela: "${contextHint}"` : ''}
+
+ZADANIE [MAP — Research Trendów, wersja skrócona]:
+Podaj 3 najważniejsze trendy contentowe dla agencji designu premium w Polsce (IG + FB, teraz).
+Format: 3 punkty, każdy max 2 zdania. Tylko actionable insighty.`)
+
+        // ── KROK 2: NAIL → 3 hooki ────────────────────────────────────────────
+        const nailText = await askClaude(`${WUYO_CONTEXT}
+
+AKTUALNE TRENDY: ${mapText.slice(0, 500)}
+${contextHint ? `\nKontekst: "${contextHint}"` : ''}
+
+ZADANIE [NAIL — 3 Hooki do postów]:
+Wygeneruj DOKŁADNIE 3 hooki dla WUYO. Każdy musi:
+- Adresować inny pain point właściciela firmy / personal brand
+- Być gotowy do użycia jako pierwsze zdanie posta
+- Max 15 słów, zero slopu, zero AI bełkotu
+
+Odpowiedz DOKŁADNIE w tym formacie (nic poza tym):
+HOOK_1: [treść hooka]
+HOOK_2: [treść hooka]
+HOOK_3: [treść hooka]`)
+
+        // Parsuj hooki
+        const hooks: string[] = []
+        const hookRegex = /HOOK_[123]:\s*(.+)/g
+        let m: RegExpExecArray | null
+        while ((m = hookRegex.exec(nailText)) !== null) {
+            const h = m[1].trim().replace(/^["'„]|["'"']$/g, '')
+            if (h.length > 10) hooks.push(h)
+        }
+        // Fallback: wyciągnij niepuste linie
+        if (hooks.length < 3) {
+            nailText.split('\n')
+                .map(l => l.replace(/^HOOK_\d:\s*/, '').trim())
+                .filter(l => l.length > 15 && !l.startsWith('#') && !l.startsWith('ZADANIE'))
+                .slice(0, 3 - hooks.length)
+                .forEach(l => hooks.push(l))
+        }
+        if (hooks.length < 1) {
+            return { success: false, error: 'AI nie wygenerował hooków. Spróbuj ponownie.' }
+        }
+        const hooksToUse = hooks.slice(0, 3)
+
+        // ── KROK 3: EXECUTE × 3 → copy FB + IG ──────────────────────────────
+        const dates = [
+            getNextWeekday(1), // poniedziałek
+            getNextWeekday(3), // środa
+            getNextWeekday(5), // piątek
+        ]
+
+        const errors: string[] = []
+        let created = 0
+        const posts: Array<{ hook: string; date: string }> = []
+
+        for (let i = 0; i < hooksToUse.length; i++) {
+            const hook = hooksToUse[i]
+            const date = dates[i] ?? dates[dates.length - 1]
+
+            try {
+                const execText = await askClaude(`${WUYO_CONTEXT}
+
+HOOK DO POSTA: "${hook}"
+
+ZADANIE [EXECUTE — Copy gotowe do publikacji]:
+Na podstawie tego hooka napisz gotowe copy na dwie platformy.
+
+## COPY_FACEBOOK
+[Pełny post. Zacznij od hooka. Ludzki ton WUYO. Max 800 znaków. 1-2 hashtagi na końcu.]
+
+## COPY_INSTAGRAM
+[Pełny post. Zacznij od hooka. Zoptymalizowany pod IG. Max 500 znaków. 3-5 hashtagów na końcu.]
+
+## PROMPT_GRAFIKA
+[Opis grafiki w 1-2 zdaniach: co pokazuje, styl dark/gold WUYO, bez tekstu na grafice]
+
+ZASADY: Zaczyna się od hooka. Bez AI slopu. Bez korporacyjnego języka. Gotowe do wklejenia.`)
+
+                // Parsuj sekcje
+                const fbMatch = execText.match(/## COPY_FACEBOOK\s*\n([\s\S]*?)(?=\n## COPY_INSTAGRAM|$)/)
+                const igMatch = execText.match(/## COPY_INSTAGRAM\s*\n([\s\S]*?)(?=\n## PROMPT_GRAFIKA|$)/)
+                const imgMatch = execText.match(/## PROMPT_GRAFIKA\s*\n([\s\S]*)$/)
+
+                const fbCopy = fbMatch ? fbMatch[1].trim() : execText.slice(0, 600)
+                const igCopy = igMatch ? igMatch[1].trim() : execText.slice(0, 400)
+                const imgPrompt = imgMatch ? imgMatch[1].trim() : ''
+
+                const promptSuffix = imgPrompt
+                    ? `\n\n---\n🎨 **Prompt grafiki:** ${imgPrompt}`
+                    : ''
+
+                // Dodaj do kalendarza: FB
+                await addCalendarEvent({
+                    topic: hook.slice(0, 80),
+                    platform: 'Facebook',
+                    format: 'Post z grafiką',
+                    goal: 'Zaangażowanie',
+                    date,
+                    status: 'Szkic',
+                    content: fbCopy + promptSuffix,
+                })
+
+                // Dodaj do kalendarza: IG
+                await addCalendarEvent({
+                    topic: hook.slice(0, 80),
+                    platform: 'Instagram',
+                    format: 'Post z grafiką',
+                    goal: 'Zaangażowanie',
+                    date,
+                    status: 'Szkic',
+                    content: igCopy + promptSuffix,
+                })
+
+                posts.push({ hook: hook.slice(0, 60), date })
+                created += 2
+            } catch (e: unknown) {
+                errors.push(`Post ${i + 1} (${hook.slice(0, 30)}...): ${e instanceof Error ? e.message : String(e)}`)
+            }
+        }
+
+        if (created === 0) {
+            return { success: false, error: errors.join(' | ') || 'Nie udało się zapisać postów' }
+        }
+
+        return { success: true, created, dates, posts, errors }
+    } catch (error: unknown) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
 }
 

@@ -120,6 +120,20 @@ export async function schedulePost(eventId: string, scheduledAt: string) {
     return true
 }
 
+export async function updateEventImageUrl(id: string, imageUrl: string) {
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('calendar_events')
+        .update({ image_url: imageUrl })
+        .eq('id', id)
+
+    if (error) {
+        console.error('updateEventImageUrl error:', error)
+        throw new Error('Nie udalo sie zapisac URL grafiki')
+    }
+    return true
+}
+
 export async function getScheduledPosts() {
     const supabase = await createClient()
     const { data, error } = await supabase

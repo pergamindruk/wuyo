@@ -40,6 +40,10 @@ export interface CalendarEvent {
     status: string
     content?: string
     image_url?: string
+    scheduled_at?: string
+    published_at?: string
+    fb_post_id?: string
+    ig_post_id?: string
     created_at?: string
 }
 

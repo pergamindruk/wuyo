@@ -7,6 +7,8 @@ import {
     generateHookVariant,
     addDashboardToCalendar,
     getFBPostInsights, getIGPostInsights,
+    generateWeeklyBatch,
+    type WeeklyBatchResult,
 } from './actions'
 import {
     Map, Crosshair, Rocket, Wrench, Clock, Loader2,
@@ -14,6 +16,7 @@ import {
     Globe, Camera, X, ExternalLink, Send, Hash, Plus, Trash2,
     CalendarPlus, BarChart3, RefreshCw, ArrowRight, Bold, Italic,
     Heading2, List, ListOrdered, Eye, Smartphone, Linkedin,
+    CalendarDays, Sparkles, AlertCircle,
 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -254,6 +257,13 @@ export default function SocialDashboardPage() {
     const [analytics, setAnalytics] = useState<{ likes: number; comments: number; shares?: number } | null>(null)
     const [analyticsLoading, setAnalyticsLoading] = useState(false)
 
+    // ─── Weekly Batch ─────────────────────────────────
+    const [weeklyLoading, setWeeklyLoading] = useState(false)
+    const [weeklyStep, setWeeklyStep] = useState<string | null>(null)
+    const [weeklyResult, setWeeklyResult] = useState<WeeklyBatchResult | null>(null)
+    const [weeklyContext, setWeeklyContext] = useState('')
+    const [showWeeklyPanel, setShowWeeklyPanel] = useState(false)
+
     useEffect(() => { setOutputs(loadOutputs()) }, [result])
     useEffect(() => { setHashtags(loadHashtags()) }, [])
 
@@ -435,6 +445,30 @@ export default function SocialDashboardPage() {
         setAnalyticsLoading(false)
     }
 
+    // ─── Weekly Batch handler ────────────────────────
+    const handleGenerateWeek = async () => {
+        setWeeklyLoading(true)
+        setWeeklyResult(null)
+        setWeeklyStep('🗺️ Research trendów (MAP)...')
+        // kroki są symulowane bo batch jest jedną async call po stronie serwera
+        const stepTimer1 = setTimeout(() => setWeeklyStep('🎯 Generuję hooki (NAIL)...'), 8000)
+        const stepTimer2 = setTimeout(() => setWeeklyStep('✍️ Piszę copy (EXECUTE 1/3)...'), 18000)
+        const stepTimer3 = setTimeout(() => setWeeklyStep('✍️ Piszę copy (EXECUTE 2/3)...'), 30000)
+        const stepTimer4 = setTimeout(() => setWeeklyStep('✍️ Piszę copy (EXECUTE 3/3)...'), 42000)
+        const stepTimer5 = setTimeout(() => setWeeklyStep('💾 Zapisuję do kalendarza...'), 52000)
+        try {
+            const res = await generateWeeklyBatch(weeklyContext || undefined)
+            setWeeklyResult(res)
+        } catch (e) {
+            setWeeklyResult({ success: false, error: (e as Error).message })
+        } finally {
+            clearTimeout(stepTimer1); clearTimeout(stepTimer2); clearTimeout(stepTimer3)
+            clearTimeout(stepTimer4); clearTimeout(stepTimer5)
+            setWeeklyStep(null)
+            setWeeklyLoading(false)
+        }
+    }
+
     const needsInput = activeOp === 'EXECUTE' || activeOp === 'WD40'
     const optionalInput = activeOp === 'NAIL'
     const hasResult = result && !loading
@@ -453,12 +487,21 @@ export default function SocialDashboardPage() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
+                    {/* Generuj Tydzień — główny przycisk automatyzacji */}
+                    <button
+                        onClick={() => setShowWeeklyPanel(!showWeeklyPanel)}
+                        disabled={weeklyLoading}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg ${showWeeklyPanel || weeklyLoading ? 'bg-yellow-400 text-zinc-950 shadow-yellow-500/25' : 'bg-gradient-to-r from-yellow-400/20 to-amber-500/20 border border-yellow-400/30 text-yellow-400 hover:from-yellow-400/30 hover:to-amber-500/30'}`}
+                    >
+                        {weeklyLoading ? <Loader2 size={14} className="animate-spin" /> : <CalendarDays size={14} />}
+                        Generuj Tydzień
+                    </button>
                     <button
                         onClick={() => { if (pipelineMode) { setPipelineMode(false); setPipelineStep(0) } else { startPipeline() } }}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${pipelineMode ? 'bg-yellow-400 text-zinc-950 shadow-lg shadow-yellow-500/25' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
                     >
                         <Zap size={14} />
-                        {pipelineMode ? 'Pipeline ON' : 'Pipeline Mode'}
+                        {pipelineMode ? 'Pipeline ON' : 'Pipeline'}
                     </button>
                     <div className="hidden md:flex items-center gap-2 text-xs text-zinc-600">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -466,6 +509,181 @@ export default function SocialDashboardPage() {
                     </div>
                 </div>
             </div>
+
+            {/* ════ GENERUJ TYDZIEŃ — Panel ════ */}
+            {showWeeklyPanel && (
+                <div className="bg-zinc-900 border border-yellow-400/30 rounded-2xl overflow-hidden shadow-xl shadow-yellow-500/5">
+                    {/* Header panelu */}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-950/50">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center text-zinc-950 shadow-lg shadow-yellow-500/25">
+                                <CalendarDays size={18} strokeWidth={2.5} />
+                            </div>
+                            <div>
+                                <h2 className="text-white font-bold text-sm">Generuj Tydzień</h2>
+                                <p className="text-zinc-500 text-xs">MAP → NAIL → EXECUTE × 3 → 6 draftów w kalendarzu (pon/śr/pt)</p>
+                            </div>
+                        </div>
+                        <button onClick={() => setShowWeeklyPanel(false)} className="text-zinc-600 hover:text-white transition-colors">
+                            <X size={16} />
+                        </button>
+                    </div>
+
+                    <div className="p-6 flex flex-col gap-5">
+                        {/* Kontekst opcjonalny */}
+                        {!weeklyLoading && !weeklyResult && (
+                            <div>
+                                <label className="text-zinc-400 text-xs font-bold mb-2 block">
+                                    Kontekst tygodnia (opcjonalnie)
+                                </label>
+                                <textarea
+                                    value={weeklyContext}
+                                    onChange={e => setWeeklyContext(e.target.value)}
+                                    rows={2}
+                                    placeholder='np. "skupiamy się na druku i brandingu" albo "nadchodzi sezon weselny, push na zaproszenia"'
+                                    className="w-full bg-zinc-950 border border-zinc-700 text-white text-sm rounded-xl p-3.5 resize-none focus:ring-1 focus:ring-yellow-400/50 focus:border-yellow-400/50 transition-all placeholder:text-zinc-600"
+                                />
+                                <p className="text-zinc-600 text-xs mt-2">
+                                    Bez kontekstu AI wybierze tematy sam na podstawie trendów.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Przepływ kroków */}
+                        {!weeklyLoading && !weeklyResult && (
+                            <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                {[
+                                    { icon: Map, label: 'MAP', color: 'text-blue-400' },
+                                    { icon: ArrowRight, label: '', color: 'text-zinc-700' },
+                                    { icon: Crosshair, label: 'NAIL', color: 'text-amber-400' },
+                                    { icon: ArrowRight, label: '', color: 'text-zinc-700' },
+                                    { icon: Rocket, label: 'EXECUTE ×3', color: 'text-green-400' },
+                                    { icon: ArrowRight, label: '', color: 'text-zinc-700' },
+                                    { icon: CalendarDays, label: '6 draftów', color: 'text-yellow-400' },
+                                ].map((s, i) => {
+                                    const Icon = s.icon
+                                    return (
+                                        <div key={i} className={`flex items-center gap-1 ${s.color}`}>
+                                            <Icon size={12} />
+                                            {s.label && <span className="font-medium">{s.label}</span>}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+
+                        {/* Loading — krok po kroku */}
+                        {weeklyLoading && (
+                            <div className="flex flex-col items-center gap-4 py-6">
+                                <div className="relative">
+                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-2xl shadow-yellow-500/30">
+                                        <Sparkles size={24} className="text-zinc-950 animate-pulse" />
+                                    </div>
+                                    <div className="absolute -inset-4 bg-yellow-400 rounded-3xl opacity-5 animate-pulse blur-xl" />
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-white font-bold text-sm">AI pracuje nad Twoim tygodniem...</p>
+                                    <p className="text-yellow-400 text-xs mt-1 animate-pulse">{weeklyStep}</p>
+                                    <p className="text-zinc-600 text-xs mt-2">Może potrwać ~60 sekund — AI generuje 3 pełne posty</p>
+                                </div>
+                                {/* Mini progress bar */}
+                                <div className="w-full max-w-xs bg-zinc-800 rounded-full h-1">
+                                    <div className="bg-gradient-to-r from-yellow-400 to-amber-500 h-1 rounded-full animate-pulse" style={{ width: '60%' }} />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Wynik — sukces */}
+                        {weeklyResult && weeklyResult.success && (
+                            <div className="flex flex-col gap-4">
+                                <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3">
+                                    <Check size={18} className="text-green-400 shrink-0" />
+                                    <div>
+                                        <p className="text-green-400 font-bold text-sm">
+                                            {weeklyResult.created} draftów zapisanych w kalendarzu ✓
+                                        </p>
+                                        <p className="text-zinc-500 text-xs mt-0.5">
+                                            Poniedziałek · Środa · Piątek — FB + IG — status: Szkic
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Lista postów */}
+                                <div className="flex flex-col gap-2">
+                                    {weeklyResult.posts.map((post, i) => {
+                                        const dayLabels = ['Poniedziałek', 'Środa', 'Piątek']
+                                        return (
+                                            <div key={i} className="flex items-start gap-3 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3">
+                                                <div className="w-7 h-7 rounded-lg bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center shrink-0">
+                                                    <span className="text-yellow-400 text-xs font-black">{i + 1}</span>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-white text-xs font-medium truncate">{post.hook}</p>
+                                                    <p className="text-zinc-600 text-[10px] mt-0.5">
+                                                        {dayLabels[i] ?? `Post ${i + 1}`} · {new Date(post.date + 'T12:00:00').toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })} · FB + IG
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+
+                                {weeklyResult.errors.length > 0 && (
+                                    <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3">
+                                        <AlertCircle size={14} className="text-amber-400 mt-0.5 shrink-0" />
+                                        <p className="text-amber-400 text-xs">{weeklyResult.errors.join(' | ')}</p>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3">
+                                    <a
+                                        href="/lab/calendar"
+                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold text-sm transition-all shadow-lg shadow-yellow-500/20"
+                                    >
+                                        <CalendarDays size={15} /> Otwórz kalendarz
+                                    </a>
+                                    <button
+                                        onClick={() => { setWeeklyResult(null); setWeeklyContext('') }}
+                                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white text-sm font-medium transition-all"
+                                    >
+                                        <RefreshCw size={15} /> Generuj nowy tydzień
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Wynik — błąd */}
+                        {weeklyResult && !weeklyResult.success && (
+                            <div className="flex flex-col gap-4">
+                                <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+                                    <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
+                                    <div>
+                                        <p className="text-red-400 font-bold text-sm">Błąd generowania</p>
+                                        <p className="text-zinc-400 text-xs mt-1">{weeklyResult.error}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setWeeklyResult(null)}
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white text-sm font-medium transition-all self-start"
+                                >
+                                    <RefreshCw size={15} /> Spróbuj ponownie
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Przycisk START — widoczny tylko gdy nie loading i nie ma wyniku */}
+                        {!weeklyLoading && !weeklyResult && (
+                            <button
+                                onClick={handleGenerateWeek}
+                                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-zinc-950 font-black text-sm transition-all shadow-xl shadow-yellow-500/20"
+                            >
+                                <Sparkles size={16} />
+                                Generuj 6 draftów na cały tydzień
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* ════ Pipeline Indicator (M3) ════ */}
             {pipelineMode && <PipelineIndicator step={pipelineStep} maxStep={pipelineMaxStep} />}

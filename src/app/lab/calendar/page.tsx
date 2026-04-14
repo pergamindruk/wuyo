@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getCalendar, addCalendarEvent, updateEventStatus } from './actions'
+import { getCalendar, addCalendarEvent, updateEventStatus, schedulePost, updateEventImageUrl } from './actions'
 import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
 import type { YtMetadata } from '../social-media/actions'
-import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check } from 'lucide-react'
+import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check, Clock, Image } from 'lucide-react'
 import type { CalendarEvent } from '@/lib/types'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -31,6 +31,8 @@ export default function CalendarLab() {
     // state publikacji
     const [publishingPostId, setPublishingPostId] = useState<string | null>(null)
     const [publishImageUrl, setPublishImageUrl] = useState('')
+    const [editingImageEventId, setEditingImageEventId] = useState<string | null>(null)
+    const [editingImageUrl, setEditingImageUrl] = useState('')
     const [publishLoading, setPublishLoading] = useState(false)
     const [publishFeedback, setPublishFeedback] = useState<{ success: boolean; message: string } | null>(null)
     const [ytMetadata, setYtMetadata] = useState<YtMetadata | null>(null)
@@ -58,8 +60,19 @@ export default function CalendarLab() {
         loadData()
     }
 
-    const handleUpdate = async (id: string, newStatus: string) => {
-        await updateEventStatus(id, newStatus)
+    const handleUpdate = async (id: string, newStatus: string, eventDate?: string) => {
+        if (newStatus === 'Zaplanowane' && eventDate) {
+            // Ustaw scheduled_at na datę eventu o 08:00 UTC (10:00 CEST / 09:00 CET)
+            const scheduledAt = `${eventDate}T08:00:00.000Z`
+            await schedulePost(id, scheduledAt)
+        } else {
+            await updateEventStatus(id, newStatus)
+        }
+        loadData()
+    }
+
+    const handleSaveImageUrl = async (id: string, url: string) => {
+        await updateEventImageUrl(id, url)
         loadData()
     }
 
@@ -303,10 +316,18 @@ export default function CalendarLab() {
                                                 </h3>
                                             </div>
 
-                                            <div className="flex items-center gap-2 bg-zinc-900 rounded-lg p-1 border border-zinc-800 shrink-0">
-                                                <button onClick={() => handleUpdate(ev.id, 'Szkic')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Szkic' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}>Szkic</button>
-                                                <button onClick={() => handleUpdate(ev.id, 'Zaplanowane')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Zaplanowane' ? 'bg-yellow-400 text-black' : 'text-zinc-500 hover:text-white'}`}>W kolejce</button>
-                                                <button onClick={() => handleUpdate(ev.id, 'Opublikowane')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Opublikowane' ? 'bg-green-500/20 text-green-400' : 'text-zinc-500 hover:text-white'}`}>Opubliko.</button>
+                                            <div className="flex flex-col items-end gap-2 shrink-0">
+                                                <div className="flex items-center gap-2 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+                                                    <button onClick={() => handleUpdate(ev.id, 'Szkic')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Szkic' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}>Szkic</button>
+                                                    <button onClick={() => handleUpdate(ev.id, 'Zaplanowane', ev.date)} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Zaplanowane' ? 'bg-yellow-400 text-black' : 'text-zinc-500 hover:text-white'}`}>W kolejce</button>
+                                                    <button onClick={() => handleUpdate(ev.id, 'Opublikowane')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Opublikowane' ? 'bg-green-500/20 text-green-400' : 'text-zinc-500 hover:text-white'}`}>Opubliko.</button>
+                                                </div>
+                                                {ev.status === 'Zaplanowane' && ev.scheduled_at && (
+                                                    <span className="flex items-center gap-1 text-[10px] text-yellow-400/80">
+                                                        <Clock size={10} />
+                                                        {new Date(ev.scheduled_at).toLocaleString('pl-PL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
 
@@ -318,6 +339,47 @@ export default function CalendarLab() {
                                                         {ev.content}
                                                     </ReactMarkdown>
                                                 </div>
+                                            </div>
+                                        )}
+
+                                        {/* ── URL Grafiki (wymagany dla IG + cron) ── */}
+                                        {ev.status !== 'Opublikowane' && (
+                                            <div className="flex items-center gap-2">
+                                                {ev.image_url ? (
+                                                    <div className="flex items-center gap-2 flex-1">
+                                                        <Image size={12} className="text-zinc-500 shrink-0" />
+                                                        <span className="text-xs text-zinc-500 truncate flex-1">{ev.image_url}</span>
+                                                        <button
+                                                            onClick={() => { setEditingImageEventId(ev.id); setEditingImageUrl(ev.image_url || '') }}
+                                                            className="text-xs text-zinc-600 hover:text-yellow-400 transition-colors shrink-0"
+                                                        >Zmień</button>
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => { setEditingImageEventId(ev.id); setEditingImageUrl('') }}
+                                                        className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-yellow-400 transition-colors"
+                                                    >
+                                                        <Image size={12} /> Dodaj URL grafiki (IG + cron)
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                        {editingImageEventId === ev.id && (
+                                            <div className="flex gap-2 items-center">
+                                                <input
+                                                    type="url"
+                                                    value={editingImageUrl}
+                                                    onChange={e => setEditingImageUrl(e.target.value)}
+                                                    placeholder="https://wuyo.pl/images/post.jpg"
+                                                    className="flex-1 bg-zinc-950 border border-zinc-700 text-white text-xs rounded-lg px-3 py-1.5 focus:border-yellow-400/50"
+                                                />
+                                                <button
+                                                    onClick={async () => { await handleSaveImageUrl(ev.id, editingImageUrl); setEditingImageEventId(null) }}
+                                                    className="px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 text-xs font-bold rounded-lg transition-colors"
+                                                >
+                                                    Zapisz
+                                                </button>
+                                                <button onClick={() => setEditingImageEventId(null)} className="text-zinc-600 hover:text-white text-xs transition-colors">Anuluj</button>
                                             </div>
                                         )}
 
