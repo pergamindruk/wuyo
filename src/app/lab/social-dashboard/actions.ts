@@ -1,6 +1,6 @@
 'use server'
 
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { addCalendarEvent } from '../calendar/actions'
 
 // ─── Graph API helpers ────────────────────────────────
@@ -49,16 +49,12 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
 }
 
 // ─── AI setup ─────────────────────────────────────────
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' })
+const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
 
 async function askClaude(prompt: string): Promise<string> {
-    const msg = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2048,
-        messages: [{ role: 'user', content: prompt }],
-    })
-    const block = msg.content[0]
-    return block.type === 'text' ? block.text : ''
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const result = await model.generateContent(prompt)
+    return result.response.text()
 }
 
 const WUYO_CONTEXT = `Jesteś Wuyo Social Engine — autonomicznym systemem automatyzacji social media dla marki WUYO.pl.
