@@ -38,3 +38,5 @@ tsconfig.tsbuildinfo
 !/public/ikonki/*
 
 .vercel
+.env.local
+.env.local
