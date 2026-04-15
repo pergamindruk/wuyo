@@ -75,8 +75,8 @@ export function Navbar() {
                         onClick={handleHomeClick}
                         aria-label="Wuyo – Dobra Grafa, strona główna"
                         className={`absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-all duration-300 ease-out origin-top-left ${scrolled
-                            ? "top-3 md:top-4 h-14 w-28 md:h-16 md:w-40 lg:h-16 lg:w-48 opacity-90"
-                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem] opacity-100"
+                            ? "top-3 md:top-4 h-10 w-20 md:h-12 md:w-28 lg:h-12 lg:w-36 opacity-90"
+                            : "top-3 md:top-4 h-12 w-24 md:h-14 md:w-32 lg:h-14 lg:w-44 opacity-100"
                             }`}
                     >
                         <Image

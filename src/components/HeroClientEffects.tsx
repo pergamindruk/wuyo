@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 const Spotlight = dynamic(() => import("@/components/ui/spotlight").then(m => ({ default: m.Spotlight })), { ssr: false });
 const MouseSpotlight = dynamic(() => import("@/components/ui/mouse-spotlight").then(m => ({ default: m.MouseSpotlight })), { ssr: false });
@@ -18,4 +20,17 @@ export function HeroClientEffects() {
 
 export function HeroStats() {
     return <StatsCounter />;
+}
+
+export function ScrollIndicator() {
+    return (
+        <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/30 pointer-events-none select-none"
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+            <span className="text-[10px] uppercase tracking-[0.2em]">Odkryj</span>
+            <ChevronDown size={20} />
+        </motion.div>
+    );
 }
