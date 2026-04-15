@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { getSeoSuggestions, getVercelAnalytics } from './actions'
 import type { AnalyticsData } from './actions'
-import { TrendingUp, Users, Target, Activity, Brain, Fingerprint, Globe, ExternalLink, AlertTriangle } from 'lucide-react'
+import { TrendingUp, Users, Activity, Brain, Globe, ExternalLink, AlertTriangle } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -145,50 +145,19 @@ export default function AnalyticsLab() {
                             )}
                         </>
                     ) : (
-                        /* ── Fallback: simulated cards ── */
-                        <>
-                            <div className="grid grid-cols-2 gap-4">
-                                <StatCard
-                                    icon={<Users size={20} className="text-blue-400" />}
-                                    label="Odwiedziny WWW"
-                                    value="1,402"
-                                    trend="+14%"
-                                    trendUp
-                                />
-                                <StatCard
-                                    icon={<Target size={20} className="text-yellow-400" />}
-                                    label="Konwersja z Bota"
-                                    value="3.2%"
-                                    trend="+5%"
-                                    trendUp
-                                />
-                                <StatCard
-                                    icon={<Activity size={20} className="text-purple-400" />}
-                                    label="Bounce Rate"
-                                    value="41%"
-                                    trend="-2%"
-                                />
-                                <StatCard
-                                    icon={<Fingerprint size={20} className="text-zinc-400" />}
-                                    label="Klikniecia w Cennik"
-                                    value="345"
-                                />
+                        /* ── No data: config required ── */
+                        <div className="bg-zinc-900 border border-dashed border-zinc-700 p-8 rounded-2xl flex flex-col items-center justify-center text-center gap-4 min-h-[280px]">
+                            <AlertTriangle size={32} className="text-zinc-600" />
+                            <div>
+                                <p className="text-sm text-zinc-400 font-medium mb-1">Brak danych analitycznych</p>
+                                <p className="text-xs text-zinc-600 leading-relaxed max-w-xs">
+                                    Dodaj <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_API_TOKEN</code> i <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_PROJECT_ID</code> w Vercel, aby zobaczyc statystyki wuyo.pl.
+                                </p>
+                                {analytics?.debugError && (
+                                    <p className="text-xs text-red-400 mt-3 font-mono bg-zinc-950 px-2 py-1 rounded">{analytics.debugError}</p>
+                                )}
                             </div>
-
-                            {/* Banner: connect real data */}
-                            <div className="bg-yellow-500/5 border border-dashed border-yellow-500/20 p-5 rounded-2xl flex items-start gap-3">
-                                <AlertTriangle size={18} className="text-yellow-500 mt-0.5 shrink-0" />
-                                <div>
-                                    <p className="text-sm text-yellow-400/90 font-medium">Dane symulowane</p>
-                                    {analytics?.debugError && (
-                                        <p className="text-xs text-red-400 mt-1 font-mono bg-zinc-900 px-2 py-1 rounded">{analytics.debugError}</p>
-                                    )}
-                                    <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
-                                        Dodaj <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_API_TOKEN</code> i <code className="text-yellow-400/70 bg-zinc-800 px-1.5 py-0.5 rounded text-[10px]">VERCEL_PROJECT_ID</code> do zmiennych srodowiskowych Vercel, aby zobaczyc prawdziwe dane z wuyo.pl.
-                                    </p>
-                                </div>
-                            </div>
-                        </>
+                        </div>
                     )}
                 </div>
 
