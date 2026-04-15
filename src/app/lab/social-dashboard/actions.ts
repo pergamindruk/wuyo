@@ -463,6 +463,14 @@ HOOK_3: [treść hooka]`)
             getNextWeekday(5), // piątek
         ]
 
+        // Rotacja celów: Pon=Edukacja, Śr=Zaangażowanie, Pt=Sprzedaż
+        const goals = ['Edukacja', 'Zaangażowanie', 'Sprzedaż']
+        const goalContext = [
+            'Cel: EDUKACJA — wytłumacz coś wartościowego, pokaż ekspertyzę, daj actionable tip.',
+            'Cel: ZAANGAŻOWANIE — wywołaj emocje, zadaj pytanie, pokaż kulisy, buduj relację.',
+            'Cel: SPRZEDAŻ — pokaż case study, konkretny rezultat, ofertę lub wezwanie do kontaktu.',
+        ]
+
         const errors: string[] = []
         let created = 0
         const posts: Array<{ hook: string; date: string }> = []
@@ -470,14 +478,17 @@ HOOK_3: [treść hooka]`)
         for (let i = 0; i < hooksToUse.length; i++) {
             const hook = hooksToUse[i]
             const date = dates[i] ?? dates[dates.length - 1]
+            const goal = goals[i] ?? 'Zaangażowanie'
+            const goalCtx = goalContext[i] ?? goalContext[1]
 
             try {
                 const execText = await askClaude(`${WUYO_CONTEXT}
 
 HOOK DO POSTA: "${hook}"
+${goalCtx}
 
 ZADANIE [EXECUTE — Copy gotowe do publikacji]:
-Na podstawie tego hooka napisz gotowe copy na dwie platformy.
+Na podstawie tego hooka napisz gotowe copy na dwie platformy. Treść musi realizować podany cel.
 
 ## COPY_FACEBOOK
 [Pełny post. Zacznij od hooka. Ludzki ton WUYO. Max 800 znaków. 1-2 hashtagi na końcu.]
@@ -508,7 +519,7 @@ ZASADY: Zaczyna się od hooka. Bez AI slopu. Bez korporacyjnego języka. Gotowe 
                     topic: hook.slice(0, 80),
                     platform: 'Facebook',
                     format: 'Post z grafiką',
-                    goal: 'Zaangażowanie',
+                    goal,
                     date,
                     status: 'Szkic',
                     content: fbCopy + promptSuffix,
@@ -519,7 +530,7 @@ ZASADY: Zaczyna się od hooka. Bez AI slopu. Bez korporacyjnego języka. Gotowe 
                     topic: hook.slice(0, 80),
                     platform: 'Instagram',
                     format: 'Post z grafiką',
-                    goal: 'Zaangażowanie',
+                    goal,
                     date,
                     status: 'Szkic',
                     content: igCopy + promptSuffix,
