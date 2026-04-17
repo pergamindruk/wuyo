@@ -23,6 +23,7 @@ const phases = [
     { name: 'Opracowanie Koncepcji', status: 'Briefing', threshold: 10 },
     { name: 'Szkic i Architektura', status: 'Koncept', threshold: 40 },
     { name: 'Wdrazanie Poprawek', status: 'Poprawki', threshold: 75 },
+    { name: 'Projekt w druku', status: 'W druku', threshold: 90 },
     { name: 'Finalizacja Projektu', status: 'Final', threshold: 100 },
 ]
 

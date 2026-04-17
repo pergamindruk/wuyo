@@ -35,8 +35,8 @@ export default function ProjectsLab() {
     }
 
     const handleUpdate = async (id: string, phase: number) => {
-        const statusMap = ['Briefing', 'Koncept', 'Poprawki', 'Final']
-        const progressMap = [10, 40, 75, 100]
+        const statusMap = ['Briefing', 'Koncept', 'Poprawki', 'W druku', 'Final']
+        const progressMap = [10, 40, 75, 90, 100]
         const note = noteInputs[id]?.trim() || undefined
         await updateProjectStatus(id, statusMap[phase], progressMap[phase], note)
         setNoteInputs(prev => ({ ...prev, [id]: '' }))
@@ -150,10 +150,10 @@ export default function ProjectsLab() {
                                 {/* Phase buttons + actions */}
                                 <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t border-zinc-800/50">
                                     <div className="flex items-center gap-2">
-                                        {['Brief', 'Koncept', 'Poprawki', 'Final'].map((label, i) => {
-                                            const progressMap = [10, 40, 75, 100]
+                                        {['Brief', 'Koncept', 'Poprawki', 'W druku', 'Final'].map((label, i) => {
+                                            const progressMap = [10, 40, 75, 90, 100]
                                             const isActive = p.progress === progressMap[i]
-                                            const isFinal = i === 3
+                                            const isFinal = i === 4
                                             return (
                                                 <button
                                                     key={label}
