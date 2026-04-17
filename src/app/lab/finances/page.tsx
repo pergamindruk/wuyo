@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock } from 'lucide-react'
+import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp } from 'lucide-react'
 import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -341,6 +341,148 @@ export default function FinancesLab() {
                 </div>
             </div>
 
+            {/* Historia wszystkich transakcji */}
+            <TransactionHistory
+                ewidencja={ewidencja}
+                getDisplayStatus={getDisplayStatus}
+                paymentStatusConfig={paymentStatusConfig}
+                handlePaymentToggle={handlePaymentToggle}
+                handleDeleteEwidencja={handleDeleteEwidencja}
+            />
+
+        </div>
+    )
+}
+
+function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, handlePaymentToggle, handleDeleteEwidencja }: {
+    ewidencja: any[]
+    getDisplayStatus: (item: any) => string
+    paymentStatusConfig: Record<string, { bg: string; text: string; border: string }>
+    handlePaymentToggle: (id: string, status: string) => void
+    handleDeleteEwidencja: (id: string) => void
+}) {
+    const [isOpen, setIsOpen] = useState(false)
+    const [filterYear, setFilterYear] = useState<string>('all')
+
+    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"]
+
+    const sorted = [...ewidencja].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    const years = Array.from(new Set(sorted.map(e => new Date(e.date).getFullYear().toString()))).sort((a, b) => Number(b) - Number(a))
+
+    const filtered = filterYear === 'all' ? sorted : sorted.filter(e => new Date(e.date).getFullYear().toString() === filterYear)
+
+    const grouped: Record<string, any[]> = {}
+    filtered.forEach(e => {
+        const d = new Date(e.date)
+        const key = `${d.getFullYear()}-${d.getMonth()}`
+        if (!grouped[key]) grouped[key] = []
+        grouped[key].push(e)
+    })
+
+    const grandTotal = filtered.reduce((s, e) => s + e.amount, 0)
+    const paidTotal = filtered.filter(e => getDisplayStatus(e) === 'Zaplacona').reduce((s, e) => s + e.amount, 0)
+
+    return (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl print:hidden">
+            <button
+                onClick={() => setIsOpen(v => !v)}
+                className="w-full flex items-center justify-between p-6 text-left"
+            >
+                <div className="flex items-center gap-3">
+                    <History size={20} className="text-yellow-400" />
+                    <div>
+                        <h2 className="text-lg font-bold text-white">Historia wszystkich transakcji</h2>
+                        <p className="text-xs text-zinc-500">{ewidencja.length} wpisów · łącznie: {grandTotal.toFixed(2)} zł</p>
+                    </div>
+                </div>
+                {isOpen ? <ChevronUp size={18} className="text-zinc-500" /> : <ChevronDown size={18} className="text-zinc-500" />}
+            </button>
+
+            {isOpen && (
+                <div className="px-6 pb-6 flex flex-col gap-6">
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-zinc-800">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold">Rok:</span>
+                            {['all', ...years].map(y => (
+                                <button
+                                    key={y}
+                                    onClick={() => setFilterYear(y)}
+                                    className={`px-3 py-1 text-xs rounded border transition-colors ${filterYear === y ? 'bg-yellow-400 text-black border-yellow-400' : 'border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500'}`}
+                                >
+                                    {y === 'all' ? 'Wszystkie' : y}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="flex items-center gap-6 text-xs">
+                            <span className="text-zinc-500">Wpłynęło: <span className="text-green-400 font-bold font-mono">{paidTotal.toFixed(2)} zł</span></span>
+                            <span className="text-zinc-500">Łącznie: <span className="text-white font-bold font-mono">{grandTotal.toFixed(2)} zł</span></span>
+                        </div>
+                    </div>
+
+                    {Object.keys(grouped).length === 0 ? (
+                        <p className="text-zinc-600 text-sm italic text-center py-4">Brak transakcji.</p>
+                    ) : (
+                        Object.entries(grouped).map(([key, items]) => {
+                            const [year, month] = key.split('-').map(Number)
+                            const monthTotal = items.reduce((s, e) => s + e.amount, 0)
+                            return (
+                                <div key={key}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{monthNames[month]} {year}</h3>
+                                        <span className="text-xs text-zinc-500 font-mono">{monthTotal.toFixed(2)} zł</span>
+                                    </div>
+                                    <div className="overflow-x-auto rounded-xl border border-zinc-800">
+                                        <table className="w-full text-left text-xs text-zinc-300">
+                                            <thead className="text-zinc-500 border-b border-zinc-800 bg-zinc-950">
+                                                <tr>
+                                                    <th className="font-normal py-2 px-3">Data</th>
+                                                    <th className="font-normal py-2 px-3">Klient</th>
+                                                    <th className="font-normal py-2 px-3">Opis</th>
+                                                    <th className="font-normal py-2 px-3">Dokument</th>
+                                                    <th className="font-normal py-2 px-3">Kwota</th>
+                                                    <th className="font-normal py-2 px-3">Status</th>
+                                                    <th className="font-normal py-2 px-3 w-8"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-zinc-800/50">
+                                                {items.map((e: any) => {
+                                                    const displayStatus = getDisplayStatus(e)
+                                                    const pCfg = paymentStatusConfig[displayStatus] || paymentStatusConfig.Wystawiona
+                                                    return (
+                                                        <tr key={e.id} className="hover:bg-zinc-800/30 transition-colors group">
+                                                            <td className="py-2.5 px-3 whitespace-nowrap">{e.date}</td>
+                                                            <td className="py-2.5 px-3 max-w-[140px] truncate" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
+                                                            <td className="py-2.5 px-3 max-w-[200px] truncate text-zinc-400" title={e.description}>{e.description}</td>
+                                                            <td className="py-2.5 px-3 text-zinc-500 whitespace-nowrap">
+                                                                {e.documentType?.includes('Faktura') ? 'Faktura' : e.documentType?.includes('Umowa') ? 'Umowa' : 'Protokół'}
+                                                            </td>
+                                                            <td className="py-2.5 px-3 font-bold text-green-400 whitespace-nowrap font-mono">+{e.amount.toFixed(2)} zł</td>
+                                                            <td className="py-2.5 px-3">
+                                                                <button
+                                                                    onClick={() => handlePaymentToggle(e.id, displayStatus)}
+                                                                    className={`${pCfg.bg} ${pCfg.text} ${pCfg.border} border px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
+                                                                >
+                                                                    {displayStatus === 'Zaplacona' ? <Check size={10} /> : displayStatus === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
+                                                                    {displayStatus}
+                                                                </button>
+                                                            </td>
+                                                            <td className="py-2.5 px-3 text-right">
+                                                                <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                                                                    <Trash2 size={14} />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    )}
+                </div>
+            )}
         </div>
     )
 }
