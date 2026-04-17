@@ -162,3 +162,107 @@ export async function deleteGeneration(id: string) {
     revalidatePath('/lab/ai-studio')
     return true
 }
+
+// ─── Post Creator ─────────────────────────────────────────────────────────────
+
+export async function generatePostForPlatform(
+    topic: string,
+    tone: string,
+    platform: string,
+    extraContext: string
+) {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+
+        const platformGuidelines: Record<string, string> = {
+            instagram: 'angażujące, krótkie akapity, emoji z umiarem (max 5–8), 5–10 hashtagów na końcu, max 2200 znaków',
+            facebook: 'konwersacyjny, może być dłuższy, 2–3 hashtagi na końcu, naturalne emoji bez przesady',
+            both: 'pasuje na Instagram i Facebook jednocześnie: krótkie akapity, emoji z umiarem, 5–7 hashtagów, max 2200 znaków',
+            linkedin: 'profesjonalny, konkretne fakty/liczby, akapity oddzielone spacją, hashtagi na końcu (3–5), max 3000 znaków',
+            blog: 'strukturyzowany artykuł z nagłówkami (##), wstęp-rozwinięcie-zakończenie, min 400 słów, SEO-friendly, bez hashtagów',
+        }
+
+        const toneGuidelines: Record<string, string> = {
+            ekspercki: 'buduj autorytet — dobre praktyki branżowe, konkretne liczby, pozycjonuj WUYO jako ekspertów',
+            storytelling: 'zacznij od konkretnej historii lub sytuacji z życia, wciągnij emocją, dopiero potem meritum',
+            edukacyjny: 'daj konkretną wartość: tipsy, lista "jak to zrobić", odpowiedź na pytanie "dlaczego warto"',
+            sprzedazowy: 'podkreślaj korzyści (nie features), buduj lekkie FOMO, zakończ wyraźnym ale subtelnym CTA',
+            viralowy: 'kontrowersyjna teza lub prowokujące pytanie otwierające post — cel: dyskusja w komentarzach',
+        }
+
+        const prompt = `Jesteś ekspertem od content marketingu marki WUYO — studio graficzne i web design "Dobra Grafa" z Rzeszowa. Ton marki: nowoczesny, pewny siebie, premium, konkretny (zero lania wody).
+
+Platforma: ${platform.toUpperCase()}
+Wytyczne platformy: ${platformGuidelines[platform] || platformGuidelines.facebook}
+
+Ton: ${tone.toUpperCase()}
+Wytyczne tonu: ${toneGuidelines[tone] || toneGuidelines.ekspercki}
+
+Temat: "${topic}"${extraContext ? `\nDodatkowy kontekst: "${extraContext}"` : ''}
+
+Zwróć TYLKO gotowy post do skopiowania. Zero wstępów, zero komentarzy, zero cudzysłowów owijających wynik.`
+
+        const result = await model.generateContent(prompt)
+        const output = result.response.text()
+
+        await saveGeneration('content', { topic, tone, platform, extraContext }, output)
+
+        return { success: true, data: output }
+    } catch (error: any) {
+        return { success: false, error: 'Błąd generowania: ' + (error.message || '') }
+    }
+}
+
+export async function publishDirectPost(
+    topic: string,
+    content: string,
+    targets: string[],
+    imageUrl?: string
+): Promise<Record<string, { success: boolean; postId?: string; error?: string }>> {
+    const { publishToFB, publishToIG } = await import('@/lib/social-publish')
+    const supabase = await createClient()
+
+    const { data: record } = await supabase
+        .from('calendar_events')
+        .insert({
+            topic,
+            content,
+            platform: targets.join('+'),
+            format: 'Post',
+            goal: 'Publikacja z Post Creatora',
+            date: new Date().toISOString().split('T')[0],
+            status: 'Szkic',
+            image_url: imageUrl || null,
+        })
+        .select('id')
+        .single()
+
+    const results: Record<string, { success: boolean; postId?: string; error?: string }> = {}
+
+    if (targets.includes('facebook')) {
+        const res = await publishToFB(content, imageUrl)
+        results.facebook = res
+        if (res.success && record) {
+            await supabase.from('calendar_events')
+                .update({ fb_post_id: res.postId, status: 'Opublikowane', published_at: new Date().toISOString() })
+                .eq('id', record.id)
+        }
+    }
+
+    if (targets.includes('instagram')) {
+        if (!imageUrl) {
+            results.instagram = { success: false, error: 'Brak URL grafiki — Instagram wymaga zdjęcia' }
+        } else {
+            const res = await publishToIG(imageUrl, content)
+            results.instagram = res
+            if (res.success && record) {
+                await supabase.from('calendar_events')
+                    .update({ ig_post_id: res.postId, status: 'Opublikowane', published_at: new Date().toISOString() })
+                    .eq('id', record.id)
+            }
+        }
+    }
+
+    revalidatePath('/lab/social-dashboard')
+    return results
+}
