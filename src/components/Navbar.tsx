@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -60,6 +60,35 @@ export function Navbar() {
             setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), SCROLL_DELAY_SAME_PAGE);
         }
     };
+
+    const hamburgerRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (!isMobileMenuOpen) return;
+        const menu = document.getElementById("mobile-menu");
+        const focusable = menu?.querySelectorAll<HTMLElement>(
+            'a, button, [tabindex]:not([tabindex="-1"])'
+        );
+        focusable?.[0]?.focus();
+
+        const handleTrap = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsMobileMenuOpen(false);
+                hamburgerRef.current?.focus();
+                return;
+            }
+            if (e.key !== "Tab" || !focusable?.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault(); last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault(); first.focus();
+            }
+        };
+        document.addEventListener("keydown", handleTrap);
+        return () => document.removeEventListener("keydown", handleTrap);
+    }, [isMobileMenuOpen]);
 
     const closeMenu = () => setIsMobileMenuOpen(false);
     const toggleMenu = () => setIsMobileMenuOpen((prev) => !prev);
@@ -127,12 +156,14 @@ export function Navbar() {
                     </a>
 
                     <button
+                        ref={hamburgerRef}
                         className="md:hidden text-white p-2 hover:text-gold transition-colors"
                         onClick={toggleMenu}
                         aria-label={isMobileMenuOpen ? "Zamknij menu" : "Otwórz menu"}
                         aria-expanded={isMobileMenuOpen}
+                        aria-controls="mobile-menu"
                     >
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        {isMobileMenuOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
                     </button>
                 </div>
             </header>
@@ -141,6 +172,10 @@ export function Navbar() {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
+                        id="mobile-menu"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Menu mobilne"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}

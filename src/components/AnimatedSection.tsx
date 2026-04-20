@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface AnimatedSectionProps {
@@ -14,8 +14,11 @@ interface AnimatedSectionProps {
 }
 
 export function AnimatedSection({ children, className = "", id, delay = 0, animateOnMount = false, hero = false }: AnimatedSectionProps) {
-    const initial = hero ? { opacity: 1, y: 20 } : { opacity: 0, y: 50 };
-    const target = hero ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 };
+    const shouldReduceMotion = useReducedMotion();
+
+    // opacity zawsze 1 — treść dostępna dla AT i crawlerów; animujemy tylko Y
+    const initial = { opacity: 1, y: shouldReduceMotion ? 0 : (hero ? 20 : 50) };
+    const target = { opacity: 1, y: 0 };
 
     const animationProps = animateOnMount
         ? { animate: target }
@@ -26,7 +29,7 @@ export function AnimatedSection({ children, className = "", id, delay = 0, anima
             id={id}
             initial={initial}
             {...animationProps}
-            transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
             className={`w-full ${className}`}
         >
             {children}

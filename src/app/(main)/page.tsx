@@ -106,7 +106,7 @@ export default function Home() {
 
 
     return (
-        <main className="flex-1 w-full">
+        <main id="main-content" className="flex-1 w-full">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

@@ -143,6 +143,7 @@ export default function ChatBot() {
                                         <span
                                             className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black"
                                             style={{ background: "#22c55e" }}
+                                            aria-hidden="true"
                                         />
                                     </div>
                                     <div>
@@ -150,20 +151,26 @@ export default function ChatBot() {
                                             Wuyo – dobra grafa ⚡
                                         </p>
                                         <p className="text-xs" style={{ color: "#22c55e" }}>
-                                            Online – odpowie w sekundy
+                                            <span className="sr-only">Status: </span>Online – odpowie w sekundy
                                         </p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setIsOpen(false)}
+                                    aria-label="Zamknij okno czatu"
                                     className="text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
                                 >
-                                    <X size={18} />
+                                    <X size={18} aria-hidden="true" />
                                 </button>
                             </div>
 
                             {/* Messages */}
-                            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-thin">
+                            <div
+                                className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-thin"
+                                aria-live="polite"
+                                aria-label="Historia wiadomości"
+                                role="log"
+                            >
                                 {messages.map((msg, i) => (
                                     <motion.div
                                         key={i}
@@ -254,6 +261,7 @@ export default function ChatBot() {
                                         onChange={(e) => setInput(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                         placeholder="Napisz wiadomość..."
+                                        aria-label="Wpisz wiadomość do asystenta"
                                         className="flex-1 bg-transparent text-white text-sm outline-none placeholder-gray-500"
                                         disabled={isLoading}
                                     />

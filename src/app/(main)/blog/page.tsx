@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
+import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
     title: "Blog – porady o grafice i stronach WWW | WUYO",
@@ -76,6 +77,11 @@ export const posts = [
 ];
 
 export default function BlogPage() {
+    // Merge MDX articles (new ones) with hardcoded legacy posts, deduplicated by slug
+    const mdxPosts = getAllPosts();
+    const legacySlugs = new Set(posts.map((p) => p.slug));
+    const allPosts = [...mdxPosts.filter((p) => !legacySlugs.has(p.slug)), ...posts];
+
     return (
         <main className="flex-1 w-full">
             <section className="relative min-h-[45vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-16 md:pt-48 overflow-hidden">
@@ -91,7 +97,7 @@ export default function BlogPage() {
 
             <section className="py-16 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto grid gap-8">
-                    {posts.map((post, i) => (
+                    {allPosts.map((post, i) => (
                         <AnimatedSection key={post.slug} delay={i * 0.1}>
                             <Link href={`/blog/${post.slug}`} className="glass-card p-8 md:p-10 block group">
                                 <div className="flex items-center gap-3 mb-4">

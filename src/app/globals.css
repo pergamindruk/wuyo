@@ -328,12 +328,28 @@ body {
 
 .brief-label {
   display: block;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75); /* podwyższony kontrast: ~5.4:1 (WCAG AA) */
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 8px;
+}
+
+/* WCAG 2.4.7 / 2.4.11 — globalny focus ring */
+:focus-visible {
+  outline: 3px solid #ffeb52;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.brief-input:focus-visible {
+  outline: 3px solid rgba(255, 235, 82, 0.8);
+  outline-offset: 0;
 }
 
 /* Mobile performance: hide heavy SVG spotlights, reduce glow blur */

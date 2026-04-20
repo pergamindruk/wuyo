@@ -188,7 +188,7 @@ export function ContactBrief() {
                 <div className="bg-navy-dark/60 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl backdrop-blur-xl">
 
                     {/* ZAKŁADKI */}
-                    <div className="grid grid-cols-3 border-b border-white/10 bg-navy/30">
+                    <div role="tablist" aria-label="Typ briefu" className="grid grid-cols-3 border-b border-white/10 bg-navy/30">
                         {([
                             { id: "quick" as Path, icon: <MessageSquare size={18} />, label: "Wiadomość", sub: "Szybki kontakt" },
                             { id: "branding" as Path, icon: <Star size={18} />, label: "Logo / Branding", sub: "Identyfikacja marki" },
@@ -196,17 +196,22 @@ export function ContactBrief() {
                         ] as const).map((tab) => (
                             <button
                                 key={tab.id}
+                                role="tab"
+                                aria-selected={path === tab.id}
+                                aria-controls={`tabpanel-${tab.id}`}
+                                id={`tab-${tab.id}`}
                                 onClick={() => switchPath(tab.id)}
                                 className={`relative flex flex-col items-center justify-center py-5 px-3 gap-2 transition-all duration-300 text-center
                                     ${path === tab.id ? "bg-gold text-navy-dark" : "text-white/40 hover:text-white/70 hover:bg-white/5"}`}
                             >
-                                <span className={`transition-colors ${path === tab.id ? "text-navy-dark" : ""}`}>{tab.icon}</span>
+                                <span className={`transition-colors ${path === tab.id ? "text-navy-dark" : ""}`} aria-hidden="true">{tab.icon}</span>
                                 <span className="font-bold text-xs md:text-sm leading-tight">{tab.label}</span>
                                 <span className={`text-[10px] hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/30"}`}>{tab.sub}</span>
                                 {path === tab.id && (
                                     <motion.div
                                         layoutId="tabBar"
                                         className="absolute bottom-0 left-0 right-0 h-[3px] bg-gold rounded-t"
+                                        aria-hidden="true"
                                     />
                                 )}
                             </button>
@@ -219,6 +224,9 @@ export function ContactBrief() {
                         <AnimatePresence mode="popLayout">
                             <motion.div
                                 key={path}
+                                role="tabpanel"
+                                id={`tabpanel-${path}`}
+                                aria-labelledby={`tab-${path}`}
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -8 }}
@@ -234,7 +242,7 @@ export function ContactBrief() {
                                             value={data.quickMessage ?? ""}
                                             onChange={(e) => { setData((d) => ({ ...d, quickMessage: e.target.value })); setFieldErrors(p => ({ ...p, message: undefined })) }}
                                         />
-                                        {fieldErrors.message && <p className="text-red-400 text-xs mt-1">{fieldErrors.message}</p>}
+                                        {fieldErrors.message && <p id="error-message" className="text-red-400 text-xs mt-1" role="alert">{fieldErrors.message}</p>}
                                     </BriefField>
                                 )}
 
@@ -313,27 +321,33 @@ export function ContactBrief() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
-                                    <label className="brief-label">Imię *</label>
+                                    <label htmlFor="contact-name" className="brief-label">Imię *</label>
                                     <input
+                                        id="contact-name"
                                         className={`brief-input w-full ${fieldErrors.name ? "border-red-500/60 focus:border-red-500" : ""}`}
                                         placeholder="Jak mam się do Ciebie zwracać?"
                                         value={data.name || ""}
                                         onChange={(e) => { setData(prev => ({ ...prev, name: e.target.value })); setFieldErrors(p => ({ ...p, name: undefined })) }}
                                         autoComplete="name"
+                                        aria-required="true"
+                                        aria-describedby={fieldErrors.name ? "error-name" : undefined}
                                     />
-                                    {fieldErrors.name && <p className="text-red-400 text-xs mt-1">{fieldErrors.name}</p>}
+                                    {fieldErrors.name && <p id="error-name" className="text-red-400 text-xs mt-1" role="alert">{fieldErrors.name}</p>}
                                 </div>
                                 <div>
-                                    <label className="brief-label">E-mail *</label>
+                                    <label htmlFor="contact-email" className="brief-label">E-mail *</label>
                                     <input
+                                        id="contact-email"
                                         type="email"
                                         className={`brief-input w-full ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : ""}`}
                                         placeholder="Na jaki adres mam odpisać?"
                                         value={data.email || ""}
                                         onChange={(e) => { setData(prev => ({ ...prev, email: e.target.value })); setFieldErrors(p => ({ ...p, email: undefined })) }}
                                         autoComplete="email"
+                                        aria-required="true"
+                                        aria-describedby={fieldErrors.email ? "error-email" : undefined}
                                     />
-                                    {fieldErrors.email && <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>}
+                                    {fieldErrors.email && <p id="error-email" className="text-red-400 text-xs mt-1" role="alert">{fieldErrors.email}</p>}
                                 </div>
                             </div>
 

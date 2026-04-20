@@ -1,9 +1,31 @@
 import { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://wuyo.pl";
 
+    // Auto-include new MDX articles (legacy articles listed manually below)
+    const mdxPosts = getAllPosts();
+    const legacySlugs = new Set([
+        "ile-kosztuje-logo",
+        "ile-kosztuje-strona-internetowa",
+        "jak-wybrac-projektanta-logo",
+        "identyfikacja-wizualna-firmy",
+        "strona-one-page-czy-multi-page",
+        "jak-stworzyc-strone-internetowa-dla-firmy",
+        "jak-napisac-brief-dla-projektanta",
+    ]);
+    const newMdxEntries: MetadataRoute.Sitemap = mdxPosts
+        .filter((p) => !legacySlugs.has(p.slug))
+        .map((p) => ({
+            url: `${baseUrl}/blog/${p.slug}`,
+            lastModified: new Date(p.dateModified ?? p.date),
+            changeFrequency: "monthly" as const,
+            priority: 0.9,
+        }));
+
     return [
+        ...newMdxEntries,
         {
             url: baseUrl,
             lastModified: new Date(),
