@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { Project } from '@/lib/types'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function getProjects() {
     const supabase = await createClient()
@@ -42,6 +43,7 @@ export async function createProject(data: Pick<Project, 'name' | 'client'>) {
         throw new Error(`Blad: ${error.message}`)
     }
 
+    await logAuditEvent('project_create', { name: data.name, client: data.client })
     revalidatePath('/lab/projects')
     return inserted
 }
@@ -74,6 +76,7 @@ export async function updateProjectStatus(id: string, status: string, progress: 
         throw new Error('Nie udalo sie zaktualizowac statusu')
     }
 
+    await logAuditEvent('project_update', { id, status, progress })
     revalidatePath('/lab/projects')
     revalidatePath(`/c/${id}`)
 }
@@ -90,6 +93,7 @@ export async function deleteProject(id: string) {
         throw new Error('Nie udalo sie usunac projektu')
     }
 
+    await logAuditEvent('project_delete', { id })
     revalidatePath('/lab/projects')
     return true
 }

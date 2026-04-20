@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { Lead } from '@/lib/types'
+import { logAuditEvent } from '@/lib/audit'
 
 const VALID_STATUSES = ['Nowy', 'Kontakt', 'Wycena', 'Zamkniety', 'Utracony'] as const
 type ValidStatus = typeof VALID_STATUSES[number]
@@ -93,6 +94,7 @@ export async function updateLeadStatus(id: string, status: string) {
         throw new Error('Nie udalo sie zaktualizowac statusu')
     }
 
+    await logAuditEvent('lead_status_change', { id, status })
     revalidatePath('/lab/crm')
     return true
 }
@@ -109,6 +111,7 @@ export async function deleteLeadOrBrief(id: string, isBrief: boolean) {
         throw new Error('Nie udalo sie usunac zapisu')
     }
 
+    await logAuditEvent('lead_delete', { id })
     revalidatePath('/lab/crm')
     return true
 }
