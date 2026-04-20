@@ -268,6 +268,7 @@ export default function ChatBot() {
                                     <button
                                         onClick={() => sendMessage()}
                                         disabled={!input.trim() || isLoading}
+                                        aria-label="Wyślij wiadomość"
                                         className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                                         style={{ background: "#FFD700" }}
                                     >
