@@ -1,9 +1,5 @@
 'use server'
 
-import { getModel } from '@/lib/gemini'
-
-// ─── Vercel Analytics API ────────────────────────────────────
-
 export type AnalyticsData = {
     available: boolean
     debugError?: string
@@ -31,7 +27,6 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
 
         const authHeaders = { Authorization: `Bearer ${token}` }
 
-        // Fetch page views by path, unique visitors, and referrers in parallel
         const [pvRes, uvRes, refRes] = await Promise.all([
             fetch(`${baseUrl}/stats/path?${commonParams}&limit=10`, { headers: authHeaders, next: { revalidate: 3600 } }),
             fetch(`${baseUrl}/stats/visitors?${commonParams}`, { headers: authHeaders, next: { revalidate: 3600 } }),
@@ -76,43 +71,5 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
     } catch (error: any) {
         console.error('Vercel Analytics fetch error:', error)
         return { available: false, debugError: `Exception: ${error?.message || String(error)}` }
-    }
-}
-
-// ─── SEO Strategy Generator ──────────────────────────────────
-
-export async function getSeoSuggestions(realData?: string) {
-    try {
-        const model = getModel('seo')
-
-        const dataContext = realData
-            ? `\n\nPRAWDZIWE DANE Z WITRYNY WUYO.PL (ostatnie 7 dni):\n${realData}\nUwzglednij te dane w swojej strategii — odwoluj sie do konkretnych liczb i stron.`
-            : ''
-
-        const prompt = `Jestes "Harbor SEO AI" — najbardziej zaawansowanym systemem analitycznym dla agencji WUYO (Dobra Grafa i strony WWW w React/Next.js).
-        Skanujesz stan sieci z perspektywy roku 2026 (AI Overviews, Zero-Click searches, Core Web Vitals 2.0).
-        ${dataContext}
-
-        TWOJE ZADANIE: Wygeneruj agresywna strategie SEO na najblizsze 30 dni dla marki WUYO.
-
-        KONTEKST WUYO:
-        - Biznes: Premium Design & Next.js Dev.
-        - Brand Voice: "Graficzny ziomek", hakerski zapal, brak korpo-belkotu.
-
-        WYTYCZNE (BEZWZGLEDNIE PRZESTRZEGAJ):
-        1. ZERO KORPO-AI-IZMOW. Zadnych slow "synergia", "odkryj", "pamietaj, ze". Pisz twardo, konkretnie i z jajem.
-        2. BADZ TECHNICZNY. Mow o strukturze DOM, INP, optymalizacji pod AI Scrapery i o linkach, ktore faktycznie rankuja.
-        3. WYMAGANE CZESCI:
-           - [KLIN] 1 potezna taktyka "pod prad", ktora da nam przewage.
-           - [OFF-SITE] Gdzie sie pokazac, by Google uznalo nas za ekspertow w 2026.
-           - [SEMANTYKA] Jakie konkretne frazy (LSI/Entity) wrzucic do portfolio, by przyciagac bogatych klientow.
-
-        Zwroc odpowiedz w czystym Markdown, hakerska narracja.`
-
-        const result = await model.generateContent(prompt)
-        return { success: true, data: result.response.text() }
-    } catch (error: any) {
-        console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udalo sie polaczyc z SEO Specjalista. Sprawdz limity AI: ' + (error.message || '') }
     }
 }
