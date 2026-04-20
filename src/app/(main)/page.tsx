@@ -140,21 +140,6 @@ export default function Home() {
                         </Link>
                     </div>
 
-                    {/* Mini social proof */}
-                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-8">
-                        <span className="text-sm text-white/45">
-                            <span className="text-gold font-bold">156+</span> projektów
-                        </span>
-                        <span className="text-white/20 hidden sm:inline">·</span>
-                        <span className="text-sm text-white/45">
-                            <span className="text-gold font-bold">46</span> branż
-                        </span>
-                        <span className="text-white/20 hidden sm:inline">·</span>
-                        <span className="text-sm text-white/45">
-                            <span className="text-gold font-bold">Rzeszów</span> i cała Polska
-                        </span>
-                    </div>
-
                     {/* Social proof — animated counters */}
                     <HeroStats />
                 </AnimatedSection>
