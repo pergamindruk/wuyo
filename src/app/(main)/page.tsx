@@ -106,7 +106,7 @@ export default function Home() {
 
 
     return (
-        <main id="main-content" className="flex-1 w-full">
+        <div className="w-full">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -293,6 +293,6 @@ export default function Home() {
             {/* ═══════════════════════ ZAUFALI MI ═══════════════════════ */}
             <TrustedBySection />
 
-        </main>
+        </div>
     );
 }

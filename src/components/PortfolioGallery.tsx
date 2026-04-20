@@ -4,49 +4,13 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Maximize2 } from "lucide-react";
+import { TABS, projects, type Project } from "@/lib/projects";
 
-const TABS = [
-    { id: "Wszystkie", label: "Wszystkie" },
-    { id: "Logotypy/Branding", label: "Branding" },
-    { id: "Do druku", label: "Druk" },
-    { id: "Strony Internetowe", label: "Strony WWW" },
-    { id: "Social media", label: "Social" },
-    { id: "Odzież/Gadżety", label: "Gadżety" },
-];
-
-type Project = {
-    id: number;
-    title: string;
-    category: string;
-    image: string;
-    images?: string[];
-    desc?: string;
-    demoUrl?: string;
-    year?: string;
-};
-
-const projects: Project[] = [
-    { id: 14, title: "Gama Ubezpieczeń – Materiały firmowe", category: "Do druku", image: "/realizacje/gama-ubezpieczen.webp", images: ["/realizacje/gama-ubezpieczen-mockup1.webp", "/realizacje/gama-ubezpieczen-mockup2.webp"], desc: "Biuro ubezpieczeń · ulotka, strona informacyjna, wizytówka", year: "2025" },
-    { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp", desc: "Usługi profesjonalne · elegancka wizytówka jednostronna", year: "2024" },
-    { id: 12, title: "Billboard Wege", category: "Do druku", image: "/realizacje/billboard-wege.webp", desc: "Dom kultury · plakat promujący spotkania Wege Pogadanki", year: "2024" },
-    { id: 7, title: "Wizytówka Premium", category: "Do druku", image: "/realizacje/business-card-mockup.webp", desc: "Klient premium · projekt wizytówki", year: "2023" },
-    { id: 8, title: "Czysta Gablota – Strona WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", desc: "Detailing · strona generująca zapytania od dnia 1", demoUrl: "https://www.czystagablota.pl", year: "2024" },
-    { id: 9, title: "Wuyo Lab – Panel CRM", category: "Strony Internetowe", image: "/realizacje/wuyo-lab-v2.webp", desc: "Własny projekt · panel do zarządzania projektami i klientami", year: "2024" },
-    { id: 13, title: "Billboard Domosfera", category: "Do druku", image: "/realizacje/domosfera-billboard.webp", desc: "Dystrybucja drzwi, okien i bram · projekt dużego billboardu", year: "2024" },
-    { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.webp", desc: "Firma technologiczna · identyfikacja wizualna od zera", year: "2023" },
-    { id: 4, title: "Prezentacja Marki Arkom", category: "Logotypy/Branding", image: "/realizacje/arkom-present.webp", desc: "Firma technologiczna · brand book i prezentacja dla inwestorów", year: "2023" },
-    { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp", desc: "Produkty spożywcze · etykiety gotowe do druku offset", year: "2024" },
-    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", desc: "Detailing · spójna identyfikacja wizualna", year: "2024" },
-    { id: 5, title: "Wizytówka Czysta Gablota v2", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup2.webp", desc: "Detailing · wizytówka", year: "2024" },
-    { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej", year: "2024" },
-    { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "ADMAR · projekt naklejki", year: "2023" },
-];
-
-export function PortfolioGallery() {
+export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: number }) {
     const [activeTab, setActiveTab] = useState("Wszystkie");
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [visibleCount, setVisibleCount] = useState(9);
+    const [visibleCount, setVisibleCount] = useState(initialVisible);
     const [fullscreenSrc, setFullscreenSrc] = useState<string | null>(null);
     const [drawerActiveImg, setDrawerActiveImg] = useState<string | null>(null);
     const tabsContainerRef = useRef<HTMLDivElement>(null);
@@ -75,7 +39,7 @@ export function PortfolioGallery() {
     const handleTabChange = (id: string, idx: number) => {
         setActiveTab(id);
         setActiveTabIndex(idx);
-        setVisibleCount(9);
+        setVisibleCount(initialVisible);
     };
 
     const openPanel = (project: Project) => {
@@ -204,6 +168,7 @@ export function PortfolioGallery() {
                                             alt={project.title}
                                             fill
                                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            priority={isFeatured}
                                             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.07]"
                                         />
 

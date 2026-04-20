@@ -122,10 +122,10 @@ export function Navbar() {
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
                     <nav aria-label="Nawigacja główna" className="flex items-center gap-6 lg:gap-8 text-sm font-medium text-white/70">
-                        <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Portfolio
+                        <Link href="/realizacje" className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            Realizacje
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </a>
+                        </Link>
                         <Link href="/cennik" className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Cennik
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
@@ -183,7 +183,7 @@ export function Navbar() {
                         className="fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
                     >
                         <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
-                            <a href="/#portfolio" onClick={(e) => handleAnchorClick(e, "portfolio")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Portfolio</a>
+                            <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
                             <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
                             <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
