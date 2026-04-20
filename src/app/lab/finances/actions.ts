@@ -5,7 +5,6 @@ import path from 'path'
 import { createClient } from '@/lib/supabase/server'
 import { getModel } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
-import { logAuditEvent } from '@/lib/audit'
 
 export async function getEwidencja() {
     const supabase = await createClient()
@@ -50,7 +49,6 @@ export async function addEwidencja(entry: any) {
         return null
     }
 
-    await logAuditEvent('finance_add', { description: entry.description, amount: entry.amount })
     revalidatePath('/lab/finances')
     return {
         id: data.id,
@@ -74,7 +72,6 @@ export async function deleteEwidencja(id: string) {
         return false
     }
     
-    await logAuditEvent('finance_delete', { id })
     revalidatePath('/lab/finances')
     return true
 }
@@ -96,7 +93,6 @@ export async function updatePaymentStatus(id: string, status: string) {
         throw new Error('Nie udalo sie zaktualizowac statusu platnosci')
     }
 
-    await logAuditEvent('finance_update', { id, status })
     revalidatePath('/lab/finances')
     return true
 }
