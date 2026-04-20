@@ -47,6 +47,7 @@ export function ContactBrief() {
     const [submitted, setSubmitted] = useState(false);
     const [sending, setSending] = useState(false);
     const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; message?: string }>({});
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -92,16 +93,22 @@ export function ContactBrief() {
         }
     }, [submitted]);
 
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
     const handleSubmit = async () => {
         if (honeypot) return;
-        if (!data.name || !data.email) {
-            setError("Wypełnij imię i adres e-mail, bez nich nie będę miał jak odpisać! 😅");
-            return;
+
+        const errs: typeof fieldErrors = {}
+        if (!data.name?.trim()) errs.name = "Podaj swoje imię"
+        if (!data.email?.trim()) errs.email = "Podaj adres e-mail"
+        else if (!EMAIL_RE.test(data.email)) errs.email = "Nieprawidłowy adres e-mail"
+        if (path === "quick" && !data.quickMessage?.trim()) errs.message = "Zostaw krótką wiadomość"
+
+        if (Object.keys(errs).length > 0) {
+            setFieldErrors(errs)
+            return
         }
-        if (path === "quick" && !data.quickMessage) {
-            setError("Zostaw chociaż krótką wiadomość o co chodzi!");
-            return;
-        }
+        setFieldErrors({})
         setSending(true);
         setError("");
         try {
@@ -222,11 +229,12 @@ export function ContactBrief() {
                                     <BriefField label="O co chodzi? 🎤" sub="Opisz co potrzebujesz, zapytaj o cenę, lub napisz kiedy możemy pogadać przez telefon.">
                                         <textarea
                                             rows={5}
-                                            className="brief-input resize-none w-full"
+                                            className={`brief-input resize-none w-full ${fieldErrors.message ? "border-red-500/60" : ""}`}
                                             placeholder="Hej Wuyo! Potrzebuję logo, mam otwarcie sklepu za 3 tygodnie... albo: zadzwoń do mnie na xxx-xxx-xxx"
                                             value={data.quickMessage ?? ""}
-                                            onChange={(e) => setData((d) => ({ ...d, quickMessage: e.target.value }))}
+                                            onChange={(e) => { setData((d) => ({ ...d, quickMessage: e.target.value })); setFieldErrors(p => ({ ...p, message: undefined })) }}
                                         />
+                                        {fieldErrors.message && <p className="text-red-400 text-xs mt-1">{fieldErrors.message}</p>}
                                     </BriefField>
                                 )}
 
@@ -306,24 +314,26 @@ export function ContactBrief() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="brief-label">Imię *</label>
-                                    <input 
-                                        className="brief-input w-full" 
-                                        placeholder="Jak mam się do Ciebie zwracać?" 
-                                        value={data.name || ""} 
-                                        onChange={(e) => setData(prev => ({ ...prev, name: e.target.value }))}
+                                    <input
+                                        className={`brief-input w-full ${fieldErrors.name ? "border-red-500/60 focus:border-red-500" : ""}`}
+                                        placeholder="Jak mam się do Ciebie zwracać?"
+                                        value={data.name || ""}
+                                        onChange={(e) => { setData(prev => ({ ...prev, name: e.target.value })); setFieldErrors(p => ({ ...p, name: undefined })) }}
                                         autoComplete="name"
                                     />
+                                    {fieldErrors.name && <p className="text-red-400 text-xs mt-1">{fieldErrors.name}</p>}
                                 </div>
                                 <div>
                                     <label className="brief-label">E-mail *</label>
-                                    <input 
-                                        type="email" 
-                                        className="brief-input w-full" 
-                                        placeholder="Na jaki adres mam odpisać?" 
-                                        value={data.email || ""} 
-                                        onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))}
+                                    <input
+                                        type="email"
+                                        className={`brief-input w-full ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : ""}`}
+                                        placeholder="Na jaki adres mam odpisać?"
+                                        value={data.email || ""}
+                                        onChange={(e) => { setData(prev => ({ ...prev, email: e.target.value })); setFieldErrors(p => ({ ...p, email: undefined })) }}
                                         autoComplete="email"
                                     />
+                                    {fieldErrors.email && <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>}
                                 </div>
                             </div>
 

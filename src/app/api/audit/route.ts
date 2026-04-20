@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
+        const fromEmail = process.env.GMAIL_USER;
 
         await transporter.sendMail({
             from: `"Wuyo Audyt" <${fromEmail}>`,

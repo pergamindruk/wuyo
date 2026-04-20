@@ -205,7 +205,7 @@ export async function POST(req: NextRequest) {
             quick: "Szybkie zapytanie",
         };
 
-        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
+        const fromEmail = process.env.GMAIL_USER;
 
         // Email do Mateusza
         await transporter.sendMail({

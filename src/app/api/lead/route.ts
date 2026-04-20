@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
+        const fromEmail = process.env.GMAIL_USER;
 
         // Wyślij email z powiadomieniem
         await transporter.sendMail({
