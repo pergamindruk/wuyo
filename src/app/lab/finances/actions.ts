@@ -2,8 +2,8 @@
 
 import fs from 'fs'
 import path from 'path'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@/lib/supabase/server'
+import { genAI, GEMINI_MODEL } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
 
 export async function getEwidencja() {
@@ -97,8 +97,6 @@ export async function updatePaymentStatus(id: string, status: string) {
     return true
 }
 
-const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
-
 export async function generateDocument(documentType: string, clientInfo: string, amount: string, description: string, saleDate: string, issueDate: string) {
     try {
         const kbPath = path.join(process.cwd(), 'src', 'app', 'lab', 'knowledge', 'nierejestrowana-2026.md')
@@ -107,7 +105,7 @@ export async function generateDocument(documentType: string, clientInfo: string,
             knowledge = fs.readFileSync(kbPath, 'utf-8')
         }
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
         const prompt = `Jesteś zautomatyzowanym systemem księgowym WUYO (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
         

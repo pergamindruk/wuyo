@@ -1,4 +1,4 @@
-import { login, signup } from './actions'
+import { login } from './actions'
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ message?: string }> }) {
     const { message } = await searchParams
@@ -51,12 +51,6 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                             className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center"
                         >
                             Zaloguj się
-                        </button>
-                        <button
-                            formAction={signup}
-                            className="w-full bg-transparent border border-zinc-700 hover:bg-zinc-800 text-zinc-300 font-medium py-2.5 rounded-lg transition-colors text-sm"
-                        >
-                            Utwórz konto (Tylko pierwszy raz)
                         </button>
                     </div>
                 </form>

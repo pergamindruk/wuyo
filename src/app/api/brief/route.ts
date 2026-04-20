@@ -172,8 +172,6 @@ export async function POST(req: NextRequest) {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_APP_PASSWORD,
             },
-            debug: true,
-            logger: true
         });
 
         const supabase = await createClient();

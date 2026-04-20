@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_APP_PASSWORD,
             },
-            debug: true,
-            logger: true
         });
 
         const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;

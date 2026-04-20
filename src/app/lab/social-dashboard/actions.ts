@@ -1,7 +1,7 @@
 'use server'
 
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { addCalendarEvent } from '../calendar/actions'
+import { genAI, GEMINI_MODEL } from '@/lib/gemini'
 
 // ─── Graph API helpers ────────────────────────────────
 const GRAPH_API_VERSION = 'v21.0'
@@ -48,11 +48,8 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
     return { ok: false as const, error: 'Instagram: timeout (sprobuj ponownie)' }
 }
 
-// ─── AI setup ─────────────────────────────────────────
-const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
-
 async function askClaude(prompt: string): Promise<string> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
     const result = await model.generateContent(prompt)
     return result.response.text()
 }

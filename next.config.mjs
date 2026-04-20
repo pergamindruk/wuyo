@@ -49,7 +49,7 @@ const nextConfig = {
                             "style-src 'self' 'unsafe-inline'",
                             "font-src 'self'",
                             "img-src 'self' data: blob: https:",
-                            "connect-src 'self' https://www.google-analytics.com",
+                            "connect-src 'self' https://www.google-analytics.com https://generativelanguage.googleapis.com https://connect.mailerlite.com https://graph.facebook.com https://api.instagram.com https://*.supabase.co https://vercel.com",
                             "frame-src 'self' https://www.google.com",
                         ].join("; "),
                     },

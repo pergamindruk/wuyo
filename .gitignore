@@ -18,10 +18,11 @@ tsconfig.tsbuildinfo
 !package.json
 !tsconfig.json
 !components.json
-!projects.json
 !calendar.json
-!ewidencja.json
-!leads.json
+# Dane osobowe klientów — poza gitem (RODO)
+projects.json
+ewidencja.json
+leads.json
 
 # --- RESTORE ESSENTIAL UI IMAGES ---
 # Allow the main logo from both paths (root and public)

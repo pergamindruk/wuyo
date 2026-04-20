@@ -1,8 +1,6 @@
 'use server'
 
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
-const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY || '')
+import { genAI, GEMINI_MODEL } from '@/lib/gemini'
 
 // ─── Vercel Analytics API ────────────────────────────────────
 
@@ -31,11 +29,14 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
         const teamParam = teamId ? `&teamId=${teamId}` : ''
         const commonParams = `projectId=${projectId}&from=${sevenDaysAgoMs}&to=${nowMs}&environment=production&filter=%7B%7D${teamParam}`
 
-        // Fetch page views by path
-        const pvRes = await fetch(
-            `${baseUrl}/stats/path?${commonParams}&limit=10`,
-            { headers: { Authorization: `Bearer ${token}` }, next: { revalidate: 3600 } }
-        )
+        const authHeaders = { Authorization: `Bearer ${token}` }
+
+        // Fetch page views by path, unique visitors, and referrers in parallel
+        const [pvRes, uvRes, refRes] = await Promise.all([
+            fetch(`${baseUrl}/stats/path?${commonParams}&limit=10`, { headers: authHeaders, next: { revalidate: 3600 } }),
+            fetch(`${baseUrl}/stats/visitors?${commonParams}`, { headers: authHeaders, next: { revalidate: 3600 } }),
+            fetch(`${baseUrl}/stats/referrer?${commonParams}&limit=5`, { headers: authHeaders, next: { revalidate: 3600 } }),
+        ])
 
         if (!pvRes.ok) {
             const errText = await pvRes.text()
@@ -50,11 +51,11 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
         }))
         const totalViews = topPages.reduce((s: number, p: { views: number }) => s + p.views, 0)
 
-        // Fetch referrers
-        const refRes = await fetch(
-            `${baseUrl}/stats/referrer?${commonParams}&limit=5`,
-            { headers: { Authorization: `Bearer ${token}` }, next: { revalidate: 3600 } }
-        )
+        let visitors = totalViews
+        if (uvRes.ok) {
+            const uvData = await uvRes.json()
+            visitors = uvData?.data?.total ?? uvData?.total ?? totalViews
+        }
 
         let topReferrers: { referrer: string; views: number }[] = []
         if (refRes.ok) {
@@ -68,7 +69,7 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
         return {
             available: true,
             pageViews: totalViews,
-            visitors: Math.round(totalViews * 0.7), // estimate unique
+            visitors,
             topPages,
             topReferrers,
         }
@@ -82,7 +83,7 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
 
 export async function getSeoSuggestions(realData?: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
         const dataContext = realData
             ? `\n\nPRAWDZIWE DANE Z WITRYNY WUYO.PL (ostatnie 7 dni):\n${realData}\nUwzglednij te dane w swojej strategii — odwoluj sie do konkretnych liczb i stron.`

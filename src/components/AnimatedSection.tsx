@@ -22,7 +22,7 @@ export function AnimatedSection({ children, className = "", id, delay = 0, anima
         : { whileInView: target, viewport: { once: true, margin: "-100px" } };
 
     return (
-        <motion.section
+        <motion.div
             id={id}
             initial={initial}
             {...animationProps}
@@ -30,6 +30,6 @@ export function AnimatedSection({ children, className = "", id, delay = 0, anima
             className={`w-full ${className}`}
         >
             {children}
-        </motion.section>
+        </motion.div>
     );
 }
