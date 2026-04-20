@@ -96,6 +96,7 @@ export async function updatePaymentStatus(id: string, status: string) {
         throw new Error('Nie udalo sie zaktualizowac statusu platnosci')
     }
 
+    await logAuditEvent('finance_update', { id, status })
     revalidatePath('/lab/finances')
     return true
 }

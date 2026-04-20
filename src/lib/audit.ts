@@ -8,6 +8,7 @@ export type AuditAction =
     | "project_update"
     | "project_delete"
     | "finance_add"
+    | "finance_update"
     | "finance_delete"
     | "post_publish"
     | "post_schedule"
