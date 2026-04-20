@@ -21,6 +21,7 @@ export default function ChatBot() {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [hasNewMessage, setHasNewMessage] = useState(false);
+    const [lastUserMessage, setLastUserMessage] = useState<Message | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,59 +40,66 @@ export default function ChatBot() {
         }
     }, [isOpen]);
 
-    const sendMessage = async () => {
-        if (!input.trim() || isLoading) return;
+    const sendMessage = async (overrideMessages?: Message[]) => {
+        if ((!input.trim() && !overrideMessages) || isLoading) return;
 
-        const userMessage: Message = { role: "user", content: input.trim() };
-        const newMessages = [...messages, userMessage];
-        setMessages(newMessages);
-        setInput("");
+        const userMessage: Message = overrideMessages
+            ? overrideMessages[overrideMessages.length - 1]
+            : { role: "user", content: input.trim() };
+        const newMessages = overrideMessages ?? [...messages, userMessage];
+
+        if (!overrideMessages) {
+            setMessages(newMessages);
+            setInput("");
+        }
+        setLastUserMessage(userMessage);
         setIsLoading(true);
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15_000);
 
         try {
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: newMessages }),
+                signal: controller.signal,
             });
 
             const data = await response.json();
 
             if (data.message) {
-                const assistantMessage: Message = {
-                    role: "assistant",
-                    content: data.message,
-                };
-                setMessages((prev) => [...prev, assistantMessage]);
+                setMessages((prev) => [...prev, { role: "assistant", content: data.message }]);
                 if (!isOpen) setHasNewMessage(true);
             } else if (data.error === "RATE_LIMIT") {
-                setMessages((prev) => [
-                    ...prev,
-                    {
-                        role: "assistant",
-                        content: "Chwilowo dużo ruchu — za sekundkę odpiszę! ⏳ Napisz ponownie za chwilę.",
-                    },
-                ]);
+                setMessages((prev) => [...prev, {
+                    role: "assistant",
+                    content: "Chwilowo dużo ruchu — za sekundkę odpiszę! ⏳ Napisz ponownie za chwilę.",
+                }]);
             } else {
-                setMessages((prev) => [
-                    ...prev,
-                    {
-                        role: "assistant",
-                        content: "Ups, coś się posypało. Spróbuj jeszcze raz! 😅",
-                    },
-                ]);
-            }
-        } catch {
-            setMessages((prev) => [
-                ...prev,
-                {
+                setMessages((prev) => [...prev, {
                     role: "assistant",
                     content: "Ups, coś się posypało. Spróbuj jeszcze raz! 😅",
-                },
-            ]);
+                }]);
+            }
+        } catch (err: unknown) {
+            const isAbort = err instanceof Error && err.name === "AbortError";
+            setMessages((prev) => [...prev, {
+                role: "assistant",
+                content: isAbort
+                    ? "Odpowiedź trwała za długo. Spróbuj ponownie. ⏳"
+                    : "Problem z siecią. Spróbuj jeszcze raz! 😅",
+            }]);
         } finally {
+            clearTimeout(timeout);
             setIsLoading(false);
         }
+    };
+
+    const retryLastMessage = () => {
+        if (!lastUserMessage || isLoading) return;
+        setMessages((prev) => [...prev, lastUserMessage]);
+        sendMessage([...messages, lastUserMessage]);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -250,7 +258,7 @@ export default function ChatBot() {
                                         disabled={isLoading}
                                     />
                                     <button
-                                        onClick={sendMessage}
+                                        onClick={() => sendMessage()}
                                         disabled={!input.trim() || isLoading}
                                         className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                                         style={{ background: "#FFD700" }}

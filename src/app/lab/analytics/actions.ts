@@ -1,6 +1,6 @@
 'use server'
 
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 
 // ─── Vercel Analytics API ────────────────────────────────────
 
@@ -83,7 +83,7 @@ export async function getVercelAnalytics(): Promise<AnalyticsData> {
 
 export async function getSeoSuggestions(realData?: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('seo')
 
         const dataContext = realData
             ? `\n\nPRAWDZIWE DANE Z WITRYNY WUYO.PL (ostatnie 7 dni):\n${realData}\nUwzglednij te dane w swojej strategii — odwoluj sie do konkretnych liczb i stron.`

@@ -2,13 +2,13 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 
 // ─── Content Generator ───────────────────────────────────────
 
 export async function generateContent(topic: string, platform: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('content')
 
         const prompt = `Jestes ekspertem ds. marketingu i copywritingu z roku 2026 dla marki WUYO (tworzenie stron internetowych premium, UI/UX, identyfikacja wizualna, grafika "Dobra Grafa"). Masz swiadomosc najnowszych trendow, algorytmow i standardow technologicznych.
     Ton marki: nowoczesny, lekko hakerski, pewny siebie, premium, konkretny (unikaj lania wody, uzywaj technicznego, ale zrozumialego zargonu, stawiaj na jakosc i oszczednosc w pakiecie).
@@ -33,7 +33,7 @@ export async function generateContent(topic: string, platform: string) {
 
 export async function generateQuote(clientMessage: string) {
     try {
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('content')
 
         const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku (Epson L18050 A3+, ploter tnacy Cameo 5, laminator, gilotyna) - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
     Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
@@ -170,7 +170,7 @@ export async function generatePostForPlatform(
     extraContext: string
 ) {
     try {
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('content')
 
         const platformGuidelines: Record<string, string> = {
             instagram: 'angażujące, krótkie akapity, emoji z umiarem (max 5–8), 5–10 hashtagów na końcu, max 2200 znaków',

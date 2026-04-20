@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -52,6 +53,14 @@ async function callGemini(apiKey: string, contents: object[], attempt = 0): Prom
 }
 
 export async function POST(req: NextRequest) {
+    const ip = getClientIp(req)
+    if (!rateLimit(`chat:${ip}`, LIMITS.chat.limit, LIMITS.chat.windowMs)) {
+        return NextResponse.json(
+            { error: "RATE_LIMIT", message: "Chwilowo dużo ruchu, spróbuj za chwilę! ⏳" },
+            { status: 429, headers: { 'Retry-After': '60' } }
+        )
+    }
+
     try {
         const { messages } = await req.json();
 

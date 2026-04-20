@@ -17,22 +17,28 @@ const ALL_STATUSES = ['Nowy', 'Kontakt', 'Wycena', 'Zamkniety', 'Utracony']
 
 export default function CRMDashboard() {
     const [items, setItems] = useState<any[]>([])
+    const [total, setTotal] = useState(0)
+    const [page, setPage] = useState(0)
+    const [pageSize, setPageSize] = useState(20)
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [filterStatus, setFilterStatus] = useState('all')
     const [sortAsc, setSortAsc] = useState(false)
     const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
-    const loadData = useCallback(async (s?: string, status?: string, asc?: boolean) => {
+    const loadData = useCallback(async (s?: string, status?: string, asc?: boolean, p?: number) => {
         setLoading(true)
-        const data = await getFilteredLeads(
+        const result = await getFilteredLeads(
             s ?? search,
             status ?? filterStatus,
-            asc ?? sortAsc
+            asc ?? sortAsc,
+            p ?? page,
         )
-        setItems(data)
+        setItems(result.items)
+        setTotal(result.total)
+        setPageSize(result.pageSize)
         setLoading(false)
-    }, [search, filterStatus, sortAsc])
+    }, [search, filterStatus, sortAsc, page])
 
     useEffect(() => {
         loadData()
@@ -40,21 +46,29 @@ export default function CRMDashboard() {
 
     const handleSearchChange = (value: string) => {
         setSearch(value)
+        setPage(0)
         if (debounceRef.current) clearTimeout(debounceRef.current)
         debounceRef.current = setTimeout(() => {
-            loadData(value, filterStatus, sortAsc)
+            loadData(value, filterStatus, sortAsc, 0)
         }, 300)
     }
 
     const handleFilterChange = (status: string) => {
         setFilterStatus(status)
-        loadData(search, status, sortAsc)
+        setPage(0)
+        loadData(search, status, sortAsc, 0)
     }
 
     const handleSortToggle = () => {
         const newAsc = !sortAsc
         setSortAsc(newAsc)
-        loadData(search, filterStatus, newAsc)
+        setPage(0)
+        loadData(search, filterStatus, newAsc, 0)
+    }
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage)
+        loadData(search, filterStatus, sortAsc, newPage)
     }
 
     const handleStatusChange = async (id: string, newStatus: string) => {
@@ -70,6 +84,7 @@ export default function CRMDashboard() {
     }
 
     const activeCount = items.filter(i => i.status === 'Nowy' || i.status === 'Kontakt').length
+    const totalPages = Math.ceil(total / pageSize)
 
     return (
         <div className="flex flex-col gap-6">
@@ -82,7 +97,7 @@ export default function CRMDashboard() {
                     <div>
                         <h1 className="text-2xl font-bold text-white">Inbox & CRM</h1>
                         <p className="text-zinc-400 text-sm">
-                            {items.length} leadow{activeCount > 0 ? ` \u00B7 ${activeCount} aktywnych` : ''}
+                            {total} leadów{activeCount > 0 ? ` · ${activeCount} aktywnych` : ''}
                         </p>
                     </div>
                 </div>
@@ -231,6 +246,30 @@ export default function CRMDashboard() {
                     </table>
                 </div>
             </div>
+
+            {/* ── Paginator ── */}
+            {totalPages > 1 && (
+                <div className="flex items-center justify-between text-sm text-zinc-500">
+                    <span>{page * pageSize + 1}–{Math.min((page + 1) * pageSize, total)} z {total}</span>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => handlePageChange(page - 1)}
+                            disabled={page === 0 || loading}
+                            className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                            ← Poprzednia
+                        </button>
+                        <span className="px-3 py-1.5 text-white">{page + 1} / {totalPages}</span>
+                        <button
+                            onClick={() => handlePageChange(page + 1)}
+                            disabled={page >= totalPages - 1 || loading}
+                            className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                            Następna →
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

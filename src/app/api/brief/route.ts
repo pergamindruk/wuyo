@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -159,6 +160,11 @@ function buildAutoReply(d: BriefData): string {
 }
 
 export async function POST(req: NextRequest) {
+    const ip = getClientIp(req)
+    if (!rateLimit(`brief:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs)) {
+        return NextResponse.json({ error: "Za dużo zapytań. Spróbuj za chwilę." }, { status: 429, headers: { 'Retry-After': '60' } })
+    }
+
     try {
         const data: BriefData = await req.json();
 

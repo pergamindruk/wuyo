@@ -1,9 +1,9 @@
 'use server'
 
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 import { createClient } from '@/lib/supabase/server'
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
 
 export async function getEwidencja() {
@@ -100,12 +100,9 @@ export async function updatePaymentStatus(id: string, status: string) {
 export async function generateDocument(documentType: string, clientInfo: string, amount: string, description: string, saleDate: string, issueDate: string) {
     try {
         const kbPath = path.join(process.cwd(), 'src', 'app', 'lab', 'knowledge', 'nierejestrowana-2026.md')
-        let knowledge = ''
-        if (fs.existsSync(kbPath)) {
-            knowledge = fs.readFileSync(kbPath, 'utf-8')
-        }
+        const knowledge = await fs.readFile(kbPath, 'utf-8').catch(() => '')
 
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('document')
 
         const prompt = `Jesteś zautomatyzowanym systemem księgowym WUYO (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
         

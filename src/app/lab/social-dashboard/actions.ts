@@ -1,7 +1,7 @@
 'use server'
 
 import { addCalendarEvent } from '../calendar/actions'
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 
 // ─── Graph API helpers ────────────────────────────────
 const GRAPH_API_VERSION = 'v21.0'
@@ -49,7 +49,7 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
 }
 
 async function askClaude(prompt: string): Promise<string> {
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+    const model = getModel('content')
     const result = await model.generateContent(prompt)
     return result.response.text()
 }

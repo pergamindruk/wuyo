@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 
 export async function getCalendar() {
     const supabase = await createClient()
@@ -53,7 +53,7 @@ export async function addCalendarEvent(event: {
     let content: string | undefined
     if (event.generateAI) {
         try {
-            const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+            const model = getModel('content')
             const result = await model.generateContent(
                 AI_PROMPT(event.platform, event.format, event.topic, event.goal)
             )

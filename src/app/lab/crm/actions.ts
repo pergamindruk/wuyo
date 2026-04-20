@@ -31,13 +31,19 @@ export async function getLeads() {
     }))
 }
 
+const PAGE_SIZE = 20
+
 export async function getFilteredLeads(
     search?: string,
     status?: string,
-    sortAsc?: boolean
-) {
+    sortAsc?: boolean,
+    page = 0,
+): Promise<{ items: Lead[]; total: number; pageSize: number }> {
     const supabase = await createClient()
-    let query = supabase.from('leads').select('*')
+    const from = page * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+
+    let query = supabase.from('leads').select('*', { count: 'exact' })
 
     if (search && search.trim()) {
         const s = `%${search.trim()}%`
@@ -48,16 +54,16 @@ export async function getFilteredLeads(
         query = query.eq('status', status)
     }
 
-    query = query.order('created_at', { ascending: !!sortAsc })
+    query = query.order('created_at', { ascending: !!sortAsc }).range(from, to)
 
-    const { data, error } = await query
+    const { data, error, count } = await query
 
     if (error) {
         console.error('Error fetching filtered leads:', error)
-        return []
+        return { items: [], total: 0, pageSize: PAGE_SIZE }
     }
 
-    return data.map((l: Record<string, unknown>): Lead => ({
+    const items = (data ?? []).map((l: Record<string, unknown>): Lead => ({
         id: l.id as string,
         name: l.name as string,
         email: l.email as string,
@@ -67,6 +73,8 @@ export async function getFilteredLeads(
         details: (l.details as string) ?? '',
         status: (l.status as ValidStatus) || 'Nowy',
     }))
+
+    return { items, total: count ?? 0, pageSize: PAGE_SIZE }
 }
 
 export async function updateLeadStatus(id: string, status: string) {

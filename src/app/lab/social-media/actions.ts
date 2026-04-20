@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { genAI, GEMINI_MODEL } from '@/lib/gemini'
+import { getModel } from '@/lib/gemini'
 
 const GRAPH_API_VERSION = 'v21.0'
 
@@ -246,7 +246,7 @@ export async function generateYouTubeMetadata(
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
+        const model = getModel('content')
 
         const prompt = `Jesteś ekspertem YouTube SEO. Wygeneruj metadane dla wideo marki WUYO (grafika, strony WWW, branding, studio designu "Dobra Grafa").
 

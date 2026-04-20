@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import nodemailer from "nodemailer";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
+    const ip = getClientIp(req)
+    if (!rateLimit(`lead:${ip}`, LIMITS.lead.limit, LIMITS.lead.windowMs)) {
+        return NextResponse.json({ error: "Za dużo zapytań." }, { status: 429, headers: { 'Retry-After': '60' } })
+    }
+
     try {
         const { name, email } = await req.json();
 
