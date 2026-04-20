@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield } from 'lucide-react'
+import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield, Star } from 'lucide-react'
 
 const navGroups = [
     {
@@ -23,6 +23,7 @@ const navGroups = [
             { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
             { href: '/lab/social-dashboard', label: 'Social Dashboard', icon: Zap },
             { href: '/lab/analytics', label: 'Harbor SEO', icon: BarChart3 },
+            { href: '/lab/testimonials', label: 'Testimoniale', icon: Star },
             { href: '/lab/audit-log', label: 'Audit Log', icon: Shield },
         ],
     },
