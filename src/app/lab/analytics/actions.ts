@@ -1,5 +1,7 @@
 'use server'
 
+import { createClient } from '@supabase/supabase-js'
+
 export type AnalyticsData = {
     available: boolean
     debugError?: string
@@ -10,66 +12,55 @@ export type AnalyticsData = {
 }
 
 export async function getVercelAnalytics(): Promise<AnalyticsData> {
-    const token = process.env.VERCEL_API_TOKEN
-    const projectId = process.env.VERCEL_PROJECT_ID
-    const teamId = process.env.VERCEL_TEAM_ID || 'team_ZeLIIvHQuTHiVlTWluV2Eyt3'
-
-    if (!token || !projectId) {
-        return { available: false, debugError: `Brak zmiennych: ${!token ? 'VERCEL_API_TOKEN ' : ''}${!projectId ? 'VERCEL_PROJECT_ID' : ''}` }
-    }
-
     try {
-        const nowMs = Date.now()
-        const sevenDaysAgoMs = nowMs - 7 * 24 * 60 * 60 * 1000
-        const baseUrl = 'https://vercel.com/api/web/insights'
-        const teamParam = teamId ? `&teamId=${teamId}` : ''
-        const commonParams = `projectId=${projectId}&from=${sevenDaysAgoMs}&to=${nowMs}&environment=production&filter=%7B%7D${teamParam}`
+        const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+        )
 
-        const authHeaders = { Authorization: `Bearer ${token}` }
+        const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
-        const [pvRes, uvRes, refRes] = await Promise.all([
-            fetch(`${baseUrl}/stats/path?${commonParams}&limit=10`, { headers: authHeaders, next: { revalidate: 3600 } }),
-            fetch(`${baseUrl}/stats/visitors?${commonParams}`, { headers: authHeaders, next: { revalidate: 3600 } }),
-            fetch(`${baseUrl}/stats/referrer?${commonParams}&limit=5`, { headers: authHeaders, next: { revalidate: 3600 } }),
-        ])
+        const { data, error } = await supabase
+            .from('page_views')
+            .select('page, referrer, created_at')
+            .gte('created_at', since)
+            .limit(5000)
 
-        if (!pvRes.ok) {
-            const errText = await pvRes.text()
-            console.error('Vercel Analytics API error:', pvRes.status, errText)
-            return { available: false, debugError: `API ${pvRes.status}: ${errText.slice(0, 300)}` }
+        if (error) return { available: false, debugError: error.message }
+        if (!data) return { available: false }
+
+        const pageCount: Record<string, number> = {}
+        for (const row of data) {
+            pageCount[row.page] = (pageCount[row.page] || 0) + 1
         }
 
-        const pvData = await pvRes.json()
-        const topPages = (pvData?.data || []).slice(0, 5).map((p: any) => ({
-            page: p.key || p.path || '/',
-            views: p.total || p.count || 0,
-        }))
-        const totalViews = topPages.reduce((s: number, p: { views: number }) => s + p.views, 0)
+        const topPages = Object.entries(pageCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([page, views]) => ({ page, views }))
 
-        let visitors = totalViews
-        if (uvRes.ok) {
-            const uvData = await uvRes.json()
-            visitors = uvData?.data?.total ?? uvData?.total ?? totalViews
+        const refCount: Record<string, number> = {}
+        for (const row of data) {
+            if (!row.referrer) continue
+            let domain = row.referrer
+            try { domain = new URL(row.referrer).hostname.replace('www.', '') } catch {}
+            if (!domain) continue
+            refCount[domain] = (refCount[domain] || 0) + 1
         }
 
-        let topReferrers: { referrer: string; views: number }[] = []
-        if (refRes.ok) {
-            const refData = await refRes.json()
-            topReferrers = (refData?.data || []).slice(0, 5).map((r: any) => ({
-                referrer: r.key || r.referrer || 'Direct',
-                views: r.total || r.count || 0,
-            }))
-        }
+        const topReferrers = Object.entries(refCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([referrer, views]) => ({ referrer, views }))
 
         return {
             available: true,
-            pageViews: totalViews,
-            visitors,
+            pageViews: data.length,
+            visitors: data.length,
             topPages,
             topReferrers,
         }
     } catch (error: any) {
-        console.error('Vercel Analytics fetch error:', error)
-        return { available: false, debugError: `Exception: ${error?.message || String(error)}` }
+        return { available: false, debugError: `Exception: ${error?.message}` }
     }
 }

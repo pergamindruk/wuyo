@@ -3,6 +3,7 @@ import { Inter, Syne, Goldman } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PageTracker } from "@/components/PageTracker";
 import Script from "next/script";
 
 // Wstaw swój GA4 Measurement ID z https://analytics.google.com → Admin → Data Streams
@@ -157,6 +158,7 @@ export default function RootLayout({
                     Przejdź do treści
                 </a>
                 {children}
+                <PageTracker />
                 <Analytics />
                 <SpeedInsights />
             </body>
