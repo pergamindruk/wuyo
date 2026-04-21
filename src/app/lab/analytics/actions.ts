@@ -12,7 +12,7 @@ export type AnalyticsData = {
 export async function getVercelAnalytics(): Promise<AnalyticsData> {
     const token = process.env.VERCEL_API_TOKEN
     const projectId = process.env.VERCEL_PROJECT_ID
-    const teamId = process.env.VERCEL_TEAM_ID || 'mateusz-s-projects-141c3aaf'
+    const teamId = process.env.VERCEL_TEAM_ID || 'team_ZeLIIvHQuTHiVlTWluV2Eyt3'
 
     if (!token || !projectId) {
         return { available: false, debugError: `Brak zmiennych: ${!token ? 'VERCEL_API_TOKEN ' : ''}${!projectId ? 'VERCEL_PROJECT_ID' : ''}` }
