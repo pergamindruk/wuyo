@@ -1,23 +1,23 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Tag } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
-import { PackagesSection } from "@/components/PackagesSection";
+import { AnimatedSection } from "@/components/AnimatedSection";
 
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Cennik usług graficznych i webowych | WUYO – Rzeszów",
-    description: "Transparentne ceny: logotyp od 800 zł, strona one-page od 1 200 zł, identyfikacja wizualna od 2 500 zł. Bez ukrytych kosztów — wycena = cena końcowa.",
+    title: "Cennik usług graficznych, druku i webowych | WUYO – Rzeszów",
+    description: "Transparentne ceny: logo od 500 zł, identyfikacja od 1 150 zł, wizytówki 99 zł/50 szt., strona od 1 200 zł. Projekt + druk w jednym miejscu. Bez ukrytych kosztów.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Pełen cennik usług graficznych, web design i social media. Skrojone na miarę pakiety bez ukrytych kosztów.",
+        description: "Pełen cennik usług graficznych, druku, web design i social media. Transparentne ceny, zero niespodzianek.",
         images: ["/logo_wuya2.webp"],
         url: "https://wuyo.pl/cennik",
     },
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Transparentne ceny usług graficznych i webowych. Logotyp od 800 zł, strona od 1 200 zł.",
+        description: "Transparentne ceny usług graficznych i webowych. Logo od 500 zł, wizytówki od 99 zł, strona od 1 200 zł.",
         images: ["/logo_wuya2.webp"],
     },
     alternates: {
@@ -25,62 +25,145 @@ export const metadata: Metadata = {
     },
 };
 
-const pricing = [
+// ─── Dane druku ────────────────────────────────────────────────────────────────
+
+const printProducts = [
     {
-        category: "🎨 Identyfikacja Wizualna",
-        color: "from-amber-500/20 to-transparent",
-        accent: "border-amber-500/30",
-        items: [
-            { name: "Logotyp (baza)", price: "od 800 zł" },
-            { name: "Pełna Identyfikacja Wizualna", price: "od 2 500 zł" },
-            { name: "Lifting istniejącego logo", price: "od 1 000 zł" },
-            { name: "Nowa Typografia / Kolorystyka", price: "od 500 zł" },
-            { name: "Księga Znaku", price: "od 1 200 zł" },
+        name: "Wizytówki",
+        note: "dwustronne, 300g błysk",
+        variants: [
+            { qty: "50 szt.", price: "99 zł" },
+            { qty: "100 szt.", price: "159 zł" },
+            { qty: "150 szt.", price: "199 zł" },
         ],
     },
     {
-        category: "🌐 Strony Internetowe",
-        color: "from-sky-500/20 to-transparent",
-        accent: "border-sky-500/30",
-        items: [
-            { name: "Strona One-Page", price: "od 1 200 zł" },
-            { name: "Strona Firmowa (Multi-Page)", price: "od 2 900 zł" },
-            { name: "Sklep E-commerce", price: "wycena ind." },
-            { name: "UI/UX Design (sam projekt)", price: "od 100 zł / sek." },
-            { name: "Zestaw ikon dedykowanych", price: "od 300 zł" },
+        name: "Ulotki A5",
+        note: "dwustronne, pełny kolor",
+        variants: [
+            { qty: "50 szt.", price: "119 zł" },
+            { qty: "100 szt.", price: "189 zł" },
+            { qty: "150 szt.", price: "239 zł" },
         ],
     },
     {
-        category: "🖨️ Materiały do Druku",
-        color: "from-rose-500/20 to-transparent",
-        accent: "border-rose-500/30",
-        items: [
-            { name: "Wizytówka", price: "od 150 zł" },
-            { name: "Ulotka / Plakat", price: "od 250 zł" },
-            { name: "Menu Restauracji", price: "od 400 zł" },
-            { name: "Katalog Produktowy", price: "od 100 zł / str." },
-            { name: "Rollup / Banner / Szyld", price: "od 300 zł" },
-            { name: "Etykiety / Opakowania", price: "od 500 zł" },
-            { name: "Naklejki / Wlepki", price: "od 100 zł" },
-            { name: "Certyfikat / Dyplom", price: "od 150 zł" },
+        name: "Vouchery / bony",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "109 zł" },
+            { qty: "100 szt.", price: "179 zł" },
         ],
     },
     {
-        category: "📱 Social Media & Digital",
-        color: "from-purple-500/20 to-transparent",
-        accent: "border-purple-500/30",
-        items: [
-            { name: "Social Media Kit (paka grafik)", price: "od 1 200 zł" },
-            { name: "Abonament na grafiki", price: "od 1 500 zł / mies." },
-            { name: "Karuzele IG / LinkedIn", price: "od 150 zł / post" },
-            { name: "Szablony Prezentacji (Pitch Deck)", price: "od 600 zł" },
-            { name: "Szablon Newslettera", price: "od 300 zł" },
-            { name: "Stopka Mailowa (HTML)", price: "150 zł" },
-            { name: "Banery Google / Meta Ads", price: "od 100 zł / format" },
-            { name: "Miniaturki YouTube", price: "od 80 zł / szt." },
+        name: "Naklejki i etykiety",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "89 zł" },
+            { qty: "100 szt.", price: "149 zł" },
+            { qty: "200 szt.", price: "229 zł" },
+        ],
+    },
+    {
+        name: "Papier firmowy A4",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "79 zł" },
+            { qty: "100 szt.", price: "139 zł" },
+        ],
+    },
+    {
+        name: "Plakaty",
+        note: "",
+        variants: [
+            { qty: "A4", price: "od 29 zł/szt." },
+            { qty: "A3", price: "od 39 zł/szt." },
+            { qty: "10+ szt.", price: "cena do ustalenia" },
+        ],
+    },
+    {
+        name: "Magnesy reklamowe",
+        note: "z laminatem, format wizytówki",
+        variants: [
+            { qty: "50 szt.", price: "229 zł" },
+            { qty: "100 szt.", price: "379 zł" },
+        ],
+    },
+    {
+        name: "Koperty z nadrukiem",
+        note: "",
+        variants: [
+            { qty: "25 szt.", price: "69 zł" },
+            { qty: "50 szt.", price: "119 zł" },
         ],
     },
 ];
+
+// ─── Lokalny komponent: siatka produktów druku ─────────────────────────────────
+
+function PrintProductGrid() {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            {printProducts.map((product, i) => (
+                <AnimatedSection key={product.name} delay={0.05 * i}>
+                    <div className="bg-navy/50 border border-white/10 rounded-2xl p-6 h-full">
+                        <h4 className="font-bold text-white text-lg mb-1">{product.name}</h4>
+                        {product.note && (
+                            <p className="text-white/40 text-xs mb-3">{product.note}</p>
+                        )}
+                        <ul className="space-y-2 mt-3">
+                            {product.variants.map((v) => (
+                                <li key={v.qty} className="flex items-center justify-between gap-2">
+                                    <span className="text-white/70 text-sm">{v.qty}</span>
+                                    <span className="text-gold font-bold text-sm whitespace-nowrap">{v.price}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </AnimatedSection>
+            ))}
+        </div>
+    );
+}
+
+// ─── Helper: karta cenowa ──────────────────────────────────────────────────────
+
+function PricingCard({
+    title,
+    items,
+    note,
+}: {
+    title: string;
+    items: { name: string; price: string }[];
+    note?: string;
+}) {
+    return (
+        <div className="rounded-2xl border border-white/10 bg-navy-dark/80 backdrop-blur-sm overflow-hidden">
+            <div className="px-5 py-4 bg-gradient-to-br from-gold/10 to-transparent border-b border-white/5">
+                <h3 className="font-bold text-white text-base leading-tight">{title}</h3>
+            </div>
+            <div className="divide-y divide-white/5">
+                {items.map((item) => (
+                    <div
+                        key={item.name}
+                        className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-white/5 transition-colors group"
+                    >
+                        <span className="text-white/70 text-sm group-hover:text-white transition-colors leading-snug">
+                            {item.name}
+                        </span>
+                        <span className="text-gold font-bold text-sm shrink-0 whitespace-nowrap">
+                            {item.price}
+                        </span>
+                    </div>
+                ))}
+            </div>
+            {note && (
+                <p className="px-5 py-3 text-white/40 text-xs border-t border-white/5">{note}</p>
+            )}
+        </div>
+    );
+}
+
+// ─── Strona ────────────────────────────────────────────────────────────────────
 
 export default function PricingPage() {
     return (
@@ -90,78 +173,174 @@ export default function PricingPage() {
             <div className="max-w-7xl mx-auto relative z-10">
 
                 {/* HEADER */}
-                <div className="mb-10">
-                    <Link href="/" className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors mb-6 font-medium text-sm">
-                        <ArrowLeft size={16} /> Wróć na stronę główną
-                    </Link>
-                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <AnimatedSection animateOnMount>
+                    <div className="mb-14">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors mb-6 font-medium text-sm"
+                        >
+                            <ArrowLeft size={16} /> Wróć na stronę główną
+                        </Link>
+                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                            <div>
+                                <p className="eyebrow mb-2">cennik</p>
+                                <h1 className="text-3xl md:text-5xl font-bold text-white">
+                                    Gramy w <span className="text-gold">otwarte karty</span>.
+                                </h1>
+                                <p className="text-white/50 mt-3 max-w-xl text-sm md:text-base">
+                                    Zero niespodzianek na rachunku. Podane kwoty to ceny brutto (nie jestem płatnikiem VAT).
+                                </p>
+                            </div>
+                            <Link
+                                href="/#kontakt"
+                                className="btn-gold px-8 py-3 rounded-full font-bold text-sm shrink-0 self-start md:self-auto shadow-[0_0_25px_rgba(255,235,82,0.25)]"
+                            >
+                                Zapytaj o wycenę →
+                            </Link>
+                        </div>
+                    </div>
+                </AnimatedSection>
+
+                {/* ── PROJEKTY GRAFICZNE ─────────────────────────────── */}
+                <AnimatedSection delay={0.05}>
+                    <h2 className="text-2xl font-bold text-white mb-5">Projekty graficzne</h2>
+                </AnimatedSection>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <AnimatedSection delay={0.1}>
+                        <PricingCard
+                            title="Logo"
+                            items={[
+                                { name: "Logo podstawowe (znak + logotyp, wektory, pełne pliki)", price: "od 500 zł" },
+                                { name: "Logo + księga znaku (logo + paleta, typografia, zasady użycia)", price: "od 1 000 zł" },
+                            ]}
+                        />
+                    </AnimatedSection>
+                    <AnimatedSection delay={0.15}>
+                        <PricingCard
+                            title="Identyfikacja wizualna"
+                            items={[
+                                { name: "Brand Basic (logo + wizytówka + papier firmowy + stopka mailowa)", price: "od 1 150 zł" },
+                                { name: "Brand Full (logo + księga + wizytówka + papier + stopka + ulotka + szablon social)", price: "od 2 200 zł" },
+                            ]}
+                        />
+                    </AnimatedSection>
+                </div>
+
+                {/* ── SOCIAL MEDIA ────────────────────────────────────── */}
+                <AnimatedSection delay={0.2}>
+                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Social media</h2>
+                </AnimatedSection>
+
+                <AnimatedSection delay={0.25}>
+                    <PricingCard
+                        title="Grafiki i szablony social media"
+                        items={[
+                            { name: "Pojedyncza grafika", price: "80 zł" },
+                            { name: "Karuzela (do 6 slajdów)", price: "od 120 zł" },
+                            { name: "Miniaturka YouTube", price: "60 zł" },
+                            { name: "Stopka mailowa", price: "100 zł" },
+                            { name: "Zestaw startowy (post + karuzela + story + okładka + highlight)", price: "od 350 zł" },
+                            { name: "Pakiet miesięczny (12 grafik)", price: "od 799 zł/msc" },
+                        ]}
+                    />
+                </AnimatedSection>
+
+                {/* ── MATERIAŁY DRUKOWANE (sam projekt) ────────────────── */}
+                <AnimatedSection delay={0.3}>
+                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Materiały drukowane — sam projekt</h2>
+                </AnimatedSection>
+
+                <AnimatedSection delay={0.35}>
+                    <PricingCard
+                        title="Projekt do druku (bez kosztów druku)"
+                        items={[
+                            { name: "Wizytówka (dwustronna)", price: "100 zł" },
+                            { name: "Ulotka A5/A6 (dwustronna)", price: "100 zł" },
+                            { name: "Plakat A3/A4", price: "130 zł" },
+                            { name: "Voucher / bon podarunkowy", price: "140 zł" },
+                            { name: "Naklejki / etykiety", price: "od 80 zł" },
+                            { name: "Baner reklamowy (roll-up, citylight, outdoor)", price: "od 249 zł" },
+                            { name: "Katalog / menu (do 8 stron)", price: "od 400 zł" },
+                            { name: "Certyfikat / dyplom", price: "130 zł" },
+                        ]}
+                    />
+                </AnimatedSection>
+
+                {/* ── OPAKOWANIA I ETYKIETY ─────────────────────────────── */}
+                <AnimatedSection delay={0.4}>
+                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Opakowania i etykiety</h2>
+                </AnimatedSection>
+
+                <AnimatedSection delay={0.45}>
+                    <PricingCard
+                        title="Projekt opakowania lub etykiety"
+                        items={[
+                            { name: "Etykieta produktowa (do 2 stron)", price: "od 180 zł" },
+                            { name: "Opakowanie (pudełko, torebka, sleeve)", price: "od 400 zł" },
+                        ]}
+                    />
+                </AnimatedSection>
+
+                {/* ── DRUK & PAPETERIA ──────────────────────────────────── */}
+                <AnimatedSection delay={0.5}>
+                    <div className="mt-14 mb-5">
+                        <h2 className="text-2xl font-bold text-white mb-2">Druk &amp; Papeteria</h2>
+                        <p className="text-white/50 text-sm">
+                            Ceny zawierają projekt + druk. Przy zamówieniu 2 lub więcej produktów — każdy kolejny -15%.
+                        </p>
+                    </div>
+                </AnimatedSection>
+
+                {/* Baner rabatowy */}
+                <AnimatedSection delay={0.55}>
+                    <div className="bg-[#ffeb52] text-[#1c1b17] rounded-2xl p-5 flex items-start gap-4 mb-8">
+                        <div className="shrink-0 mt-0.5">
+                            <Tag size={22} />
+                        </div>
                         <div>
-                            <p className="eyebrow mb-2">cennik</p>
-                            <h1 className="text-3xl md:text-5xl font-bold text-white">Gramy w <span className="text-gold">otwarte karty</span>.</h1>
-                            <p className="text-white/50 mt-3 max-w-xl text-sm md:text-base">
-                                Zero niespodzianek na rachunku. Klikasz to, co potrzebujesz – i lecimy z tematem. Podane kwoty to ceny brutto (nie jestem płatnikiem VAT, wystawiam rachunek / fakturę bez VAT).
+                            <p className="font-bold text-base leading-snug">
+                                Zamów 2 lub więcej produktów — każdy kolejny -15%.
+                            </p>
+                            <p className="font-medium text-sm mt-1 opacity-80">
+                                Projekty spójne wizualnie, druk w jednej partii, jeden kontakt.
                             </p>
                         </div>
-                        <Link href="/#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shrink-0 self-start md:self-auto shadow-[0_0_25px_rgba(255,235,82,0.25)]">
-                            Zapytaj o wycenę →
-                        </Link>
                     </div>
-                </div>
+                </AnimatedSection>
 
-                {/* SIATKA KATEGORII */}
-                <h2 className="text-2xl font-bold text-white mb-6">Usługi pojedyncze</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-                    {pricing.map((section) => (
-                        <div
-                            key={section.category}
-                            className={`rounded-2xl border bg-navy-dark/80 backdrop-blur-sm flex flex-col overflow-hidden ${section.accent}`}
+                <PrintProductGrid />
+
+                {/* ── STRONY WWW ───────────────────────────────────────── */}
+                <AnimatedSection delay={0.1}>
+                    <h2 className="text-2xl font-bold text-white mb-5 mt-14">Strony WWW</h2>
+                </AnimatedSection>
+
+                <AnimatedSection delay={0.15}>
+                    <PricingCard
+                        title="Projektowanie i wdrażanie stron internetowych"
+                        items={[
+                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 1 200 zł" },
+                            { name: "Strony rozbudowane", price: "wycena indywidualna" },
+                        ]}
+                        note="50% zaliczki przed startem. 50% po zakończeniu. Gram w otwarte karty — cena ustalona przed startem to cena końcowa."
+                    />
+                </AnimatedSection>
+
+                {/* ── CTA KOŃCOWE ──────────────────────────────────────── */}
+                <AnimatedSection delay={0.2}>
+                    <div className="mt-14 flex flex-col items-center text-center gap-6">
+                        <p className="text-white/60 max-w-2xl text-sm md:text-base">
+                            Nie wiesz od czego zacząć? Napisz — dostaniesz konkretny plan i wycenę w 24h.
+                        </p>
+                        <Link
+                            href="/#kontakt"
+                            className="btn-gold px-10 py-4 rounded-full font-bold inline-flex items-center gap-2 shadow-[0_0_25px_rgba(255,235,82,0.3)] hover:shadow-[0_0_45px_rgba(255,235,82,0.5)] transition-all hover:scale-105 active:scale-95"
                         >
-                            {/* Nagłówek kategorii */}
-                            <div className={`px-5 py-4 bg-gradient-to-br ${section.color} border-b border-white/5`}>
-                                <h2 className="font-bold text-white text-base leading-tight">{section.category}</h2>
-                            </div>
-
-                            {/* Lista pozycji */}
-                            <div className="flex-1 divide-y divide-white/5">
-                                {section.items.map((item) => (
-                                    <div key={item.name} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-white/5 transition-colors group">
-                                        <span className="text-white/70 text-sm group-hover:text-white transition-colors leading-snug">
-                                            {item.name}
-                                        </span>
-                                        <span className="text-gold font-bold text-sm shrink-0 whitespace-nowrap">
-                                            {item.price}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <PackagesSection showButton={false} className="mt-20 mb-8" />
-
-                {/* UWAGI + CTA */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-2 bg-white/3 rounded-2xl border border-white/8 p-6">
-                        <h3 className="text-white font-bold mb-3 text-base">Kilka słów o wycenach 📌</h3>
-                        <ul className="space-y-2 text-white/50 text-sm">
-                            <li>• <strong className="text-white/80">Wszystkie podane kwoty to ceny brutto.</strong> Nie doliczam VAT-u, więc na rachunku nie będzie niespodzianek.</li>
-                            <li>• Podane kwoty to <strong className="text-white/80">dolne widełki</strong> — finalny koszt zależy od zakresu i czasu realizacji.</li>
-                            <li>• Przy <strong className="text-white/80">pakietach łączonych</strong> (np. logo + strona) zawsze staram się wyjść naprzeciw z rabatem.</li>
-                            <li>• Każdą wycenę wysyłam <strong className="text-white/80">w ciągu 24 h</strong> od przesłania briefu – bez zbędnych formalności.</li>
-                            <li>• <strong className="text-white/80">Nie pracuję z budżetami poniżej 500 zł</strong> — by nie kompromitować jakości. Lepiej mieć jedno dobre logo niż pięć tanich.</li>
-                        </ul>
-                    </div>
-                    <div className="bg-gradient-to-br from-gold/15 to-transparent rounded-2xl border border-gold/25 p-6 flex flex-col items-start justify-between gap-4">
-                        <div>
-                            <p className="text-gold font-bold text-base mb-2">Nie widzisz tego co szukasz?</p>
-                            <p className="text-white/60 text-sm">Masz niestandardowy projekt? Napisz. Dogadamy się!</p>
-                        </div>
-                        <Link href="/#kontakt" className="btn-gold px-6 py-3 rounded-full font-bold text-sm w-full text-center shadow-[0_0_20px_rgba(255,235,82,0.2)]">
-                            Porozmawiajmy →
+                            Napisz do mnie
                         </Link>
                     </div>
-                </div>
+                </AnimatedSection>
 
             </div>
         </main>

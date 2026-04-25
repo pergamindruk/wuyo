@@ -1,14 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Check, Flame } from "lucide-react";
+import { Tag } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
+// Zachowane dla kompatybilności wstecznej — używane przez ContactBrief i inne strony
 export const packages = [
     {
         name: "Szybki start",
         persona: "Wejście na rynek — dla firm stawiających pierwsze kroki w sieci",
         price: "od 1 500 zł",
-        desc: "Szybka, solidna strona, która działa od pierwszego dnia. Idealna wizytówka dla małych firm i freelancerów, którzy chcą zaistnieć bez wstydu i kompromisów.",
+        desc: "Szybka, solidna strona, która działa od pierwszego dnia.",
         image: "/tworzenie-stron-www-start-v3.png",
         imageScale: "scale-100",
         features: [
@@ -26,7 +26,7 @@ export const packages = [
         name: "Najpopularniejszy",
         persona: "Strona która sprzedaje — dla firm gotowych na poważną obecność w sieci",
         price: "od 3 500 zł",
-        desc: "Strona zaprojektowana pod konwersję — przyciąga klientów, generuje zapytania i sprzedaje nawet gdy śpisz. Konkret bez przepłacania.",
+        desc: "Strona zaprojektowana pod konwersję — przyciąga klientów, generuje zapytania i sprzedaje nawet gdy śpisz.",
         image: "/tworzenie-stron-www-rozwoj-v3.png",
         imageScale: "scale-100",
         features: [
@@ -45,7 +45,7 @@ export const packages = [
         name: "Zaawansowany",
         persona: "Sklep który zarabia — dla firm sprzedających online 24/7",
         price: "od 7 000 zł",
-        desc: "Kompletny sklep internetowy lub system rezerwacji. Pełna integracja płatności, panel zarządzania i szkolenie — wychodzisz z sesji i działasz samodzielnie.",
+        desc: "Kompletny sklep internetowy lub system rezerwacji.",
         image: "/tworzenie-stron-www-kombajn-v3.png",
         imageScale: "scale-100",
         features: [
@@ -61,86 +61,139 @@ export const packages = [
     },
 ];
 
+const printProducts = [
+    {
+        name: "Wizytówki",
+        note: "dwustronne, 300g błysk",
+        variants: [
+            { qty: "50 szt.", price: "99 zł" },
+            { qty: "100 szt.", price: "159 zł" },
+            { qty: "150 szt.", price: "199 zł" },
+        ],
+    },
+    {
+        name: "Ulotki A5",
+        note: "dwustronne, pełny kolor",
+        variants: [
+            { qty: "50 szt.", price: "119 zł" },
+            { qty: "100 szt.", price: "189 zł" },
+            { qty: "150 szt.", price: "239 zł" },
+        ],
+    },
+    {
+        name: "Vouchery / bony",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "109 zł" },
+            { qty: "100 szt.", price: "179 zł" },
+        ],
+    },
+    {
+        name: "Naklejki i etykiety",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "89 zł" },
+            { qty: "100 szt.", price: "149 zł" },
+            { qty: "200 szt.", price: "229 zł" },
+        ],
+    },
+    {
+        name: "Papier firmowy A4",
+        note: "",
+        variants: [
+            { qty: "50 szt.", price: "79 zł" },
+            { qty: "100 szt.", price: "139 zł" },
+        ],
+    },
+    {
+        name: "Plakaty",
+        note: "",
+        variants: [
+            { qty: "A4", price: "od 29 zł/szt." },
+            { qty: "A3", price: "od 39 zł/szt." },
+            { qty: "10+ szt.", price: "cena do ustalenia" },
+        ],
+    },
+    {
+        name: "Magnesy reklamowe",
+        note: "z laminatem, format wizytówki",
+        variants: [
+            { qty: "50 szt.", price: "229 zł" },
+            { qty: "100 szt.", price: "379 zł" },
+        ],
+    },
+    {
+        name: "Koperty z nadrukiem",
+        note: "",
+        variants: [
+            { qty: "25 szt.", price: "69 zł" },
+            { qty: "50 szt.", price: "119 zł" },
+        ],
+    },
+];
+
 export function PackagesSection({ showButton = true, className = "py-28 px-6 md:px-12" }: { showButton?: boolean; className?: string }) {
     return (
         <section id="pakiety" className={`relative ${className}`}>
-            <AnimatedSection className="text-center mb-16 relative z-10">
-                <p className="eyebrow mb-4">Pakiety stron internetowych</p>
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Wybierz stronę, która pasuje do Twojego biznesu.</h2>
-                <p className="text-white/60 max-w-xl mx-auto">Nie naciągam na funkcje, których nie potrzebujesz – dostajesz solidny kod i super szybką stronę 🙂</p>
+            {/* Nagłówek */}
+            <AnimatedSection className="text-center mb-10 relative z-10">
+                <p className="eyebrow mb-4">Druk &amp; Papeteria</p>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                    Projekt + druk. Wszystko w jednym miejscu.
+                </h2>
+                <p className="text-white/60 max-w-2xl mx-auto">
+                    Nie musisz szukać drukarni, tłumaczyć wizji i modlić się żeby wyszło.
+                    Projektuję, drukuję, dostarczam — Ty dostajesz gotowy produkt.
+                </p>
             </AnimatedSection>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch relative z-10">
-                {packages.map((pkg, i) => (
-                    <AnimatedSection key={i} delay={i * 0.15}>
-                        <div className={`${pkg.featured ? 'pricing-card-featured border-gold' : 'pricing-card border-white/10'} border bg-navy/50 backdrop-blur-md p-8 md:p-10 h-full flex flex-col relative overflow-hidden rounded-3xl group`}>
-                            {/* Images Badge Effect */}
-                            <div className="w-full relative aspect-[4/3] mb-8 group-hover:scale-105 transition-transform duration-500 rounded-xl overflow-hidden flex items-center justify-center">
-                                <Image src={pkg.image} alt={pkg.name} fill className={`object-contain p-2 md:p-4 opacity-100 group-hover:opacity-100 transition-all drop-shadow-2xl ${pkg.imageScale || 'scale-100'}`} />
-                                <div className="absolute inset-0 bg-gradient-to-t from-navy/100 via-navy/5 to-transparent z-10 pointer-events-none" />
-                            </div>
+            {/* Baner rabatowy */}
+            <AnimatedSection delay={0.1} className="max-w-4xl mx-auto mb-10 relative z-10">
+                <div className="bg-[#ffeb52] text-[#1c1b17] rounded-2xl p-5 flex items-start gap-4">
+                    <div className="shrink-0 mt-0.5">
+                        <Tag size={22} />
+                    </div>
+                    <div>
+                        <p className="font-bold text-base leading-snug">
+                            Zamów 2 lub więcej produktów — każdy kolejny -15%.
+                        </p>
+                        <p className="font-medium text-sm mt-1 opacity-80">
+                            Projekty spójne wizualnie, druk w jednej partii, jeden kontakt.
+                        </p>
+                    </div>
+                </div>
+            </AnimatedSection>
 
-                            {pkg.featured && (
-                                <div className="absolute top-4 right-4 bg-gold text-navy-dark text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wider shadow-glow-gold z-20">
-                                    Bestseller
-                                </div>
+            {/* Siatka produktów */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 max-w-7xl mx-auto relative z-10">
+                {printProducts.map((product, i) => (
+                    <AnimatedSection key={product.name} delay={0.05 * i}>
+                        <div className="bg-navy/50 border border-white/10 rounded-2xl p-6 h-full">
+                            <h3 className="font-bold text-white text-lg mb-1">{product.name}</h3>
+                            {product.note && (
+                                <p className="text-white/40 text-xs mb-3">{product.note}</p>
                             )}
-
-                            <div className="mb-3">
-                                <span className="inline-block px-3 py-1 text-[11px] font-black uppercase rounded-full tracking-widest shadow-lg shadow-black/50 bg-gold text-navy-dark border-[1.5px] border-gold/50">
-                                    {pkg.name}
-                                </span>
-                            </div>
-                            <div className="flex items-baseline gap-3 mb-4">
-                                <div className="text-3xl font-bold text-white">{pkg.price}</div>
-                            </div>
-                            <p className="text-white/60 text-sm leading-relaxed mb-4">{pkg.desc}</p>
-                            {pkg.persona && (
-                                <p className="text-xs text-gold/70 font-medium mb-8 flex items-center gap-1.5">
-                                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold/50" />
-                                    {pkg.persona}
-                                </p>
-                            )}
-
-                            <ul className="space-y-3 mb-10 flex-grow">
-                                {pkg.features.map((feat, idx) => (
-                                    <li key={idx} className="flex items-start gap-3 text-sm text-white/70">
-                                        <Check size={16} className="text-gold shrink-0 mt-0.5" />
-                                        <span>{feat}</span>
+                            <ul className="space-y-2 mt-3">
+                                {product.variants.map((v) => (
+                                    <li key={v.qty} className="flex items-center justify-between gap-2">
+                                        <span className="text-white/70 text-sm">{v.qty}</span>
+                                        <span className="text-gold font-bold text-sm whitespace-nowrap">{v.price}</span>
                                     </li>
                                 ))}
                             </ul>
-
-                            <Link href={`/?pakiet=${encodeURIComponent(pkg.name)}#kontakt`} className={`text-center block w-full py-4 rounded-full font-semibold text-sm transition-all ${pkg.featured
-                                ? 'btn-gold !rounded-full !w-full'
-                                : 'btn-outline !rounded-full !w-full'
-                                }`}>
-                                {pkg.cta}
-                            </Link>
                         </div>
                     </AnimatedSection>
                 ))}
             </div>
 
-            {/* Zakotwiczenie cenowe */}
-            <AnimatedSection className="mt-12 text-center max-w-2xl mx-auto">
-                <div className="relative rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-6 py-5 md:px-8 md:py-6 overflow-hidden flex flex-col md:flex-row items-center justify-center gap-4">
-                    <div className="absolute inset-0 bg-gradient-to-r from-gold/10 via-transparent to-gold/10 pointer-events-none" />
-                    <div className="bg-gold/10 p-3 rounded-full relative z-10 shrink-0">
-                        <Flame className="text-gold animate-pulse" size={24} />
-                    </div>
-                    <p className="text-white/80 text-sm md:text-base relative z-10 text-center md:text-left">
-                        Za analogiczny projekt agencja wystawia fakturę na{" "}
-                        <span className="text-gold font-bold">8&nbsp;000–15&nbsp;000 zł</span>.<br className="hidden md:block" />
-                        U&nbsp;Wuja dostajesz ten sam wynik w&nbsp;cenie, która nie boli.
-                    </p>
-                </div>
-            </AnimatedSection>
-
+            {/* CTA */}
             {showButton && (
-                <AnimatedSection className="mt-10 text-center">
-                    <Link href="/cennik" className="btn-gold px-12 py-5 inline-flex items-center gap-2 font-bold text-lg text-navy uppercase tracking-widest shadow-[0_0_30px_rgba(255,235,82,0.4)] hover:shadow-[0_0_50px_rgba(255,235,82,0.6)] transition-all rounded-full hover:scale-105 active:scale-95">
-                        Zobacz pełny Cennik
+                <AnimatedSection delay={0.3} className="mt-12 text-center relative z-10">
+                    <p className="text-white/60 max-w-2xl mx-auto mb-6 text-sm md:text-base">
+                        Nie wiesz co wybrać? Napisz — w 24h dostajesz konkretny zestaw dopasowany do Twojej firmy i budżetu.
+                    </p>
+                    <Link href="/#kontakt" className="btn-gold px-10 py-4 inline-flex items-center gap-2 font-bold rounded-full">
+                        Napisz do mnie
                     </Link>
                 </AnimatedSection>
             )}
