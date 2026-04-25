@@ -28,7 +28,7 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
         service: "Logo & Identyfikacja",
     },
     {
-        quote: "Pełen profesjonalizm. Dostałem pełen pakiet plików wektorowych, book marki i brand guidelines. Nie spodziewałem się aż tyle za tę cenę.",
+        quote: "Pełen profesjonalizm. Dostałam pełen pakiet plików wektorowych, book marki i brand guidelines. Nie spodziewałam się aż tyle za tę cenę.",
         name: "Karolina M.",
         role: "Właścicielka",
         company: "Butik — Rzeszów",
