@@ -72,6 +72,7 @@ const printProducts = [
             { qty: "50 szt.", price: "99 zł", priceNum: 99 },
             { qty: "100 szt.", price: "159 zł", priceNum: 159 },
             { qty: "150 szt.", price: "199 zł", priceNum: 199 },
+            { qty: "300 szt.", price: "299 zł", priceNum: 299 },
         ],
     },
     {
@@ -80,6 +81,7 @@ const printProducts = [
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
             { qty: "100 szt.", price: "189 zł", priceNum: 189 },
             { qty: "150 szt.", price: "239 zł", priceNum: 239 },
+            { qty: "300 szt.", price: "359 zł", priceNum: 359 },
         ],
     },
     {
