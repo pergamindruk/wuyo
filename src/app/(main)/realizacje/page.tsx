@@ -7,7 +7,7 @@ import { projects } from "@/lib/projects";
 
 export const metadata: Metadata = {
     title: "Realizacje – Portfolio projektów graficznych i stron WWW",
-    description: `${projects.length} zrealizowanych projektów: strony internetowe, logotypy, identyfikacja wizualna, druk i social media. Dowody zamiast obietnic — sprawdź moje portfolio.`,
+    description: "156+ zrealizowanych projektów: strony internetowe, logotypy, identyfikacja wizualna, druk i social media. Dowody zamiast obietnic — sprawdź moje portfolio.",
     alternates: {
         canonical: "https://wuyo.pl/realizacje",
     },
@@ -19,9 +19,8 @@ export const metadata: Metadata = {
 };
 
 const stats = [
-    { value: `${projects.length}+`, label: "zrealizowanych projektów" },
-    { value: "3+", label: "lata doświadczenia" },
-    { value: "100%", label: "klientów powraca" },
+    { value: "156+", label: "zrealizowanych projektów" },
+    { value: "46", label: "branż" },
 ];
 
 export default function RealizacjePage() {
