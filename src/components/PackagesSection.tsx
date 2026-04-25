@@ -474,11 +474,11 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
             <AnimatePresence>
                 {cart.length > 0 && (
                     <motion.button
-                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                        initial={{ opacity: 0, x: 60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 60 }}
                         onClick={() => setDrawerOpen(true)}
-                        className="fixed bottom-6 right-6 z-30 bg-[#ffeb52] text-[#1c1b17] rounded-full px-5 py-3 font-bold text-sm flex items-center gap-2 shadow-2xl hover:bg-[#ffe000] transition-colors"
+                        className="fixed top-1/2 -translate-y-1/2 right-0 z-30 bg-[#ffeb52] text-[#1c1b17] rounded-l-xl px-3 py-4 font-bold text-xs flex flex-col items-center gap-1.5 shadow-2xl hover:bg-[#ffe000] transition-colors"
                         aria-label={`Otwórz koszyk (${cart.length} ${cart.length === 1 ? "pozycja" : "pozycje"})`}
                     >
                         <ShoppingCart size={18} />
