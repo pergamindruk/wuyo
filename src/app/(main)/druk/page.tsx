@@ -39,9 +39,9 @@ const drukSchema = {
         { "@type": "Country", "name": "Polska" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "150", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "199", "priceCurrency": "PLN" },
         { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "250", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "200", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "249", "priceCurrency": "PLN" },
     ],
 };
 
@@ -49,7 +49,7 @@ const products = [
     {
         name: "Wizytówki",
         desc: "Standard 85×55 mm, papier 350g, zaokrąglone rogi, mat lub gloss. Projekt unikalny — żadnych szablonów z internetu.",
-        price: "od 150 zł",
+        price: "od 199 zł",
         details: ["Projekt graficzny", "Druk dwustronny", "Papier 350g/m²", "Wykończenie mat lub gloss", "Min. 100 szt."],
     },
     {
@@ -61,7 +61,7 @@ const products = [
     {
         name: "Vouchery",
         desc: "Idealny prezent dla klientów — voucher który wygląda jak produkt premium, nie jak bilet parkingowy.",
-        price: "od 200 zł",
+        price: "od 249 zł",
         details: ["Projekt graficzny", "Format dowolny", "Perforacja lub bez", "Numeracja opcjonalna", "Min. 50 szt."],
     },
     {
@@ -79,7 +79,7 @@ const products = [
     {
         name: "Naklejki i etykiety",
         desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo lub na arkuszach.",
-        price: "od 100 zł",
+        price: "od 169 zł",
         details: ["Projekt graficzny", "Dowolny kształt i rozmiar", "Folie standardowe i premium", "Wersja do druku lokalnego", "Min. 50 szt."],
     },
 ];
