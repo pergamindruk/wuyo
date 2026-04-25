@@ -67,7 +67,7 @@ export const packages = [
 
 const printProducts = [
     {
-        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk",
+        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 100,
         variants: [
             { qty: "50 szt.", price: "99 zł", priceNum: 99 },
             { qty: "100 szt.", price: "159 zł", priceNum: 159 },
@@ -75,7 +75,7 @@ const printProducts = [
         ],
     },
     {
-        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor",
+        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 100,
         variants: [
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
             { qty: "100 szt.", price: "189 zł", priceNum: 189 },
@@ -83,14 +83,14 @@ const printProducts = [
         ],
     },
     {
-        id: "vouchery", name: "Vouchery / bony", note: "",
+        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 140,
         variants: [
             { qty: "50 szt.", price: "109 zł", priceNum: 109 },
             { qty: "100 szt.", price: "179 zł", priceNum: 179 },
         ],
     },
     {
-        id: "naklejki", name: "Naklejki i etykiety", note: "",
+        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 80,
         variants: [
             { qty: "50 szt.", price: "89 zł", priceNum: 89 },
             { qty: "100 szt.", price: "149 zł", priceNum: 149 },
@@ -98,14 +98,14 @@ const printProducts = [
         ],
     },
     {
-        id: "papier", name: "Papier firmowy A4", note: "",
+        id: "papier", name: "Papier firmowy A4", note: "", designFee: 100,
         variants: [
             { qty: "50 szt.", price: "79 zł", priceNum: 79 },
             { qty: "100 szt.", price: "139 zł", priceNum: 139 },
         ],
     },
     {
-        id: "plakaty", name: "Plakaty", note: "",
+        id: "plakaty", name: "Plakaty", note: "", designFee: 130,
         variants: [
             { qty: "A4", price: "od 29 zł/szt.", priceNum: 29 },
             { qty: "A3", price: "od 39 zł/szt.", priceNum: 39 },
@@ -113,14 +113,14 @@ const printProducts = [
         ],
     },
     {
-        id: "magnesy", name: "Magnesy reklamowe", note: "z laminatem, format wizytówki",
+        id: "magnesy", name: "Magnesy reklamowe", note: "z laminatem, format wizytówki", designFee: 100,
         variants: [
             { qty: "50 szt.", price: "229 zł", priceNum: 229 },
             { qty: "100 szt.", price: "379 zł", priceNum: 379 },
         ],
     },
     {
-        id: "koperty", name: "Koperty z nadrukiem", note: "",
+        id: "koperty", name: "Koperty z nadrukiem", note: "", designFee: 80,
         variants: [
             { qty: "25 szt.", price: "69 zł", priceNum: 69 },
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
@@ -134,6 +134,8 @@ type CartItem = {
     qty: string;
     price: string;
     priceNum: number;
+    withDesign: boolean;
+    designFee: number;
 };
 
 type Variant = { qty: string; price: string; priceNum: number };
@@ -146,19 +148,40 @@ interface ProductCardProps {
 
 function ProductCard({ product, onAddToCart }: ProductCardProps) {
     const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+    const [withDesign, setWithDesign] = useState<boolean | null>(null);
     const [justAdded, setJustAdded] = useState(false);
 
+    const totalPrice = selectedVariant
+        ? selectedVariant.priceNum === 0
+            ? 0
+            : selectedVariant.priceNum + (withDesign ? product.designFee : 0)
+        : 0;
+
+    const priceLabel = selectedVariant
+        ? selectedVariant.priceNum === 0
+            ? "wycena indywidualna"
+            : `${totalPrice} zł`
+        : "";
+
+    const canAdd = selectedVariant !== null && withDesign !== null;
+
     function handleAdd() {
-        if (!selectedVariant) return;
+        if (!selectedVariant || withDesign === null) return;
         onAddToCart({
             productId: product.id,
             productName: product.name,
             qty: selectedVariant.qty,
-            price: selectedVariant.price,
-            priceNum: selectedVariant.priceNum,
+            price: priceLabel,
+            priceNum: totalPrice,
+            withDesign,
+            designFee: withDesign ? product.designFee : 0,
         });
         setJustAdded(true);
-        setTimeout(() => setJustAdded(false), 1500);
+        setTimeout(() => {
+            setJustAdded(false);
+            setSelectedVariant(null);
+            setWithDesign(null);
+        }, 1500);
     }
 
     return (
@@ -170,44 +193,97 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                 )}
             </div>
 
-            {/* Variant pills */}
-            <div className="flex flex-wrap gap-2">
-                {product.variants.map((v) => {
-                    const isSelected = selectedVariant?.qty === v.qty;
-                    return (
-                        <button
-                            key={v.qty}
-                            onClick={() => setSelectedVariant(isSelected ? null : v)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
-                                isSelected
-                                    ? "border-[#ffeb52] bg-[#ffeb52]/10 text-[#ffeb52]"
-                                    : "border-white/20 text-white/60 hover:border-white/40 hover:text-white/80"
-                            }`}
-                        >
-                            {v.qty}
-                        </button>
-                    );
-                })}
+            {/* Variant pills — ilość */}
+            <div>
+                <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Ilość</p>
+                <div className="flex flex-wrap gap-2">
+                    {product.variants.map((v) => {
+                        const isSelected = selectedVariant?.qty === v.qty;
+                        return (
+                            <button
+                                key={v.qty}
+                                onClick={() => setSelectedVariant(isSelected ? null : v)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                                    isSelected
+                                        ? "border-[#ffeb52] bg-[#ffeb52]/10 text-[#ffeb52]"
+                                        : "border-white/20 text-white/60 hover:border-white/40 hover:text-white/80"
+                                }`}
+                            >
+                                {v.qty}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
-            {/* Price + Add to cart — animated reveal */}
+            {/* Projekt toggle */}
+            <div>
+                <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Projekt</p>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setWithDesign(false)}
+                        className={`flex-1 px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${
+                            withDesign === false
+                                ? "border-white/60 bg-white/10 text-white"
+                                : "border-white/20 text-white/50 hover:border-white/30 hover:text-white/70"
+                        }`}
+                    >
+                        Mam swój projekt
+                    </button>
+                    <button
+                        onClick={() => setWithDesign(true)}
+                        className={`flex-1 px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 ${
+                            withDesign === true
+                                ? "border-[#ffeb52] bg-[#ffeb52]/10 text-[#ffeb52]"
+                                : "border-white/20 text-white/50 hover:border-white/30 hover:text-white/70"
+                        }`}
+                    >
+                        Zamawiam z projektem
+                        {withDesign !== true && (
+                            <span className="block text-[10px] text-white/30 font-normal">+{product.designFee} zł</span>
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {/* Price breakdown + Add to cart — animated reveal */}
             <AnimatePresence mode="wait">
-                {selectedVariant && (
+                {canAdd && (
                     <motion.div
-                        key={selectedVariant.qty}
+                        key={`${selectedVariant!.qty}-${String(withDesign)}`}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2 }}
-                        className="flex items-center justify-between gap-3 mt-auto"
+                        transition={{ duration: 0.18 }}
+                        className="mt-auto flex flex-col gap-3"
                     >
-                        <span className="text-[#ffeb52] font-bold text-base whitespace-nowrap">
-                            {selectedVariant.price}
-                        </span>
+                        {/* Rozbicie ceny */}
+                        {selectedVariant!.priceNum > 0 && (
+                            <div className="bg-white/5 rounded-xl px-3 py-2.5 text-xs space-y-1">
+                                <div className="flex justify-between text-white/50">
+                                    <span>Druk ({selectedVariant!.qty})</span>
+                                    <span>{selectedVariant!.price}</span>
+                                </div>
+                                {withDesign && (
+                                    <div className="flex justify-between text-white/50">
+                                        <span>Projekt graficzny</span>
+                                        <span>+{product.designFee} zł</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between text-[#ffeb52] font-bold pt-1 border-t border-white/10">
+                                    <span>Razem</span>
+                                    <span>{priceLabel}</span>
+                                </div>
+                            </div>
+                        )}
+                        {selectedVariant!.priceNum === 0 && (
+                            <p className="text-white/50 text-xs text-center">wycena indywidualna po kontakcie</p>
+                        )}
+
                         <button
                             onClick={handleAdd}
                             disabled={justAdded}
-                            className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 whitespace-nowrap ${
+                            className={`w-full py-2.5 rounded-full text-xs font-bold transition-all duration-200 ${
                                 justAdded
                                     ? "bg-green-500/20 text-green-400 border border-green-500/40"
                                     : "bg-[#ffeb52] text-[#1c1b17] hover:bg-[#ffe000]"
@@ -319,7 +395,9 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                                 <li key={i} className="flex items-start justify-between gap-3 bg-white/5 rounded-xl px-4 py-3">
                                     <div className="flex-1 min-w-0">
                                         <p className="text-white font-semibold text-sm truncate">{item.productName}</p>
-                                        <p className="text-white/50 text-xs mt-0.5">{item.qty}</p>
+                                        <p className="text-white/50 text-xs mt-0.5">
+                                            {item.qty} · {item.withDesign ? "z projektem" : "własny projekt"}
+                                        </p>
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
                                         <span className={`font-bold text-sm whitespace-nowrap ${item.priceNum === 0 ? "text-white/50 text-xs" : "text-[#ffeb52]"}`}>
