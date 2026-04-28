@@ -3,7 +3,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { createClient } from '@/lib/supabase/server'
-import { getModel } from '@/lib/gemini'
+import { generateWithFallback } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
 import { logAuditEvent } from '@/lib/audit'
 
@@ -106,8 +106,6 @@ export async function generateDocument(documentType: string, clientInfo: string,
         const kbPath = path.join(process.cwd(), 'src', 'app', 'lab', 'knowledge', 'nierejestrowana-2026.md')
         const knowledge = await fs.readFile(kbPath, 'utf-8').catch(() => '')
 
-        const model = getModel('document')
-
         const prompt = `Jesteś zautomatyzowanym systemem księgowym (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
 
         KONTEKST PRAWNY (DZIAŁALNOŚĆ NIEREJESTROWANA):
@@ -155,7 +153,7 @@ export async function generateDocument(documentType: string, clientInfo: string,
 
         5. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
 
-        const result = await model.generateContent(prompt)
+        const markdown = await generateWithFallback('document', prompt)
 
         // Dodaj wpis do ewidencji automatycznie w tle
         await addEwidencja({
@@ -166,7 +164,7 @@ export async function generateDocument(documentType: string, clientInfo: string,
             amount: parseFloat(amount)
         })
 
-        return { success: true, markdown: result.response.text() }
+        return { success: true, markdown }
     } catch (error: any) {
         console.error('Gemini API Error:', error)
         return { success: false, error: 'Nie udało się wygenerować dokumentu. Błąd: ' + (error.message || '') }
