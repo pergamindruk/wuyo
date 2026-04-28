@@ -142,7 +142,7 @@ export async function generateDocument(documentType: string, clientInfo: string,
 
         4. UKŁAD DOKUMENTU (kolejność obowiązkowa):
            - Nagłówek po prawej: **Miejscowość:** Rzeszów &nbsp;&nbsp; **Data wystawienia:** ${issueDate} &nbsp;&nbsp; **Data sprzedaży:** ${saleDate}
-           - Duży nagłówek: # Rachunek nr [numer]/[miesiąc słownie]/[rok]
+           - Duży nagłówek: # Rachunek nr [numer]/[miesiąc cyfrowo 01-12]/[rok] (np. 01/04/2026)
            - **Sprzedawca:** Mateusz Machoś, ul. Siemieńskiego 17A/38, 35-203 Rzeszów
            - **Nabywca:** dane z pola Nabywca
            - Tabela (patrz punkt 3)
