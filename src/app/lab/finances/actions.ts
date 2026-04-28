@@ -108,14 +108,17 @@ export async function generateDocument(documentType: string, clientInfo: string,
 
         const model = getModel('document')
 
-        const prompt = `Jesteś zautomatyzowanym systemem księgowym WUYO (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
+        const prompt = `Jesteś zautomatyzowanym systemem księgowym (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
 
-        WAŻNY PRAWNY KONTEKST (DZIAŁALNOŚĆ NIEREJESTROWANA):
+        KONTEKST PRAWNY (DZIAŁALNOŚĆ NIEREJESTROWANA):
         ${knowledge}
 
         DANE DO DOKUMENTU:
         - Nabywca/Klient: ${clientInfo}
-        - Sprzedawca (Wystawca): Mateusz Machoś (WUYO Dobra Grafa)
+        - Sprzedawca (Wystawca, osoba fizyczna prowadząca działalność nierejestrowaną):
+            Mateusz Machoś
+            ul. Siemieńskiego 17A/38
+            35-203 Rzeszów
         - Kwota do zapłaty (końcowa, po ewentualnych korektach): ${amount} PLN
         - Opis przedmiotu transakcji (może zawierać informacje o korekcie ilości, zaliczce, itp.): ${description}
         - Data wystawienia: ${issueDate}
@@ -126,29 +129,31 @@ export async function generateDocument(documentType: string, clientInfo: string,
 
         1. Zwróć TYLKO I WYŁĄCZNIE czysty kod Markdown reprezentujący dokument. ZERO WSTĘPÓW ani podsumowań. Nie owijaj wyniku w blok kodu (\`\`\`).
 
-        2. KRYTYCZNE – TABELA MARKDOWN: Tabela MUSI być w pełni wypełniona. Każda komórka musi mieć wartość. Użyj dokładnie tego formatu (pipe na początku i końcu, separator ---):
+        2. NAZEWNICTWO: Dokument to zawsze RACHUNEK (nie Faktura). Sprzedawca to osoba fizyczna bez działalności gospodarczej. NIE używaj nazwy "WUYO" ani żadnej nazwy handlowej w sekcji Sprzedawcy – tylko imię, nazwisko i adres.
+
+        3. KRYTYCZNE – TABELA MARKDOWN: Tabela MUSI być w pełni wypełniona. Każda komórka musi mieć wartość. Użyj dokładnie tego formatu:
 
         | Lp. | Nazwa usługi / produktu | Jednostka miary | Ilość | Kwota (PLN) |
         |-----|------------------------|-----------------|-------|-------------|
         | 1   | [opis usługi]          | [jednostka]     | [ilość] | [kwota]  |
 
-        Jeśli opis zawiera informację o zaliczce lub korekcie ilości, dodaj osobne wiersze w tabeli:
+        Jeśli opis zawiera informację o zaliczce lub korekcie ilości, dodaj osobne wiersze:
         - wiersz z główną usługą i jej pełną wartością
         - wiersz "Zaliczka (wpłacona)" z wartością ujemną (np. -600,00)
-        Ostatni wiersz podsumowujący z łączną kwotą do zapłaty: ${amount} PLN.
+        - ostatni wiersz podsumowujący: **Razem do zapłaty** | | | | **${amount}**
 
-        3. UKŁAD DOKUMENTU:
-           - Nagłówek (wyrównany do prawej przez spacje/znak |): **Miejscowość:** Rzeszów, **Data wystawienia:** ${issueDate}, **Data sprzedaży:** ${saleDate}
-           - Duży nagłówek: # Faktura nr .../miesiąc słownie/rok lub # Rachunek nr ...
-           - **Sprzedawca:** Mateusz Machoś (WUYO Dobra Grafa) — bez adresu, bez PESEL
+        4. UKŁAD DOKUMENTU:
+           - Nagłówek po prawej: **Miejscowość:** Rzeszów &nbsp;&nbsp; **Data wystawienia:** ${issueDate} &nbsp;&nbsp; **Data sprzedaży:** ${saleDate}
+           - Duży nagłówek: # Rachunek nr [numer]/[miesiąc słownie]/[rok]
+           - **Sprzedawca:** Mateusz Machoś, ul. Siemieńskiego 17A/38, 35-203 Rzeszów
            - **Nabywca:** dane z pola Nabywca
-           - Tabela (patrz punkt 2)
-           - **Kwota do zapłaty: ${amount} PLN** (pogrubione, wyraźne)
-           - Dopisek o zwolnieniu z VAT na podstawie art. 113 ust. 1 i 9 ustawy o VAT
-           - Jeśli była zaliczka lub korekta ilości – dodaj sekcję **Uwagi** z krótkim wyjaśnieniem
+           - Tabela (patrz punkt 3)
+           - **Kwota do zapłaty: ${amount} PLN** (pogrubione)
+           - Dopisek o działalności nierejestrowanej (zamiast VAT): _Sprzedawca prowadzi działalność nierejestrowaną w rozumieniu art. 5 ust. 1 ustawy Prawo przedsiębiorców. Przychód zostanie wykazany przez Sprzedawcę w zeznaniu rocznym PIT-36 jako przychód z innych źródeł._
+           - Jeśli była zaliczka lub korekta ilości – sekcja **Uwagi** z wyjaśnieniem
            - Miejsca na podpisy: "Podpis Sprzedawcy: ........................" i "Podpis Nabywcy: ........................"
 
-        4. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
+        5. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
 
         const result = await model.generateContent(prompt)
 

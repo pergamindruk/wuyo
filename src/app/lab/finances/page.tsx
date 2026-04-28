@@ -7,7 +7,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 export default function FinancesLab() {
-    const defaultDocType = 'Faktura (zwolnienie z VAT na podst. art. 113 ust. 1 i 9 ustawy o VAT)'
+    const defaultDocType = 'Rachunek (Działalność Nierejestrowana – art. 5 ust. 1 Prawo przedsiębiorców)'
     const [docType, setDocType] = useState(defaultDocType)
     const [clientInfo, setClientInfo] = useState('')
     const [amount, setAmount] = useState('1500')
@@ -131,8 +131,8 @@ export default function FinancesLab() {
                     <FileText size={24} />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Generator Umów i Rachunków</h1>
-                    <p className="text-zinc-400 text-sm">Finanse skrojone pod regulacje z Działalności Nierejestrowanej (Limity na 2026 r.)</p>
+                    <h1 className="text-2xl font-bold text-white">Generator Rachunków i Umów</h1>
+                    <p className="text-zinc-400 text-sm">Dokumenty dla Działalności Nierejestrowanej – rachunki, nie faktury (limity 2026)</p>
                 </div>
             </div>
 
@@ -237,9 +237,9 @@ export default function FinancesLab() {
                         <div className="flex flex-col gap-2">
                             <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Rodzaj Dokumentu</label>
                             <select value={docType} onChange={e => setDocType(e.target.value)} className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5">
-                                <option value="Faktura (zwolnienie z VAT na podst. art. 113 ust. 1 i 9 ustawy o VAT)">Faktura (zwolnienie z VAT)</option>
-                                <option value="Umowa o Dzieło z przeniesieniem praw autorskich">Umowa o Dzieło z Prawami Autorskimi</option>
-                                <option value="Protokół Zleceniodawczy z przekazaniem">Protokół Odbiorczy (zakończenie projektu)</option>
+                                <option value="Rachunek (Działalność Nierejestrowana – art. 5 ust. 1 Prawo przedsiębiorców)">Rachunek (Działalność Nierejestrowana)</option>
+                                <option value="Rachunek do Umowy o Dzieło z przeniesieniem praw autorskich">Rachunek do Umowy o Dzieło</option>
+                                <option value="Protokół Odbiorczy z przekazaniem wykonanej usługi">Protokół Odbiorczy (zakończenie projektu)</option>
                             </select>
                         </div>
 
