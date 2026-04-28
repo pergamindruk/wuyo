@@ -90,7 +90,7 @@ export default function FinancesLab() {
                 margin: 15,
                 filename: `Dokument_${new Date().toISOString().split('T')[0]}.pdf`,
                 image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 2, windowWidth: 794, useCORS: true },
                 jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
             };
             html2pdf().set(opt).from(element).save();
