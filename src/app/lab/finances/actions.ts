@@ -109,31 +109,46 @@ export async function generateDocument(documentType: string, clientInfo: string,
         const model = getModel('document')
 
         const prompt = `Jesteś zautomatyzowanym systemem księgowym WUYO (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
-        
+
         WAŻNY PRAWNY KONTEKST (DZIAŁALNOŚĆ NIEREJESTROWANA):
         ${knowledge}
-        
+
         DANE DO DOKUMENTU:
         - Nabywca/Klient: ${clientInfo}
         - Sprzedawca (Wystawca): Mateusz Machoś (WUYO Dobra Grafa)
-        - Kwota transakcji (Do zapłaty): ${amount} PLN
-        - Opis przedmiotu transakcji: ${description}
+        - Kwota do zapłaty (końcowa, po ewentualnych korektach): ${amount} PLN
+        - Opis przedmiotu transakcji (może zawierać informacje o korekcie ilości, zaliczce, itp.): ${description}
         - Data wystawienia: ${issueDate}
         - Data sprzedaży / wykonania usługi: ${saleDate}
         - Miejsce wystawienia: Rzeszów
 
         WYTYCZNE DLA GENERATORA (MUSISZ ICH DOKŁADNIE PRZESTRZEGAĆ):
-        1. Zwróć TYLKO I WYŁĄCZNIE "czysty" kod Markdown (bez języka HTML naokoło, to ma być zwykły tekst formatowany na markown) reprezentujący dokument. ZERO WSTĘPÓW typu "Oto Twój rachunek:" ani żadnych podsumowań na końcu. Wynikiem zapytania ma być gotowy, sformatowany obszar wydruku.
-        2. Układ dokumentu musi być estetyczny i w pełni profesjonalny:
-           - Rozpocznij od napisania z prawej strony symulowanego nagłówka w Markdown np: \`**Miejscowość:** Rzeszów  \n**Data wystawienia:** ${issueDate}  \n**Data sprzedaży:** ${saleDate}\`.
-           - Duży Nagłówek np. \`# Rachunek nr ... / Umowa ...\`.
-           - Sekcja SPRZEDAWCA: Tylko imię i nazwisko (Mateusz Machoś) ze znakiem WUYO (zgodnie z przepisami nie podajemy adresu i PESEL-u).
-           - Sekcja NABYWCA: Dane podane przez użytkownika.
-           - Elegancka tabela w formacie Markdown określająca: Lp., Nazwę usługi / produktu, Jednostkę miary, Ilość, Kwotę.
-           - Zdecydowane i wyraźne podsumowanie \`**Kwota do zapłaty: ${amount} PLN**\`.
-           - Zawsze dodaj dopisek o zwolnieniu (jeśli to Rachunek / Faktura załącz, że dostawa jest zwolniona z VAT).
-           - Na samym dole ułóż dwa miejsca na podpisy: "Podpis Sprzedawcy: ........................" i "Podpis Nabywcy: ........................".
-        3. Upewnij się, że nie ma śladów języka potocznego. Dokument to dowód księgowy. Nie używaj cudzysłowów naokoło wygenerowanego wyniku.`
+
+        1. Zwróć TYLKO I WYŁĄCZNIE czysty kod Markdown reprezentujący dokument. ZERO WSTĘPÓW ani podsumowań. Nie owijaj wyniku w blok kodu (\`\`\`).
+
+        2. KRYTYCZNE – TABELA MARKDOWN: Tabela MUSI być w pełni wypełniona. Każda komórka musi mieć wartość. Użyj dokładnie tego formatu (pipe na początku i końcu, separator ---):
+
+        | Lp. | Nazwa usługi / produktu | Jednostka miary | Ilość | Kwota (PLN) |
+        |-----|------------------------|-----------------|-------|-------------|
+        | 1   | [opis usługi]          | [jednostka]     | [ilość] | [kwota]  |
+
+        Jeśli opis zawiera informację o zaliczce lub korekcie ilości, dodaj osobne wiersze w tabeli:
+        - wiersz z główną usługą i jej pełną wartością
+        - wiersz "Zaliczka (wpłacona)" z wartością ujemną (np. -600,00)
+        Ostatni wiersz podsumowujący z łączną kwotą do zapłaty: ${amount} PLN.
+
+        3. UKŁAD DOKUMENTU:
+           - Nagłówek (wyrównany do prawej przez spacje/znak |): **Miejscowość:** Rzeszów, **Data wystawienia:** ${issueDate}, **Data sprzedaży:** ${saleDate}
+           - Duży nagłówek: # Faktura nr .../miesiąc słownie/rok lub # Rachunek nr ...
+           - **Sprzedawca:** Mateusz Machoś (WUYO Dobra Grafa) — bez adresu, bez PESEL
+           - **Nabywca:** dane z pola Nabywca
+           - Tabela (patrz punkt 2)
+           - **Kwota do zapłaty: ${amount} PLN** (pogrubione, wyraźne)
+           - Dopisek o zwolnieniu z VAT na podstawie art. 113 ust. 1 i 9 ustawy o VAT
+           - Jeśli była zaliczka lub korekta ilości – dodaj sekcję **Uwagi** z krótkim wyjaśnieniem
+           - Miejsca na podpisy: "Podpis Sprzedawcy: ........................" i "Podpis Nabywcy: ........................"
+
+        4. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
 
         const result = await model.generateContent(prompt)
 
