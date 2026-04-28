@@ -136,19 +136,21 @@ export async function generateDocument(documentType: string, clientInfo: string,
         | 1   | [opis usługi]          | [jednostka]     | [ilość] | [kwota]  |
 
         Jeśli opis zawiera informację o zaliczce lub korekcie ilości, dodaj osobne wiersze:
-        - wiersz z główną usługą i jej pełną wartością
-        - wiersz "Zaliczka (wpłacona)" z wartością ujemną (np. -600,00)
-        - ostatni wiersz podsumowujący: **Razem do zapłaty** | | | | **${amount}**
+        - wiersz z główną usługą i jej pełną wartością (jednostka adekwatna do usługi, np. "szt.", "godz.", "komplet")
+        - wiersz "Zaliczka (wpłacona)" – jednostka miary: "usługa", ilość: 1, wartość ujemna (np. -600,00)
+        - ostatni wiersz podsumowujący: | – | **Razem do zapłaty** | – | – | **${amount}** |
 
-        4. UKŁAD DOKUMENTU:
+        4. UKŁAD DOKUMENTU (kolejność obowiązkowa):
            - Nagłówek po prawej: **Miejscowość:** Rzeszów &nbsp;&nbsp; **Data wystawienia:** ${issueDate} &nbsp;&nbsp; **Data sprzedaży:** ${saleDate}
            - Duży nagłówek: # Rachunek nr [numer]/[miesiąc słownie]/[rok]
            - **Sprzedawca:** Mateusz Machoś, ul. Siemieńskiego 17A/38, 35-203 Rzeszów
            - **Nabywca:** dane z pola Nabywca
            - Tabela (patrz punkt 3)
            - **Kwota do zapłaty: ${amount} PLN** (pogrubione)
-           - Dopisek o działalności nierejestrowanej (zamiast VAT): _Sprzedawca prowadzi działalność nierejestrowaną w rozumieniu art. 5 ust. 1 ustawy Prawo przedsiębiorców. Przychód zostanie wykazany przez Sprzedawcę w zeznaniu rocznym PIT-36 jako przychód z innych źródeł._
-           - Jeśli była zaliczka lub korekta ilości – sekcja **Uwagi** z wyjaśnieniem
+           - Dwa dopiski prawne (oba obowiązkowe):
+             a) _Sprzedawca prowadzi działalność nierejestrowaną w rozumieniu art. 5 ust. 1 ustawy Prawo przedsiębiorców. Przychód zostanie wykazany przez Sprzedawcę w zeznaniu rocznym PIT-36 jako przychód z innych źródeł._
+             b) _Sprzedawca zwolniony z podatku od towarów i usług na podstawie art. 113 ust. 1 i 9 ustawy o VAT._
+           - Jeśli była zaliczka lub korekta ilości – sekcja **Uwagi** z wyjaśnieniem (bez języka potocznego)
            - Miejsca na podpisy: "Podpis Sprzedawcy: ........................" i "Podpis Nabywcy: ........................"
 
         5. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
