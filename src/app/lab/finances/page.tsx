@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp } from 'lucide-react'
+import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X } from 'lucide-react'
 import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -354,6 +354,64 @@ export default function FinancesLab() {
     )
 }
 
+function DocumentModal({ item, onClose }: { item: any; onClose: () => void }) {
+    const handlePrint = () => window.print()
+
+    const handleDownloadPDF = async () => {
+        // @ts-ignore
+        const html2pdf = (await import('html2pdf.js')).default
+        const element = document.getElementById('modal-printable-document')
+        if (element) {
+            html2pdf().set({
+                margin: 15,
+                filename: `Rachunek_${item.date}.pdf`,
+                image: { type: 'jpeg' as const, quality: 0.98 },
+                html2canvas: { scale: 2, windowWidth: 794, useCORS: true },
+                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+            }).from(element).save()
+        }
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:p-0">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm print:hidden" onClick={onClose} />
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:overflow-visible">
+                {/* Toolbar */}
+                <div className="sticky top-0 z-10 bg-white border-b border-zinc-200 px-6 py-3 flex items-center justify-between print:hidden">
+                    <span className="text-sm font-bold text-zinc-700">Podgląd dokumentu · {item.date}</span>
+                    <div className="flex items-center gap-2">
+                        <button onClick={handleDownloadPDF} title="Pobierz PDF" className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-zinc-900 hover:bg-yellow-500 transition-colors">
+                            <Download size={14} />
+                        </button>
+                        <button onClick={handlePrint} title="Drukuj" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
+                            <Printer size={14} />
+                        </button>
+                        <button onClick={onClose} className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
+                            <X size={14} />
+                        </button>
+                    </div>
+                </div>
+                {/* Document */}
+                <div id="modal-printable-document" className="p-8 print:p-0">
+                    <div className="border-b border-zinc-300 pb-4 mb-8">
+                        <h1 className="text-3xl font-black tracking-tighter text-black uppercase">
+                            DOBRAGRAFA <span className="text-zinc-400">WUYO</span>
+                        </h1>
+                        <p className="text-sm text-zinc-500 font-medium">Oficjalny Dokument / Potwierdzenie Transakcji</p>
+                    </div>
+                    <div className="prose prose-sm md:prose-base prose-zinc max-w-none prose-headings:font-bold prose-headings:text-black text-black">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.markdownContent}</ReactMarkdown>
+                    </div>
+                    <div className="mt-16 pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex justify-between items-center opacity-80">
+                        <span>Wygenerowano autonomicznie przez System WUYO Lab</span>
+                        <span>Nierejestrowana 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, handlePaymentToggle, handleDeleteEwidencja }: {
     ewidencja: any[]
     getDisplayStatus: (item: any) => string
@@ -363,6 +421,7 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
 }) {
     const [isOpen, setIsOpen] = useState(false)
     const [filterYear, setFilterYear] = useState<string>('all')
+    const [previewItem, setPreviewItem] = useState<any | null>(null)
 
     const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"]
 
@@ -383,6 +442,8 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
     const paidTotal = filtered.filter(e => getDisplayStatus(e) === 'Zaplacona').reduce((s, e) => s + e.amount, 0)
 
     return (
+        <>
+        {previewItem && <DocumentModal item={previewItem} onClose={() => setPreviewItem(null)} />}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl print:hidden">
             <button
                 onClick={() => setIsOpen(v => !v)}
@@ -441,7 +502,7 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                                                     <th className="font-normal py-2 px-3">Dokument</th>
                                                     <th className="font-normal py-2 px-3">Kwota</th>
                                                     <th className="font-normal py-2 px-3">Status</th>
-                                                    <th className="font-normal py-2 px-3 w-8"></th>
+                                                    <th className="font-normal py-2 px-3 w-16"></th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-zinc-800/50">
@@ -467,9 +528,16 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                                                                 </button>
                                                             </td>
                                                             <td className="py-2.5 px-3 text-right">
-                                                                <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
-                                                                    <Trash2 size={14} />
-                                                                </button>
+                                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    {e.markdownContent && (
+                                                                        <button onClick={() => setPreviewItem(e)} className="text-zinc-500 hover:text-yellow-400 transition-colors" title="Podgląd dokumentu">
+                                                                            <Eye size={14} />
+                                                                        </button>
+                                                                    )}
+                                                                    <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors" title="Usuń">
+                                                                        <Trash2 size={14} />
+                                                                    </button>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                     )
@@ -484,5 +552,6 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                 </div>
             )}
         </div>
+        </>
     )
 }

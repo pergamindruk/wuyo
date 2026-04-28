@@ -27,6 +27,7 @@ export async function getEwidencja() {
         description: item.description,
         amount: Number(item.amount),
         paymentStatus: item.payment_status || 'Wystawiona',
+        markdownContent: item.markdown_content || null,
         createdAt: item.created_at,
     }))
 }
@@ -40,7 +41,8 @@ export async function addEwidencja(entry: any) {
             date: entry.date,
             client_info: entry.clientInfo,
             description: entry.description,
-            amount: entry.amount
+            amount: entry.amount,
+            markdown_content: entry.markdownContent || null,
         }])
         .select()
         .single()
@@ -163,7 +165,8 @@ export async function generateDocument(documentType: string, clientInfo: string,
             date: saleDate,
             clientInfo,
             description,
-            amount: parseFloat(amount)
+            amount: parseFloat(amount),
+            markdownContent: markdown,
         })
 
         return { success: true, markdown }
