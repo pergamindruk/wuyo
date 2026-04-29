@@ -573,7 +573,7 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                                                             <td className="py-2.5 px-3 max-w-[140px] truncate" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
                                                             <td className="py-2.5 px-3 max-w-[200px] truncate text-zinc-400" title={e.description}>{e.description}</td>
                                                             <td className="py-2.5 px-3 text-zinc-500 whitespace-nowrap">
-                                                                {e.documentType?.includes('Faktura') ? 'Faktura' : e.documentType?.includes('Umowa') ? 'Umowa' : 'Protokół'}
+                                                                {e.documentType?.includes('Faktura') ? 'Faktura' : e.documentType?.includes('Umowa') ? 'Umowa' : e.documentType?.includes('Protokół') ? 'Protokół' : 'Rachunek'}
                                                             </td>
                                                             <td className="py-2.5 px-3 font-bold text-green-400 whitespace-nowrap font-mono">+{e.amount.toFixed(2)} zł</td>
                                                             <td className="py-2.5 px-3">
@@ -586,13 +586,15 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                                                                 </button>
                                                             </td>
                                                             <td className="py-2.5 px-3 text-right">
-                                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                    {e.markdownContent && (
-                                                                        <button onClick={() => setPreviewItem(e)} className="text-zinc-500 hover:text-yellow-400 transition-colors" title="Podgląd dokumentu">
-                                                                            <Eye size={14} />
-                                                                        </button>
-                                                                    )}
-                                                                    <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors" title="Usuń">
+                                                                <div className="flex items-center justify-end gap-2">
+                                                                    <button
+                                                                        onClick={() => setPreviewItem(e)}
+                                                                        className={`transition-colors ${e.markdownContent ? 'text-yellow-400 hover:text-yellow-300' : 'text-zinc-600 hover:text-zinc-400'}`}
+                                                                        title={e.markdownContent ? 'Podgląd i edycja dokumentu' : 'Edytuj / wprowadź dokument ręcznie'}
+                                                                    >
+                                                                        {e.markdownContent ? <Eye size={14} /> : <Pencil size={14} />}
+                                                                    </button>
+                                                                    <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-700 hover:text-red-500 transition-colors" title="Usuń">
                                                                         <Trash2 size={14} />
                                                                     </button>
                                                                 </div>
