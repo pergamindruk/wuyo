@@ -64,6 +64,23 @@ export async function addEwidencja(entry: any) {
     }
 }
 
+export async function updateMarkdownContent(id: string, markdownContent: string) {
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('finances')
+        .update({ markdown_content: markdownContent })
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error updating markdown content:', error)
+        return false
+    }
+
+    await logAuditEvent('finance_update', { id, action: 'markdown_edit' })
+    revalidatePath('/lab/finances')
+    return true
+}
+
 export async function deleteEwidencja(id: string) {
     const supabase = await createClient()
     const { error } = await supabase

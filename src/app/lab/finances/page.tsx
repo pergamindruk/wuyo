@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X } from 'lucide-react'
-import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus } from './actions'
+import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X, Pencil } from 'lucide-react'
+import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus, updateMarkdownContent } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -354,7 +354,21 @@ export default function FinancesLab() {
     )
 }
 
-function DocumentModal({ item, onClose }: { item: any; onClose: () => void }) {
+function DocumentModal({ item, onClose, onSaved }: { item: any; onClose: () => void; onSaved: (id: string, newMarkdown: string) => void }) {
+    const [editMode, setEditMode] = useState(false)
+    const [draft, setDraft] = useState(item.markdownContent ?? '')
+    const [saving, setSaving] = useState(false)
+
+    const handleSave = async () => {
+        setSaving(true)
+        const ok = await updateMarkdownContent(item.id, draft)
+        setSaving(false)
+        if (ok) {
+            onSaved(item.id, draft)
+            setEditMode(false)
+        }
+    }
+
     const handlePrint = () => window.print()
 
     const handleDownloadPDF = async () => {
@@ -376,37 +390,73 @@ function DocumentModal({ item, onClose }: { item: any; onClose: () => void }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:p-0">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm print:hidden" onClick={onClose} />
             <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:overflow-visible">
+
                 {/* Toolbar */}
                 <div className="sticky top-0 z-10 bg-white border-b border-zinc-200 px-6 py-3 flex items-center justify-between print:hidden">
-                    <span className="text-sm font-bold text-zinc-700">Podgląd dokumentu · {item.date}</span>
+                    <span className="text-sm font-bold text-zinc-700">
+                        {editMode ? '✏️ Tryb edycji' : `Podgląd dokumentu · ${item.date}`}
+                    </span>
                     <div className="flex items-center gap-2">
-                        <button onClick={handleDownloadPDF} title="Pobierz PDF" className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-zinc-900 hover:bg-yellow-500 transition-colors">
-                            <Download size={14} />
-                        </button>
-                        <button onClick={handlePrint} title="Drukuj" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
-                            <Printer size={14} />
-                        </button>
+                        {!editMode && (
+                            <>
+                                <button onClick={handleDownloadPDF} title="Pobierz PDF" className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-zinc-900 hover:bg-yellow-500 transition-colors">
+                                    <Download size={14} />
+                                </button>
+                                <button onClick={handlePrint} title="Drukuj" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
+                                    <Printer size={14} />
+                                </button>
+                                <button onClick={() => setEditMode(true)} title="Edytuj dokument" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
+                                    <Pencil size={14} />
+                                </button>
+                            </>
+                        )}
+                        {editMode && (
+                            <>
+                                <button onClick={() => { setDraft(item.markdownContent ?? ''); setEditMode(false) }} className="px-3 py-1.5 text-xs border border-zinc-300 rounded-lg text-zinc-600 hover:text-black transition-colors">
+                                    Anuluj
+                                </button>
+                                <button onClick={handleSave} disabled={saving} className="px-3 py-1.5 text-xs bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1">
+                                    <Save size={12} />
+                                    {saving ? 'Zapisuję...' : 'Zapisz'}
+                                </button>
+                            </>
+                        )}
                         <button onClick={onClose} className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
                             <X size={14} />
                         </button>
                     </div>
                 </div>
-                {/* Document */}
-                <div id="modal-printable-document" className="p-8 print:p-0">
-                    <div className="border-b border-zinc-300 pb-4 mb-8">
-                        <h1 className="text-3xl font-black tracking-tighter text-black uppercase">
-                            DOBRAGRAFA <span className="text-zinc-400">WUYO</span>
-                        </h1>
-                        <p className="text-sm text-zinc-500 font-medium">Oficjalny Dokument / Potwierdzenie Transakcji</p>
+
+                {/* Edytor */}
+                {editMode && (
+                    <div className="p-6 print:hidden">
+                        <p className="text-xs text-zinc-500 mb-2">Edytujesz markdown dokumentu. Zmiany zobaczysz po kliknięciu Zapisz.</p>
+                        <textarea
+                            value={draft}
+                            onChange={e => setDraft(e.target.value)}
+                            className="w-full h-[60vh] font-mono text-xs bg-zinc-950 text-green-400 border border-zinc-700 rounded-xl p-4 resize-none focus:outline-none focus:border-yellow-400"
+                        />
                     </div>
-                    <div className="prose prose-sm md:prose-base prose-zinc max-w-none prose-headings:font-bold prose-headings:text-black text-black">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.markdownContent}</ReactMarkdown>
+                )}
+
+                {/* Podgląd */}
+                {!editMode && (
+                    <div id="modal-printable-document" className="p-8 print:p-0">
+                        <div className="border-b border-zinc-300 pb-4 mb-8">
+                            <h1 className="text-3xl font-black tracking-tighter text-black uppercase">
+                                DOBRAGRAFA <span className="text-zinc-400">WUYO</span>
+                            </h1>
+                            <p className="text-sm text-zinc-500 font-medium">Oficjalny Dokument / Potwierdzenie Transakcji</p>
+                        </div>
+                        <div className="prose prose-sm md:prose-base prose-zinc max-w-none prose-headings:font-bold prose-headings:text-black text-black">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
+                        </div>
+                        <div className="mt-16 pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex justify-between items-center opacity-80">
+                            <span>Wygenerowano autonomicznie przez System WUYO Lab</span>
+                            <span>Nierejestrowana 2026</span>
+                        </div>
                     </div>
-                    <div className="mt-16 pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex justify-between items-center opacity-80">
-                        <span>Wygenerowano autonomicznie przez System WUYO Lab</span>
-                        <span>Nierejestrowana 2026</span>
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     )
@@ -443,7 +493,15 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
 
     return (
         <>
-        {previewItem && <DocumentModal item={previewItem} onClose={() => setPreviewItem(null)} />}
+        {previewItem && (
+            <DocumentModal
+                item={previewItem}
+                onClose={() => setPreviewItem(null)}
+                onSaved={(id, newMarkdown) => {
+                    setPreviewItem((prev: any) => prev ? { ...prev, markdownContent: newMarkdown } : null)
+                }}
+            />
+        )}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl print:hidden">
             <button
                 onClick={() => setIsOpen(v => !v)}
