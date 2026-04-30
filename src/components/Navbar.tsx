@@ -97,16 +97,21 @@ export function Navbar() {
         <>
             <header className="fixed top-0 left-0 right-0 z-50 h-20 md:h-24 px-6 md:px-12 lg:px-24 bg-navy/80 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between">
 
-                {/* Lewa strona - Wielkie Logo (wystające za Header, zero efektów) */}
+                {/* Lewa strona - Wielkie Logo (wystające za Header) */}
                 <div className="flex-1 flex items-center justify-start">
-                    <a
+                    <motion.a
                         href="/"
                         onClick={handleHomeClick}
                         aria-label="Wuyo – Dobra Grafa, strona główna"
-                        className={`absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-all duration-300 ease-out origin-top-left ${scrolled
-                            ? "top-3 md:top-4 h-14 w-28 md:h-16 md:w-40 lg:h-16 lg:w-48 opacity-90"
-                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem] opacity-100"
+                        className={`absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
+                            ? "top-3 md:top-4 h-14 w-28 md:h-16 md:w-40 lg:h-16 lg:w-48"
+                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem]"
                             }`}
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.97 }}
                     >
                         <Image
                             src="/logo_wuya2.webp"
@@ -116,7 +121,7 @@ export function Navbar() {
                             className="object-contain object-left"
                             priority
                         />
-                    </a>
+                    </motion.a>
                 </div>
 
                 {/* Środek - Nawigacja (tylko desktop) */}

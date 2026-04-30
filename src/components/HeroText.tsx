@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 
 const words = [
     { text: "Twoi", line: 1, style: "white" },
@@ -21,6 +23,7 @@ const words = [
 const goldClass = "bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent uppercase font-bold";
 
 export function HeroText() {
+    const shouldReduceMotion = useReducedMotion();
     const lines = [1, 2, 3, 4];
 
     return (
@@ -32,13 +35,19 @@ export function HeroText() {
                         .map((w, i) => {
                             const globalIdx = words.filter((x) => x.line < lineNum).length + i;
                             return (
-                                <span
+                                <motion.span
                                     key={i}
-                                    className={`inline-block mr-[0.25em] pb-1 hero-word${w.style === "gold" ? ` ${goldClass}` : ""}`}
-                                    style={{ animationDelay: `${globalIdx * 0.04}s` }}
+                                    className={`inline-block mr-[0.25em] pb-1${w.style === "gold" ? ` ${goldClass}` : ""}`}
+                                    initial={shouldReduceMotion ? false : { y: 18 }}
+                                    animate={{ y: 0 }}
+                                    transition={{
+                                        delay: globalIdx * 0.045,
+                                        duration: 0.55,
+                                        ease: [0.16, 1, 0.3, 1],
+                                    }}
                                 >
                                     {w.text}
-                                </span>
+                                </motion.span>
                             );
                         })}
                 </div>

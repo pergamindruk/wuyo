@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const Spotlight = dynamic(() => import("@/components/ui/spotlight").then(m => ({ default: m.Spotlight })), { ssr: false });
@@ -20,6 +20,27 @@ export function HeroClientEffects() {
 
 export function HeroStats() {
     return <StatsCounter />;
+}
+
+export function HeroBackgroundText() {
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 600], [0, -70]);
+    const opacity = useTransform(scrollY, [0, 350], [1, 0]);
+
+    return (
+        <motion.div
+            style={{ y, opacity }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+            aria-hidden
+        >
+            <span
+                className="font-black text-white/[0.028] tracking-tighter -rotate-6"
+                style={{ fontSize: "clamp(8rem,22vw,20rem)", fontFamily: "var(--font-ava-meridian)" }}
+            >
+                WUYO
+            </span>
+        </motion.div>
+    );
 }
 
 export function ScrollIndicator() {

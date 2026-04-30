@@ -12,7 +12,7 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats, ScrollIndicator } from "@/components/HeroClientEffects";
+import { HeroClientEffects, HeroStats, ScrollIndicator, HeroBackgroundText } from "@/components/HeroClientEffects";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -116,15 +116,8 @@ export default function Home() {
             <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
                 <HeroClientEffects />
 
-                {/* Dekoracyjne tło — signature WUYO */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden>
-                    <span
-                        className="font-black text-white/[0.028] tracking-tighter -rotate-6"
-                        style={{ fontSize: "clamp(8rem,22vw,20rem)", fontFamily: "var(--font-ava-meridian)" }}
-                    >
-                        WUYO
-                    </span>
-                </div>
+                {/* Dekoracyjne tło — signature WUYO (parallax) */}
+                <HeroBackgroundText />
 
                 <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true} hero={true}>
                     <HeroText />
