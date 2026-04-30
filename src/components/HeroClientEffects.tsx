@@ -22,6 +22,31 @@ export function HeroStats() {
     return <StatsCounter />;
 }
 
+export function HeroAmbientOrbs() {
+    return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+            <motion.div
+                className="absolute w-[700px] h-[700px] rounded-full bg-[#FFEB52]/[0.05] blur-[120px]"
+                style={{ top: "-10%", left: "55%" }}
+                animate={{ x: [0, 70, -40, 0], y: [0, -50, 70, 0], scale: [1, 1.15, 0.9, 1] }}
+                transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+                className="absolute w-[500px] h-[500px] rounded-full bg-white/[0.03] blur-[100px]"
+                style={{ bottom: "0%", right: "5%" }}
+                animate={{ x: [0, -60, 40, 0], y: [0, 50, -60, 0], scale: [1, 0.85, 1.1, 1] }}
+                transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+            />
+            <motion.div
+                className="absolute w-[350px] h-[350px] rounded-full bg-[#FFEB52]/[0.03] blur-[90px]"
+                style={{ top: "40%", left: "5%" }}
+                animate={{ x: [0, 40, -20, 0], y: [0, -30, 40, 0], scale: [1, 1.2, 0.95, 1] }}
+                transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+            />
+        </div>
+    );
+}
+
 export function HeroBackgroundText() {
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [0, 600], [0, -70]);

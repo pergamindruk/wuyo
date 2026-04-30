@@ -12,7 +12,7 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats, ScrollIndicator, HeroBackgroundText } from "@/components/HeroClientEffects";
+import { HeroClientEffects, HeroStats, ScrollIndicator, HeroBackgroundText, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -115,6 +115,7 @@ export default function Home() {
             {/* ═══════════════════════ HERO ═══════════════════════ */}
             <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
                 <HeroClientEffects />
+                <HeroAmbientOrbs />
 
                 {/* Dekoracyjne tło — signature WUYO (parallax) */}
                 <HeroBackgroundText />
