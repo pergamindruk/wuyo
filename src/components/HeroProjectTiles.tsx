@@ -1,94 +1,98 @@
 "use client";
 
-import { motion, useMotionValue, animate } from "framer-motion";
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { projects } from "@/lib/projects";
 
-// 3D coverflow-style carousel: cards arranged on a cylinder rotating around
-// the Y axis. The viewer sees the front half-circle of cards. Continuous
-// auto-rotation; hovering a card smoothly rotates the carousel so that card
-// becomes the focal point at the front.
-
-const COUNT = projects.length;
-const ANGLE_STEP = 360 / COUNT;
-const RADIUS = 300;        // px — distance from axis
-const CARD_W = 240;
-const CARD_H = 300;        // 4:5 portrait, similar to mockups
-const ROTATION_DURATION = 55; // seconds for a full revolution
+// Subtle per-card variations — each slot in the column gets a small rotation
+// and horizontal nudge so the stack feels like organic floating slides rather
+// than a rigid list. Kept gentle (±5°) per "less dynamic" request.
+const CARD_VARIANTS = [
+    { rotate: -3, x: -4 },
+    { rotate: 4, x: 3 },
+    { rotate: -2, x: 5 },
+    { rotate: 5, x: -3 },
+    { rotate: -4, x: 2 },
+    { rotate: 2, x: -5 },
+    { rotate: -3, x: 4 },
+    { rotate: 4, x: -2 },
+    { rotate: -2, x: 3 },
+    { rotate: 3, x: -4 },
+    { rotate: -4, x: 2 },
+    { rotate: 2, x: -3 },
+];
 
 export function HeroProjectTiles() {
-    const rotateY = useMotionValue(0);
-    const [focus, setFocus] = useState<number | null>(null);
-
-    useEffect(() => {
-        if (focus !== null) {
-            // Rotate to put `focus` card at angle 0 (front), via shortest path
-            const targetRaw = -focus * ANGLE_STEP;
-            const current = rotateY.get();
-            const delta = ((targetRaw - current) % 360 + 540) % 360 - 180;
-            const controls = animate(rotateY, current + delta, {
-                type: "spring",
-                stiffness: 70,
-                damping: 18,
-            });
-            return () => controls.stop();
-        }
-        // Resume continuous rotation from current angle
-        const start = rotateY.get();
-        const controls = animate(rotateY, start - 360, {
-            duration: ROTATION_DURATION,
-            ease: "linear",
-            repeat: Infinity,
-        });
-        return () => controls.stop();
-    }, [focus, rotateY]);
+    const [paused, setPaused] = useState(false);
+    // Duplicate the list so the upward translateY(-50%) animation loops seamlessly
+    const doubled = [...projects, ...projects];
 
     return (
         <div
             className="relative h-full w-full"
-            style={{ perspective: "1400px", perspectiveOrigin: "50% 50%" }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
         >
-            {/* Rotating carousel — width/height 0 so children orbit around the centre */}
-            <motion.div
-                className="absolute top-1/2 left-1/2"
+            <div
+                className="absolute inset-0 overflow-hidden"
                 style={{
-                    rotateY,
-                    transformStyle: "preserve-3d",
-                    width: 0,
-                    height: 0,
+                    perspective: "2200px",
+                    perspectiveOrigin: "50% 35%",
                 }}
             >
-                {projects.map((p, i) => (
+                {/* Strong top-down camera pose — slides laid out below the viewer */}
+                <div
+                    className="absolute inset-0 flex justify-center"
+                    style={{
+                        transform: "rotateX(48deg) rotateZ(-14deg)",
+                        transformStyle: "preserve-3d",
+                    }}
+                >
+                    {/* Slow vertical scroll; pauses while the user hovers any card */}
                     <div
-                        key={p.id}
-                        className="absolute rounded-2xl overflow-hidden border border-white/10 cursor-pointer group bg-[#1c1b17] transition-[box-shadow,filter] duration-500"
+                        className="flex flex-col gap-10 py-16"
                         style={{
-                            width: CARD_W,
-                            height: CARD_H,
-                            top: -CARD_H / 2,
-                            left: -CARD_W / 2,
-                            transform: `rotateY(${i * ANGLE_STEP}deg) translateZ(${RADIUS}px)`,
-                            backfaceVisibility: "hidden",
-                            boxShadow:
-                                "0 30px 60px -20px rgba(0,0,0,0.55), 0 10px 25px -10px rgba(0,0,0,0.4)",
+                            animation: "tiles-scroll 110s linear infinite",
+                            animationPlayState: paused ? "paused" : "running",
+                            willChange: "transform",
+                            width: "min(420px, 90%)",
                         }}
-                        onMouseEnter={() => setFocus(i)}
-                        onMouseLeave={() => setFocus(null)}
                     >
-                        <Image
-                            src={p.image}
-                            alt={p.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
-                            sizes="280px"
-                            loading={i < 3 ? "eager" : "lazy"}
-                        />
-                        {/* Soft inner highlight for legibility */}
-                        <div className="absolute inset-0 ring-1 ring-inset ring-white/5 rounded-2xl pointer-events-none" />
+                        {doubled.map((project, i) => {
+                            const v = CARD_VARIANTS[i % CARD_VARIANTS.length];
+                            return (
+                                // Outer: per-card translate + rotate (organic stack)
+                                <div
+                                    key={`${project.id}-${i}`}
+                                    className="shrink-0 w-full"
+                                    style={{
+                                        transform: `translateX(${v.x}%) rotateZ(${v.rotate}deg)`,
+                                    }}
+                                >
+                                    {/* Inner: hover scale, isolated from per-card rotation */}
+                                    <div
+                                        className="group relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#1c1b17] transition-transform duration-700 ease-out hover:scale-[1.04]"
+                                        style={{
+                                            aspectRatio: "16/10",
+                                            boxShadow:
+                                                "0 40px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)",
+                                        }}
+                                    >
+                                        <Image
+                                            src={project.image}
+                                            alt={project.title}
+                                            fill
+                                            className="object-cover"
+                                            sizes="420px"
+                                            loading={i < 2 ? "eager" : "lazy"}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                ))}
-            </motion.div>
+                </div>
+            </div>
         </div>
     );
 }
