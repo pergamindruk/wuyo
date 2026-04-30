@@ -1,98 +1,126 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import { projects } from "@/lib/projects";
 
-// Subtle per-card variations — each slot in the column gets a small rotation
-// and horizontal nudge so the stack feels like organic floating slides rather
-// than a rigid list. Kept gentle (±5°) per "less dynamic" request.
-const CARD_VARIANTS = [
-    { rotate: -3, x: -4 },
-    { rotate: 4, x: 3 },
-    { rotate: -2, x: 5 },
-    { rotate: 5, x: -3 },
-    { rotate: -4, x: 2 },
-    { rotate: 2, x: -5 },
-    { rotate: -3, x: 4 },
-    { rotate: 4, x: -2 },
-    { rotate: -2, x: 3 },
-    { rotate: 3, x: -4 },
-    { rotate: -4, x: 2 },
-    { rotate: 2, x: -3 },
-];
+// ─── dane ────────────────────────────────────────────────────────────────────
+
+const ITEMS = projects.slice(0, 7);
+const N = ITEMS.length;
+const CENTER = Math.floor(N / 2); // 3
+
+// ─── geometria ───────────────────────────────────────────────────────────────
+
+const CARD_W = 240;
+const CARD_H = 150; // proporcja ~16:10
+const STEP = 168;   // odstęp między lewymi krawędziami; nakładanie = CARD_W - STEP = 72 px
+const STRIP_W = CARD_W + (N - 1) * STEP;
+
+// Łuk wypukły (∩): środkowy kafelek na szczycie, boczne opadają
+const ARC_K = 12; // współczynnik paraboli
+const BASE_TOP = CENTER * CENTER * ARC_K + 30;
+const STRIP_H = BASE_TOP + CARD_H + 34;
+
+function arcY(i: number): number {
+    const d = i - CENTER;
+    // środek → –108 px (góra), krawędzie → 0
+    return -(CENTER * CENTER - d * d) * ARC_K;
+}
+
+function arcRotZ(i: number): number {
+    return (i - CENTER) * 4.5; // –13.5° … +13.5°
+}
+
+// ─── spring configs ───────────────────────────────────────────────────────────
+
+const CARD_SPRING = { type: "spring" as const, stiffness: 280, damping: 24 };
+const STRIP_SPRING = {
+    type: "spring" as const,
+    stiffness: 180,
+    damping: 28,
+    mass: 0.85,
+};
+
+// ─── komponent ────────────────────────────────────────────────────────────────
 
 export function HeroProjectTiles() {
-    const [paused, setPaused] = useState(false);
-    // Duplicate the list so the upward translateY(-50%) animation loops seamlessly
-    const doubled = [...projects, ...projects];
+    const [hovered, setHovered] = useState<number | null>(null);
+
+    // Przesuń wstęgę tak, by aktywny kafelek znalazł się w centrum
+    const stripX = hovered !== null ? STEP * (CENTER - hovered) : 0;
 
     return (
         <div
-            className="relative h-full w-full"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
+            className="relative w-full h-full flex items-center justify-center overflow-hidden"
+            style={{ perspective: "1100px" }}
         >
-            <div
-                className="absolute inset-0 overflow-hidden"
-                style={{
-                    perspective: "2200px",
-                    perspectiveOrigin: "50% 35%",
-                }}
+            {/* Wstęga – przesuwa się po osi X przy hover */}
+            <motion.div
+                className="relative shrink-0"
+                style={{ width: STRIP_W, height: STRIP_H }}
+                animate={{ x: stripX }}
+                transition={STRIP_SPRING}
             >
-                {/* Strong top-down camera pose — slides laid out below the viewer */}
-                <div
-                    className="absolute inset-0 flex justify-center"
-                    style={{
-                        transform: "rotateX(48deg) rotateZ(-14deg)",
-                        transformStyle: "preserve-3d",
-                    }}
-                >
-                    {/* Slow vertical scroll; pauses while the user hovers any card */}
-                    <div
-                        className="flex flex-col gap-10 py-16"
-                        style={{
-                            animation: "tiles-scroll 110s linear infinite",
-                            animationPlayState: paused ? "paused" : "running",
-                            willChange: "transform",
-                            width: "min(420px, 90%)",
-                        }}
-                    >
-                        {doubled.map((project, i) => {
-                            const v = CARD_VARIANTS[i % CARD_VARIANTS.length];
-                            return (
-                                // Outer: per-card translate + rotate (organic stack)
-                                <div
-                                    key={`${project.id}-${i}`}
-                                    className="shrink-0 w-full"
-                                    style={{
-                                        transform: `translateX(${v.x}%) rotateZ(${v.rotate}deg)`,
-                                    }}
-                                >
-                                    {/* Inner: hover scale, isolated from per-card rotation */}
-                                    <div
-                                        className="group relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#1c1b17] transition-transform duration-700 ease-out hover:scale-[1.04]"
-                                        style={{
-                                            aspectRatio: "16/10",
-                                            boxShadow:
-                                                "0 40px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)",
-                                        }}
-                                    >
-                                        <Image
-                                            src={project.image}
-                                            alt={project.title}
-                                            fill
-                                            className="object-cover"
-                                            sizes="420px"
-                                            loading={i < 2 ? "eager" : "lazy"}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
+                {ITEMS.map((project, i) => {
+                    const isActive = hovered === i;
+                    const dist = i - CENTER;
+
+                    return (
+                        <motion.div
+                            key={project.id}
+                            className="absolute overflow-hidden cursor-pointer"
+                            style={{
+                                width: CARD_W,
+                                height: CARD_H,
+                                left: i * STEP,
+                                top: BASE_TOP,
+                                borderRadius: 20,
+                                zIndex: isActive ? 50 : N - Math.abs(Math.round(dist)),
+                                boxShadow:
+                                    "0 28px 60px -10px rgba(0,0,0,0.82), 0 0 0 1px rgba(255,255,255,0.07)",
+                            }}
+                            animate={{
+                                // Kafelek unosi się powyżej pozycji łuku po hover
+                                y: isActive ? arcY(i) - 26 : arcY(i),
+                                // Przy hover zmniejsz rotację do subtelnej
+                                rotateZ: isActive ? dist * 1.2 : arcRotZ(i),
+                                // rotateX na każdej karcie → efekt patrzenia z góry
+                                rotateX: isActive ? 1 : 9,
+                                scale: isActive ? 1.09 : 1,
+                            }}
+                            transition={CARD_SPRING}
+                            onHoverStart={() => setHovered(i)}
+                            onHoverEnd={() => setHovered(null)}
+                        >
+                            <Image
+                                src={project.image}
+                                alt={project.title}
+                                fill
+                                className="object-cover"
+                                sizes={`${CARD_W}px`}
+                                loading={i <= 2 ? "eager" : "lazy"}
+                            />
+
+                            {/* Tytuł pojawia się przy hover */}
+                            <motion.div
+                                className="absolute inset-0 flex items-end p-3"
+                                style={{
+                                    background:
+                                        "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 60%)",
+                                }}
+                                animate={{ opacity: isActive ? 1 : 0 }}
+                                transition={{ duration: 0.18 }}
+                            >
+                                <span className="text-white text-xs font-semibold leading-tight truncate">
+                                    {project.title}
+                                </span>
+                            </motion.div>
+                        </motion.div>
+                    );
+                })}
+            </motion.div>
         </div>
     );
 }
