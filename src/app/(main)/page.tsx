@@ -12,7 +12,8 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats, ScrollIndicator, HeroBackgroundText, HeroAmbientOrbs } from "@/components/HeroClientEffects";
+import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
+import { HeroProjectTiles } from "@/components/HeroProjectTiles";
 
 const faqSchema = {
     "@context": "https://schema.org",
@@ -113,30 +114,39 @@ export default function Home() {
             />
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
-            <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-24 md:pt-56 lg:pt-64 overflow-hidden">
+            <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden">
                 <HeroClientEffects />
                 <HeroAmbientOrbs />
 
-                {/* Dekoracyjne tło — signature WUYO (parallax) */}
-                <HeroBackgroundText />
+                <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center pt-32 md:pt-40 pb-20">
 
-                <AnimatedSection className="relative z-10 max-w-4xl" animateOnMount={true} hero={true}>
-                    <HeroText />
-                    <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
-                        Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                        <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
-                            <span className="font-bold text-lg text-navy">Wybierz pakiet</span>
-                        </Link>
-                        <Link href="#portfolio" className="relative px-10 py-4 rounded-full inline-flex items-center justify-center overflow-hidden transition-all group backdrop-blur-sm border border-gold/40 shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] hover:border-gold hover:bg-gold/10">
-                            <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10 w-full text-center">Portfolio</span>
-                        </Link>
+                    {/* LEFT — tekst + CTA */}
+                    <AnimatedSection className="text-center lg:text-left" animateOnMount={true} hero={true}>
+                        <HeroText />
+                        <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto lg:mx-0 mb-12 leading-relaxed font-medium text-balance">
+                            Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center lg:items-start">
+                            <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
+                                <span className="font-bold text-lg text-navy">Wybierz pakiet</span>
+                            </Link>
+                            <Link href="#portfolio" className="relative px-10 py-4 rounded-full inline-flex items-center justify-center overflow-hidden transition-all group backdrop-blur-sm border border-gold/40 shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] hover:border-gold hover:bg-gold/10">
+                                <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10 w-full text-center">Portfolio</span>
+                            </Link>
+                        </div>
+
+                        {/* Social proof — animated counters */}
+                        <div className="flex justify-center lg:justify-start">
+                            <HeroStats />
+                        </div>
+                    </AnimatedSection>
+
+                    {/* RIGHT — ruchome kafelki z realizacjami (desktop only) */}
+                    <div className="hidden lg:block relative h-[82vh] max-h-[960px]">
+                        <HeroProjectTiles />
                     </div>
 
-                    {/* Social proof — animated counters */}
-                    <HeroStats />
-                </AnimatedSection>
+                </div>
 
                 {/* Scroll indicator */}
                 <ScrollIndicator />

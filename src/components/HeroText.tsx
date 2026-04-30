@@ -27,7 +27,7 @@ export function HeroText() {
     const lines = [1, 2, 3, 4];
 
     return (
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8 text-white tracking-tight flex flex-col items-center">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8 text-white tracking-tight flex flex-col items-center lg:items-start">
             {lines.map((lineNum) => (
                 <div key={lineNum} className={`flex flex-wrap justify-center${lineNum >= 3 ? " mt-2" : ""}`}>
                     {words

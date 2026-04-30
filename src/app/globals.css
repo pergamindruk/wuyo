@@ -344,6 +344,12 @@ body {
   outline-offset: 0;
 }
 
+/* Hero project tiles – infinite scroll columns */
+@keyframes tiles-scroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
 /* Mobile performance: hide heavy SVG spotlights, reduce glow blur */
 @media (max-width: 767px) {
   .animate-spotlight {
