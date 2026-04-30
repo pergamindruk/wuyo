@@ -1,62 +1,95 @@
 import Image from "next/image";
 import { projects } from "@/lib/projects";
 
-// 3 columns — evenly distribute 12 projects, each column duplicated for seamless loop
-const COLS = [
-    [0, 3, 6, 9],
-    [1, 4, 7, 10],
-    [2, 5, 8, 11],
-].map(indices => indices.map(i => projects[i]).filter(Boolean));
-
-// Different scroll speeds and negative delays so columns start at different phases
-const COL_CONFIG = [
-    { duration: 32, delay: "0s" },
-    { duration: 24, delay: "-9s" },
-    { duration: 28, delay: "-14s" },
+// Deterministic per-position transforms — each slot in the stack gets its own
+// rotation + horizontal offset so the column flows diagonally like a stack of
+// slides floating through space.
+const CARD_VARIANTS = [
+    { rotate: -7, x: -8 },
+    { rotate: 6, x: 9 },
+    { rotate: -4, x: 12 },
+    { rotate: 9, x: -10 },
+    { rotate: -10, x: 6 },
+    { rotate: 4, x: -12 },
+    { rotate: -6, x: 11 },
+    { rotate: 8, x: -7 },
+    { rotate: -3, x: 9 },
+    { rotate: 7, x: -11 },
+    { rotate: -8, x: 7 },
+    { rotate: 5, x: -6 },
 ];
 
 export function HeroProjectTiles() {
+    // Duplicate the list so the upward translateY(-50%) animation loops seamlessly
+    const doubled = [...projects, ...projects];
+
     return (
         <div className="relative h-full w-full overflow-hidden">
-            {/* Gradient masks */}
-            <div className="absolute inset-x-0 top-0 h-40 z-10 pointer-events-none bg-gradient-to-b from-[#141310] to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-52 z-10 pointer-events-none bg-gradient-to-t from-[#1c1b17] to-transparent" />
-            <div className="absolute inset-y-0 left-0 w-8 z-10 pointer-events-none bg-gradient-to-r from-[#1c1b17] to-transparent" />
+            {/* Edge fades — top, bottom, and left so cards melt into the section bg */}
+            <div className="absolute inset-x-0 top-0 h-40 z-20 pointer-events-none bg-gradient-to-b from-[#1c1b17] to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-52 z-20 pointer-events-none bg-gradient-to-t from-[#1c1b17] to-transparent" />
+            <div className="absolute inset-y-0 left-0 w-16 z-20 pointer-events-none bg-gradient-to-r from-[#1c1b17] to-transparent" />
 
-            <div className="flex gap-3 h-full">
-                {COLS.map((col, ci) => {
-                    const doubled = [...col, ...col];
-                    const { duration, delay } = COL_CONFIG[ci];
-                    return (
-                        <div key={ci} className="flex-1 overflow-hidden">
-                            <div
-                                className="flex flex-col gap-3"
-                                style={{
-                                    animation: `tiles-scroll ${duration}s linear ${delay} infinite`,
-                                    willChange: "transform",
-                                }}
-                            >
-                                {doubled.map((project, i) => (
+            {/* 3D perspective camera */}
+            <div
+                className="absolute inset-0"
+                style={{
+                    perspective: "1800px",
+                    perspectiveOrigin: "65% 45%",
+                }}
+            >
+                {/* Static 3D rotation — tilts the whole column like the Pinterest reference */}
+                <div
+                    className="absolute inset-0 flex justify-center"
+                    style={{
+                        transform: "rotateY(-22deg) rotateX(6deg) rotateZ(-3deg)",
+                        transformStyle: "preserve-3d",
+                    }}
+                >
+                    {/* Vertical infinite scroll */}
+                    <div
+                        className="flex flex-col gap-6 py-12"
+                        style={{
+                            animation: "tiles-scroll 42s linear infinite",
+                            willChange: "transform",
+                            width: "min(420px, 85%)",
+                        }}
+                    >
+                        {doubled.map((project, i) => {
+                            const v = CARD_VARIANTS[i % CARD_VARIANTS.length];
+                            return (
+                                // Outer: per-card translate + rotate (the diagonal stack)
+                                <div
+                                    key={`${project.id}-${i}`}
+                                    className="shrink-0 w-full"
+                                    style={{
+                                        transform: `translateX(${v.x}%) rotateZ(${v.rotate}deg)`,
+                                    }}
+                                >
+                                    {/* Inner: handles hover scale independently of the per-card rotation */}
                                     <div
-                                        key={`${project.id}-${i}`}
-                                        className="relative rounded-2xl overflow-hidden shrink-0 border border-white/[0.06]"
-                                        style={{ aspectRatio: "3/4" }}
+                                        className="group relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#1c1b17] transition-transform duration-500 ease-out hover:scale-[1.06] hover:z-20"
+                                        style={{
+                                            aspectRatio: "16/10",
+                                            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04)",
+                                        }}
                                     >
                                         <Image
                                             src={project.image}
                                             alt={project.title}
                                             fill
-                                            className="object-cover"
-                                            sizes="220px"
-                                            loading={i < 3 ? "eager" : "lazy"}
+                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            sizes="420px"
+                                            loading={i < 2 ? "eager" : "lazy"}
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#141310]/55 via-transparent to-transparent" />
+                                        {/* Subtle bottom gradient for legibility */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
         </div>
     );
