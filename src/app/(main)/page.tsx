@@ -118,7 +118,7 @@ export default function Home() {
                 <HeroClientEffects />
                 <HeroAmbientOrbs />
 
-                <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center pt-32 md:pt-40 pb-20">
+                <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
 
                     {/* LEFT — tekst + CTA */}
                     <AnimatedSection className="text-center lg:text-left" animateOnMount={true} hero={true}>
