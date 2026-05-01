@@ -54,14 +54,9 @@ export function HeroProjectTiles() {
 
     return (
         <div
-            className="relative w-full h-full flex items-center justify-center"
+            className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-            {/* Twarde odcięcie na dole – karta hovered (z-50) widoczna nad maską */}
-            <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28"
-                style={{ background: "#141310" }}
-            />
 
             <div
                 className="relative shrink-0"
