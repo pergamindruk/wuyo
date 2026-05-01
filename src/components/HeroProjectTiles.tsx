@@ -44,23 +44,28 @@ export function HeroProjectTiles() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Dla kart sąsiednich: rozsuń o PUSH × odległość.
-    // Dla hovered: dopchaj do widoku jeśli jest obcięta (skrajne karty).
+    // Dla hovered: dopchaj do widoku uwzględniając scale 1.18.
     function cardY(i: number): number {
         if (hovered === null) return 0;
 
         if (i !== hovered) return (i - hovered) * PUSH;
 
-        // Oblicz o ile hovered karta jest obcięta przez overflow-hidden
         const h = containerRef.current?.clientHeight ?? 0;
         if (!h) return 0;
         const stripTop = (h - STRIP_H) / 2;
         const cardTop = stripTop + i * STEP;
         const cardBot = cardTop + CARD_H;
-        const PAD = 12;
+        // karta po scale 1.18 jest większa o tę wartość na każdej krawędzi
+        const scaleExtra = Math.ceil(CARD_H * (1.18 - 1) / 2);
+        const PAD = 16;
 
-        if (cardTop < PAD) return PAD - cardTop;        // karta obcięta u góry → przesuń w dół
-        if (cardBot > h - PAD) return (h - PAD) - cardBot; // obcięta u dołu → przesuń w górę
+        if (cardTop - scaleExtra < PAD) return PAD - cardTop + scaleExtra;
+        if (cardBot + scaleExtra > h - PAD) return (h - PAD) - cardBot - scaleExtra;
         return 0;
+    }
+
+    function scrollToPortfolio() {
+        document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
     }
 
     return (
@@ -101,6 +106,7 @@ export function HeroProjectTiles() {
                             transition={CARD_SPRING}
                             onHoverStart={() => setHovered(i)}
                             onHoverEnd={() => setHovered(null)}
+                            onClick={scrollToPortfolio}
                         >
                             <Image
                                 src={project.image}
