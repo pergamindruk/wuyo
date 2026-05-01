@@ -19,9 +19,12 @@ const STEP = 142;    // odstęp między górnymi krawędziami; nakładanie = CAR
 
 // Łuk poziomy (∩ na osi X): środkowy kafelek wysuwa się w prawo, boczne cofają
 const ARC_K = 9;
-const ARC_MAX = CENTER * CENTER * ARC_K;        // = 81 px
-const STRIP_H = CARD_H + (N - 1) * STEP;        // = 1062 px
-const STRIP_W = CARD_W + ARC_MAX + 44;           // = 461 px
+const ARC_MAX = CENTER * CENTER * ARC_K;  // = 81 px
+const STRIP_H = CARD_H + (N - 1) * STEP; // = 1062 px
+const STRIP_W = CARD_W + ARC_MAX + 44;   // = 461 px
+
+// Ile pikseli karty powyżej/poniżej hovered odsuwają się od kursora
+const PUSH = 32;
 
 function arcX(i: number): number {
     const d = i - CENTER;
@@ -29,42 +32,34 @@ function arcX(i: number): number {
 }
 
 function arcRotZ(i: number): number {
-    return (i - CENTER) * 1.8; // –5.4° … +5.4° (wachlarz pionowy)
+    return (i - CENTER) * 1.8;
 }
 
-// ─── spring configs ───────────────────────────────────────────────────────────
+// Przesunięcie Y każdej karty względem jej statycznej pozycji
+function cardPushY(i: number, hovered: number | null): number {
+    if (hovered === null) return 0;
+    if (i === hovered) return 0;             // hovered karta stoi w miejscu
+    const steps = i - hovered;
+    return steps * PUSH;                     // karty powyżej: ujemne, poniżej: dodatnie
+}
+
+// ─── spring config ────────────────────────────────────────────────────────────
 
 const CARD_SPRING = { type: "spring" as const, stiffness: 120, damping: 22 };
-const STRIP_SPRING = {
-    type: "spring" as const,
-    stiffness: 70,
-    damping: 22,
-    mass: 1.2,
-};
 
 // ─── komponent ────────────────────────────────────────────────────────────────
 
 export function HeroProjectTiles() {
     const [hovered, setHovered] = useState<number | null>(null);
 
-    const stripY = hovered !== null ? STEP * (CENTER - hovered) : 0;
-
     return (
         <div
             className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-            {/* Maski góra/dół – kafelki wychodzące za kadr zanikają */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-40"
-                style={{ background: "linear-gradient(to bottom, #141310 0%, transparent 100%)" }} />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40"
-                style={{ background: "linear-gradient(to top, #141310 0%, transparent 100%)" }} />
-
-            <motion.div
+            <div
                 className="relative shrink-0"
                 style={{ width: STRIP_W, height: STRIP_H }}
-                animate={{ y: stripY }}
-                transition={STRIP_SPRING}
             >
                 {ITEMS.map((project, i) => {
                     const isActive = hovered === i;
@@ -85,6 +80,7 @@ export function HeroProjectTiles() {
                                     "0 28px 60px -10px rgba(0,0,0,0.82), 0 0 0 1px rgba(255,255,255,0.07)",
                             }}
                             animate={{
+                                y: cardPushY(i, hovered),
                                 x: isActive ? arcX(i) + 10 : arcX(i),
                                 rotateZ: isActive ? dist * 0.5 : arcRotZ(i),
                                 rotateY: isActive ? 1 : 5,
@@ -105,7 +101,7 @@ export function HeroProjectTiles() {
                         </motion.div>
                     );
                 })}
-            </motion.div>
+            </div>
         </div>
     );
 }
