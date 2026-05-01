@@ -57,15 +57,10 @@ export function HeroProjectTiles() {
             className="relative w-full h-full flex items-center justify-center"
             style={{ perspective: "1100px" }}
         >
-            {/* Maski – karty wychodzące za kadr zanikają (z-20),
-                ale karta hovered (z-50) renderuje się nad maską i jest w pełni widoczna */}
-            <div
-                className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28"
-                style={{ background: "linear-gradient(to bottom, #141310 20%, transparent 100%)" }}
-            />
+            {/* Twarde odcięcie na dole – karta hovered (z-50) widoczna nad maską */}
             <div
                 className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28"
-                style={{ background: "linear-gradient(to top, #141310 20%, transparent 100%)" }}
+                style={{ background: "#141310" }}
             />
 
             <div
