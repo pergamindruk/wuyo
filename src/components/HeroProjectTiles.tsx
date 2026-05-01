@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { projects } from "@/lib/projects";
@@ -15,16 +15,14 @@ const CENTER = Math.floor(N / 2); // 3
 
 const CARD_W = 336;
 const CARD_H = 210;
-const STEP = 142;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 68 px
+const STEP = 142;
 
-// Łuk poziomy (∩ na osi X): środkowy kafelek wysuwa się w prawo, boczne cofają
 const ARC_K = 9;
-const ARC_MAX = CENTER * CENTER * ARC_K;  // = 81 px
-const STRIP_H = CARD_H + (N - 1) * STEP; // = 1062 px
-const STRIP_W = CARD_W + ARC_MAX + 44;   // = 461 px
+const ARC_MAX = CENTER * CENTER * ARC_K;
+const STRIP_H = CARD_H + (N - 1) * STEP;
+const STRIP_W = CARD_W + ARC_MAX + 44;
 
-// Ile pikseli karty powyżej/poniżej hovered odsuwają się od kursora
-const PUSH = 32;
+const PUSH = 32; // ile pikseli sąsiednie karty odsuwają się od hovered
 
 function arcX(i: number): number {
     const d = i - CENTER;
@@ -35,14 +33,6 @@ function arcRotZ(i: number): number {
     return (i - CENTER) * 1.8;
 }
 
-// Przesunięcie Y każdej karty względem jej statycznej pozycji
-function cardPushY(i: number, hovered: number | null): number {
-    if (hovered === null) return 0;
-    if (i === hovered) return 0;             // hovered karta stoi w miejscu
-    const steps = i - hovered;
-    return steps * PUSH;                     // karty powyżej: ujemne, poniżej: dodatnie
-}
-
 // ─── spring config ────────────────────────────────────────────────────────────
 
 const CARD_SPRING = { type: "spring" as const, stiffness: 120, damping: 22 };
@@ -51,13 +41,34 @@ const CARD_SPRING = { type: "spring" as const, stiffness: 120, damping: 22 };
 
 export function HeroProjectTiles() {
     const [hovered, setHovered] = useState<number | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Dla kart sąsiednich: rozsuń o PUSH × odległość.
+    // Dla hovered: dopchaj do widoku jeśli jest obcięta (skrajne karty).
+    function cardY(i: number): number {
+        if (hovered === null) return 0;
+
+        if (i !== hovered) return (i - hovered) * PUSH;
+
+        // Oblicz o ile hovered karta jest obcięta przez overflow-hidden
+        const h = containerRef.current?.clientHeight ?? 0;
+        if (!h) return 0;
+        const stripTop = (h - STRIP_H) / 2;
+        const cardTop = stripTop + i * STEP;
+        const cardBot = cardTop + CARD_H;
+        const PAD = 12;
+
+        if (cardTop < PAD) return PAD - cardTop;        // karta obcięta u góry → przesuń w dół
+        if (cardBot > h - PAD) return (h - PAD) - cardBot; // obcięta u dołu → przesuń w górę
+        return 0;
+    }
 
     return (
         <div
+            ref={containerRef}
             className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-
             <div
                 className="relative shrink-0"
                 style={{ width: STRIP_W, height: STRIP_H }}
@@ -81,7 +92,7 @@ export function HeroProjectTiles() {
                                     "0 28px 60px -10px rgba(0,0,0,0.82), 0 0 0 1px rgba(255,255,255,0.07)",
                             }}
                             animate={{
-                                y: cardPushY(i, hovered),
+                                y: cardY(i),
                                 x: isActive ? arcX(i) + 10 : arcX(i),
                                 rotateZ: isActive ? dist * 0.5 : arcRotZ(i),
                                 rotateY: isActive ? 1 : 5,
