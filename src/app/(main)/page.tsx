@@ -121,12 +121,12 @@ export default function Home() {
                 <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
 
                     {/* LEFT — tekst + CTA */}
-                    <AnimatedSection className="text-center lg:text-left" animateOnMount={true} hero={true}>
+                    <AnimatedSection className="text-center" animateOnMount={true} hero={true}>
                         <HeroText />
-                        <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto lg:mx-0 mb-12 leading-relaxed font-medium text-balance">
+                        <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
                             Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center lg:items-start">
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                             <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
                                 <span className="font-bold text-lg text-navy">Wybierz pakiet</span>
                             </Link>
@@ -136,7 +136,7 @@ export default function Home() {
                         </div>
 
                         {/* Social proof — animated counters */}
-                        <div className="flex justify-center lg:justify-start">
+                        <div className="flex justify-center">
                             <HeroStats />
                         </div>
                     </AnimatedSection>
