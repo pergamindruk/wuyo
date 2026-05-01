@@ -13,15 +13,15 @@ const CENTER = Math.floor(N / 2); // 3
 
 // ─── geometria ───────────────────────────────────────────────────────────────
 
-const CARD_W = 320;
-const CARD_H = 200;
-const STEP = 136;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 64 px
+const CARD_W = 336;
+const CARD_H = 210;
+const STEP = 142;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 68 px
 
 // Łuk poziomy (∩ na osi X): środkowy kafelek wysuwa się w prawo, boczne cofają
 const ARC_K = 9;
 const ARC_MAX = CENTER * CENTER * ARC_K;        // = 81 px
-const STRIP_H = CARD_H + (N - 1) * STEP;        // = 1016 px
-const STRIP_W = CARD_W + ARC_MAX + 44;           // = 445 px
+const STRIP_H = CARD_H + (N - 1) * STEP;        // = 1062 px
+const STRIP_W = CARD_W + ARC_MAX + 44;           // = 461 px
 
 function arcX(i: number): number {
     const d = i - CENTER;
@@ -35,32 +35,20 @@ function arcRotZ(i: number): number {
 // ─── spring configs ───────────────────────────────────────────────────────────
 
 const CARD_SPRING = { type: "spring" as const, stiffness: 120, damping: 22 };
-const STRIP_SPRING = {
-    type: "spring" as const,
-    stiffness: 70,
-    damping: 22,
-    mass: 1.2,
-};
 
 // ─── komponent ────────────────────────────────────────────────────────────────
 
 export function HeroProjectTiles() {
     const [hovered, setHovered] = useState<number | null>(null);
 
-    // Przesuń wstęgę tak, by aktywny kafelek znalazł się w centrum
-    const stripY = hovered !== null ? STEP * (CENTER - hovered) : 0;
-
     return (
         <div
             className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-            {/* Wstęga pionowa – przesuwa się po osi Y przy hover */}
-            <motion.div
+            <div
                 className="relative shrink-0"
                 style={{ width: STRIP_W, height: STRIP_H }}
-                animate={{ y: stripY }}
-                transition={STRIP_SPRING}
             >
                 {ITEMS.map((project, i) => {
                     const isActive = hovered === i;
@@ -95,13 +83,13 @@ export function HeroProjectTiles() {
                                 alt={project.title}
                                 fill
                                 className="object-cover"
-                                sizes="320px"
+                                sizes="336px"
                                 loading={i <= 2 ? "eager" : "lazy"}
                             />
                         </motion.div>
                     );
                 })}
-            </motion.div>
+            </div>
         </div>
     );
 }
