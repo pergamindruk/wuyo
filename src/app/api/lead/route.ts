@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
-import nodemailer from "nodemailer";
+import { resend, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
@@ -28,20 +28,9 @@ export async function POST(req: NextRequest) {
 
         if (dbError) console.error("Database save error:", dbError);
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
-
-        const fromEmail = process.env.GMAIL_USER;
-
-        // Wyślij email z powiadomieniem
-        await transporter.sendMail({
-            from: `"Wuyo Chatbot" <${fromEmail}>`,
-            to: process.env.LEAD_EMAIL || "kontakt@wuyo.pl",
+        await resend.emails.send({
+            from: FROM_NOTIFICATION,
+            to: TO_MATEUSZ,
             subject: `🔥 Nowy lead z chatbota: ${name}`,
             html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #fff; border-radius: 12px;">

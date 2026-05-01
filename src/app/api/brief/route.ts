@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { resend, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 
@@ -172,13 +172,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
         }
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
 
         const supabase = await createClient();
         const typeLabel: Record<string, string> = {
@@ -205,21 +198,17 @@ export async function POST(req: NextRequest) {
             quick: "Szybkie zapytanie",
         };
 
-        const fromEmail = process.env.GMAIL_USER;
-
-        // Email do Mateusza
-        await transporter.sendMail({
-            from: `"Wuyo Brief" <${fromEmail}>`,
-            to: "kontakt@wuyo.pl",
+        await resend.emails.send({
+            from: FROM_NOTIFICATION,
+            to: TO_MATEUSZ,
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data),
         });
 
-        // Auto-reply do klienta
-        await transporter.sendMail({
-            from: `"Mateusz z WUYO" <${fromEmail}>`,
-            to: data.email,
+        await resend.emails.send({
+            from: FROM_CLIENT,
+            to: data.email!,
             subject: `Cześć ${data.name?.split(" ")[0] ?? ""}! Dostałem Twój brief 👋`,
             html: buildAutoReply(data),
         });
