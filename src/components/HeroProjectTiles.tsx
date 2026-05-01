@@ -35,20 +35,36 @@ function arcRotZ(i: number): number {
 // ─── spring configs ───────────────────────────────────────────────────────────
 
 const CARD_SPRING = { type: "spring" as const, stiffness: 120, damping: 22 };
+const STRIP_SPRING = {
+    type: "spring" as const,
+    stiffness: 70,
+    damping: 22,
+    mass: 1.2,
+};
 
 // ─── komponent ────────────────────────────────────────────────────────────────
 
 export function HeroProjectTiles() {
     const [hovered, setHovered] = useState<number | null>(null);
 
+    const stripY = hovered !== null ? STEP * (CENTER - hovered) : 0;
+
     return (
         <div
             className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-            <div
+            {/* Maski góra/dół – kafelki wychodzące za kadr zanikają */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-40"
+                style={{ background: "linear-gradient(to bottom, #141310 0%, transparent 100%)" }} />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40"
+                style={{ background: "linear-gradient(to top, #141310 0%, transparent 100%)" }} />
+
+            <motion.div
                 className="relative shrink-0"
                 style={{ width: STRIP_W, height: STRIP_H }}
+                animate={{ y: stripY }}
+                transition={STRIP_SPRING}
             >
                 {ITEMS.map((project, i) => {
                     const isActive = hovered === i;
@@ -89,7 +105,7 @@ export function HeroProjectTiles() {
                         </motion.div>
                     );
                 })}
-            </div>
+            </motion.div>
         </div>
     );
 }
