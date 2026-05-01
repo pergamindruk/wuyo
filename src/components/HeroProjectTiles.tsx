@@ -14,23 +14,22 @@ const CENTER = Math.floor(N / 2); // 3
 // ─── geometria ───────────────────────────────────────────────────────────────
 
 const CARD_W = 240;
-const CARD_H = 150; // proporcja ~16:10
-const STEP = 168;   // odstęp między lewymi krawędziami; nakładanie = CARD_W - STEP = 72 px
-const STRIP_W = CARD_W + (N - 1) * STEP;
+const CARD_H = 150;
+const STEP = 112;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 38 px
 
-// Łuk wypukły (∩): środkowy kafelek na szczycie, boczne opadają
-const ARC_K = 12; // współczynnik paraboli
-const BASE_TOP = CENTER * CENTER * ARC_K + 30;
-const STRIP_H = BASE_TOP + CARD_H + 34;
+// Łuk poziomy (∩ na osi X): środkowy kafelek wysuwa się w prawo, boczne cofają
+const ARC_K = 8;
+const ARC_MAX = CENTER * CENTER * ARC_K;        // = 72 px
+const STRIP_H = CARD_H + (N - 1) * STEP;        // = 822 px
+const STRIP_W = CARD_W + ARC_MAX + 40;           // = 352 px
 
-function arcY(i: number): number {
+function arcX(i: number): number {
     const d = i - CENTER;
-    // środek → –108 px (góra), krawędzie → 0
-    return -(CENTER * CENTER - d * d) * ARC_K;
+    return (CENTER * CENTER - d * d) * ARC_K;
 }
 
 function arcRotZ(i: number): number {
-    return (i - CENTER) * 4.5; // –13.5° … +13.5°
+    return (i - CENTER) * 2.5; // –7.5° … +7.5° (wachlarz pionowy)
 }
 
 // ─── spring configs ───────────────────────────────────────────────────────────
@@ -49,18 +48,18 @@ export function HeroProjectTiles() {
     const [hovered, setHovered] = useState<number | null>(null);
 
     // Przesuń wstęgę tak, by aktywny kafelek znalazł się w centrum
-    const stripX = hovered !== null ? STEP * (CENTER - hovered) : 0;
+    const stripY = hovered !== null ? STEP * (CENTER - hovered) : 0;
 
     return (
         <div
             className="relative w-full h-full flex items-center justify-center overflow-hidden"
             style={{ perspective: "1100px" }}
         >
-            {/* Wstęga – przesuwa się po osi X przy hover */}
+            {/* Wstęga pionowa – przesuwa się po osi Y przy hover */}
             <motion.div
                 className="relative shrink-0"
                 style={{ width: STRIP_W, height: STRIP_H }}
-                animate={{ x: stripX }}
+                animate={{ y: stripY }}
                 transition={STRIP_SPRING}
             >
                 {ITEMS.map((project, i) => {
@@ -74,20 +73,20 @@ export function HeroProjectTiles() {
                             style={{
                                 width: CARD_W,
                                 height: CARD_H,
-                                left: i * STEP,
-                                top: BASE_TOP,
+                                top: i * STEP,
+                                left: 0,
                                 borderRadius: 20,
                                 zIndex: isActive ? 50 : N - Math.abs(Math.round(dist)),
                                 boxShadow:
                                     "0 28px 60px -10px rgba(0,0,0,0.82), 0 0 0 1px rgba(255,255,255,0.07)",
                             }}
                             animate={{
-                                // Kafelek unosi się powyżej pozycji łuku po hover
-                                y: isActive ? arcY(i) - 26 : arcY(i),
-                                // Przy hover zmniejsz rotację do subtelnej
-                                rotateZ: isActive ? dist * 1.2 : arcRotZ(i),
-                                // rotateX na każdej karcie → efekt patrzenia z góry
-                                rotateX: isActive ? 1 : 9,
+                                // Kafelek wysuwa się bardziej w prawo przy hover
+                                x: isActive ? arcX(i) + 10 : arcX(i),
+                                // Przy hover spłaszcz rotację do subtelnej
+                                rotateZ: isActive ? dist * 0.8 : arcRotZ(i),
+                                // rotateY → efekt patrzenia z lewej
+                                rotateY: isActive ? 2 : 8,
                                 scale: isActive ? 1.09 : 1,
                             }}
                             transition={CARD_SPRING}
