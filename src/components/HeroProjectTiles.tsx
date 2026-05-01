@@ -13,15 +13,15 @@ const CENTER = Math.floor(N / 2); // 3
 
 // ─── geometria ───────────────────────────────────────────────────────────────
 
-const CARD_W = 240;
-const CARD_H = 150;
-const STEP = 112;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 38 px
+const CARD_W = 290;
+const CARD_H = 182;
+const STEP = 124;    // odstęp między górnymi krawędziami; nakładanie = CARD_H - STEP = 58 px
 
 // Łuk poziomy (∩ na osi X): środkowy kafelek wysuwa się w prawo, boczne cofają
-const ARC_K = 8;
-const ARC_MAX = CENTER * CENTER * ARC_K;        // = 72 px
-const STRIP_H = CARD_H + (N - 1) * STEP;        // = 822 px
-const STRIP_W = CARD_W + ARC_MAX + 40;           // = 352 px
+const ARC_K = 9;
+const ARC_MAX = CENTER * CENTER * ARC_K;        // = 81 px
+const STRIP_H = CARD_H + (N - 1) * STEP;        // = 926 px
+const STRIP_W = CARD_W + ARC_MAX + 44;           // = 415 px
 
 function arcX(i: number): number {
     const d = i - CENTER;
@@ -29,17 +29,17 @@ function arcX(i: number): number {
 }
 
 function arcRotZ(i: number): number {
-    return (i - CENTER) * 2.5; // –7.5° … +7.5° (wachlarz pionowy)
+    return (i - CENTER) * 1.8; // –5.4° … +5.4° (wachlarz pionowy)
 }
 
 // ─── spring configs ───────────────────────────────────────────────────────────
 
-const CARD_SPRING = { type: "spring" as const, stiffness: 280, damping: 24 };
+const CARD_SPRING = { type: "spring" as const, stiffness: 160, damping: 22 };
 const STRIP_SPRING = {
     type: "spring" as const,
-    stiffness: 180,
-    damping: 28,
-    mass: 0.85,
+    stiffness: 110,
+    damping: 22,
+    mass: 1.0,
 };
 
 // ─── komponent ────────────────────────────────────────────────────────────────
@@ -81,13 +81,10 @@ export function HeroProjectTiles() {
                                     "0 28px 60px -10px rgba(0,0,0,0.82), 0 0 0 1px rgba(255,255,255,0.07)",
                             }}
                             animate={{
-                                // Kafelek wysuwa się bardziej w prawo przy hover
                                 x: isActive ? arcX(i) + 10 : arcX(i),
-                                // Przy hover spłaszcz rotację do subtelnej
-                                rotateZ: isActive ? dist * 0.8 : arcRotZ(i),
-                                // rotateY → efekt patrzenia z lewej
-                                rotateY: isActive ? 2 : 8,
-                                scale: isActive ? 1.09 : 1,
+                                rotateZ: isActive ? dist * 0.5 : arcRotZ(i),
+                                rotateY: isActive ? 1 : 5,
+                                scale: isActive ? 1.07 : 1,
                             }}
                             transition={CARD_SPRING}
                             onHoverStart={() => setHovered(i)}
@@ -98,7 +95,7 @@ export function HeroProjectTiles() {
                                 alt={project.title}
                                 fill
                                 className="object-cover"
-                                sizes={`${CARD_W}px`}
+                                sizes="290px"
                                 loading={i <= 2 ? "eager" : "lazy"}
                             />
 
