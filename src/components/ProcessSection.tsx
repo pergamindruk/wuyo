@@ -95,7 +95,7 @@ export function ProcessSection() {
                                 <div className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-gold mb-5 group-hover:scale-110 group-hover:from-gold/20 transition-all duration-300 relative z-10 overflow-hidden">
                                     {step.icon}
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2 relative z-10">
+                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">
                                     {step.title}
                                 </h3>
                                 <p className="text-sm text-white/60 leading-relaxed relative z-10">

@@ -213,7 +213,7 @@ body {
   border-radius: 9999px;
   padding: 14px 36px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -230,7 +230,7 @@ body {
   border-radius: 9999px;
   padding: 14px 36px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -247,7 +247,7 @@ body {
   border-radius: 9999px;
   padding: 14px 36px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }

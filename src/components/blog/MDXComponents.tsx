@@ -3,13 +3,13 @@ import type { ReactNode } from "react";
 
 export const mdxComponents = {
     h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-        <h2 className="text-2xl font-bold text-white mb-4 mt-10 font-syne" {...props} />
+        <h2 className="text-3xl font-bold text-white mb-4 mt-10 font-syne" {...props} />
     ),
     h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-        <h3 className="text-xl font-bold text-white mb-3 mt-8 font-syne" {...props} />
+        <h3 className="text-2xl font-bold text-white mb-3 mt-8 font-syne" {...props} />
     ),
     h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-        <h4 className="text-lg font-bold text-white mb-2 mt-6" {...props} />
+        <h4 className="text-xl font-bold text-white mb-2 mt-6" {...props} />
     ),
     p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
         <p className="text-white/70 leading-relaxed mb-4" {...props} />
