@@ -98,8 +98,8 @@ export default function Home() {
         },
         {
             icon: <Box size={28} />,
-            title: "Opakowanie, które krzyczy 'kup mnie!'",
-            desc: "Produkt musi się sprzedawać już na półce. Projektuję etykiety i opakowania, które krzyczą: 'kup mnie!'. Dobra grafa na pudełku to połowa sukcesu.",
+            title: "Projekty graficzne, które robią robotę",
+            desc: "Potrzebujesz czegoś poza logo i stroną? Projektuję opakowania, etykiety, materiały POS, prezentacje, banery i infografiki — wszystko, czego marka potrzebuje, żeby wyglądać spójnie i profesjonalnie na każdym nośniku.",
             href: null,
         },
     ];
@@ -168,7 +168,7 @@ export default function Home() {
                         <AnimatedSection
                             key={i}
                             delay={i * 0.08}
-                            className={i < 2 ? "lg:col-span-2" : "lg:col-span-1"}
+                            className={(i < 2 || i === 4) ? "lg:col-span-2" : "lg:col-span-1"}
                         >
                             {service.href ? (
                                 <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
@@ -180,7 +180,7 @@ export default function Home() {
                             ) : (
                                 <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
                                     <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                    <h3 className="text-xl font-bold text-white transition-colors duration-300 mb-3">{service.title}</h3>
+                                    <h3 className={`font-bold text-white transition-colors duration-300 mb-3 ${i === 4 ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
                                     <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
                                 </div>
                             )}
