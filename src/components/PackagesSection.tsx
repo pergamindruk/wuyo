@@ -2,9 +2,67 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, Check } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { motion, AnimatePresence } from "framer-motion";
+
+const businessPackages = [
+    {
+        id: "wizytowka-firmy",
+        name: "Wizytówka Firmy",
+        persona: "Nowe firmy, rzemiosło, usługi lokalne",
+        desc: "Wszystko co nowa firma potrzebuje żeby wyglądać poważnie od pierwszego dnia.",
+        price: "1 800 zł",
+        priceSuffix: "jednorazowo",
+        featured: false,
+        cta: "Zacznij od marki",
+        realizacja: "7–10 dni roboczych",
+        features: [
+            "Logo + wersje pozioma i pionowa",
+            "Wizytówki (projekt + plik do druku)",
+            "Stopka mailowa",
+            "Szablon oferty w PDF",
+            "Booklet marki (kolory, fonty, zasady)",
+        ],
+    },
+    {
+        id: "firma-w-internecie",
+        name: "Firma w Internecie",
+        persona: "Budowlanka, usługi, gabinety, warsztaty",
+        desc: "Obecność online która generuje zapytania — nie tylko wygląda.",
+        price: "3 500 zł",
+        priceSuffix: "jednorazowo",
+        featured: true,
+        cta: "Chcę taką stronę",
+        realizacja: "14–21 dni roboczych",
+        features: [
+            "Strona wizytówka (5 podstron)",
+            "Formularz kontaktowy + mapa",
+            "Wersja mobilna dopracowana",
+            "Podstawowe SEO lokalne (Rzeszów)",
+            "Projekt graficzny spójny z marką",
+            "Szkolenie jak samemu edytować treść",
+        ],
+    },
+    {
+        id: "staly-opiekun",
+        name: "Stały Opiekun",
+        persona: "Firmy które regularnie potrzebują grafiki",
+        desc: "Grafik w abonamencie — bez zatrudniania, bez czekania tygodniami.",
+        price: "900 zł",
+        priceSuffix: "/ miesiąc",
+        featured: false,
+        cta: "Zacznij abonament",
+        realizacja: "Priorytet 48h",
+        features: [
+            "8 godzin pracy graficznej miesięcznie",
+            "Posty social media, banery, ulotki",
+            "Priorytetowy czas realizacji (48h)",
+            "Drobne aktualizacje strony",
+            "Miesięczna rozmowa strategiczna",
+        ],
+    },
+];
 
 // Zachowane dla kompatybilności wstecznej — używane przez ContactBrief i inne strony
 export const packages = [
@@ -577,6 +635,96 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                     />
                 )}
             </AnimatePresence>
+
+            {/* ── Pakiety ── */}
+            <AnimatedSection className="text-center mb-14 relative z-10">
+                <p className="eyebrow mb-4">Pakiety</p>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                    Wybierz co Ci teraz potrzebne.
+                </h2>
+                <p className="text-white/60 max-w-xl mx-auto">
+                    Trzy opcje, zero lania wody. Wiesz co dostajesz, wiesz ile płacisz.
+                </p>
+            </AnimatedSection>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-24 relative z-10">
+                {businessPackages.map((pkg, i) => (
+                    <motion.div
+                        key={pkg.id}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-60px" }}
+                        transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                        whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                        className={`relative flex flex-col rounded-3xl p-7 border transition-colors ${
+                            pkg.featured
+                                ? "bg-[#ffeb52]/5 border-[#ffeb52]/50 shadow-[0_0_60px_-10px_rgba(255,235,82,0.25)]"
+                                : "bg-navy/50 border-white/10 hover:border-white/20"
+                        }`}
+                    >
+                        {pkg.featured && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.35, duration: 0.3 }}
+                                className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#ffeb52] text-[#1c1b17] text-[11px] font-bold px-4 py-1 rounded-full tracking-wide whitespace-nowrap"
+                            >
+                                Najczęściej wybierany
+                            </motion.div>
+                        )}
+
+                        {/* Persona */}
+                        <p className="text-[10px] uppercase tracking-widest text-white/40 mb-5">{pkg.persona}</p>
+
+                        {/* Tytuł + opis */}
+                        <h3 className={`text-2xl font-bold mb-2 ${pkg.featured ? "text-[#ffeb52]" : "text-white"}`}>
+                            {pkg.name}
+                        </h3>
+                        <p className="text-white/50 text-sm leading-relaxed mb-6">{pkg.desc}</p>
+
+                        {/* Cena */}
+                        <div className="mb-7">
+                            <span className={`text-4xl font-bold tabular-nums ${pkg.featured ? "text-[#ffeb52]" : "text-white"}`}>
+                                {pkg.price}
+                            </span>
+                            <span className="text-white/40 text-sm ml-2">{pkg.priceSuffix}</span>
+                        </div>
+
+                        {/* Features */}
+                        <ul className="space-y-3 mb-8 flex-1">
+                            {pkg.features.map((f) => (
+                                <li key={f} className="flex items-start gap-3 text-sm text-white/70">
+                                    <span className={`mt-0.5 shrink-0 rounded-full p-0.5 ${pkg.featured ? "text-[#ffeb52]" : "text-white/50"}`}>
+                                        <Check size={13} strokeWidth={3} />
+                                    </span>
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* Realizacja */}
+                        <p className="text-white/30 text-xs mb-5">Czas realizacji: {pkg.realizacja}</p>
+
+                        {/* CTA */}
+                        <Link
+                            href="/#kontakt"
+                            className={`text-center py-3.5 rounded-full text-sm font-bold transition-all duration-200 ${
+                                pkg.featured
+                                    ? "bg-[#ffeb52] text-[#1c1b17] hover:bg-[#ffe000]"
+                                    : "border border-white/20 text-white hover:border-white/50 hover:bg-white/5"
+                            }`}
+                        >
+                            {pkg.cta}
+                        </Link>
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Separator */}
+            <div className="max-w-6xl mx-auto mb-20 relative z-10">
+                <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            </div>
 
             {/* Nagłówek */}
             <AnimatedSection className="text-center mb-10 relative z-10">
