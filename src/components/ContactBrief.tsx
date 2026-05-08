@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
-import { packages } from "@/components/PackagesSection";
+import { packages, businessPackages } from "@/components/PackagesSection";
 
 /* ─ Linki kontaktowe ─ */
 const WA_LINK = "https://wa.me/48725182053";
@@ -55,13 +55,24 @@ export function ContactBrief() {
     useEffect(() => {
         const pakiet = searchParams.get("pakiet");
         if (pakiet) {
-            const found = packages.find((p) => p.name === pakiet);
-            const priceStr = found ? ` (${found.price})` : "";
+            const webPkg = packages.find((p) => p.name === pakiet);
+            const bizPkg = businessPackages.find((p) => p.name === pakiet);
+
+            let priceStr = "";
+            let featuresList = "";
+
+            if (webPkg) {
+                priceStr = ` (${webPkg.price})`;
+            } else if (bizPkg) {
+                priceStr = ` (${bizPkg.price} ${bizPkg.priceSuffix})`;
+                featuresList = "\n\nCo zawiera ten pakiet:\n" + bizPkg.features.map((f) => `• ${f}`).join("\n");
+            }
+
             switchPath("quick");
             setData((prev) => ({
                 ...prev,
                 path: "quick",
-                quickMessage: `Cześć! Interesuje mnie pakiet \u201E${pakiet}\u201D${priceStr}. Chciałbym dowiedzieć się więcej i omówić szczegóły.`,
+                quickMessage: `Cześć! Interesuje mnie pakiet „${pakiet}”${priceStr}.${featuresList}\n\nChciałbym dowiedzieć się więcej i omówić szczegóły.`,
             }));
             setTimeout(() => {
                 const el = document.getElementById("kontakt");

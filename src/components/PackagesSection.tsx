@@ -6,7 +6,7 @@ import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, Check } from "
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { motion, AnimatePresence } from "framer-motion";
 
-const businessPackages = [
+export const businessPackages = [
     {
         id: "wizytowka-firmy",
         name: "Wizytówka Firmy",
@@ -708,7 +708,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
 
                         {/* CTA */}
                         <Link
-                            href="/#kontakt"
+                            href={`/?pakiet=${encodeURIComponent(pkg.name)}#kontakt`}
                             className={`text-center py-3.5 rounded-full text-sm font-bold transition-all duration-200 ${
                                 pkg.featured
                                     ? "bg-[#ffeb52] text-[#1c1b17] hover:bg-[#ffe000]"
