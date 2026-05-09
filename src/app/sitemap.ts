@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "jak-napisac-brief-dla-projektanta",
         "kto-robi-strony-internetowe-w-rzeszowie",
         "dobry-grafik-rzeszow",
+        "identyfikacja-wizualna-mala-firma-od-czego-zaczac",
     ]);
     const newMdxEntries: MetadataRoute.Sitemap = mdxPosts
         .filter((p) => !legacySlugs.has(p.slug))
@@ -132,6 +133,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/blog/dobry-grafik-rzeszow`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.95,
+        },
+        {
+            url: `${baseUrl}/blog/identyfikacja-wizualna-mala-firma-od-czego-zaczac`,
             lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.95,
