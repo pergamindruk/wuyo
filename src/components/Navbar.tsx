@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, X, House } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -125,6 +125,14 @@ export function Navbar() {
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
                     <nav aria-label="Nawigacja główna" className="flex items-center gap-6 lg:gap-8 text-sm font-medium text-white/70">
+                        <a
+                            href="/"
+                            onClick={handleHomeClick}
+                            aria-label="Strona główna"
+                            className="text-white/50 hover:text-gold transition-colors duration-200"
+                        >
+                            <House size={18} aria-hidden="true" />
+                        </a>
                         <Link href="/realizacje" className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Realizacje
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
@@ -182,6 +190,10 @@ export function Navbar() {
                         className="fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
                     >
                         <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
+                            <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
+                                <House size={20} aria-hidden="true" />
+                                Strona główna
+                            </a>
                             <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
                             <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
