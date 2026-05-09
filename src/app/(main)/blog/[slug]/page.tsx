@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { getAllSlugs, getPost } from "@/lib/blog";
 import { mdxComponents } from "@/components/blog/MDXComponents";
 import type { Metadata } from "next";
+import remarkGfm from "remark-gfm";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -98,7 +99,11 @@ export default async function ArticlePage({ params }: Props) {
 
             <article className="px-6 pb-20">
                 <div className="max-w-3xl mx-auto">
-                    <MDXRemote source={post.content} components={mdxComponents} />
+                    <MDXRemote
+                        source={post.content}
+                        components={mdxComponents}
+                        options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+                    />
                 </div>
             </article>
 
