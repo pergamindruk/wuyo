@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "jak-stworzyc-strone-internetowa-dla-firmy",
         "jak-napisac-brief-dla-projektanta",
         "kto-robi-strony-internetowe-w-rzeszowie",
+        "dobry-grafik-rzeszow",
     ]);
     const newMdxEntries: MetadataRoute.Sitemap = mdxPosts
         .filter((p) => !legacySlugs.has(p.slug))
@@ -125,6 +126,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/blog/kto-robi-strony-internetowe-w-rzeszowie`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.95,
+        },
+        {
+            url: `${baseUrl}/blog/dobry-grafik-rzeszow`,
             lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.95,
