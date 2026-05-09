@@ -33,7 +33,7 @@ export function HeroText() {
                             return (
                                 <motion.span
                                     key={i}
-                                    className={`inline-block mr-[0.25em] pb-1${w.style === "gold" ? ` ${goldClass}` : ""}`}
+                                    className={`inline-block mr-[0.25em] pb-1${w.style === "gold" ? ` ${goldClass}` : " font-heading"}`}
                                     initial={shouldReduceMotion ? false : { y: 18 }}
                                     animate={{ y: 0 }}
                                     transition={{
