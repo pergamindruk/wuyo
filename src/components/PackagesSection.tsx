@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, Check } from "lucide-react";
+import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, Check, CreditCard, BookOpen, Gift, FileText, Frame, Magnet, Mail } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -125,7 +125,7 @@ export const packages = [
 
 const printProducts = [
     {
-        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 100,
+        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 100, icon: <CreditCard size={22} />,
         variants: [
             { qty: "50 szt.", price: "99 zł", priceNum: 99 },
             { qty: "100 szt.", price: "159 zł", priceNum: 159 },
@@ -134,7 +134,7 @@ const printProducts = [
         ],
     },
     {
-        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 100,
+        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 100, icon: <BookOpen size={22} />,
         variants: [
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
             { qty: "100 szt.", price: "189 zł", priceNum: 189 },
@@ -143,14 +143,14 @@ const printProducts = [
         ],
     },
     {
-        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 140,
+        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 140, icon: <Gift size={22} />,
         variants: [
             { qty: "50 szt.", price: "109 zł", priceNum: 109 },
             { qty: "100 szt.", price: "179 zł", priceNum: 179 },
         ],
     },
     {
-        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 80,
+        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 80, icon: <Tag size={22} />,
         variants: [
             { qty: "50 szt.", price: "89 zł", priceNum: 89 },
             { qty: "100 szt.", price: "149 zł", priceNum: 149 },
@@ -158,14 +158,14 @@ const printProducts = [
         ],
     },
     {
-        id: "papier", name: "Papier firmowy A4", note: "", designFee: 100,
+        id: "papier", name: "Papier firmowy A4", note: "", designFee: 100, icon: <FileText size={22} />,
         variants: [
             { qty: "50 szt.", price: "79 zł", priceNum: 79 },
             { qty: "100 szt.", price: "139 zł", priceNum: 139 },
         ],
     },
     {
-        id: "plakaty", name: "Plakaty", note: "", designFee: 130,
+        id: "plakaty", name: "Plakaty", note: "", designFee: 130, icon: <Frame size={22} />,
         variants: [
             { qty: "A4", price: "od 29 zł/szt.", priceNum: 29 },
             { qty: "A3", price: "od 39 zł/szt.", priceNum: 39 },
@@ -173,14 +173,14 @@ const printProducts = [
         ],
     },
     {
-        id: "magnesy", name: "Magnesy reklamowe", note: "z laminatem, format wizytówki", designFee: 100,
+        id: "magnesy", name: "Magnesy reklamowe", note: "z laminatem, format wizytówki", designFee: 100, icon: <Magnet size={22} />,
         variants: [
             { qty: "50 szt.", price: "229 zł", priceNum: 229 },
             { qty: "100 szt.", price: "379 zł", priceNum: 379 },
         ],
     },
     {
-        id: "koperty", name: "Koperty z nadrukiem", note: "", designFee: 80,
+        id: "koperty", name: "Koperty z nadrukiem", note: "", designFee: 80, icon: <Mail size={22} />,
         variants: [
             { qty: "25 szt.", price: "69 zł", priceNum: 69 },
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
@@ -246,7 +246,8 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
     return (
         <div className="bg-navy/50 border border-white/10 rounded-2xl p-6 h-full flex flex-col gap-4 transition-colors hover:border-white/20">
-            <div>
+            <div className="flex flex-col items-center text-center">
+                <div className="text-gold/70 mb-3">{product.icon}</div>
                 <h3 className="font-bold text-white text-lg mb-1">{product.name}</h3>
                 {product.note && (
                     <p className="text-white/40 text-xs">{product.note}</p>
