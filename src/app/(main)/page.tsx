@@ -15,6 +15,69 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTiles } from "@/components/HeroProjectTiles";
 
+const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "WUYO – Studio Graficzne",
+    "alternateName": "WUYO",
+    "description": "Studio graficzne z Rzeszowa. Projektowanie logo, identyfikacja wizualna, strony internetowe na Next.js, druk wizytówek i ulotek. Obsługuję małe i średnie firmy z Rzeszowa i całej Polski.",
+    "url": "https://wuyo.pl",
+    "logo": "https://wuyo.pl/logo_wuya2.webp",
+    "image": "https://wuyo.pl/logo_wuya2.webp",
+    "telephone": "+48-784-728-375",
+    "email": "kontakt@wuyo.pl",
+    "founder": {
+        "@type": "Person",
+        "name": "Mateusz Machoś",
+        "jobTitle": "Projektant graficzny i web developer",
+        "url": "https://wuyo.pl/o-mnie",
+    },
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ul. Siemieńskiego 17A/38",
+        "addressLocality": "Rzeszów",
+        "postalCode": "35-203",
+        "addressRegion": "Podkarpacie",
+        "addressCountry": "PL",
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 50.0412,
+        "longitude": 21.9991,
+    },
+    "areaServed": [
+        { "@type": "City", "name": "Rzeszów" },
+        { "@type": "Country", "name": "Polska" },
+    ],
+    "serviceType": [
+        "Projektowanie logo",
+        "Identyfikacja wizualna",
+        "Tworzenie stron internetowych",
+        "Strony na Next.js",
+        "Druk wizytówek",
+        "Druk ulotek",
+        "Grafika social media",
+    ],
+    "knowsAbout": [
+        "Logo design",
+        "Brand identity",
+        "Web design",
+        "Next.js",
+        "React",
+        "SEO",
+        "Druk cyfrowy",
+        "Grafika reklamowa",
+    ],
+    "priceRange": "$$",
+    "currenciesAccepted": "PLN",
+    "paymentAccepted": "Przelew bankowy",
+    "openingHours": "Mo-Fr 08:00-18:00",
+    "sameAs": [
+        "https://www.facebook.com/wuyostudio",
+        "https://www.instagram.com/wuyo.studio",
+    ],
+};
+
 const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -108,6 +171,10 @@ export default function Home() {
 
     return (
         <div className="w-full">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+            />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
