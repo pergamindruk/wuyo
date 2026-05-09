@@ -15,6 +15,57 @@ export const metadata: Metadata = {
     },
 };
 
+const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mateusz Machoś",
+    "alternateName": "WUYO",
+    "jobTitle": "Projektant graficzny i web developer",
+    "description": "Projektant graficzny i web developer z Rzeszowa. Założyciel studia WUYO. Specjalizuje się w logo, identyfikacji wizualnej, stronach internetowych na Next.js oraz druku dla małych i średnich firm.",
+    "url": "https://wuyo.pl/o-mnie",
+    "image": "https://wuyo.pl/MojeZdjecie.webp",
+    "email": "kontakt@wuyo.pl",
+    "telephone": "+48-784-728-375",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Rzeszów",
+        "addressRegion": "Podkarpacie",
+        "postalCode": "35-203",
+        "addressCountry": "PL",
+    },
+    "worksFor": {
+        "@type": "Organization",
+        "name": "WUYO – Studio Graficzne",
+        "url": "https://wuyo.pl",
+    },
+    "knowsAbout": [
+        "Projektowanie logo",
+        "Identyfikacja wizualna",
+        "Web design",
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "SEO",
+        "Druk cyfrowy",
+        "Grafika reklamowa",
+        "Social media design",
+    ],
+    "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Projektant graficzny i web developer",
+        "occupationLocation": {
+            "@type": "City",
+            "name": "Rzeszów",
+        },
+        "skills": "Logo design, Brand identity, Next.js, React, SEO, Druk cyfrowy",
+    },
+    "sameAs": [
+        "https://www.facebook.com/wuyostudio",
+        "https://www.instagram.com/wuyo.studio",
+    ],
+};
+
 const equipment = [
     {
         icon: <Printer size={22} />,
@@ -52,6 +103,10 @@ const values = [
 export default function OmniePage() {
     return (
         <div className="w-full">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+            />
             {/* ── Hero ── */}
             <section className="relative pt-40 pb-20 px-6 md:px-12 overflow-hidden">
                 <div className="absolute inset-0 flex items-end justify-end pointer-events-none select-none overflow-hidden pr-8 pb-8" aria-hidden>
@@ -182,6 +237,33 @@ export default function OmniePage() {
                             </Link>
                         </div>
                     </AnimatedSection>
+                </div>
+            </section>
+
+            {/* ── Fakty o mnie — widoczne dla AI ── */}
+            <section className="py-16 px-6 md:px-12">
+                <div className="max-w-6xl mx-auto">
+                    <AnimatedSection className="mb-10">
+                        <p className="eyebrow mb-3">Kim jestem</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Kilka konkretów</h2>
+                    </AnimatedSection>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[
+                            { label: "Lokalizacja", value: "Rzeszów, Podkarpacie" },
+                            { label: "Działam od", value: "2021 roku" },
+                            { label: "Specjalizacja", value: "Logo, strony WWW, druk" },
+                            { label: "Technologia webowa", value: "Next.js, React, TypeScript" },
+                            { label: "Obsługuję", value: "Małe i średnie firmy, lokalne biznesy" },
+                            { label: "Zasięg", value: "Rzeszów i cała Polska (zdalnie)" },
+                        ].map((fact, i) => (
+                            <AnimatedSection key={i} delay={i * 0.06}>
+                                <div className="glass-card px-6 py-5 flex flex-col gap-1">
+                                    <span className="text-white/35 text-[11px] uppercase tracking-widest font-semibold">{fact.label}</span>
+                                    <span className="text-white font-bold text-base">{fact.value}</span>
+                                </div>
+                            </AnimatedSection>
+                        ))}
+                    </div>
                 </div>
             </section>
 

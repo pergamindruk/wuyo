@@ -105,4 +105,16 @@ export const mdxComponents = {
             <span className="text-white/70 text-sm">{children}</span>
         </div>
     ),
+
+    CTABox: ({ text, href, label }: { text: string; href: string; label: string }) => (
+        <div className="glass-card p-6 my-8 flex flex-col sm:flex-row items-center justify-between gap-4 border border-gold/20">
+            <p className="text-white/80 font-medium text-sm text-center sm:text-left">{text}</p>
+            <a
+                href={href}
+                className="shrink-0 bg-[#ffeb52] text-[#1c1b17] font-bold px-6 py-2.5 rounded-full text-sm hover:bg-[#ffe000] transition-colors whitespace-nowrap"
+            >
+                {label}
+            </a>
+        </div>
+    ),
 };
