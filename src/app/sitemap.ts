@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "strona-one-page-czy-multi-page",
         "jak-stworzyc-strone-internetowa-dla-firmy",
         "jak-napisac-brief-dla-projektanta",
+        "kto-robi-strony-internetowe-w-rzeszowie",
     ]);
     const newMdxEntries: MetadataRoute.Sitemap = mdxPosts
         .filter((p) => !legacySlugs.has(p.slug))
@@ -121,6 +122,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/blog/kto-robi-strony-internetowe-w-rzeszowie`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.95,
         },
         {
             url: `${baseUrl}/polityka-prywatnosci`,
