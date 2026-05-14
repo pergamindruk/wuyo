@@ -309,37 +309,37 @@ export default function Home() {
                     <AnimatedSection delay={0.2} className="max-w-2xl mx-auto lg:mx-0">
                         <p className="eyebrow mb-4">Współpraca</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-                            Ty robisz biznes,<br />ja ogarniam resztę.
+                            Ty robisz swoje.<br />Ja ogarniam resztę.
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>Działam sam, co oznacza konkret: rozmawiasz bezpośrednio ze mną. Bez agencyjnego ping-ponga, bez asystentów i lania wody. Tłumaczę najtrudniejsze tech-nowinki po ludzku.</p>
-                            <p>Twoja nowa strona czy marka mają sprzedawać, budować prestiż i przede wszystkim — zarabiać. Ja zajmuję się strategią i kodem, a Ty masz święty spokój na to, na czym znasz się najlepiej.</p>
+                            <p>Działam sam — rozmawiasz ze mną, nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost co zrobię, ile to kosztuje i kiedy będzie gotowe.</p>
+                            <p>Twoja strona czy marka mają jedno zadanie: zarabiać. Nie tylko wyglądać. Zajmuję się tym żebyś Ty mógł skupić się na tym, na czym znasz się najlepiej.</p>
                         </div>
-                        
+
                         <div className="mt-8 mb-10 relative">
                             {/* Ścieżka */}
                             <div className="absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-gold/50 via-white/10 to-transparent" />
-                            
+
                             <ul className="space-y-6">
                                 <li className="relative flex items-start gap-5">
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">1</div>
                                     <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">Szybki brief</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Ustalamy w 15 minut, czego brakuje w Twoim biznesie. Zbieram konkrety i szukam najlepszego rozwiązania.</p>
+                                        <strong className="block text-white mb-1">01 — Szybki brief</strong>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gadamy 15 minut. Mówisz mi gdzie jesteś i co chcesz osiągnąć — ja szukam najlepszego rozwiązania i wracam z konkretnym planem.</p>
                                     </div>
                                 </li>
                                 <li className="relative flex items-start gap-5">
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">2</div>
                                     <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">Projekt i kodowanie</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Po akceptacji propozycji przejmuję stery. Tworzę design, piszę kod, a Ty spokojnie obserwujesz postępy na żywo.</p>
+                                        <strong className="block text-white mb-1">02 — Projekt i realizacja</strong>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Po akceptacji przejmuję stery. Tworzę design, piszę kod, drukuję — zależnie od zlecenia. Postępy widzisz na bieżąco.</p>
                                     </div>
                                 </li>
                                 <li className="relative flex items-start gap-5">
                                     <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-gold/10 border border-gold/40 shadow-[0_0_15px_rgba(255,235,82,0.3)] flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">3</div>
                                     <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">Mamy to! Gotowy produkt</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz gotową maszynę, która od pierwszego dnia zarabia i buduje przewagę w Twojej branży.</p>
+                                        <strong className="block text-white mb-1">03 — Gotowe. Działa.</strong>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz produkt który od pierwszego dnia robi robotę. Strona, logo, materiały — wszystko gotowe do użycia od razu.</p>
                                     </div>
                                 </li>
                             </ul>
