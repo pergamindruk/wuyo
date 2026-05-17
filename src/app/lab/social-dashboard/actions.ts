@@ -70,38 +70,31 @@ export async function runMAP() {
 
         const prompt = `${WUYO_CONTEXT}
 
-ZADANIE [MAP — Research Trendów & Growth Intelligence]:
-Przeprowadź pełny research dla agencji designu/druku premium w Polsce (${monthYear}).
+Przygotuj raport trendów social media dla studia WUYO (${monthYear}). Odpowiedz TYLKO w podanym formacie — każda sekcja to lista punktorów, bez wstępów i podsumowań.
 
-## Trendy na Facebooku
-- 3-5 aktualnych trendów contentowych (formaty, typy postów)
-- Co algorytm FB nagradza teraz na fanpage'ach usługowych
-- Jakie posty generują największy zasięg organiczny
+## Trendy Facebook (${monthYear})
+Podaj 4 trendy. Każdy w formacie: **Nazwa trendu** — jedno zdanie co robić i dlaczego to działa teraz.
 
-## Trendy na Instagramie
-- 3-5 aktualnych trendów (Reels, karuzele, Stories)
-- Jakie formaty mają najwyższy engagement i zasięg
-- Jak algorytm IG dystrybuuje treści teraz (co premiuje)
+## Trendy Instagram (${monthYear})
+Podaj 4 trendy (Reels, karuzele, Stories). Każdy: **Nazwa** — jedno zdanie co robić i efekt.
 
-## Growth Mechanics — jak rosnąć na IG/FB
-- Konkretne taktyki zwiększania zasięgu organicznego (nie płatnego)
-- Jak zbierać followersów z właściwej grupy (MŚP, lokalne firmy)
-- Błędy które zabijają zasięg — czego unikać
-- Timing i częstotliwość publikacji dla małego konta usługowego
+## Growth Mechanics — zasięg organiczny
+Podaj 5 konkretnych taktyk dla małego konta usługowego B2B w Polsce:
+- co robić żeby algorytm dystrybuował posty szerzej
+- jak zbierać followersów z grupy właściciele MŚP
+- 2 błędy które najbardziej zabijają zasięg
 
-## Viralowe Formaty do Zaadaptowania
-- 3 konkretne formaty które WUYO może wdrożyć od razu
-- Dlaczego każdy działa (psychologia + algorytm)
-- Szacowany czas realizacji każdego
+## 3 Formaty Wiralowe do Wdrożenia od Razu
+Każdy format: **Nazwa** | Platforma | Czas produkcji | Dlaczego działa (1 zdanie)
 
-## Hashtagi & Timing
-- Top 10 hashtagów dla branży design/print w PL
-- Optymalne godziny publikacji na FB i IG
+## Hashtagi (branża design/print, Polska)
+Lista: 5 niszowych + 5 zasięgowych. Format: \`#hashtag\` — krótko po co.
 
-## Rekomendacja Tygodniowa
-- Konkretny plan: ile postów, platforma, format, cel (zasięg / leady / trust)
+## Timing publikacji
+Tabela: Platforma | Najlepsze dni | Godziny | Częstotliwość/tydzień
 
-Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable dla 1-osobowego studia.`
+## Plan minimum na ten tydzień
+3 punkty. Konkretne działania dla 1-osobowego studia z ograniczonym czasem.`
 
         const data = await askClaude(prompt, 'document')
         return { success: true, data }

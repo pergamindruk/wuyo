@@ -9,7 +9,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' })
 const MODEL_CONFIGS = {
     chat:     { maxOutputTokens: 1024  },
     content:  { maxOutputTokens: 2048  },
-    document: { maxOutputTokens: 4096  },
+    document: { maxOutputTokens: 8192  },
     seo:      { maxOutputTokens: 2048  },
 } as const
 
