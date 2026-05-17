@@ -48,8 +48,8 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
     return { ok: false as const, error: 'Instagram: timeout (sprobuj ponownie)' }
 }
 
-async function askClaude(prompt: string): Promise<string> {
-    const model = getModel('content')
+async function askClaude(prompt: string, preset: 'content' | 'document' = 'content'): Promise<string> {
+    const model = getModel(preset)
     const result = await model.generateContent(prompt)
     return result.response.text()
 }
@@ -103,7 +103,7 @@ Przeprowadź pełny research dla agencji designu/druku premium w Polsce (${month
 
 Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable dla 1-osobowego studia.`
 
-        const data = await askClaude(prompt)
+        const data = await askClaude(prompt, 'document')
         return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
@@ -243,7 +243,7 @@ Odpowiedz w formacie:
 
 Bądź BRUTALNIE szczery. Zero dyplomacji. Konkretne, actionable feedback.`
 
-        const data = await askClaude(prompt)
+        const data = await askClaude(prompt, 'document')
         return { success: true, data }
     } catch (error: unknown) {
         return { success: false, error: error instanceof Error ? error.message : String(error) }
