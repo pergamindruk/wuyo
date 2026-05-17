@@ -66,35 +66,43 @@ Rok: 2026. Masz świadomość najnowszych trendów i algorytmów.`
 // ═══════════════════════════════════════════════════════
 export async function runMAP() {
     try {
-        // model via Claude
+        const now = new Date()
+        const monthYear = now.toLocaleString('pl-PL', { month: 'long', year: 'numeric' })
 
         const prompt = `${WUYO_CONTEXT}
 
-ZADANIE [MAP — Research Trendów]:
-Przeprowadź research trendów na Facebook i Instagram dla agencji designu/druku premium w Polsce (marzec 2026).
+ZADANIE [MAP — Research Trendów & Growth Intelligence]:
+Przeprowadź pełny research dla agencji designu/druku premium w Polsce (${monthYear}).
 
-Odpowiedz w formacie:
+## Trendy na Facebooku
+- 3-5 aktualnych trendów contentowych (formaty, typy postów)
+- Co algorytm FB nagradza teraz na fanpage'ach usługowych
+- Jakie posty generują największy zasięg organiczny
 
-## Trendy na Facebooku (marzec 2026)
-- 3-5 aktualnych trendów contentowych (formaty, typy postów, algorytm)
-- Co działa na fanpage'ach usługowych/kreatywnych
-
-## Trendy na Instagramie (marzec 2026)
+## Trendy na Instagramie
 - 3-5 aktualnych trendów (Reels, karuzele, Stories)
-- Jakie formaty mają najwyższy engagement
+- Jakie formaty mają najwyższy engagement i zasięg
+- Jak algorytm IG dystrybuuje treści teraz (co premiuje)
 
-## Viralowe Formaty do Wykorzystania
-- 3 konkretne formaty postów, które WUYO może zaadaptować
-- Dlaczego każdy z nich działa (psychologia + algorytm)
+## Growth Mechanics — jak rosnąć na IG/FB
+- Konkretne taktyki zwiększania zasięgu organicznego (nie płatnego)
+- Jak zbierać followersów z właściwej grupy (MŚP, lokalne firmy)
+- Błędy które zabijają zasięg — czego unikać
+- Timing i częstotliwość publikacji dla małego konta usługowego
+
+## Viralowe Formaty do Zaadaptowania
+- 3 konkretne formaty które WUYO może wdrożyć od razu
+- Dlaczego każdy działa (psychologia + algorytm)
+- Szacowany czas realizacji każdego
 
 ## Hashtagi & Timing
 - Top 10 hashtagów dla branży design/print w PL
 - Optymalne godziny publikacji na FB i IG
 
 ## Rekomendacja Tygodniowa
-- Konkretny plan: ile postów, na jakiej platformie, w jakim formacie
+- Konkretny plan: ile postów, platforma, format, cel (zasięg / leady / trust)
 
-Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable.`
+Bądź KONKRETNY. Zero ogólników. Każdy insight musi być actionable dla 1-osobowego studia.`
 
         const data = await askClaude(prompt)
         return { success: true, data }
@@ -408,12 +416,15 @@ function getNextWeekday(target: number): string {
 export async function generateWeeklyBatch(contextHint?: string): Promise<WeeklyBatchResult> {
     try {
         // ── KROK 1: MAP (skrócony) ────────────────────────────────────────────
+        const now = new Date()
+        const monthYear = now.toLocaleString('pl-PL', { month: 'long', year: 'numeric' })
+
         const mapText = await askClaude(`${WUYO_CONTEXT}
 ${contextHint ? `\nDodatkowy kontekst od właściciela: "${contextHint}"` : ''}
 
 ZADANIE [MAP — Research Trendów, wersja skrócona]:
-Podaj 3 najważniejsze trendy contentowe dla agencji designu premium w Polsce (IG + FB, teraz).
-Format: 3 punkty, każdy max 2 zdania. Tylko actionable insighty.`)
+Podaj 3 najważniejsze trendy contentowe i 1 growth tip dla agencji designu premium w Polsce (IG + FB, ${monthYear}).
+Format: 4 punkty, każdy max 2 zdania. Tylko actionable insighty.`)
 
         // ── KROK 2: NAIL → 3 hooki ────────────────────────────────────────────
         const nailText = await askClaude(`${WUYO_CONTEXT}
