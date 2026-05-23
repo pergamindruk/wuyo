@@ -13,7 +13,7 @@ import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react
 import { PackagesSection } from "@/components/PackagesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
-import { HeroProjectTiles } from "@/components/HeroProjectTiles";
+import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
 
 const localBusinessSchema = {
     "@context": "https://schema.org",

@@ -102,6 +102,82 @@ body {
   overflow-x: hidden;
 }
 
+/* ─── Hero ambient orbs — czyste CSS, zero JS ─────────────────────────────── */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-orb-1 {
+  width: 700px;
+  height: 700px;
+  top: -10%;
+  left: 55%;
+  background: rgba(255, 235, 82, 0.05);
+  filter: blur(80px);
+  animation: orb-drift-1 20s ease-in-out infinite;
+}
+
+.hero-orb-2 {
+  width: 500px;
+  height: 500px;
+  bottom: 0;
+  right: 5%;
+  background: rgba(255, 255, 255, 0.03);
+  filter: blur(70px);
+  animation: orb-drift-2 25s ease-in-out infinite 4s;
+}
+
+.hero-orb-3 {
+  width: 350px;
+  height: 350px;
+  top: 40%;
+  left: 5%;
+  background: rgba(255, 235, 82, 0.03);
+  filter: blur(60px);
+  animation: orb-drift-3 18s ease-in-out infinite 8s;
+}
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(70px, -50px) scale(1.12); }
+  66%       { transform: translate(-40px, 70px) scale(0.92); }
+}
+
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-60px, 50px) scale(0.88); }
+  66%       { transform: translate(40px, -60px) scale(1.08); }
+}
+
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -30px) scale(1.18); }
+  66%       { transform: translate(-20px, 40px) scale(0.96); }
+}
+
+/* Scroll indicator bounce — CSS, bez JS */
+.scroll-indicator-bounce {
+  animation: scroll-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb { animation: none; }
+  .scroll-indicator-bounce { animation: none; }
+}
+
+/* Na mobile wyłącz orby — GPU mobilne sobie nie radzi z dużym blur */
+@media (max-width: 767px) {
+  .hero-orb { display: none; }
+}
+
 /* Gradient glow effects */
 .hero-glow {
   position: absolute;
