@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Projektowanie Logo dla Firm | WUYO",
         description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 800 zł — Rzeszów i cała Polska.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/logo",
         type: "website",
     },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Projektowanie Logo dla Firm | WUYO",
         description: "Logo od 800 zł — pełen pakiet plików, CMYK, prawa autorskie. Rzeszów i cała Polska.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/logo" },
 };

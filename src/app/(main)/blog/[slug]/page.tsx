@@ -27,13 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 description: post.excerpt,
                 type: "article",
                 url: `https://wuyo.pl/blog/${slug}`,
-                images: ["/logo_wuya2.webp"],
+                images: ["/og-image.webp"],
             },
             twitter: {
                 card: "summary_large_image",
                 title: post.title,
                 description: post.excerpt,
-                images: ["/logo_wuya2.webp"],
+                images: ["/og-image.webp"],
             },
             alternates: { canonical: `https://wuyo.pl/blog/${slug}` },
         };

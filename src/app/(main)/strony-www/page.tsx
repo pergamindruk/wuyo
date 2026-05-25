@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
         description: "Strony www na Next.js — szybkie, SEO-friendly, bez WordPressa i pluginów. Od 1 200 zł.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-www",
         type: "website",
     },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
         description: "Strony firmowe od 1 200 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-www" },
 };

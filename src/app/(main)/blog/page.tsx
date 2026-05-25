@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Blog WUYO – grafika i strony WWW bez ściemy",
         description: "Ile kosztuje logo? Kiedy strona one-page wystarczy? Odpowiadam konkretnie.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/blog",
     },
     alternates: { canonical: "https://wuyo.pl/blog" },

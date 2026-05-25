@@ -11,14 +11,14 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
         description: "Pełen cennik usług graficznych, druku, web design i social media. Transparentne ceny, zero niespodzianek.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/cennik",
     },
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO – Dobra Grafa",
         description: "Transparentne ceny usług graficznych i webowych. Logo od 500 zł, wizytówki od 99 zł, strona od 1 200 zł.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
     },
     alternates: {
         canonical: "https://wuyo.pl/cennik",

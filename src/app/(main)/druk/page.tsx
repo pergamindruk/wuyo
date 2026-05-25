@@ -10,14 +10,14 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Druk wizytówek, ulotek i voucherów | WUYO",
         description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki, ulotki, vouchery, bannery. Rzeszów i cała Polska.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/druk",
     },
     twitter: {
         card: "summary_large_image",
         title: "Druk wizytówek, ulotek i voucherów | WUYO",
         description: "Projekt i druk papeterii w jednym miejscu. Rzeszów i cała Polska.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
     },
     alternates: {
         canonical: "https://wuyo.pl/druk",

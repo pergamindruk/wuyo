@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł. Termin murowany, cena bez niespodzianek.",
         images: [
             {
-                url: "/logo_wuya2.webp",
+                url: "/og-image.webp",
                 width: 1200,
                 height: 630,
                 alt: "Wuyo – Dobra Grafa – agencja stron internetowych i identyfikacji wizualnej",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
         description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł.",
-        images: ["/logo_wuya2.webp"],
+        images: ["/og-image.webp"],
     },
     robots: {
         index: true,
