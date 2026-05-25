@@ -8,18 +8,19 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk papeterii – wizytówki, ulotki, vouchery | WUYO Rzeszów",
-    description: "Projekt i druk wizytówek, ulotek, voucherów, bannerów. Zamawiasz komplet – projekt + druk w jednym miejscu. Bez kombinowania, bez pośredników. Rzeszów i wysyłka cała Polska.",
+    title: "Druk Wizytówek i Ulotek – projekt + druk | od 99 zł | WUYO",
+    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, małe nakłady bez minimum. Rzeszów + wysyłka kurierem →",
     openGraph: {
-        title: "Druk wizytówek, ulotek i voucherów | WUYO",
-        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki, ulotki, vouchery, bannery. Rzeszów i cała Polska.",
+        title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
+        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki od 99 zł, termin 1–3 dni. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/druk",
+        type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Druk wizytówek, ulotek i voucherów | WUYO",
-        description: "Projekt i druk papeterii w jednym miejscu. Rzeszów i cała Polska.",
+        title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
+        description: "Wizytówki od 99 zł, termin 1–3 dni. Projekt + druk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -200,6 +201,31 @@ export default function DrukPage() {
                 </div>
             </section>
 
+            {/* ═══ CROSS-SELL ═══ */}
+            <section className="py-12 px-6 md:px-12">
+                <div className="max-w-5xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 800 zł · 10–14 dni</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
+                                <Link href="/strony-www" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony internetowe →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 1 200 zł · Next.js</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
+                                <Link href="/druk-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk w Rzeszowie →</Link>
+                                <p className="text-white/40 text-xs mt-1">odbiór osobisty · 1–3 dni</p>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </div>
+            </section>
+
             {/* ═══ JAK TO DZIAŁA ═══ */}
             <section className="py-20 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
@@ -226,6 +252,23 @@ export default function DrukPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* ═══ SOCIAL PROOF LINKS ═══ */}
+            <section className="pb-4 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection>
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/40">
+                            <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
+                                ★ Opinie na Google Maps
+                            </a>
+                            <span className="hidden sm:block">·</span>
+                            <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
+                                Portfolio na Instagramie →
+                            </a>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 

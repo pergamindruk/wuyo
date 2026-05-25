@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony Internetowe Rzeszów – Next.js, szybkie, SEO | WUYO",
-    description: "Tworzę strony internetowe dla firm z Rzeszowa i Podkarpacia. Next.js, szybkie ładowanie, SEO od pierwszego dnia. One-page od 1 200 zł, multi-page od 2 900 zł. Wycena w 24h.",
+    title: "Strony Internetowe Rzeszów – od 1 200 zł | Next.js, SEO | WUYO",
+    description: "Tworzę strony internetowe dla firm z Rzeszowa. Next.js – ładuje się w <1s, SEO wbudowane od zera. One-page od 1 200 zł, multi-page od 2 900 zł. Stała cena, wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
         "tworzenie stron internetowych Rzeszów",
@@ -223,9 +223,9 @@ export default function StronyInternetowerRzeszowPage() {
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-4">
                         {[
-                            { icon: <Zap size={20} className="text-gold" />, title: "Ładuje się w < 1s", desc: "Każda dodatkowa sekunda ładowania to -7% konwersji. WordPress z pluginami ładuje się 3–8 sekund." },
-                            { icon: <Search size={20} className="text-gold" />, title: "SEO od pierwszej linii", desc: "Google widzi pełen content od razu. Metadata, Open Graph, Schema markup — wbudowane w kod." },
-                            { icon: <Shield size={20} className="text-gold" />, title: "Zero problemów z bezpieczeństwem", desc: "Nie ma backendu wystawionego na świat. Nie ma czego hakować. Nie ma cotygodniowych aktualizacji pluginów." },
+                            { icon: <Zap size={20} className="text-gold" />, title: "Ładuje się w < 1s", desc: <span>Każda dodatkowa sekunda ładowania to -7% konwersji. Sprawdź swoją aktualną stronę w <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">PageSpeed Insights</a> — jeśli wynik to mniej niż 90, czas coś zmienić.</span> },
+                            { icon: <Search size={20} className="text-gold" />, title: "SEO od pierwszej linii", desc: "Google widzi pełen content od razu. Metadata, Open Graph, Schema markup — wbudowane w kod, nie jako plugin." },
+                            { icon: <Shield size={20} className="text-gold" />, title: "Zero problemów z bezpieczeństwem", desc: <span>Nie ma backendu wystawionego na świat. <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">Next.js</a> generuje statyczne pliki — nie ma czego hakować i nie ma cotygodniowych aktualizacji pluginów.</span> },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.08}>
                                 <div className="glass-card p-6">
@@ -261,6 +261,31 @@ export default function StronyInternetowerRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* CROSS-SELL */}
+            <section className="py-12 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 800 zł · projekt od zera</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Cennik szczegółowy</p>
+                                <Link href="/cennik" className="font-bold text-white hover:text-gold transition-colors text-sm">Pełny cennik →</Link>
+                                <p className="text-white/40 text-xs mt-1">wszystkie usługi i pakiety</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik z Rzeszowa</p>
+                                <Link href="/grafik-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">O studio WUYO →</Link>
+                                <p className="text-white/40 text-xs mt-1">logo · strony · druk</p>
+                            </div>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 

@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek i Ulotek Rzeszów – projekt + druk | WUYO",
-    description: "Druk wizytówek, ulotek, voucherów i naklejek w Rzeszowie. Projekt graficzny i druk w jednym miejscu. Małe nakłady, szybka realizacja. Wizytówki od 99 zł.",
+    title: "Druk Wizytówek Rzeszów – projekt + druk | od 99 zł | WUYO",
+    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie — projekt i druk w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, odbiór w Rzeszowie lub wysyłka kurierem →",
     keywords: [
         "druk wizytówek Rzeszów",
         "druk ulotek Rzeszów",
@@ -139,6 +139,9 @@ export default function DrukRzeszowPage() {
                         <Link href="/druk" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
                             Pełna oferta druku →
                         </Link>
+                        <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
+                            Portfolio →
+                        </a>
                     </div>
                 </AnimatedSection>
             </section>
@@ -215,6 +218,31 @@ export default function DrukRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* CROSS-SELL */}
+            <section className="py-12 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 800 zł · projekt od zera</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik w Rzeszowie</p>
+                                <Link href="/grafik-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Studio WUYO →</Link>
+                                <p className="text-white/40 text-xs mt-1">logo · strony · druk</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Opinie klientów</p>
+                                <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">★ Google Maps →</a>
+                                <p className="text-white/40 text-xs mt-1">sprawdź co mówią klienci</p>
+                            </div>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 

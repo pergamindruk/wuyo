@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Grafik Rzeszów – logo, strony www, druk | WUYO Mateusz Machoś",
-    description: "Szukasz grafika w Rzeszowie? Projektuję logo, identyfikację wizualną, strony internetowe i materiały drukowane dla firm z Rzeszowa i całego Podkarpacia. Wycena w 24h.",
+    title: "Grafik Rzeszów – logo od 800 zł, strony od 1 200 zł | WUYO",
+    description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, termin murowany, bezpośredni kontakt. Wycena bezpłatna, odpowiedź w 24h →",
     keywords: [
         "grafik Rzeszów",
         "projektant graficzny Rzeszów",
@@ -360,6 +360,12 @@ export default function GrafikRzeszowPage() {
                                 </a>
                                 <a href="https://wa.me/48725182053" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
                                     WhatsApp
+                                </a>
+                                <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
+                                    ★ Opinie na Google
+                                </a>
+                                <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
+                                    Portfolio – Instagram →
                                 </a>
                                 <Link href="/cennik" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
                                     Zobacz cennik →
