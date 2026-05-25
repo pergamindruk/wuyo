@@ -12,7 +12,7 @@ export function Footer() {
                             <Image src="/logo_wuya2.webp" alt="WUYO" fill className="object-contain object-left" />
                         </Link>
                         <p className="text-white/60 text-xs sm:text-sm max-w-sm leading-relaxed">
-                            Wuyo – Twój strategiczny partner w designie. Zamieniam dobre pomysły w marki, które zarabiają i wyróżniają się na tle konkurencji.
+                            Studio graficzne z Rzeszowa. Logo, strony internetowe i druk dla firm z całej Polski. Zamieniam dobre pomysły w marki, które zarabiają.
                         </p>
                     </div>
 

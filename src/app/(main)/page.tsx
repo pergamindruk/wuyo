@@ -24,7 +24,7 @@ const localBusinessSchema = {
     "url": "https://wuyo.pl",
     "logo": "https://wuyo.pl/logo_wuya2.webp",
     "image": "https://wuyo.pl/logo_wuya2.webp",
-    "telephone": "+48-784-728-375",
+    "telephone": "+48725182053",
     "email": "kontakt@wuyo.pl",
     "founder": {
         "@type": "Person",
@@ -73,8 +73,9 @@ const localBusinessSchema = {
     "paymentAccepted": "Przelew bankowy",
     "openingHours": "Mo-Fr 08:00-18:00",
     "sameAs": [
-        "https://www.facebook.com/wuyostudio",
-        "https://www.instagram.com/wuyo.studio",
+        "https://www.facebook.com/wuyo.dobra.grafa",
+        "https://www.instagram.com/wuyo.pl/",
+        "https://www.youtube.com/@wuyo.dobra.grafa",
     ],
 };
 
@@ -189,6 +190,7 @@ export default function Home() {
 
                     {/* LEFT — tekst + CTA */}
                     <AnimatedSection className="text-center" animateOnMount={true} hero={true}>
+                        <p className="eyebrow mb-4">Studio graficzne · Rzeszów i cała Polska</p>
                         <HeroText />
                         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
                             Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.

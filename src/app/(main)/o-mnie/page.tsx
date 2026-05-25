@@ -25,7 +25,7 @@ const personSchema = {
     "url": "https://wuyo.pl/o-mnie",
     "image": "https://wuyo.pl/MojeZdjecie.webp",
     "email": "kontakt@wuyo.pl",
-    "telephone": "+48-784-728-375",
+    "telephone": "+48725182053",
     "address": {
         "@type": "PostalAddress",
         "addressLocality": "Rzeszów",
@@ -61,8 +61,9 @@ const personSchema = {
         "skills": "Logo design, Brand identity, Next.js, React, SEO, Druk cyfrowy",
     },
     "sameAs": [
-        "https://www.facebook.com/wuyostudio",
-        "https://www.instagram.com/wuyo.studio",
+        "https://www.facebook.com/wuyo.dobra.grafa",
+        "https://www.instagram.com/wuyo.pl/",
+        "https://www.youtube.com/@wuyo.dobra.grafa",
     ],
 };
 

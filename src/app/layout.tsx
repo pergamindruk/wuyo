@@ -108,7 +108,10 @@ const jsonLd = {
     "priceRange": "800–5000 PLN",
     "address": {
         "@type": "PostalAddress",
+        "streetAddress": "ul. Siemieńskiego 17A/38",
         "addressLocality": "Rzeszów",
+        "postalCode": "35-203",
+        "addressRegion": "Podkarpacie",
         "addressCountry": "PL",
     },
     "contactPoint": {
