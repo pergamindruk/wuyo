@@ -122,7 +122,7 @@ const faqSchema = {
             "name": "Co wyróżnia WUYO spośród grafików w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Działam sam — nie ma pośredników ani asystentów. Masz bezpośredni kontakt ze mną przez cały projekt. Łączę grafikę z programowaniem i druk mam na miejscu (własny sprzęt poligraficzny), więc od logo po stronę i wydruk to jedno miejsce.",
+                "text": "Działam sam — nie ma pośredników ani asystentów. Masz bezpośredni kontakt ze mną przez cały projekt. Łączę grafikę z programowaniem, a małe nakłady drukuję u siebie — od logo po stronę i wydruk to jedno miejsce.",
             },
         },
     ],
@@ -163,7 +163,7 @@ const reasons = [
     { n: "01", title: "Wiesz co dostajesz — zanim zapłacisz", desc: "Przed każdym projektem dostajesz stałą wycenę. Nie stawkę godzinową, nie \"zależy od zakresu\". Konkretna kwota, konkretny termin. Jeśli coś zmienisz w trakcie — mówię o tym od razu, nie na fakturze." },
     { n: "02", title: "Piszesz do mnie, nie do firmy", desc: "Nie ma tu działu obsługi klienta ani project managera. Piszesz do mnie, ja odpisuję, ja projektuję. Skraca to czas realizacji i eliminuje nieporozumienia które zdarzają się w agencjach." },
     { n: "03", title: "Logo, strona i druk — jedno zlecenie", desc: "Większość firm potrzebuje tych trzech rzeczy naraz. Możesz zlecić wszystko jednej osobie — nie tracisz czasu na szukanie osobnego grafika, web developera i drukarni." },
-    { n: "04", title: "Rzeszów: druk na miejscu, bez czekania", desc: "Mam własny sprzęt poligraficzny. Wizytówki, ulotki i naklejki drukuję u siebie — możesz je mieć następnego dnia. Żadnych minimalnych nakładów, żadnego tygodniowego oczekiwania na przesyłkę z drukarni." },
+    { n: "04", title: "Małe nakłady drukuję u siebie", desc: "Wizytówki, ulotki i naklejki drukuję sam — nie wysyłam do zewnętrznej drukarni. Możesz zamówić 20 sztuk zamiast 500. Możesz mieć je następnego dnia. Bez czekania, bez minimum." },
 ];
 
 export default function GrafikRzeszowPage() {
