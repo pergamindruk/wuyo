@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowRight, Zap, Shield, Search, Smartphone } from "lucid
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ContactBrief } from "@/components/ContactBrief";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Tworzenie Stron Internetowych dla Firm | WUYO – Rzeszów",
@@ -22,6 +24,45 @@ export const metadata: Metadata = {
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-www" },
+};
+
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Ile kosztuje strona internetowa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Strona One-Page od 1 200 zł, strona firmowa Multi-Page od 2 900 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Ile trwa zbudowanie strony internetowej?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Strona One-Page zazwyczaj tydzień od zatwierdzenia projektu graficznego. Strona Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy będę mógł samodzielnie edytować treści na stronie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak — podłączam lekki CMS (np. Sanity lub Contentlayer) jeśli tego potrzebujesz. W pakiecie Multi-Page edycja treści jest standardem. Możesz też po prostu pisać do mnie — drobne zmiany tekstu wchodzą w zakres wsparcia.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Dlaczego Next.js zamiast WordPressa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Strona na Next.js ładuje się poniżej 1 sekundy, nie wymaga cotygodniowych aktualizacji pluginów i jest praktycznie niemożliwa do zhackowania bo nie ma backendu wystawionego na świat. WordPress jest wygodniejszy do samodzielnej edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości.",
+            },
+        },
+    ],
 };
 
 const serviceSchema = {
@@ -150,10 +191,8 @@ const process = [
 export default function StronyWwwPage() {
     return (
         <main className="flex-1 w-full">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* Hero */}
             <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-20 md:pt-48 overflow-hidden">
@@ -393,26 +432,10 @@ export default function StronyWwwPage() {
                 </div>
             </section>
 
-            {/* CTA główny */}
-            <section className="py-20 px-6 md:px-12">
-                <div className="max-w-3xl mx-auto">
-                    <AnimatedSection>
-                        <div className="glass-card p-8 md:p-12 text-center border border-gold/20">
-                            <p className="eyebrow mb-4">Gotowy na stronę która generuje klientów?</p>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                                Opisz mi swój biznes — wycenię w 24h
-                            </h2>
-                            <p className="text-white/60 max-w-xl mx-auto mb-8 leading-relaxed">
-                                Bez automatycznych odpowiedzi i formularzy briefu do wypełnienia. Piszesz mi o firmie, odpowiadam z konkretną wyceną i terminem.
-                            </p>
-                            <a href="/#kontakt" className="btn-gold px-10 py-4 rounded-full font-bold inline-block text-lg">
-                                Zamów stronę →
-                            </a>
-                            <p className="text-white/30 text-xs mt-4">Bezpłatna wycena · Odpowiedź w 24h · Bez zobowiązań</p>
-                        </div>
-                    </AnimatedSection>
-                </div>
-            </section>
+            {/* Kontakt */}
+            <Suspense fallback={null}>
+                <ContactBrief />
+            </Suspense>
         </main>
     );
 }

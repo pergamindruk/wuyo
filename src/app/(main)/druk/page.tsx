@@ -3,6 +3,9 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ContactBrief } from "@/components/ContactBrief";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Druk papeterii – wizytówki, ulotki, vouchery | WUYO Rzeszów",
@@ -22,6 +25,45 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "https://wuyo.pl/druk",
     },
+};
+
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Ile kosztują wizytówki z projektem?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wizytówki 50 szt. z projektem od 99 zł, 100 szt. z projektem od 199 zł. W cenie projekt graficzny, druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Jak szybko dostanę wydruk?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy mogę zamówić mały nakład — np. 20 wizytówek?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak. Nie mam minimalnego nakładu na wizytówki i naklejki — drukuję u siebie, więc nie obowiązują mnie minimalne ilości drukarni przemysłowych. Przy ulotkach minimum to 100 szt.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy zajmujesz się tylko projektem, czy też drukiem?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Jedno i drugie — projekt i druk w jednym miejscu. Nie musisz szukać oddzielnie grafika i drukarni, tłumaczyć specyfikacji ani wysyłać plików w odpowiednich formatach. Dostajesz gotowy produkt.",
+            },
+        },
+    ],
 };
 
 const drukSchema = {
@@ -87,10 +129,8 @@ const products = [
 export default function DrukPage() {
     return (
         <main className="flex-1 w-full">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(drukSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(drukSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* ═══ HERO ═══ */}
             <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-20 md:pt-48 overflow-hidden">
@@ -189,27 +229,13 @@ export default function DrukPage() {
                 </div>
             </section>
 
-            {/* ═══ CTA ═══ */}
-            <section className="py-20 px-6 md:px-12">
-                <AnimatedSection className="max-w-3xl mx-auto text-center">
-                    <div className="glass-card p-10 md:p-16">
-                        <p className="eyebrow mb-4">Gotowy?</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Powiedz mi co potrzebujesz
-                        </h2>
-                        <p className="text-white/60 mb-8 max-w-lg mx-auto">
-                            Napisz w kilku zdaniach co chcesz wydrukować — odpiszę z wyceną tego samego dnia.
-                        </p>
-                        <Link
-                            href="/#kontakt"
-                            className="btn-gold px-10 py-4 inline-flex items-center justify-center gap-3 group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]"
-                        >
-                            <span className="font-bold text-lg text-navy">Wyślij zapytanie</span>
-                            <ArrowRight size={20} className="text-navy group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
-                </AnimatedSection>
-            </section>
+            {/* Opinie */}
+            <TestimonialsSection />
+
+            {/* Kontakt */}
+            <Suspense fallback={null}>
+                <ContactBrief />
+            </Suspense>
         </main>
     );
 }

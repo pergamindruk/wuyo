@@ -36,6 +36,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.95,
         },
         {
+            url: `${baseUrl}/strony-internetowe-rzeszow`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.95,
+        },
+        {
+            url: `${baseUrl}/druk-rzeszow`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.9,
+        },
+        {
             url: baseUrl,
             lastModified: new Date(),
             changeFrequency: "weekly",

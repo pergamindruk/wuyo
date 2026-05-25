@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowRight, Layers, FileText, Palette, Type } from "lucid
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ContactBrief } from "@/components/ContactBrief";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Projektowanie Logo dla Firm | WUYO – Rzeszów i cała Polska",
@@ -22,6 +24,45 @@ export const metadata: Metadata = {
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/logo" },
+};
+
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Ile kosztuje zaprojektowanie logo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Logotyp od 800 zł, pełna identyfikacja wizualna (logo + wizytówka + szablony social + księga znaku) od 2 500 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Ile trwa projekt logo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Standardowo 10–14 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Co dostaję razem z logo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pełen pakiet: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do drukarni. Paleta kolorów w HEX i CMYK, typografia firmowa, wszystkie warianty (kolor, mono, sygnet). Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy mogę samodzielnie edytować logo po projekcie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak — na życzenie przekazuję pliki źródłowe Figma lub Adobe Illustrator. Jeśli nie masz programów graficznych, wystarczą Ci pliki PNG i SVG do codziennego użytku.",
+            },
+        },
+    ],
 };
 
 const serviceSchema = {
@@ -142,10 +183,8 @@ const process = [
 export default function LogoPage() {
     return (
         <main className="flex-1 w-full">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* Hero */}
             <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-20 md:pt-48 overflow-hidden">
@@ -370,26 +409,10 @@ export default function LogoPage() {
                 </div>
             </section>
 
-            {/* CTA główny */}
-            <section className="py-20 px-6 md:px-12">
-                <div className="max-w-3xl mx-auto">
-                    <AnimatedSection>
-                        <div className="glass-card p-8 md:p-12 text-center border border-gold/20">
-                            <p className="eyebrow mb-4">Gotowy na logo które działa?</p>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                                Opisz mi swój biznes — wycenię w 24h
-                            </h2>
-                            <p className="text-white/60 max-w-xl mx-auto mb-8 leading-relaxed">
-                                Bez automatycznych odpowiedzi i cenników do uzupełnienia. Piszesz mi o firmie, odpowiadam z konkretną wyceną i terminem.
-                            </p>
-                            <a href="/#kontakt" className="btn-gold px-10 py-4 rounded-full font-bold inline-block text-lg">
-                                Zamów logo →
-                            </a>
-                            <p className="text-white/30 text-xs mt-4">Bezpłatna wycena · Odpowiedź w 24h · Bez zobowiązań</p>
-                        </div>
-                    </AnimatedSection>
-                </div>
-            </section>
+            {/* Kontakt */}
+            <Suspense fallback={null}>
+                <ContactBrief />
+            </Suspense>
         </main>
     );
 }
