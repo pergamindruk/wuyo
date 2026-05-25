@@ -132,38 +132,38 @@ const services = [
     {
         title: "Logo i identyfikacja wizualna",
         price: "od 800 zł",
-        desc: "Logotyp, sygnet, paleta kolorów, typografia i pełen pakiet plików. Opcjonalnie: księga znaku, wizytówki, szablony social media.",
+        desc: "Nie szablon, nie Canva — projekt robiony od zera dla Twojej firmy. Dostajesz gotowe pliki do drukarni, na stronę i do social mediów. Prawa autorskie w cenie, bez dodatkowych opłat.",
         href: "/logo",
-        items: ["Logotyp + sygnet", "Pliki SVG, PNG, PDF", "Paleta kolorów CMYK/HEX", "Prawa autorskie w cenie"],
+        items: ["Logotyp + sygnet + warianty", "SVG, PNG, PDF — gotowe wszędzie", "Kolory CMYK i HEX", "Prawa autorskie majątkowe"],
     },
     {
         title: "Strony internetowe",
         price: "od 1 200 zł",
-        desc: "Strony na Next.js — szybkie, responsywne, zoptymalizowane pod SEO od pierwszego dnia. Bez WordPressa, bez pluginów.",
+        desc: "Piszę kod od zera — żadnego WordPressa, żadnych pluginów które się psują. Strona ładuje się szybko, działa na telefonie i Google ją widzi od pierwszego dnia.",
         href: "/strony-www",
-        items: ["Next.js + React", "Techniczne SEO on-page", "Mobile first", "Deploy na Vercel (0 zł/mies.)"],
+        items: ["Next.js — poniżej 1s ładowania", "SEO techniczne wbudowane", "Wygląda i działa na każdym telefonie", "Hosting Vercel — 0 zł miesięcznie"],
     },
     {
         title: "Druk i papeteria",
         price: "od 99 zł",
-        desc: "Projekt i druk w jednym miejscu. Własny sprzęt poligraficzny — wizytówki, ulotki, vouchery, naklejki bez minimum nakładu.",
+        desc: "Mam własny sprzęt — drukuję u siebie, nie wysyłam do zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Bez minimum nakładu, bez tygodniowego czekania.",
         href: "/druk",
-        items: ["Wizytówki, ulotki, vouchery", "Druk własny — szybciej i taniej", "Laminowanie mat/błysk", "Naklejki w dowolnym kształcie"],
+        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Laminat mat lub błysk", "Ekspresowa realizacja"],
     },
     {
         title: "Grafika reklamowa",
         price: "wycena ind.",
-        desc: "Bannery, posty social media, materiały POS, opakowania, etykiety — wszystko czego marka potrzebuje żeby wyglądać spójnie.",
+        desc: "Posty i karuzele na social media, bannery, roll-upy, opakowania, etykiety — jeśli potrzebujesz żeby marka wyglądała spójnie na każdym nośniku, to jest tu.",
         href: null,
-        items: ["Social media (posty, stories)", "Bannery i roll-upy", "Opakowania i etykiety", "Prezentacje i infografiki"],
+        items: ["Posty, stories, karuzele", "Bannery i roll-upy", "Opakowania i etykiety", "Prezentacje i infografiki"],
     },
 ];
 
 const reasons = [
-    { n: "01", title: "Jeden człowiek, pełna odpowiedzialność", desc: "Rozmawiasz ze mną, ja projektuję, ja dostarczam. Zero ping-ponga między działami, zero nieporozumień w przekazie." },
-    { n: "02", title: "Grafika + web + druk w jednym miejscu", desc: "Logo, strona i wizytówki — trzy rzeczy które każda firma potrzebuje, w jednym miejscu. Nie musisz szukać trzech różnych wykonawców." },
-    { n: "03", title: "Cena ustalona przed startem", desc: "Zawsze dostajesz stałą wycenę zanim zacznę pracę. Żadnych stawek godzinowych, żadnych niespodzianek na fakturze." },
-    { n: "04", title: "Druk na miejscu w Rzeszowie", desc: "Własny Epson A3+, laminator i ploter tnący. Wizytówki i naklejki możesz mieć nawet następnego dnia — bez czekania na drukarnię." },
+    { n: "01", title: "Wiesz co dostajesz — zanim zapłacisz", desc: "Przed każdym projektem dostajesz stałą wycenę. Nie stawkę godzinową, nie \"zależy od zakresu\". Konkretna kwota, konkretny termin. Jeśli coś zmienisz w trakcie — mówię o tym od razu, nie na fakturze." },
+    { n: "02", title: "Piszesz do mnie, nie do firmy", desc: "Nie ma tu działu obsługi klienta ani project managera. Piszesz do mnie, ja odpisuję, ja projektuję. Skraca to czas realizacji i eliminuje nieporozumienia które zdarzają się w agencjach." },
+    { n: "03", title: "Logo, strona i druk — jedno zlecenie", desc: "Większość firm potrzebuje tych trzech rzeczy naraz. Możesz zlecić wszystko jednej osobie — nie tracisz czasu na szukanie osobnego grafika, web developera i drukarni." },
+    { n: "04", title: "Rzeszów: druk na miejscu, bez czekania", desc: "Mam własny sprzęt poligraficzny. Wizytówki, ulotki i naklejki drukuję u siebie — możesz je mieć następnego dnia. Żadnych minimalnych nakładów, żadnego tygodniowego oczekiwania na przesyłkę z drukarni." },
 ];
 
 export default function GrafikRzeszowPage() {
@@ -178,17 +178,14 @@ export default function GrafikRzeszowPage() {
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
                     <div className="inline-flex items-center gap-2 text-gold/80 text-sm font-medium mb-5 border border-gold/20 bg-gold/5 px-4 py-1.5 rounded-full">
                         <MapPin size={13} />
-                        Rzeszów, Podkarpacie
+                        Rzeszów · Podkarpacie · cała Polska
                     </div>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Grafik w&nbsp;Rzeszowie<br className="hidden md:block" />
-                        <span className="text-gold">który dowozi</span>
+                        Grafik z&nbsp;Rzeszowa,<br className="hidden md:block" />
+                        <span className="text-gold">który mówi wprost</span>
                     </h1>
-                    <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-4 leading-relaxed">
-                        Logo, strona internetowa i druk dla Twojej firmy — w jednym miejscu, od jednej osoby, za ustaloną z góry cenę.
-                    </p>
-                    <p className="text-sm text-white/35 mb-10">
-                        Mateusz Machoś · WUYO Studio · Rzeszów, ul. Siemieńskiego 17A/38
+                    <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        Podaję cenę zanim zacznę. Trzymam termin. Nie masz do czynienia z pośrednikiem — rozmawiasz ze mną i ja robię projekt.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
@@ -206,10 +203,10 @@ export default function GrafikRzeszowPage() {
                 <div className="py-8 px-6 border-y border-white/5">
                     <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                         {[
-                            { stat: "5+", label: "lat w branży" },
-                            { stat: "150+", label: "projektów w Rzeszowie i Polsce" },
-                            { stat: "24h", label: "czas odpowiedzi" },
-                            { stat: "1 os.", label: "rozmawiasz ze mną, nie z asystentem" },
+                            { stat: "od 2021", label: "działam w Rzeszowie" },
+                            { stat: "150+", label: "zrealizowanych projektów" },
+                            { stat: "24h", label: "i masz wycenę w skrzynce" },
+                            { stat: "1 osoba", label: "piszesz do mnie, nie do działu" },
                         ].map((item, i) => (
                             <div key={i}>
                                 <p className="text-2xl md:text-3xl font-bold text-gold">{item.stat}</p>
@@ -224,9 +221,9 @@ export default function GrafikRzeszowPage() {
             <section className="py-20 px-6 md:px-12">
                 <div className="max-w-5xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
-                        <p className="eyebrow mb-4">Co robię</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Usługi graficzne w Rzeszowie</h2>
-                        <p className="text-white/50 max-w-xl mx-auto mt-4">Nie trzeba szukać kilku wykonawców — logo, strona i druk to jeden projekt, jedna osoba, jeden kontakt.</p>
+                        <p className="eyebrow mb-4">Usługi graficzne · Rzeszów</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Co możesz mi zlecić</h2>
+                        <p className="text-white/50 max-w-xl mx-auto mt-4">Logo, strona i wizytówki to trzy rzeczy, które każda firma potrzebuje. U mnie zamawiasz wszystko w jednym miejscu — i rozmawiasz z jedną osobą, nie trzema różnymi wykonawcami.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {services.map((s, i) => (
@@ -263,7 +260,7 @@ export default function GrafikRzeszowPage() {
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Dlaczego WUYO</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">
-                            Co odróżnia mnie od innych<br className="hidden md:block" /> grafików w Rzeszowie
+                            Czego nie dostaniesz<br className="hidden md:block" /> w większości agencji w Rzeszowie
                         </h2>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-4">
@@ -298,19 +295,19 @@ export default function GrafikRzeszowPage() {
                         {[
                             {
                                 q: "Ile kosztuje grafik w Rzeszowie?",
-                                a: "Logo od 800 zł, pełna identyfikacja od 2 500 zł, strona od 1 200 zł, wizytówki od 99 zł za 50 szt. z projektem. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+                                a: "Logo: od 800 zł. Pełna identyfikacja wizualna (logo + wizytówka + szablony social): od 2 500 zł. Strona internetowa: od 1 200 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
                             },
                             {
                                 q: "Czy obsługujesz firmy spoza Rzeszowa?",
-                                a: "Tak, zdecydowana większość projektów idzie zdalnie. Obsługuję firmy z całej Polski — przez Messenger, WhatsApp lub e-mail. Rzeszów to moja baza, zasięg ogólnopolski.",
+                                a: "Tak. Projekt robi się zdalnie równie dobrze co na miejscu — większość moich klientów to firmy spoza Rzeszowa. Cały kontakt przez WhatsApp, Messenger lub e-mail. Druk wysyłam kurierem.",
                             },
                             {
-                                q: "Jak długo czeka się na projekt?",
-                                a: "Logo: 10–14 dni roboczych. Strona One-Page: tydzień. Wizytówki z drukiem: 1–3 dni robocze. Przy pilnych zleceniach pytaj o termin ekspresowy.",
+                                q: "Ile czekam na gotowy projekt?",
+                                a: "Logo: 10–14 dni roboczych od briefu. Strona One-Page: ok. tydzień. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
                             },
                             {
-                                q: "Czy dostaję pliki źródłowe do logo?",
-                                a: "Tak. Pełen pakiet: SVG (wektor), PNG z przezroczystym tłem, PDF gotowy do drukarni. Pliki Figma/AI na życzenie. Prawa autorskie majątkowe w cenie.",
+                                q: "Co dostaję razem z logo?",
+                                a: "Pełen pakiet plików: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do każdej drukarni. Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty. Pliki źródłowe Figma lub AI na życzenie.",
                             },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.06}>
@@ -335,14 +332,17 @@ export default function GrafikRzeszowPage() {
                     <AnimatedSection>
                         <div className="glass-card p-8 md:p-10 grid md:grid-cols-2 gap-8 items-center">
                             <div>
-                                <p className="eyebrow mb-4">Kontakt</p>
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-                                    Grafik z Rzeszowa<br />do Twojej dyspozycji
+                                <p className="eyebrow mb-4">Napisz do mnie</p>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                                    Opisz mi firmę.<br />Wycenię w 24h.
                                 </h2>
+                                <p className="text-white/50 text-sm leading-relaxed mb-6">
+                                    Bez automatycznych odpowiedzi. Piszesz, ja czytam i odpisuję z konkretną propozycją — nie z formularzem do wypełnienia.
+                                </p>
                                 <ul className="space-y-3">
                                     <li className="flex items-center gap-3 text-white/70 text-sm">
                                         <MapPin size={15} className="text-gold shrink-0" />
-                                        Rzeszów, ul. Siemieńskiego 17A/38
+                                        Rzeszów, Podkarpacie
                                     </li>
                                     <li className="flex items-center gap-3 text-white/70 text-sm">
                                         <Phone size={15} className="text-gold shrink-0" />
