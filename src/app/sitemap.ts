@@ -30,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return [
         ...newMdxEntries,
         {
+            url: `${baseUrl}/grafik-rzeszow`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.95,
+        },
+        {
             url: baseUrl,
             lastModified: new Date(),
             changeFrequency: "weekly",
