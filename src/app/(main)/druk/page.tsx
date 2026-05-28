@@ -8,11 +8,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek i Ulotek – projekt + druk | od 179 zł | WUYO",
-    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. od 179 zł, termin 1–3 dni, małe nakłady bez minimum. Rzeszów + wysyłka kurierem →",
+    title: "Druk Wizytówek i Ulotek – projekt + druk | od 99 zł | WUYO",
+    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, małe nakłady bez minimum. Rzeszów + wysyłka kurierem →",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki od 179 zł, termin 1–3 dni. Rzeszów i cała Polska.",
+        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki od 99 zł, termin 1–3 dni. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/druk",
         type: "website",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Wizytówki od 179 zł, termin 1–3 dni. Projekt + druk w jednym miejscu.",
+        description: "Wizytówki od 99 zł, termin 1–3 dni. Projekt + druk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -37,7 +37,7 @@ const faqSchema = {
             "name": "Ile kosztują wizytówki z projektem?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Wizytówki 50 szt. z projektem od 179 zł, 100 szt. z projektem od 239 zł. W cenie projekt graficzny, druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+                "text": "Wizytówki 50 szt. od 99 zł (sam druk) lub od 229 zł z projektem graficznym. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
             },
         },
         {
@@ -82,9 +82,9 @@ const drukSchema = {
         { "@type": "Country", "name": "Polska" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "179", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "199", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "189", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "229", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "249", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "279", "priceCurrency": "PLN" },
     ],
 };
 

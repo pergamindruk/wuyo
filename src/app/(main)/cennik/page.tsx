@@ -32,37 +32,37 @@ const printProducts = [
         name: "Wizytówki",
         note: "dwustronne, 300g błysk",
         variants: [
-            { qty: "50 szt.", price: "179 zł" },
-            { qty: "100 szt.", price: "239 zł" },
-            { qty: "150 szt.", price: "279 zł" },
-            { qty: "300 szt.", price: "379 zł" },
+            { qty: "50 szt.", price: "99 zł" },
+            { qty: "100 szt.", price: "159 zł" },
+            { qty: "150 szt.", price: "199 zł" },
+            { qty: "300 szt.", price: "299 zł" },
         ],
     },
     {
         name: "Ulotki A5",
         note: "dwustronne, pełny kolor",
         variants: [
-            { qty: "50 szt.", price: "199 zł" },
-            { qty: "100 szt.", price: "269 zł" },
-            { qty: "150 szt.", price: "319 zł" },
-            { qty: "300 szt.", price: "439 zł" },
+            { qty: "50 szt.", price: "119 zł" },
+            { qty: "100 szt.", price: "189 zł" },
+            { qty: "150 szt.", price: "239 zł" },
+            { qty: "300 szt.", price: "359 zł" },
         ],
     },
     {
         name: "Vouchery / bony",
         note: "",
         variants: [
-            { qty: "50 szt.", price: "189 zł" },
-            { qty: "100 szt.", price: "259 zł" },
+            { qty: "50 szt.", price: "109 zł" },
+            { qty: "100 szt.", price: "179 zł" },
         ],
     },
     {
         name: "Naklejki i etykiety",
         note: "",
         variants: [
-            { qty: "50 szt.", price: "169 zł" },
-            { qty: "100 szt.", price: "229 zł" },
-            { qty: "200 szt.", price: "309 zł" },
+            { qty: "50 szt.", price: "89 zł" },
+            { qty: "100 szt.", price: "149 zł" },
+            { qty: "200 szt.", price: "229 zł" },
         ],
     },
     {
@@ -78,16 +78,16 @@ const printProducts = [
         name: "Magnesy reklamowe",
         note: "z laminatem, format wizytówki",
         variants: [
-            { qty: "50 szt.", price: "309 zł" },
-            { qty: "100 szt.", price: "459 zł" },
+            { qty: "50 szt.", price: "229 zł" },
+            { qty: "100 szt.", price: "379 zł" },
         ],
     },
     {
         name: "Koperty z nadrukiem",
         note: "",
         variants: [
-            { qty: "25 szt.", price: "149 zł" },
-            { qty: "50 szt.", price: "199 zł" },
+            { qty: "25 szt.", price: "69 zł" },
+            { qty: "50 szt.", price: "119 zł" },
         ],
     },
 ];
