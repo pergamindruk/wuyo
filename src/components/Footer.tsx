@@ -25,7 +25,6 @@ export function Footer() {
                                 <li><Link href="/logo" className="text-white/60 hover:text-white transition-colors">Projektowanie logo</Link></li>
                                 <li><Link href="/strony-www" className="text-white/60 hover:text-white transition-colors">Strony internetowe</Link></li>
                                 <li><Link href="/druk" className="text-white/60 hover:text-white transition-colors">Druk & papeteria</Link></li>
-                                <li><Link href="/cennik" className="text-white/60 hover:text-white transition-colors">Cennik</Link></li>
                             </ul>
                         </div>
                         <div>

@@ -66,14 +66,6 @@ const printProducts = [
         ],
     },
     {
-        name: "Papier firmowy A4",
-        note: "",
-        variants: [
-            { qty: "50 szt.", price: "79 zł" },
-            { qty: "100 szt.", price: "139 zł" },
-        ],
-    },
-    {
         name: "Plakaty",
         note: "",
         variants: [
@@ -213,8 +205,7 @@ export default function PricingPage() {
                         <PricingCard
                             title="Logo"
                             items={[
-                                { name: "Logo podstawowe (znak + logotyp, wektory, pełne pliki)", price: "od 500 zł" },
-                                { name: "Logo + księga znaku (logo + paleta, typografia, zasady użycia)", price: "od 1 000 zł" },
+                                { name: "Logo + księga znaku (logo + paleta, typografia, zasady użycia)", price: "1 500 zł" },
                             ]}
                         />
                     </AnimatedSection>
@@ -241,7 +232,6 @@ export default function PricingPage() {
                             { name: "Pojedyncza grafika", price: "80 zł" },
                             { name: "Karuzela (do 6 slajdów)", price: "od 120 zł" },
                             { name: "Miniaturka YouTube", price: "60 zł" },
-                            { name: "Stopka mailowa", price: "100 zł" },
                             { name: "Zestaw startowy (post + karuzela + story + okładka + highlight)", price: "od 350 zł" },
                             { name: "Pakiet miesięczny (12 grafik)", price: "od 799 zł/msc" },
                         ]}
@@ -257,14 +247,14 @@ export default function PricingPage() {
                     <PricingCard
                         title="Projekt do druku (bez kosztów druku)"
                         items={[
-                            { name: "Wizytówka (dwustronna)", price: "100 zł" },
-                            { name: "Ulotka A5/A6 (dwustronna)", price: "100 zł" },
-                            { name: "Plakat A3/A4", price: "130 zł" },
-                            { name: "Voucher / bon podarunkowy", price: "140 zł" },
-                            { name: "Naklejki / etykiety", price: "od 80 zł" },
-                            { name: "Baner reklamowy (roll-up, citylight, outdoor)", price: "od 249 zł" },
-                            { name: "Katalog / menu (do 8 stron)", price: "od 400 zł" },
-                            { name: "Certyfikat / dyplom", price: "130 zł" },
+                            { name: "Wizytówka (dwustronna)", price: "180 zł" },
+                            { name: "Ulotka A5/A6 (dwustronna)", price: "180 zł" },
+                            { name: "Plakat A3/A4", price: "210 zł" },
+                            { name: "Voucher / bon podarunkowy", price: "220 zł" },
+                            { name: "Naklejki / etykiety", price: "od 160 zł" },
+                            { name: "Baner reklamowy (roll-up, citylight, outdoor)", price: "od 329 zł" },
+                            { name: "Katalog / menu (do 8 stron)", price: "od 480 zł" },
+                            { name: "Certyfikat / dyplom", price: "210 zł" },
                         ]}
                     />
                 </AnimatedSection>
@@ -322,7 +312,8 @@ export default function PricingPage() {
                     <PricingCard
                         title="Projektowanie i wdrażanie stron internetowych"
                         items={[
-                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 1 200 zł" },
+                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 1 800 zł" },
+                            { name: "Sklep internetowy", price: "od 3 500 zł" },
                             { name: "Strony rozbudowane", price: "wycena indywidualna" },
                         ]}
                         note="50% zaliczki przed startem. 50% po zakończeniu. Gram w otwarte karty — cena ustalona przed startem to cena końcowa."
