@@ -8,11 +8,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Projektowanie Logo dla Firm | WUYO – Rzeszów i cała Polska",
-    description: "Projektuję logo które działa — na wizytówce, stronie i szyldzie. Logotyp od 800 zł, pełna identyfikacja od 2 500 zł. Sprawdź proces i zamów wycenę w 24h.",
+    title: "Logo dla Firmy od 800 zł | Wycena w 24h | WUYO Rzeszów",
+    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 800 zł, identyfikacja od 2 500 zł. Bezpłatna wycena →",
     openGraph: {
-        title: "Projektowanie Logo dla Firm | WUYO",
-        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 800 zł — Rzeszów i cała Polska.",
+        title: "Logo dla Firmy od 800 zł | WUYO – Rzeszów i Polska",
+        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 800 zł. Termin 10–14 dni. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/logo",
         type: "website",
