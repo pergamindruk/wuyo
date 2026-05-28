@@ -8,11 +8,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Tworzenie Stron Internetowych dla Firm | WUYO – Rzeszów",
-    description: "Tworzę strony www na Next.js — szybkie, responsywne i zoptymalizowane pod SEO. Strona one-page od 1 200 zł, multi-page od 2 900 zł. Rzeszów i cała Polska.",
+    title: "Strony Internetowe od 1 800 zł | Next.js, SEO | WUYO Rzeszów",
+    description: "Tworzę strony na Next.js — ładują się w <1s, SEO od pierwszego dnia, bez WordPressa. One-page od 1 800 zł, multi-page od 2 900 zł. Stała cena, termin murowany. Wycena w 24h →",
     openGraph: {
-        title: "Tworzenie Stron Internetowych dla Firm | WUYO",
-        description: "Strony www na Next.js — szybkie, SEO-friendly, bez WordPressa i pluginów. Od 1 200 zł.",
+        title: "Strony Internetowe od 1 800 zł | Next.js, SEO | WUYO",
+        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 1 800 zł. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-www",
         type: "website",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
-        description: "Strony firmowe od 1 200 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
+        description: "Strony firmowe od 1 800 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-www" },
@@ -35,7 +35,7 @@ const faqSchema = {
             "name": "Ile kosztuje strona internetowa?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Strona One-Page od 1 200 zł, strona firmowa Multi-Page od 2 900 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+                "text": "Strona One-Page od 1 800 zł, strona firmowa Multi-Page od 2 900 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
             },
         },
         {
@@ -90,7 +90,7 @@ const serviceSchema = {
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Strona One-Page" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "1200", "priceCurrency": "PLN", "minPrice": "1200" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "1800", "priceCurrency": "PLN", "minPrice": "1800" },
             },
             {
                 "@type": "Offer",
@@ -105,7 +105,7 @@ const serviceSchema = {
 const packages = [
     {
         name: "Strona One-Page",
-        price: "od 1 200 zł",
+        price: "od 1 800 zł",
         desc: "Jedna strona, jeden cel — maksymalna konwersja. Idealna dla freelancerów, coachów, nowych biznesów.",
         includes: [
             "Dedykowany projekt graficzny (UI/UX)",
@@ -114,7 +114,7 @@ const packages = [
             "Formularz kontaktowy",
             "Podstawowe SEO on-page",
             "Optymalizacja obrazów (WebP/AVIF)",
-            "Deploy na Vercel (darmowy hosting)",
+            "Wdrożenie na hostingu klienta",
         ],
         time: "tydzień",
         highlight: false,
@@ -156,7 +156,7 @@ const techStack = [
     { name: "React 19", desc: "Komponenty, interaktywność, wydajność. Standard w nowoczesnym web dev." },
     { name: "TypeScript", desc: "Bezpieczny kod bez błędów typowania — mniej bugów w produkcji." },
     { name: "Tailwind CSS", desc: "Spójny design system, lekkie style, bez zbędnego CSS." },
-    { name: "Vercel", desc: "Hosting z CDN, auto-deploy z Git, darmowy SSL. Globalnie szybki." },
+    { name: "Hosting", desc: "Wdrożenie na hostingu klienta — wspieram konfigurację domeny, SSL i środowiska produkcyjnego." },
     { name: "Framer Motion", desc: "Płynne animacje które nie spowalniają strony." },
 ];
 
@@ -184,7 +184,7 @@ const process = [
     {
         n: "05",
         title: "Deploy i przekazanie",
-        desc: "Wdrożenie na Vercel, setup domeny, Google Search Console, instrukcja obsługi. Jesteś właścicielem — masz dostęp do wszystkiego.",
+        desc: "Wdrożenie na Twoim hostingu, setup domeny, Google Search Console, instrukcja obsługi. Jesteś właścicielem — masz dostęp do wszystkiego.",
     },
 ];
 
@@ -298,7 +298,7 @@ export default function StronyWwwPage() {
                                             { c: "PageSpeed score", a: "90–100/100", b: "40–70/100 typowo" },
                                             { c: "Bezpieczeństwo", a: "Brak backendu = brak ataków", b: "Cotygodniowe aktualizacje pluginów" },
                                             { c: "SEO", a: "Wbudowane, spójne", b: "Plugin Yoast — zależy od konfiguracji" },
-                                            { c: "Koszty utrzymania", a: "Hosting Vercel ~0 zł/mies.", b: "Hosting + SSL + domeny + pluginy premium" },
+                                            { c: "Koszty utrzymania", a: "Hosting klienta (zależnie od dostawcy)", b: "Hosting + SSL + domeny + pluginy premium" },
                                             { c: "Awarie / downtime", a: "Minimalne", b: "Aktualizacja pluginu może posypać stronę" },
                                             { c: "Edycja treści", a: "Prosto przez kod lub CMS", b: "Panel WordPress — wygodny" },
                                         ].map((row, i) => (
