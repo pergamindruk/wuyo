@@ -81,6 +81,14 @@ const localSchema = {
         "jobTitle": "Projektant graficzny i web developer",
         "url": "https://wuyo.pl/o-mnie",
     },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "5",
+        "reviewCount": "5",
+    },
     "sameAs": [
         "https://www.facebook.com/wuyo.dobra.grafa",
         "https://www.instagram.com/wuyo.pl/",

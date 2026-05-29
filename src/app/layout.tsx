@@ -121,6 +121,14 @@ const jsonLd = {
         "email": "kontakt@wuyo.pl",
         "telephone": "+48725182053",
     },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "5",
+        "reviewCount": "5",
+    },
     "sameAs": [
         "https://www.facebook.com/wuyo.dobra.grafa",
         "https://www.instagram.com/wuyo.pl/",
