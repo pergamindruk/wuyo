@@ -24,6 +24,16 @@ export const metadata: Metadata = {
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/logo" },
+    keywords: [
+        "projektowanie logo Rzeszów",
+        "logo dla firmy Rzeszów",
+        "projektant logo Rzeszów",
+        "identyfikacja wizualna Rzeszów",
+        "logo firma cena",
+        "ile kosztuje logo",
+        "projekt logo dla firmy",
+        "grafik logo Rzeszów",
+    ],
 };
 
 const faqSchema = {
@@ -105,6 +115,14 @@ const serviceSchema = {
         ],
     },
     "url": "https://wuyo.pl/logo",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "5",
+        "reviewCount": "5",
+    },
 };
 
 const packages = [

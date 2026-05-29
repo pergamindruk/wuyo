@@ -53,6 +53,14 @@ const localSchema = {
             "postalCode": "35-203",
             "addressCountry": "PL",
         },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": "5",
+            "reviewCount": "5",
+        },
     },
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
@@ -283,6 +291,32 @@ export default function StronyInternetowerRzeszowPage() {
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik z Rzeszowa</p>
                                 <Link href="/grafik-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">O studio WUYO →</Link>
                                 <p className="text-white/40 text-xs mt-1">logo · strony · druk</p>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </div>
+            </section>
+
+            {/* BLOG */}
+            <section className="py-16 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
+                            <div className="flex-1">
+                                <p className="text-white/40 text-xs mb-1">Z bloga</p>
+                                <p className="font-bold text-white mb-1">Zanim zdecydujesz — przeczytaj</p>
+                                <p className="text-white/50 text-sm">One-page czy multi-page, ile kosztuje strona i jak wybrać wykonawcę.</p>
+                            </div>
+                            <div className="flex flex-col gap-2 shrink-0">
+                                <Link href="/blog/strona-one-page-czy-multi-page" className="inline-flex items-center gap-2 text-gold text-sm font-bold hover:gap-3 transition-all">
+                                    One page czy multi page? <ArrowRight size={14} />
+                                </Link>
+                                <Link href="/blog/ile-kosztuje-strona-internetowa" className="inline-flex items-center gap-2 text-gold text-sm font-bold hover:gap-3 transition-all">
+                                    Ile kosztuje strona? <ArrowRight size={14} />
+                                </Link>
+                                <Link href="/blog/kto-robi-strony-internetowe-w-rzeszowie" className="inline-flex items-center gap-2 text-gold text-sm font-bold hover:gap-3 transition-all">
+                                    Kto robi strony w Rzeszowie? <ArrowRight size={14} />
+                                </Link>
                             </div>
                         </div>
                     </AnimatedSection>
