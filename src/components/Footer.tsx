@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Youtube, Instagram, Facebook, MessageCircle, Mail } from "lucide-react";
+import { TrackedLink } from "@/components/TrackedLink";
 
 export function Footer() {
     return (
@@ -39,9 +40,9 @@ export function Footer() {
                             <h4 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Pogadajmy</h4>
                             <ul className="space-y-3 text-sm">
                                 <li>
-                                    <Link href="https://wa.me/48725182053" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
+                                    <TrackedLink href="https://wa.me/48725182053" trackAs="whatsapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
                                         <MessageCircle size={18} className="group-hover:text-green-500 transition-colors" /> WhatsApp
-                                    </Link>
+                                    </TrackedLink>
                                 </li>
                                 <li>
                                     <Link href="https://m.me/wuyo.dobra.grafa" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
