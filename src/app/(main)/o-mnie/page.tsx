@@ -8,6 +8,15 @@ export const metadata: Metadata = {
     title: "O mnie – Mateusz Machoś, projektant graficzny i web developer",
     description: "Cześć, jestem Mateusz. Projektant graficzny i web developer z Rzeszowa. Działam sam, co znaczy, że rozmawiasz bezpośrednio ze mną — bez agencyjnego ping-ponga.",
     alternates: { canonical: "https://wuyo.pl/o-mnie" },
+    keywords: [
+        "grafik Rzeszów",
+        "projektant graficzny Rzeszów",
+        "web developer Rzeszów",
+        "WUYO studio graficzne",
+        "Mateusz Machoś",
+        "projektowanie logo Rzeszów",
+        "strony internetowe Rzeszów",
+    ],
     openGraph: {
         title: "O mnie – Mateusz Machoś | WUYO – Dobra Grafa",
         description: "Kim jestem i jak pracuję. Mateusz Machoś — projektant graficzny, web developer, właściciel sprzętu poligraficznego.",
@@ -266,6 +275,31 @@ export default function OmniePage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* ── Usługi — linki ── */}
+            <section className="py-6 px-6 md:px-12">
+                <div className="max-w-6xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 grid sm:grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Logo i branding</p>
+                                <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Projektowanie logo →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 800 zł</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Strony internetowe</p>
+                                <Link href="/strony-internetowe-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony dla firm →</Link>
+                                <p className="text-white/40 text-xs mt-1">od 1 800 zł</p>
+                            </div>
+                            <div>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Druk i wykończenie</p>
+                                <Link href="/druk" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk własny →</Link>
+                                <p className="text-white/40 text-xs mt-1">wizytówki, naklejki, ulotki</p>
+                            </div>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 
