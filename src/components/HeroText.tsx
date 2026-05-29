@@ -11,9 +11,6 @@ const lines: { words: string[]; style: "white" | "gold" }[] = [
     { words: ["za", "Ciebie"],                          style: "gold"  },
 ];
 
-// Buduje płaską listę słów z indeksem globalnym do obliczenia delay
-const flat = lines.flatMap((l) => l.words.map((w) => ({ word: w, style: l.style })));
-
 export function HeroText() {
     let idx = 0;
 

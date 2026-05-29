@@ -164,20 +164,19 @@ body {
 }
 
 /* Hero heading words — slide-up entrance, CSS zamiast Framer Motion */
+/* Brak opacity:0 — tekst widoczny od razu (LCP), animacja tylko dodaje ruch */
 @keyframes hero-word-in {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(18px); }
+  to   { transform: translateY(0); }
 }
 
 .hero-word {
-  opacity: 0;
-  animation: hero-word-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: hero-word-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-word {
     animation: none;
-    opacity: 1;
   }
 }
 
