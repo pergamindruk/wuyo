@@ -1,10 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import Anthropic from '@anthropic-ai/sdk'
 
 export const GEMINI_MODEL = 'gemini-2.5-flash'
 
 export const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY ?? '')
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' })
 
 const MODEL_CONFIGS = {
     chat:     { maxOutputTokens: 1024  },
@@ -23,22 +21,6 @@ export function getModel(preset: ModelPreset = 'content') {
 }
 
 export async function generateWithFallback(preset: ModelPreset, prompt: string): Promise<string> {
-    // Próba z Gemini
-    try {
-        const result = await getModel(preset).generateContent(prompt)
-        return result.response.text()
-    } catch (err: any) {
-        const isRetryable = err?.message?.includes('503') || err?.message?.includes('overloaded') || err?.message?.includes('high demand')
-        if (!isRetryable) throw err
-    }
-
-    // Fallback na Claude gdy Gemini niedostępny
-    const message = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: MODEL_CONFIGS[preset].maxOutputTokens,
-        messages: [{ role: 'user', content: prompt }],
-    })
-    const block = message.content[0]
-    if (block.type !== 'text') throw new Error('Nieoczekiwany typ odpowiedzi z Claude')
-    return block.text
+    const result = await getModel(preset).generateContent(prompt)
+    return result.response.text()
 }
