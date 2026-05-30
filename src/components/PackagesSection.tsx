@@ -8,18 +8,37 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export const businessPackages = [
     {
-        id: "wizytowka-firmy",
-        name: "Wizytówka Firmy",
+        id: "start",
+        name: "Start",
+        persona: "Dopiero startujesz — chcesz wyglądać poważnie od ręki",
+        desc: "Logo i wizytówki w garści w 5 dni. Bez czekania, bez wielkiego budżetu.",
+        price: "490 zł",
+        priceSuffix: "jednorazowo",
+        featured: false,
+        cta: "Chcę wystartować",
+        realizacja: "5 dni roboczych",
+        hook: "Trzymasz wizytówki w ręku, zanim konkurencja skończy się zastanawiać.",
+        features: [
+            "Logo — prosta, czytelna wersja (1 wariant)",
+            "100 wizytówek wydrukowanych i dostarczonych",
+            "Stopka mailowa gotowa do wklejenia",
+            "Pliki do dalszego druku kiedy zechcesz",
+        ],
+    },
+    {
+        id: "marka",
+        name: "Marka",
         persona: "Nowe firmy, rzemiosło, usługi lokalne",
-        desc: "Wszystko co nowa firma potrzebuje żeby wyglądać poważnie od pierwszego dnia.",
+        desc: "Wszystko czego nowa firma potrzebuje, żeby wyglądać poważnie od pierwszego dnia.",
         price: "1 400 zł",
         priceSuffix: "jednorazowo",
         featured: false,
         cta: "Zacznij od marki",
         realizacja: "7–10 dni roboczych",
+        hook: "Wyglądasz jak firma z klasą, nie jak ktoś z darmowego szablonu.",
         features: [
             "Logo + wersje pozioma i pionowa",
-            "Wizytówki (projekt + plik do druku)",
+            "100 wizytówek — projekt i druk w cenie",
             "Stopka mailowa",
             "Szablon oferty w PDF",
             "Booklet marki (kolory, fonty, zasady)",
@@ -35,6 +54,7 @@ export const businessPackages = [
         featured: true,
         cta: "Chcę taką stronę",
         realizacja: "od 7–21 dni",
+        hook: "Stała cena ustalona przed startem. Ani złotówki więcej.",
         features: [
             "Strona wizytówka (5 podstron)",
             "Formularz kontaktowy + mapa",
@@ -45,21 +65,22 @@ export const businessPackages = [
         ],
     },
     {
-        id: "staly-opiekun",
-        name: "Stały Opiekun",
-        persona: "Firmy które regularnie potrzebują grafiki",
-        desc: "Grafik w abonamencie — bez zatrudniania, bez czekania tygodniami.",
-        price: "900 zł",
+        id: "opieka-nad-strona",
+        name: "Opieka nad stroną",
+        persona: "Masz już stronę i chcesz mieć ją z głowy",
+        desc: "Strona zawsze aktualna i bezpieczna. Drobne zmiany robisz jednym mailem — bez dopłat za każdą literówkę.",
+        price: "149 zł",
         priceSuffix: "/ miesiąc",
         featured: false,
-        cta: "Zacznij abonament",
-        realizacja: "Priorytet 48h",
+        cta: "Oddaj stronę pod opiekę",
+        realizacja: "Zmiany w 2–3 dni",
+        hook: "Dzwonisz raz, zmiana gotowa. Bez szukania, bez tłumaczenia od zera.",
         features: [
-            "8 godzin pracy graficznej miesięcznie",
-            "Posty social media, banery, ulotki",
-            "Priorytetowy czas realizacji (48h)",
-            "Drobne aktualizacje strony",
-            "Miesięczna rozmowa strategiczna",
+            "Pilnuję domeny i hostingu — żeby strona nie znikła",
+            "Kopie zapasowe i aktualizacje bezpieczeństwa",
+            "Drobne zmiany treści — do 4 w miesiącu",
+            "1 grafika na social media miesięcznie",
+            "Cudza strona? Przejmę ją — jednorazowy przegląd na start",
         ],
     },
 ];
@@ -641,7 +662,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                 </p>
             </AnimatedSection>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-24 relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-24 relative z-10">
                 {businessPackages.map((pkg, i) => (
                     <motion.div
                         key={pkg.id}
@@ -698,7 +719,14 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                         </ul>
 
                         {/* Realizacja */}
-                        <p className="text-white/30 text-xs mb-5">Czas realizacji: {pkg.realizacja}</p>
+                        <p className="text-white/30 text-xs mb-3">Czas realizacji: {pkg.realizacja}</p>
+
+                        {/* Hak sprzedażowy */}
+                        {pkg.hook && (
+                            <p className={`text-xs italic leading-relaxed mb-5 ${pkg.featured ? "text-[#ffeb52]/70" : "text-white/40"}`}>
+                                „{pkg.hook}"
+                            </p>
+                        )}
 
                         {/* CTA */}
                         <Link
