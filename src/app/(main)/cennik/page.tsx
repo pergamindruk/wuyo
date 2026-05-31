@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Tag } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { PricingSection } from "@/components/pricing/PricingSection";
 
 import type { Metadata } from "next";
 
@@ -193,6 +194,18 @@ export default function PricingPage() {
                             </Link>
                         </div>
                     </div>
+                </AnimatedSection>
+
+                {/* ── PAKIETY (nowa sekcja cennika) ──────────────────── */}
+                <PricingSection className="pb-12" id="pakiety" />
+
+                {/* ── PEŁNY CENNIK SZCZEGÓŁOWY ───────────────────────── */}
+                <AnimatedSection delay={0.05}>
+                    <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12" />
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Pełny cennik szczegółowy</h2>
+                    <p className="text-white/50 text-sm mb-8">
+                        Pojedyncze usługi i produkty — jeśli potrzebujesz tylko części.
+                    </p>
                 </AnimatedSection>
 
                 {/* ── PROJEKTY GRAFICZNE ─────────────────────────────── */}

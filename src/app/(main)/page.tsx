@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
+import { PricingSection } from "@/components/pricing/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
@@ -277,7 +278,10 @@ export default function Home() {
             {/* ═══════════════════════ REALIZACJE ═══════════════════════ */}
             <PortfolioGallery />
 
-            {/* ═══════════════════════ PAKIETY ═══════════════════════ */}
+            {/* ═══════════════════════ CENNIK / PAKIETY ═══════════════════════ */}
+            <PricingSection showFaq={false} showFinalCta={false} id="pakiety" />
+
+            {/* ═══════════════════════ DRUK & PAPETERIA ═══════════════════════ */}
             <PackagesSection />
 
             {/* ═══════════════════════ FAQ ═══════════════════════ */}

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
-import { packages, businessPackages } from "@/components/PackagesSection";
+import { packages } from "@/components/PackagesSection";
+import { findPricingCard } from "@/data/pricing";
 import { trackFormSubmit, trackWhatsAppClick } from "@/lib/tracking";
 
 /* ─ Linki kontaktowe ─ */
@@ -57,16 +58,16 @@ export function ContactBrief() {
         const pakiet = searchParams.get("pakiet");
         if (pakiet) {
             const webPkg = packages.find((p) => p.name === pakiet);
-            const bizPkg = businessPackages.find((p) => p.name === pakiet);
+            const bizPkg = findPricingCard(pakiet);
 
             let priceStr = "";
             let featuresList = "";
 
-            if (webPkg) {
-                priceStr = ` (${webPkg.price})`;
-            } else if (bizPkg) {
+            if (bizPkg) {
                 priceStr = ` (${bizPkg.price} ${bizPkg.priceSuffix})`;
                 featuresList = "\n\nCo zawiera ten pakiet:\n" + bizPkg.features.map((f) => `• ${f}`).join("\n");
+            } else if (webPkg) {
+                priceStr = ` (${webPkg.price})`;
             }
 
             switchPath("quick");
