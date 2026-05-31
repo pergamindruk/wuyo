@@ -8,11 +8,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony Internetowe od 1 800 zł | Next.js, SEO | WUYO Rzeszów",
-    description: "Tworzę strony na Next.js — ładują się w <1s, SEO od pierwszego dnia, bez WordPressa. One-page od 1 800 zł, multi-page od 2 900 zł. Stała cena, termin murowany. Wycena w 24h →",
+    title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO Rzeszów",
+    description: "Tworzę strony na Next.js — ładują się w <1s, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 3 490 zł. Stała cena, termin murowany. Wycena w 24h →",
     openGraph: {
-        title: "Strony Internetowe od 1 800 zł | Next.js, SEO | WUYO",
-        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 1 800 zł. Rzeszów i cała Polska.",
+        title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO",
+        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 2 490 zł. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-www",
         type: "website",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
-        description: "Strony firmowe od 1 800 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
+        description: "Strony firmowe od 2 490 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-www" },
@@ -35,7 +35,7 @@ const faqSchema = {
             "name": "Ile kosztuje strona internetowa?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Strona One-Page od 1 800 zł, strona firmowa Multi-Page od 2 900 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+                "text": "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 3 490 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
             },
         },
         {
@@ -90,12 +90,12 @@ const serviceSchema = {
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Strona One-Page" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "1800", "priceCurrency": "PLN", "minPrice": "1800" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "2490", "priceCurrency": "PLN", "minPrice": "2490" },
             },
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Strona Firmowa Multi-Page" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "2900", "priceCurrency": "PLN", "minPrice": "2900" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "3490", "priceCurrency": "PLN", "minPrice": "3490" },
             },
         ],
     },
@@ -105,7 +105,7 @@ const serviceSchema = {
 const packages = [
     {
         name: "Strona One-Page",
-        price: "od 1 800 zł",
+        price: "od 2 490 zł",
         desc: "Jedna strona, jeden cel — maksymalna konwersja. Idealna dla freelancerów, coachów, nowych biznesów.",
         includes: [
             "Dedykowany projekt graficzny (UI/UX)",
@@ -121,7 +121,7 @@ const packages = [
     },
     {
         name: "Strona Firmowa Multi-Page",
-        price: "od 2 900 zł",
+        price: "od 3 490 zł",
         desc: "Pełny serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie.",
         includes: [
             "Wszystko z one-page +",

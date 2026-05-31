@@ -57,7 +57,7 @@ function calcPrice(s: Selection): [number, number] | null {
     if (s.service === "logo") {
         if (!s.logoType) return null;
         const base: Record<string, [number, number]> = {
-            wordmark: [800, 1400],
+            wordmark: [900, 1400],
             monogram: [1000, 1600],
             combo: [1200, 2200],
         };
@@ -65,10 +65,10 @@ function calcPrice(s: Selection): [number, number] | null {
         if (s.brandbook) { low += 600; high += 1000; }
     } else if (s.service === "www") {
         if (!s.wwwType) return null;
-        if (s.wwwType === "onepage") { low = 1200; high = 2200; }
+        if (s.wwwType === "onepage") { low = 2490; high = 3500; }
         else if (s.wwwType === "multipage") {
-            if (s.wwwPages === "1-5") { low = 2000; high = 3800; }
-            else { low = 3500; high = 6000; }
+            if (s.wwwPages === "1-5") { low = 3490; high = 5500; }
+            else { low = 5900; high = 9000; }
         } else { low = 4000; high = 7500; }
     } else if (s.service === "druk") {
         if (!s.drukType) return null;

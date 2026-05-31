@@ -13,7 +13,7 @@ export const packages = [
     {
         name: "Szybki start",
         persona: "Wejście na rynek — dla firm stawiających pierwsze kroki w sieci",
-        price: "od 1 500 zł",
+        price: "od 2 490 zł",
         desc: "Szybka, solidna strona, która działa od pierwszego dnia.",
         image: "/tworzenie-stron-www-start-v3.png",
         imageScale: "scale-100",
@@ -31,7 +31,7 @@ export const packages = [
     {
         name: "Najpopularniejszy",
         persona: "Strona która sprzedaje — dla firm gotowych na poważną obecność w sieci",
-        price: "od 3 500 zł",
+        price: "od 3 490 zł",
         desc: "Strona zaprojektowana pod konwersję — przyciąga klientów, generuje zapytania i sprzedaje nawet gdy śpisz.",
         image: "/tworzenie-stron-www-rozwoj-v3.png",
         imageScale: "scale-100",

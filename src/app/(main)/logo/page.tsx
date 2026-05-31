@@ -8,10 +8,10 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Logo dla Firmy od 800 zł | Wycena w 24h | WUYO Rzeszów",
-    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 800 zł, identyfikacja od 2 500 zł. Bezpłatna wycena →",
+    title: "Logo dla Firmy od 890 zł | Wycena w 24h | WUYO Rzeszów",
+    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 890 zł, identyfikacja od 1 490 zł. Bezpłatna wycena →",
     openGraph: {
-        title: "Logo dla Firmy od 800 zł | WUYO – Rzeszów i Polska",
+        title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
         description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 800 zł. Termin 10–14 dni. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/logo",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Projektowanie Logo dla Firm | WUYO",
-        description: "Logo od 800 zł — pełen pakiet plików, CMYK, prawa autorskie. Rzeszów i cała Polska.",
+        description: "Logo od 890 zł — pełen pakiet plików, CMYK, prawa autorskie. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/logo" },
@@ -45,7 +45,7 @@ const faqSchema = {
             "name": "Ile kosztuje zaprojektowanie logo?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Logotyp od 800 zł, pełna identyfikacja wizualna (logo + wizytówka + szablony social + księga znaku) od 2 500 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+                "text": "Logotyp od 890 zł, pełna identyfikacja wizualna (logo + wizytówka + szablony social + księga znaku) od 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
             },
         },
         {
@@ -128,7 +128,7 @@ const serviceSchema = {
 const packages = [
     {
         name: "Logotyp",
-        price: "od 800 zł",
+        price: "od 890 zł",
         desc: "Punkt wyjścia — profesjonalne logo gotowe do użycia od razu.",
         includes: [
             "Logo (wersja kolorowa + monochromatyczna)",
@@ -142,13 +142,11 @@ const packages = [
     },
     {
         name: "Identyfikacja Wizualna",
-        price: "od 2 500 zł",
+        price: "od 1 490 zł",
         desc: "Pełny system wizualny — logo plus wszystko co potrzebne do spójnej komunikacji.",
         includes: [
             "Wszystko z pakietu Logotyp +",
             "Wizytówka (projekt + druk-ready)",
-            "Papier firmowy A4",
-            "Stopka e-mail",
             "Szablony social media (3 formaty)",
             "Księga znaku (brand guidelines PDF)",
             "Pliki źródłowe (Figma / AI)",

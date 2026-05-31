@@ -229,7 +229,7 @@ export default function DrukRzeszowPage() {
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 800 zł · projekt od zera</p>
+                                <p className="text-white/40 text-xs mt-1">od 890 zł · projekt od zera</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik w Rzeszowie</p>

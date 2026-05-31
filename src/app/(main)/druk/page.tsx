@@ -209,12 +209,12 @@ export default function DrukPage() {
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 800 zł · 10–14 dni</p>
+                                <p className="text-white/40 text-xs mt-1">od 890 zł · 10–14 dni</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
                                 <Link href="/strony-www" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony internetowe →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 1 800 zł · Next.js</p>
+                                <p className="text-white/40 text-xs mt-1">od 2 490 zł · Next.js</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>

@@ -286,12 +286,12 @@ export default function OmniePage() {
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Logo i branding</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Projektowanie logo →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 800 zł</p>
+                                <p className="text-white/40 text-xs mt-1">od 890 zł</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Strony internetowe</p>
                                 <Link href="/strony-internetowe-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony dla firm →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 1 800 zł</p>
+                                <p className="text-white/40 text-xs mt-1">od 2 490 zł</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Druk i wykończenie</p>

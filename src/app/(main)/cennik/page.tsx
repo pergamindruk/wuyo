@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Cennik usług graficznych, druku i webowych | WUYO – Rzeszów",
-    description: "Transparentne ceny: logo od 1 500 zł, identyfikacja od 1 500 zł, wizytówki 99 zł/50 szt., strona od 1 800 zł. Projekt + druk w jednym miejscu. Bez ukrytych kosztów.",
+    description: "Transparentne ceny: logo od 890 zł, marka od 1 490 zł, wizytówki 99 zł/50 szt., strona od 2 490 zł. Projekt + druk w jednym miejscu. Bez ukrytych kosztów.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
         description: "Pełen cennik usług graficznych, druku, web design i social media. Transparentne ceny, zero niespodzianek.",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Transparentne ceny usług graficznych i webowych. Logo od 1 500 zł, wizytówki od 99 zł, strona od 1 800 zł.",
+        description: "Transparentne ceny usług graficznych i webowych. Logo od 890 zł, wizytówki od 99 zł, strona od 2 490 zł.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -218,7 +218,8 @@ export default function PricingPage() {
                         <PricingCard
                             title="Logo"
                             items={[
-                                { name: "Logo + księga znaku (logo + paleta, typografia, zasady użycia)", price: "1 500 zł" },
+                                { name: "Logo (3 wersje: pozioma, pionowa, mono)", price: "od 890 zł" },
+                                { name: "Logo + mini księga znaku (paleta, typografia, zasady)", price: "1 490 zł" },
                             ]}
                         />
                     </AnimatedSection>
@@ -226,8 +227,8 @@ export default function PricingPage() {
                         <PricingCard
                             title="Identyfikacja wizualna"
                             items={[
-                                { name: "Brand Basic (logo + wizytówka + stopka mailowa)", price: "od 1 500 zł" },
-                                { name: "Brand Full (logo + księga + wizytówka + papier + stopka + ulotka + szablon social)", price: "od 2 200 zł" },
+                                { name: "Brand Basic (logo + wizytówka)", price: "od 1 490 zł" },
+                                { name: "Brand Full (logo + księga + wizytówka + ulotka + szablon social)", price: "od 2 200 zł" },
                             ]}
                         />
                     </AnimatedSection>
@@ -325,7 +326,7 @@ export default function PricingPage() {
                     <PricingCard
                         title="Projektowanie i wdrażanie stron internetowych"
                         items={[
-                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 1 800 zł" },
+                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 2 490 zł" },
                             { name: "Sklep internetowy", price: "od 3 500 zł" },
                             { name: "Strony rozbudowane", price: "wycena indywidualna" },
                         ]}

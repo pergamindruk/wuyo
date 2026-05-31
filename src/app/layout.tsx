@@ -24,7 +24,7 @@ export const metadata: Metadata = {
         default: "WUYO – Logo, Strony WWW & Grafika | Rzeszów",
         template: "%s | WUYO – Dobra Grafa",
     },
-    description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 1 200 zł.",
+    description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 890 zł.",
     keywords: ["tworzenie stron internetowych", "projektant graficzny", "identyfikacja wizualna", "logo design", "strony www Rzeszów", "web design Polska", "Next.js", "grafika reklamowa", "strony internetowe dla firm"],
     authors: [{ name: "Wuyo – Dobra Grafa", url: "https://wuyo.pl" }],
     creator: "Wuyo – Dobra Grafa",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl",
         siteName: "Wuyo – Dobra Grafa",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
-        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł. Termin murowany, cena bez niespodzianek.",
+        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 890 zł. Termin murowany, cena bez niespodzianek.",
         images: [
             {
                 url: "/og-image.webp",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
-        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 1 200 zł.",
+        description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 890 zł.",
         images: ["/og-image.webp"],
     },
     robots: {

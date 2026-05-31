@@ -100,7 +100,6 @@ export const pricingGroups: PricingGroupData[] = [
                     "Logo + wersje pozioma, pionowa i mono",
                     "Mini księga znaku (kolory, fonty, zasady) — w cenie",
                     "Wizytówki (projekt + plik do druku)",
-                    "Stopka mailowa",
                     "Szablon oferty w PDF",
                     "Pełne prawa do projektu + pliki źródłowe",
                 ],

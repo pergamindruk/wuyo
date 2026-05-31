@@ -52,15 +52,15 @@ export async function generateQuote(clientMessage: string) {
     Rabat pakietowy przy 4+ pozycjach dla jednej marki: -10-15% od sumy.
 
     PROJEKT GRAFICZNY (bez druku):
-    - Logo: od 800 zl (baza), od 1000 zl (pelne)
-    - Identyfikacja wizualna: od 2500 zl
+    - Logo: od 890 zl (sam projekt), 1490 zl (z mini ksiega znaku)
+    - Marka / identyfikacja: od 1490 zl
     - Wizytowka (sam projekt): 120-180 zl
     - Ulotka (sam projekt): 150-220 zl
     - Rollup/Banner (sam projekt): 300-400 zl
 
     STRONY WWW:
-    - One-Page: 1200 zl
-    - Multi-Page: 2900 zl
+    - Strona: od 2490 zl
+    - Strona firmowa: od 3490 zl
     - E-commerce: wycena ind. (min. 5000 zl)
 
     SOCIAL MEDIA / DIGITAL:
