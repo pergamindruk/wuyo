@@ -327,7 +327,7 @@ export default function PricingPage() {
                         title="Projektowanie i wdrażanie stron internetowych"
                         items={[
                             { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 2 490 zł" },
-                            { name: "Sklep internetowy", price: "od 3 500 zł" },
+                            { name: "Sklep internetowy", price: "od 6 900 zł" },
                             { name: "Strony rozbudowane", price: "wycena indywidualna" },
                         ]}
                         note="50% zaliczki przed startem. 50% po zakończeniu. Gram w otwarte karty — cena ustalona przed startem to cena końcowa."

@@ -69,7 +69,7 @@ function calcPrice(s: Selection): [number, number] | null {
         else if (s.wwwType === "multipage") {
             if (s.wwwPages === "1-5") { low = 3490; high = 5500; }
             else { low = 5900; high = 9000; }
-        } else { low = 4000; high = 7500; }
+        } else { low = 6900; high = 12000; }
     } else if (s.service === "druk") {
         if (!s.drukType) return null;
         const base: Record<string, [number, number]> = {

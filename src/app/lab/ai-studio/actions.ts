@@ -61,7 +61,7 @@ export async function generateQuote(clientMessage: string) {
     STRONY WWW:
     - Strona: od 2490 zl
     - Strona firmowa: od 3490 zl
-    - E-commerce: wycena ind. (min. 5000 zl)
+    - E-commerce / sklep: od 6900 zl
 
     SOCIAL MEDIA / DIGITAL:
     - Social Media Kit: od 1200 zl

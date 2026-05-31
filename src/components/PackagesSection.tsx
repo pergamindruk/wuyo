@@ -50,7 +50,7 @@ export const packages = [
     {
         name: "Zaawansowany",
         persona: "Sklep który zarabia — dla firm sprzedających online 24/7",
-        price: "od 7 000 zł",
+        price: "od 6 900 zł",
         desc: "Kompletny sklep internetowy lub system rezerwacji.",
         image: "/tworzenie-stron-www-kombajn-v3.png",
         imageScale: "scale-100",
