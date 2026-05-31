@@ -22,9 +22,6 @@ export interface PricingGroupData {
     cards: PricingCardData[];
 }
 
-export const vatNote =
-    "Nie jestem płatnikiem VAT — podane ceny są cenami końcowymi, bez doliczania 23%. Wystawiam fakturę (zwolnioną z VAT), którą wrzucisz w koszty firmy.";
-
 export const sectionHeader = {
     eyebrow: "Cennik",
     title: "Przejrzysty cennik. Wiesz, ile zapłacisz, zanim zadzwonisz.",
@@ -99,8 +96,7 @@ export const pricingGroups: PricingGroupData[] = [
                 features: [
                     "Logo + wersje pozioma, pionowa i mono",
                     "Mini księga znaku (kolory, fonty, zasady) — w cenie",
-                    "Wizytówki (projekt + plik do druku)",
-                    "Szablon oferty w PDF",
+                    "Wizytówki 150 szt. — projekt + druk",
                     "Pełne prawa do projektu + pliki źródłowe",
                 ],
                 delivery: "Czas realizacji: 7–10 dni roboczych",

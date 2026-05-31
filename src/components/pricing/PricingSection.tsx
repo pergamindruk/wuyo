@@ -8,7 +8,6 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { PricingGroup } from "./PricingGroup";
 import {
     pricingGroups,
-    vatNote,
     sectionHeader,
     aLaCarte,
     perks,
@@ -52,7 +51,7 @@ export function PricingSection({
                 <PricingGroup group={jednorazowo} />
             </div>
 
-            {/* Linijka à la carte + notka VAT */}
+            {/* Linijka à la carte */}
             <div className="max-w-3xl mx-auto mt-12 text-center space-y-4 relative z-10">
                 <p className="text-white/60 text-sm md:text-base">
                     Potrzebujesz tylko części? Indywidualna strona od{" "}
@@ -60,16 +59,12 @@ export function PricingSection({
                     <strong className="text-gold font-semibold">{aLaCarte.logoFrom}</strong>. Napisz — wycenię
                     konkretnie pod Ciebie.
                 </p>
-                <p className="text-white/35 text-xs leading-relaxed max-w-2xl mx-auto">{vatNote}</p>
             </div>
 
             {/* Grupa B — abonament */}
             <div className="mt-24 relative z-10">
                 <PricingGroup group={abonament} />
             </div>
-            <p className="text-white/35 text-xs leading-relaxed max-w-2xl mx-auto text-center mt-12 relative z-10">
-                {vatNote}
-            </p>
 
             {/* Pasek wyróżników */}
             <div className="max-w-5xl mx-auto mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
