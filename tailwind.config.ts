@@ -69,6 +69,11 @@ const config: Config = {
 				],
 				heading: [
 					'var(--font-syne)'
+				],
+				'cs-harley': [
+					'CS Harley',
+					'var(--font-syne)',
+					'sans-serif'
 				]
 			},
 			borderRadius: {

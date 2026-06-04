@@ -185,29 +185,41 @@ export default function Home() {
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
             <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden">
+                {/* Olive-green top glow — per Figma */}
+                <div
+                    className="absolute inset-x-0 top-0 pointer-events-none z-0"
+                    style={{
+                        height: "65%",
+                        background: "radial-gradient(ellipse 85% 70% at 50% 0%, rgba(95, 115, 5, 0.72) 0%, transparent 70%)",
+                    }}
+                    aria-hidden
+                />
                 <HeroClientEffects />
                 <HeroAmbientOrbs />
 
                 <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
 
                     {/* LEFT — tekst + CTA */}
-                    <AnimatedSection className="text-center" animateOnMount={true} hero={true}>
-                        <p className="eyebrow mb-4">Studio graficzne · Rzeszów i cała Polska</p>
+                    <AnimatedSection className="text-left" animateOnMount={true} hero={true}>
                         <HeroText />
-                        <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 leading-relaxed font-medium text-balance">
-                            Obsługuję marki od startupu po skalowanie — od&nbsp;identyfikacji, przez stronę, po&nbsp;grafiki, które zarabiają na social media.
+                        <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
+                            Obsługuję marki od startupu po skalowanie&nbsp;—{" "}
+                            <span className="text-[#FFEB52] font-semibold">Projekty graficzne,</span>{" "}
+                            <span className="text-[#FFEB52] font-semibold">Druk do A3+:</span>{" "}
+                            Wizytówki, ulotki, plakaty, zaproszenia, fotoobrazy, nadruki CD/DVD
+                            {" "}— KRÓTKIE SERIE, SZYBKO, OD RĘKI.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
-                                <span className="font-bold text-lg text-navy">Wybierz pakiet</span>
+                                <span className="font-bold text-lg text-navy">Sprawdź ofertę</span>
                             </Link>
                             <Link href="#portfolio" className="relative px-10 py-4 rounded-full inline-flex items-center justify-center overflow-hidden transition-all group backdrop-blur-sm border border-gold/40 shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] hover:border-gold hover:bg-gold/10">
-                                <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10 w-full text-center">Portfolio</span>
+                                <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10">Portfolio</span>
                             </Link>
                         </div>
 
                         {/* Social proof — animated counters */}
-                        <div className="flex justify-center">
+                        <div className="flex justify-start">
                             <HeroStats />
                         </div>
                     </AnimatedSection>

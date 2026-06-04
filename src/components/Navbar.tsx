@@ -104,21 +104,31 @@ export function Navbar() {
                         onClick={handleHomeClick}
                         aria-label="Wuyo – Dobra Grafa, strona główna"
                         className={`absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
-                            ? "top-3 md:top-4 h-14 w-28 md:h-16 md:w-40 lg:h-16 lg:w-48"
+                            ? "top-3 md:top-4 h-14 w-14 md:h-14 md:w-14"
                             : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem]"
                             }`}
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <Image
-                            src="/logo_wuya2.webp"
-                            alt="WUYO – Dobra Grafa logo"
-                            fill
-                            sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 384px"
-                            className="object-contain object-left"
-                            priority
-                        />
+                        {scrolled ? (
+                            <Image
+                                src="/favicon-wuyo.png"
+                                alt="WUYO – Dobra Grafa logo"
+                                fill
+                                sizes="56px"
+                                className="object-contain"
+                            />
+                        ) : (
+                            <Image
+                                src="/logo_wuya2.webp"
+                                alt="WUYO – Dobra Grafa logo"
+                                fill
+                                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 384px"
+                                className="object-contain object-left"
+                                priority
+                            />
+                        )}
                     </motion.a>
                 </div>
 
