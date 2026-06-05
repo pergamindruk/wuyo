@@ -147,83 +147,51 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.35, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                variants={{ hover: { scale: 2 } }}
-                                whileHover="hover"
+                                whileHover={{ scale: 2 }}
                                 onClick={() => openPanel(project)}
-                                className="relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
+                                className="group relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
                                 style={{ height: "280px", zIndex: 1 }}
                                 onHoverStart={e => { (e.currentTarget as HTMLElement).style.zIndex = "30"; }}
                                 onHoverEnd={e => { (e.currentTarget as HTMLElement).style.zIndex = "1"; }}
                             >
-                                {/* Image with subtle scale */}
-                                <motion.div
-                                    className="absolute inset-0"
-                                    variants={{ hover: { scale: 1.04 } }}
-                                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                >
-                                    <Image
-                                        src={project.image}
-                                        alt={project.title}
-                                        fill
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                        priority={index < 3}
-                                        className="object-cover"
-                                        style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
-                                    />
-                                </motion.div>
+                                {/* Image */}
+                                <Image
+                                    src={project.image}
+                                    alt={project.title}
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    priority={index < 3}
+                                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                                    style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
+                                />
 
                                 {/* Base gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-10" />
 
                                 {/* Hover overlay */}
-                                <motion.div
-                                    className="absolute inset-0 bg-black/30 z-10"
-                                    variants={{ hover: { opacity: 1 } }}
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                />
+                                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
-                                {/* Category chip top-right */}
-                                <motion.div
-                                    className="absolute top-4 right-4 z-20"
-                                    variants={{ hover: { opacity: 1, y: 0 } }}
-                                    initial={{ opacity: 0, y: -6 }}
-                                    transition={{ duration: 0.25 }}
-                                >
+                                {/* Category chip */}
+                                <div className="absolute top-4 right-4 z-20 opacity-0 -translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-250">
                                     <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-white/80 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
                                         {project.category}
                                     </span>
-                                </motion.div>
+                                </div>
 
                                 {/* Bottom info */}
                                 <div className="absolute bottom-0 left-0 right-0 z-20 p-5">
-                                    <motion.div
-                                        variants={{ hover: { y: 0, opacity: 1 } }}
-                                        initial={{ y: 6, opacity: 0.85 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
+                                    <div className="translate-y-1.5 group-hover:translate-y-0 transition-transform duration-300">
                                         <h3 className="text-white font-bold text-base leading-tight">
                                             {project.title}
                                         </h3>
                                         {project.desc && (
-                                            <motion.p
-                                                className="text-white/50 text-xs mt-1.5 line-clamp-1"
-                                                variants={{ hover: { opacity: 1, y: 0 } }}
-                                                initial={{ opacity: 0, y: 4 }}
-                                                transition={{ duration: 0.25, delay: 0.05 }}
-                                            >
+                                            <p className="text-white/50 text-xs mt-1.5 line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
                                                 {project.desc}
-                                            </motion.p>
+                                            </p>
                                         )}
-                                    </motion.div>
-
+                                    </div>
                                     {/* Gold line */}
-                                    <motion.div
-                                        className="h-[2px] bg-gold mt-3 origin-left"
-                                        variants={{ hover: { scaleX: 1 } }}
-                                        initial={{ scaleX: 0 }}
-                                        transition={{ duration: 0.4, ease: "easeOut" }}
-                                    />
+                                    <div className="h-[2px] bg-gold mt-3 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-400 ease-out" />
                                 </div>
                             </motion.div>
                         ))}
