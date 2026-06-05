@@ -20,12 +20,12 @@ export const TABS = [
 ];
 
 export const projects: Project[] = [
-    { id: 15, title: "Wizytówka Memorial", category: "Do druku", image: "/realizacje/memorial-wizytowka-mockup.webp", desc: "Zakład kamieniarski · projekt + druk wizytówki dwustronnej", year: "2025" },
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", images: ["/realizacje/CzystaGablota-Wizytowka-mockup2.webp"], desc: "Detailing · spójna identyfikacja wizualna", year: "2024", cardObjectPosition: "top" },
     { id: 14, title: "Gama Ubezpieczeń – Materiały firmowe", category: "Do druku", image: "/realizacje/gama-ubezpieczen.webp", images: ["/realizacje/gama-ubezpieczen-mockup1.webp", "/realizacje/gama-ubezpieczen-mockup2.webp"], desc: "Biuro ubezpieczeń · ulotka, strona informacyjna, wizytówka", year: "2025" },
     { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp", desc: "Usługi profesjonalne · elegancka wizytówka jednostronna", year: "2024" },
     { id: 12, title: "Billboard Wege", category: "Do druku", image: "/realizacje/billboard-wege.webp", desc: "Dom kultury · plakat promujący spotkania Wege Pogadanki", year: "2024" },
     { id: 7, title: "Wizytówka Premium", category: "Do druku", image: "/realizacje/business-card-mockup.webp", desc: "Klient premium · projekt wizytówki", year: "2023" },
+    { id: 15, title: "Wizytówka Memorial", category: "Do druku", image: "/realizacje/memorial-wizytowka-mockup.webp", desc: "Zakład kamieniarski · projekt + druk wizytówki dwustronnej", year: "2025" },
     { id: 8, title: "Czysta Gablota – Strona WWW", category: "Strony Internetowe", image: "/realizacje/gablota-www.webp", desc: "Detailing · strona generująca zapytania od dnia 1", demoUrl: "https://www.czystagablota.pl", year: "2024" },
     { id: 13, title: "Billboard Domosfera", category: "Do druku", image: "/realizacje/domosfera-billboard.webp", desc: "Dystrybucja drzwi, okien i bram · projekt dużego billboardu", year: "2024" },
     { id: 3, title: "Logo Arkom", category: "Logotypy/Branding", image: "/realizacje/logo_arkom.webp", desc: "Firma technologiczna · identyfikacja wizualna od zera", year: "2023" },
