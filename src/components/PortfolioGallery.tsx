@@ -139,83 +139,91 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                     <AnimatePresence mode="popLayout">
-                        {visibleProjects.map((project, index) => {
-                            const globalNum = String(projects.findIndex(p => p.id === project.id) + 1).padStart(2, "0");
-
-                            return (
+                        {visibleProjects.map((project, index) => (
+                            <motion.div
+                                key={project.id}
+                                layout
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.35, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                whileHover="hover"
+                                onClick={() => openPanel(project)}
+                                className="relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
+                                style={{ height: "280px" }}
+                            >
+                                {/* Image with motion scale */}
                                 <motion.div
-                                    key={project.id}
-                                    layout
-                                    initial={{ opacity: 0, y: 16 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.96 }}
-                                    transition={{ duration: 0.28, delay: index * 0.045 }}
-                                    onClick={() => openPanel(project)}
-                                    className="group relative overflow-hidden rounded-2xl cursor-pointer"
+                                    className="absolute inset-0"
+                                    variants={{ hover: { scale: 1.06 } }}
+                                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
                                 >
-                                    {/* Height container */}
-                                    <div className="relative w-full h-56 sm:h-64 lg:h-[280px]">
-
-                                        {/* Photo */}
-                                        <Image
-                                            src={project.image}
-                                            alt={project.title}
-                                            fill
-                                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                            priority={index < 3}
-                                            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.07]"
-                                            style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
-                                        />
-
-                                        {/* Permanent bottom gradient */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/85 via-navy-dark/10 to-transparent" />
-
-                                        {/* Dark hover overlay */}
-                                        <div className="absolute inset-0 bg-navy-dark/45 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                        {/* Project number – editorial accent */}
-                                        <div
-                                            className={[
-                                                "absolute top-4 left-4 font-black leading-none select-none z-10 pointer-events-none",
-                                                "text-gold/15 group-hover:text-gold/40 transition-colors duration-500",
-                                                "text-4xl",
-                                            ].join(" ")}
-                                            style={{ fontFamily: "var(--font-ava-meridian)" }}
-                                            aria-hidden
-                                        >
-                                            {globalNum}
-                                        </div>
-
-                                        {/* Category chip – appears on hover */}
-                                        <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                                            <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-white/80 bg-navy-dark/70 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
-                                                {project.category}
-                                            </span>
-                                        </div>
-
-                                        {/* Bottom info */}
-                                        <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
-                                            <div className="translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
-                                                <h3 className="text-white font-bold leading-tight text-base">
-                                                    {project.title}
-                                                </h3>
-                                                {project.desc && (
-                                                    <p className="text-white/50 text-xs mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75 line-clamp-1">
-                                                        {project.desc}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Gold reveal line – sweeps from left */}
-                                        <div className="absolute bottom-0 left-0 right-0 h-[2px] overflow-hidden z-30 pointer-events-none">
-                                            <div className="w-full h-full bg-gold origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out" />
-                                        </div>
-
-                                    </div>
+                                    <Image
+                                        src={project.image}
+                                        alt={project.title}
+                                        fill
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        priority={index < 3}
+                                        className="object-cover"
+                                        style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
+                                    />
                                 </motion.div>
-                            );
-                        })}
+
+                                {/* Base gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-10" />
+
+                                {/* Hover overlay */}
+                                <motion.div
+                                    className="absolute inset-0 bg-black/30 z-10"
+                                    variants={{ hover: { opacity: 1 } }}
+                                    initial={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                />
+
+                                {/* Category chip top-right */}
+                                <motion.div
+                                    className="absolute top-4 right-4 z-20"
+                                    variants={{ hover: { opacity: 1, y: 0 } }}
+                                    initial={{ opacity: 0, y: -6 }}
+                                    transition={{ duration: 0.25 }}
+                                >
+                                    <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-white/80 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+                                        {project.category}
+                                    </span>
+                                </motion.div>
+
+                                {/* Bottom info */}
+                                <div className="absolute bottom-0 left-0 right-0 z-20 p-5">
+                                    <motion.div
+                                        variants={{ hover: { y: 0, opacity: 1 } }}
+                                        initial={{ y: 6, opacity: 0.85 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <h3 className="text-white font-bold text-base leading-tight">
+                                            {project.title}
+                                        </h3>
+                                        {project.desc && (
+                                            <motion.p
+                                                className="text-white/50 text-xs mt-1.5 line-clamp-1"
+                                                variants={{ hover: { opacity: 1, y: 0 } }}
+                                                initial={{ opacity: 0, y: 4 }}
+                                                transition={{ duration: 0.25, delay: 0.05 }}
+                                            >
+                                                {project.desc}
+                                            </motion.p>
+                                        )}
+                                    </motion.div>
+
+                                    {/* Gold line */}
+                                    <motion.div
+                                        className="h-[2px] bg-gold mt-3 origin-left"
+                                        variants={{ hover: { scaleX: 1 } }}
+                                        initial={{ scaleX: 0 }}
+                                        transition={{ duration: 0.4, ease: "easeOut" }}
+                                    />
+                                </div>
+                            </motion.div>
+                        ))}
                     </AnimatePresence>
                 </motion.div>
 
