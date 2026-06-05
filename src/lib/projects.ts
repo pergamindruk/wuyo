@@ -32,4 +32,5 @@ export const projects: Project[] = [
     { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp", desc: "Produkty spożywcze · etykiety gotowe do druku offset", year: "2024" },
     { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej", year: "2024" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "ADMAR · projekt naklejki", year: "2023" },
+    { id: 15, title: "Wizytówka Memorial", category: "Do druku", image: "/realizacje/memorial-wizytowka-mockup.webp", desc: "Zakład kamieniarski · projekt + druk wizytówki dwustronnej", year: "2025" },
 ];
