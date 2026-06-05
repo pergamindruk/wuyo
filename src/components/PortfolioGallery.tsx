@@ -68,15 +68,16 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
     }, [fullscreenSrc]);
 
     return (
-        <section id="portfolio" className="py-28 px-6 md:px-12 relative overflow-hidden">
+        <section id="portfolio" className="py-28 px-6 md:px-12 relative">
 
-            {/* Decorative large background word */}
-            <div
-                className="absolute right-0 top-10 leading-none select-none pointer-events-none pr-4 hidden lg:block font-black tracking-tighter text-white/[0.025]"
-                style={{ fontSize: "clamp(6rem,16vw,14rem)", fontFamily: "var(--font-ava-meridian)" }}
-                aria-hidden
-            >
-                PRACE
+            {/* Decorative large background word – isolated overflow so it never adds scroll */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
+                <div
+                    className="absolute right-0 top-10 leading-none select-none pr-4 hidden lg:block font-black tracking-tighter text-white/[0.025]"
+                    style={{ fontSize: "clamp(6rem,16vw,14rem)", fontFamily: "var(--font-ava-meridian)" }}
+                >
+                    PRACE
+                </div>
             </div>
 
             <div className="max-w-6xl mx-auto relative z-10">
@@ -134,25 +135,22 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                 </div>
 
                 {/* Grid */}
-                <motion.div
-                    layout
+                <div
+                    key={activeTab}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
-                    <AnimatePresence mode="popLayout">
+                    <AnimatePresence>
                         {visibleProjects.map((project, index) => (
                             <motion.div
                                 key={project.id}
-                                layout
                                 initial={{ opacity: 0, y: 24 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.35, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                whileHover={{ scale: 2 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.35, delay: Math.min(index, 8) * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                whileHover={{ scale: 1.6, zIndex: 30 }}
                                 onClick={() => openPanel(project)}
                                 className="group relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
                                 style={{ height: "280px", zIndex: 1 }}
-                                onHoverStart={e => { (e.currentTarget as HTMLElement).style.zIndex = "30"; }}
-                                onHoverEnd={e => { (e.currentTarget as HTMLElement).style.zIndex = "1"; }}
                             >
                                 {/* Image */}
                                 <Image
@@ -196,7 +194,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                             </motion.div>
                         ))}
                     </AnimatePresence>
-                </motion.div>
+                </div>
 
                 {/* Load more */}
                 {hasMore && (
