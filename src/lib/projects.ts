@@ -20,6 +20,7 @@ export const TABS = [
 ];
 
 export const projects: Project[] = [
+    { id: 15, title: "Wizytówka Memorial", category: "Do druku", image: "/realizacje/memorial-wizytowka-mockup.webp", desc: "Zakład kamieniarski · projekt + druk wizytówki dwustronnej", year: "2025" },
     { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", images: ["/realizacje/CzystaGablota-Wizytowka-mockup2.webp"], desc: "Detailing · spójna identyfikacja wizualna", year: "2024", cardObjectPosition: "top" },
     { id: 14, title: "Gama Ubezpieczeń – Materiały firmowe", category: "Do druku", image: "/realizacje/gama-ubezpieczen.webp", images: ["/realizacje/gama-ubezpieczen-mockup1.webp", "/realizacje/gama-ubezpieczen-mockup2.webp"], desc: "Biuro ubezpieczeń · ulotka, strona informacyjna, wizytówka", year: "2025" },
     { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp", desc: "Usługi profesjonalne · elegancka wizytówka jednostronna", year: "2024" },
@@ -32,5 +33,4 @@ export const projects: Project[] = [
     { id: 11, title: "Projekt Etykiet", category: "Do druku", image: "/realizacje/projekt-etykiet.webp", desc: "Produkty spożywcze · etykiety gotowe do druku offset", year: "2024" },
     { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej", year: "2024" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "ADMAR · projekt naklejki", year: "2023" },
-    { id: 15, title: "Wizytówka Memorial", category: "Do druku", image: "/realizacje/memorial-wizytowka-mockup.webp", desc: "Zakład kamieniarski · projekt + druk wizytówki dwustronnej", year: "2025" },
 ];
