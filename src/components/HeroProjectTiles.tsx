@@ -56,7 +56,7 @@ export function HeroProjectTiles() {
         const cardTop = stripTop + i * STEP;
         const cardBot = cardTop + CARD_H;
         // karta po scale 1.18 jest większa o tę wartość na każdej krawędzi
-        const scaleExtra = Math.ceil(CARD_H * (2 - 1) / 2);
+        const scaleExtra = Math.ceil(CARD_H * (1.18 - 1) / 2);
         const PAD = 16;
 
         if (cardTop - scaleExtra < PAD) return PAD - cardTop + scaleExtra;
@@ -101,7 +101,7 @@ export function HeroProjectTiles() {
                                 x: isActive ? arcX(i) + 10 : arcX(i),
                                 rotateZ: isActive ? dist * 0.5 : arcRotZ(i),
                                 rotateY: isActive ? 1 : 5,
-                                scale: isActive ? 2 : 1,
+                                scale: isActive ? 1.18 : 1,
                             }}
                             transition={CARD_SPRING}
                             onHoverStart={() => setHovered(i)}

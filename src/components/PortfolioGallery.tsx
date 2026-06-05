@@ -147,16 +147,20 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.35, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                variants={{ hover: { scale: 2 } }}
                                 whileHover="hover"
+                                transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
                                 onClick={() => openPanel(project)}
                                 className="relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
-                                style={{ height: "280px" }}
+                                style={{ height: "280px", zIndex: 1 }}
+                                onHoverStart={e => { (e.currentTarget as HTMLElement).style.zIndex = "30"; }}
+                                onHoverEnd={e => { (e.currentTarget as HTMLElement).style.zIndex = "1"; }}
                             >
-                                {/* Image with motion scale */}
+                                {/* Image with subtle scale */}
                                 <motion.div
                                     className="absolute inset-0"
-                                    variants={{ hover: { scale: 1.06 } }}
-                                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                    variants={{ hover: { scale: 1.04 } }}
+                                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                                 >
                                     <Image
                                         src={project.image}
