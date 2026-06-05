@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Maximize2 } from "lucide-react";
 import { TABS, projects, type Project } from "@/lib/projects";
 
-export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: number }) {
+export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { initialVisible?: number; hideHeader?: boolean }) {
     const [activeTab, setActiveTab] = useState("Wszystkie");
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -82,7 +82,7 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
             <div className="max-w-6xl mx-auto relative z-10">
 
                 {/* Section header – editorial, left-aligned */}
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-6">
+                <div className={`flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-6 ${hideHeader ? "hidden" : ""}`}>
                     <div>
                         <p className="eyebrow mb-3">Dowody, nie obietnice</p>
                         <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">

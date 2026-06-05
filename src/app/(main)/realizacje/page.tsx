@@ -74,7 +74,7 @@ export default function RealizacjePage() {
             </section>
 
             {/* ── Galeria – wszystkie projekty od razu ── */}
-            <PortfolioGallery initialVisible={projects.length} />
+            <PortfolioGallery initialVisible={projects.length} hideHeader />
 
             {/* ── CTA ── */}
             <section className="py-24 px-6 md:px-12">
