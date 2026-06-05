@@ -196,7 +196,7 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                                         {/* Bottom info */}
                                         <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                                             <div className="translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
-                                                <h3 className={`text-white font-bold leading-tight ${isFeatured ? "text-xl md:text-2xl" : "text-base"}`}>
+                                                <h3 className="text-white font-bold leading-tight text-base">
                                                     {project.title}
                                                 </h3>
                                                 {project.desc && (
