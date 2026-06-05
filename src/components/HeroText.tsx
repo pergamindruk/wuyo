@@ -28,20 +28,20 @@ export function HeroText() {
         <h1 className="mb-8 tracking-tight uppercase">
             <span
                 className="hero-word block text-white font-cs-harley font-bold"
-                style={{ fontSize: "54px", lineHeight: 1.0 }}
+                style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0 }}
             >
                 PIERWSZE
             </span>
             <span
                 className="hero-word block text-white font-cs-harley font-bold"
-                style={{ fontSize: "54px", lineHeight: 1.0, animationDelay: "0.05s" }}
+                style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}
                 aria-label="WRAŻENIE"
             >
                 <span aria-hidden="true">WRA<ZWithDot color="white" />ENIE</span>
             </span>
             <span
-                className="hero-word block text-[#FFEB52] font-cs-harley font-normal mt-2 whitespace-nowrap"
-                style={{ fontSize: "42px", lineHeight: 1.1, animationDelay: "0.10s" }}
+                className="hero-word block text-[#FFEB52] font-cs-harley font-normal mt-2"
+                style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}
             >
                 MASZ TYLKO JEDNO.
             </span>
