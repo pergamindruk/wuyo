@@ -44,8 +44,8 @@ export function StatsCounter() {
     return (
         <div className="flex items-stretch justify-center mt-14 gap-0">
             {/* Stat 1 */}
-            <div className="flex flex-col items-center px-12 sm:px-20">
-                <span className="text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
+            <div className="flex flex-col items-center px-8 sm:px-14 md:px-20">
+                <span className="text-5xl sm:text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
                     <AnimatedNumber target={156} suffix="+" />
                 </span>
                 <span className="text-white/35 text-[10px] uppercase tracking-[0.25em]">projektów</span>
@@ -55,8 +55,8 @@ export function StatsCounter() {
             <div className="self-stretch w-px bg-white/10" />
 
             {/* Stat 2 */}
-            <div className="flex flex-col items-center px-12 sm:px-20">
-                <span className="text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
+            <div className="flex flex-col items-center px-8 sm:px-14 md:px-20">
+                <span className="text-5xl sm:text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
                     <AnimatedNumber target={46} />
                 </span>
                 <span className="text-white/35 text-[10px] uppercase tracking-[0.25em]">branż</span>

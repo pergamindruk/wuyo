@@ -170,6 +170,7 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                             priority={isFeatured}
                                             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.07]"
+                                            style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
                                         />
 
                                         {/* Permanent bottom gradient */}

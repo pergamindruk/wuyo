@@ -7,6 +7,7 @@ export type Project = {
     desc?: string;
     demoUrl?: string;
     year?: string;
+    cardObjectPosition?: string;
 };
 
 export const TABS = [
@@ -19,7 +20,7 @@ export const TABS = [
 ];
 
 export const projects: Project[] = [
-    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", images: ["/realizacje/CzystaGablota-Wizytowka-mockup2.webp"], desc: "Detailing · spójna identyfikacja wizualna", year: "2024" },
+    { id: 2, title: "Wizytówka Czysta Gablota", category: "Do druku", image: "/realizacje/CzystaGablota-Wizytowka-mockup.webp", images: ["/realizacje/CzystaGablota-Wizytowka-mockup2.webp"], desc: "Detailing · spójna identyfikacja wizualna", year: "2024", cardObjectPosition: "top" },
     { id: 14, title: "Gama Ubezpieczeń – Materiały firmowe", category: "Do druku", image: "/realizacje/gama-ubezpieczen.webp", images: ["/realizacje/gama-ubezpieczen-mockup1.webp", "/realizacje/gama-ubezpieczen-mockup2.webp"], desc: "Biuro ubezpieczeń · ulotka, strona informacyjna, wizytówka", year: "2025" },
     { id: 10, title: "Wizytówka Stanisław Czudec", category: "Do druku", image: "/realizacje/wizytowka-mockup-s-czudec.webp", desc: "Usługi profesjonalne · elegancka wizytówka jednostronna", year: "2024" },
     { id: 12, title: "Billboard Wege", category: "Do druku", image: "/realizacje/billboard-wege.webp", desc: "Dom kultury · plakat promujący spotkania Wege Pogadanki", year: "2024" },
