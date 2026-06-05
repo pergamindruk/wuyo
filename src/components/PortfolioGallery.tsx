@@ -133,16 +133,14 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                     </div>
                 </div>
 
-                {/* Bento grid */}
+                {/* Grid */}
                 <motion.div
                     layout
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[260px] gap-3"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
                     <AnimatePresence mode="popLayout">
                         {visibleProjects.map((project, index) => {
                             const globalNum = String(projects.findIndex(p => p.id === project.id) + 1).padStart(2, "0");
-                            const isFeatured = index === 0;
-                            const isWide = index === 5 && visibleProjects.length > 6;
 
                             return (
                                 <motion.div
@@ -153,14 +151,10 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                                     exit={{ opacity: 0, scale: 0.96 }}
                                     transition={{ duration: 0.28, delay: index * 0.045 }}
                                     onClick={() => openPanel(project)}
-                                    className={[
-                                        "group relative overflow-hidden rounded-2xl cursor-pointer col-span-1",
-                                        isFeatured ? "lg:col-span-2 lg:row-span-2" : "",
-                                        isWide ? "lg:col-span-2" : "",
-                                    ].join(" ")}
+                                    className="group relative overflow-hidden rounded-2xl cursor-pointer"
                                 >
-                                    {/* Height container – fixed on mobile, auto (grid row) on desktop */}
-                                    <div className={`relative w-full ${isFeatured ? "h-72 sm:h-80 lg:h-full" : "h-56 sm:h-64 lg:h-full"}`}>
+                                    {/* Height container */}
+                                    <div className="relative w-full h-56 sm:h-64 lg:h-[280px]">
 
                                         {/* Photo */}
                                         <Image
@@ -168,7 +162,7 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                                             alt={project.title}
                                             fill
                                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                            priority={isFeatured}
+                                            priority={index < 3}
                                             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.07]"
                                             style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
                                         />
@@ -184,7 +178,7 @@ export function PortfolioGallery({ initialVisible = 9 }: { initialVisible?: numb
                                             className={[
                                                 "absolute top-4 left-4 font-black leading-none select-none z-10 pointer-events-none",
                                                 "text-gold/15 group-hover:text-gold/40 transition-colors duration-500",
-                                                isFeatured ? "text-6xl" : "text-4xl",
+                                                "text-4xl",
                                             ].join(" ")}
                                             style={{ fontFamily: "var(--font-ava-meridian)" }}
                                             aria-hidden
