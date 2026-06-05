@@ -149,7 +149,6 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                 transition={{ duration: 0.35, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
                                 variants={{ hover: { scale: 2 } }}
                                 whileHover="hover"
-                                transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
                                 onClick={() => openPanel(project)}
                                 className="relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
                                 style={{ height: "280px", zIndex: 1 }}
