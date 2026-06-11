@@ -7,6 +7,7 @@ export const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY ?? '')
 const MODEL_CONFIGS = {
     chat:     { maxOutputTokens: 1024  },
     content:  { maxOutputTokens: 2048  },
+    quote:    { maxOutputTokens: 6000  },
     document: { maxOutputTokens: 8192  },
     seo:      { maxOutputTokens: 2048  },
 } as const

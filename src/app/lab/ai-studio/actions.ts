@@ -33,35 +33,46 @@ export async function generateContent(topic: string, platform: string) {
 
 export async function generateQuote(clientMessage: string) {
     try {
-        const model = getModel('content')
+        const model = getModel('quote')
 
         const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku (Epson L18050 A3+, ploter tnacy Cameo 5, laminator, gilotyna) - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
     Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
 
     "${clientMessage}"
 
-    CENNIK REFERENCYJNY WUYO (brutto, 2026, rynek rzeszowski):
+    CENNIK REFERENCYJNY WUYO (ceny koncowe, bez VAT, 2026, rynek rzeszowski):
 
     DRUK wlasny (projekt + druk lacznie, ceny calkowite dla klienta):
-    - Wizytowki 500 szt. (dwustronne): 200-250 zl/set
-    - Ulotki A6 500 szt.: 250-300 zl/set
-    - Ulotki A5 500 szt.: 300-370 zl/set
-    - Plakat A3 (1 szt.): 60-100 zl
-    - Vouchery 500 szt.: 200-280 zl/set
+    - Wizytowki 100 szt. (projekt + druk): 200-250 zl
+    - Wizytowki 250 szt. (projekt + druk): 240-290 zl
+    - Ulotki A5 100 szt. (projekt + druk): 210-280 zl
+    - Ulotki A4 100 szt. (projekt + druk): 240-310 zl
+    - Plakat A3 (projekt + druk, 1 szt.): 60-100 zl
+    - Vouchery 100 szt. (projekt + druk): 200-280 zl
     Adaptacje/warianty tego samego projektu: 50% ceny zestawu bazowego.
     Rabat pakietowy przy 4+ pozycjach dla jednej marki: -10-15% od sumy.
 
     PROJEKT GRAFICZNY (bez druku):
     - Logo: od 890 zl (sam projekt), 1490 zl (z mini ksiega znaku)
     - Marka / identyfikacja: od 1490 zl
-    - Wizytowka (sam projekt): 120-180 zl
-    - Ulotka (sam projekt): 150-220 zl
-    - Rollup/Banner (sam projekt): 300-400 zl
+    - Wizytowka (sam projekt): 150-200 zl
+    - Ulotka A5 (sam projekt): 150-220 zl
+    - Ulotka A4 (sam projekt): 180-250 zl
+    - Rollup/Baner (sam projekt): 300-400 zl
 
-    STRONY WWW:
-    - Strona: od 2490 zl
+    PAKIETY JEDNORAZOWE (projekt pod klucz):
+    - Marka Start (logo + mini ksiega + wizytowki 150szt projekt+druk): 1490 zl
+    - Firma w Internecie (Marka Start + strona do 5 podstron): 3490 zl
+    - Pelny Start (branding + strona + Google + 5 grafik + 3mc opieki): 5900 zl
+
+    STRONY WWW (sama strona bez brandingu):
+    - Strona indywidualna: od 2490 zl
     - Strona firmowa: od 3490 zl
     - E-commerce / sklep: od 6900 zl
+
+    ABONAMENT MIESIĘCZNY:
+    - Opieka Strony (hosting, aktualizacje, drobne zmiany): 149 zl/mc
+    - Widocznosc i Opieka (jw. + wizytowka Google + 5-6 grafik/mc): 690 zl/mc
 
     SOCIAL MEDIA / DIGITAL:
     - Social Media Kit: od 1200 zl
