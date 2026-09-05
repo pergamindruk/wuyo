@@ -93,12 +93,52 @@ const printProducts = [
     },
 ];
 
-// ─── Lokalny komponent: siatka produktów druku ─────────────────────────────────
+// ─── Dane odzieży i nadruków ────────────────────────────────────────────────────
 
-function PrintProductGrid() {
+const clothingProducts = [
+    {
+        name: "Koszulki z nadrukiem",
+        note: "DTF, pełny kolor, bez minimum",
+        variants: [
+            { qty: "1 szt.", price: "79 zł" },
+            { qty: "5+ szt.", price: "65 zł/szt." },
+            { qty: "20+ szt.", price: "49 zł/szt." },
+        ],
+    },
+    {
+        name: "Bluzy z nadrukiem",
+        note: "DTF, kaptur lub bez, bez minimum",
+        variants: [
+            { qty: "1 szt.", price: "199 zł" },
+            { qty: "5+ szt.", price: "169 zł/szt." },
+            { qty: "20+ szt.", price: "139 zł/szt." },
+        ],
+    },
+    {
+        name: "Nadruk na Twojej odzieży",
+        note: "przynosisz swoje, my wprasowujemy",
+        variants: [
+            { qty: "mały wzór (do A5)", price: "od 45 zł" },
+            { qty: "duży wzór (cały przód)", price: "od 65 zł" },
+        ],
+    },
+    {
+        name: "Personalizacja i inne",
+        note: "",
+        variants: [
+            { qty: "Imię / numer (dopłata)", price: "od 15 zł" },
+            { qty: "Napis flex/flock", price: "od 35 zł/szt." },
+            { qty: "Haft (min. 5 szt.)", price: "od 45 zł/szt." },
+        ],
+    },
+];
+
+// ─── Lokalny komponent: siatka produktów (druk / odzież) ───────────────────────
+
+function ProductGrid({ products }: { products: typeof printProducts }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-            {printProducts.map((product, i) => (
+            {products.map((product, i) => (
                 <AnimatedSection key={product.name} delay={0.05 * i}>
                     <div className="bg-navy/50 border border-white/10 rounded-2xl p-6 h-full">
                         <h4 className="font-bold text-white text-lg mb-1">{product.name}</h4>
@@ -315,7 +355,20 @@ export default function PricingPage() {
                     </div>
                 </AnimatedSection>
 
-                <PrintProductGrid />
+                <ProductGrid products={printProducts} />
+
+                {/* ── ODZIEŻ I PERSONALIZACJA ────────────────────────────── */}
+                <AnimatedSection delay={0.5}>
+                    <div className="mt-14 mb-5">
+                        <h2 className="text-2xl font-bold text-white mb-2">Odzież &amp; Personalizacja</h2>
+                        <p className="text-white/50 text-sm">
+                            Nadruk DTF na koszulkach i bluzach — bez minimum ilościowego, od 1 sztuki. Więcej wariantów na{" "}
+                            <Link href="/odziez" className="text-gold hover:underline">stronie odzieży</Link>.
+                        </p>
+                    </div>
+                </AnimatedSection>
+
+                <ProductGrid products={clothingProducts} />
 
                 {/* ── STRONY WWW ───────────────────────────────────────── */}
                 <AnimatedSection delay={0.1}>

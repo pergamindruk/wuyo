@@ -8,23 +8,23 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek i Ulotek – projekt + druk | od 99 zł | WUYO",
-    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, małe nakłady bez minimum. Rzeszów + wysyłka kurierem →",
+    title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | od 49 zł | WUYO",
+    description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum ilościowego — od 1 sztuki. Rzeszów + wysyłka kurierem →",
     openGraph: {
-        title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki od 99 zł, termin 1–3 dni. Rzeszów i cała Polska.",
+        title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
+        description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum ilościowego. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
-        url: "https://wuyo.pl/druk",
+        url: "https://wuyo.pl/odziez",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Wizytówki od 99 zł, termin 1–3 dni. Projekt + druk w jednym miejscu.",
+        title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
+        description: "Nadruk DTF od 49 zł/szt. Bez minimum ilościowego. Projekt + nadruk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
     alternates: {
-        canonical: "https://wuyo.pl/druk",
+        canonical: "https://wuyo.pl/odziez",
     },
 };
 
@@ -34,44 +34,52 @@ const faqSchema = {
     "mainEntity": [
         {
             "@type": "Question",
-            "name": "Ile kosztują wizytówki z projektem?",
+            "name": "Jaka jest minimalna ilość zamówienia?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Wizytówki 50 szt. od 99 zł (sam druk) lub od 229 zł z projektem graficznym. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+                "text": "Koszulki i bluzy z nadrukiem DTF robię od 1 sztuki — bez minimum. Przy haftowaniu minimum to 5 sztuk, bo to inna technologia.",
             },
         },
         {
             "@type": "Question",
-            "name": "Jak szybko dostanę wydruk?",
+            "name": "Czy mogę przynieść własną koszulkę do nadruku?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
+                "text": "Tak. Przynosisz swoją odzież — koszulkę, bluzę, torbę — a ja wprasowuję nadruk w Twoim wzorze. Cena zależy od wielkości nadruku, nie od ubrania.",
             },
         },
         {
             "@type": "Question",
-            "name": "Czy mogę zamówić mały nakład — np. 20 wizytówek?",
+            "name": "Ile czasu zajmuje realizacja?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Tak. Nie mam minimalnego nakładu na wizytówki i naklejki — drukuję u siebie, więc nie obowiązują mnie minimalne ilości drukarni przemysłowych. Przy ulotkach minimum to 100 szt.",
+                "text": "Nadruk DTF i flex/flock: 1–4 dni robocze, zależnie od ilości i tego czy potrzebujesz projektu od zera. Haft ustalam indywidualnie, bo termin zależy od nakładu.",
             },
         },
         {
             "@type": "Question",
-            "name": "Czy zajmujesz się tylko projektem, czy też drukiem?",
+            "name": "Czy zajmujesz się też projektem graficznym nadruku?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Jedno i drugie — projekt i druk w jednym miejscu. Nie musisz szukać oddzielnie grafika i drukarni, tłumaczyć specyfikacji ani wysyłać plików w odpowiednich formatach. Dostajesz gotowy produkt.",
+                "text": "Tak — projekt i nadruk w jednym miejscu. Jeśli masz gotowy plik, wykorzystam go od razu. Jeśli nie, zaprojektuję grafikę pod Twój pomysł.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Co lepiej sprawdzi się na drużynowych koszulkach — nadruk czy haft?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Do numerów, imion i prostych logo na koszulkach sportowych lepszy jest nadruk DTF lub flex — jest tańszy i szybszy. Haft sprawdza się na czapkach, polówkach i odzieży roboczej, którą pierze się częściej.",
             },
         },
     ],
 };
 
-const drukSchema = {
+const clothingSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": "Druk wizytówek, ulotek i voucherów",
-    "description": "Projekt graficzny i druk małej papeterii — wizytówki, ulotki, vouchery, bannery, naklejki. Projekt + druk w jednym miejscu.",
+    "name": "Nadruki na odzieży i personalizacja",
+    "description": "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, napisy flex/flock, haft. Projekt i nadruk w jednym miejscu.",
     "provider": {
         "@type": "LocalBusiness",
         "name": "WUYO – Dobra Grafa",
@@ -82,55 +90,55 @@ const drukSchema = {
         { "@type": "Country", "name": "Polska" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "229", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "249", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "279", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Koszulka z nadrukiem DTF", "price": "49", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Bluza z nadrukiem DTF", "price": "139", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Nadruk na własnej odzieży klienta", "price": "45", "priceCurrency": "PLN" },
     ],
 };
 
 const products = [
     {
-        name: "Wizytówki",
-        desc: "Standard 85×55 mm, papier 350g, zaokrąglone rogi, mat lub gloss. Projekt unikalny — żadnych szablonów z internetu.",
-        price: "od 199 zł",
-        details: ["Projekt graficzny", "Druk dwustronny", "Papier 350g/m²", "Wykończenie mat lub gloss", "Min. 100 szt."],
+        name: "Koszulki z nadrukiem",
+        desc: "Twoje logo, hasło albo grafika na koszulce. Nadruk DTF — pełny kolor, trwały, nie pęka i nie blaknie przy praniu.",
+        price: "od 49 zł/szt",
+        details: ["Nadruk DTF, pełny kolor", "100% bawełna, 205g, unisex", "Bez minimum ilościowego — od 1 szt.", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
-        name: "Ulotki",
-        desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt który przyciąga wzrok i rzeczywiście skłania do działania.",
-        price: "od 250 zł",
-        details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Papier 130–170g/m²", "Min. 100 szt."],
+        name: "Bluzy z nadrukiem",
+        desc: "Bluza z kapturem albo bez, logo na piersi lub duży wzór na plecach. Sprawdza się na eventy firmowe i prezenty.",
+        price: "od 139 zł/szt",
+        details: ["Nadruk DTF, pełny kolor", "Bluza 280g, kaptur lub bez", "Bez minimum ilościowego — od 1 szt.", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
-        name: "Vouchery",
-        desc: "Idealny prezent dla klientów — voucher który wygląda jak produkt premium, nie jak bilet parkingowy.",
-        price: "od 249 zł",
-        details: ["Projekt graficzny", "Format dowolny", "Perforacja lub bez", "Numeracja opcjonalna", "Min. 50 szt."],
+        name: "Nadruk na Twojej odzieży",
+        desc: "Masz już koszulki, bluzy albo torby firmowe? Przynosisz swoje, ja wprasowuję nadruk w Twoim wzorze.",
+        price: "od 45 zł/szt",
+        details: ["Wprasowanie DTF na powierzonej odzieży", "Mały wzór (do A5) lub duży (cały przód)", "Bez minimum ilościowego", "Termin 1–2 dni"],
     },
     {
-        name: "Menu restauracyjne",
-        desc: "Karty dań, które sprzedają. Układ, który prowadzi wzrok klienta do dań z największą marżą.",
-        price: "od 400 zł",
-        details: ["Projekt graficzny", "Format A4 / A5 lub niestandardowy", "Druk dwustronny", "Laminowanie opcjonalne", "Od 1 szt."],
+        name: "Personalizacja imienna",
+        desc: "Numer, imię albo nazwisko na koszulce. Idealne na eventy, drużyny, wyjazdy integracyjne i prezenty na jedną osobę.",
+        price: "od 15 zł/szt do wzoru",
+        details: ["Dopłata do dowolnego nadruku z oferty", "Imię, numer, inicjały", "Krój czcionki dopasowany do reszty wzoru", "Realizacja pojedynczych sztuk"],
     },
     {
-        name: "Rollup / Banner",
-        desc: "Na eventy, targi i wystawiennictwo. Projekt spójny z Twoją marką, gotowy do druku wielkogabarytowego.",
-        price: "od 300 zł",
-        details: ["Projekt graficzny", "Plik gotowy do druku (300 dpi)", "Konsultacja wymiarów", "Możliwość zamówienia druku", "Termin do 5 dni"],
+        name: "Napisy i numery (flex/flock)",
+        desc: "Jednokolorowy napis albo numer wycinany z folii. Dobre rozwiązanie do prostych logotypów i numeracji drużynowej.",
+        price: "od 35 zł/szt",
+        details: ["Folia flex (gładka) lub flock (aksamitna)", "Jeden kolor, prosty kształt", "Świetne do krótkich napisów i numerów", "Termin 1–2 dni"],
     },
     {
-        name: "Naklejki i etykiety",
-        desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo lub na arkuszach.",
-        price: "od 169 zł",
-        details: ["Projekt graficzny", "Dowolny kształt i rozmiar", "Folie standardowe i premium", "Wersja do druku lokalnego", "Min. 50 szt."],
+        name: "Haft",
+        desc: "Czapki, polówki, odzież robocza. Haft trzyma się latami i wygląda solidniej niż nadruk — kosztem dłuższego terminu.",
+        price: "od 45 zł/szt",
+        details: ["Czapki, polo, kurtki, odzież robocza", "Trwałość wyższa niż przy nadruku", "Minimum 5 szt.", "Termin ustalany indywidualnie"],
     },
 ];
 
-export default function DrukPage() {
+export default function OdziezPage() {
     return (
         <main className="flex-1 w-full">
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(drukSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(clothingSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* ═══ HERO ═══ */}
@@ -138,15 +146,15 @@ export default function DrukPage() {
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
 
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
-                    <p className="eyebrow mb-4">Projekt + druk</p>
+                    <p className="eyebrow mb-4">Nadruk + personalizacja</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Wizytówki, ulotki,<br />
+                        Koszulki, bluzy<br />
                         <span className="bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent">
-                            vouchery i więcej.
+                            i nadruki, które zostają.
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Jedno miejsce — projekt i druk. Nie musisz szukać drukarni, tłumaczyć specyfikacji ani przesyłać plików w 5 formatach. Dostajesz gotowy produkt pod drzwi.
+                        Nadruk DTF, personalizacja imienna, haft. Bez minimum ilościowego — jedna koszulka albo cały zespół, jeden kontakt od projektu do gotowej rzeczy.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
@@ -171,9 +179,9 @@ export default function DrukPage() {
                 <div className="section-glow" />
                 <div className="max-w-6xl mx-auto relative z-10">
                     <AnimatedSection className="text-center mb-16">
-                        <p className="eyebrow mb-4">Co drukujemy</p>
+                        <p className="eyebrow mb-4">Co robimy</p>
                         <h2 className="text-3xl md:text-5xl font-bold text-white">
-                            Mała papeteria,<br />duże wrażenie
+                            Od jednej koszulki,<br />po cały zespół
                         </h2>
                     </AnimatedSection>
 
@@ -205,26 +213,21 @@ export default function DrukPage() {
             <section className="py-12 px-6 md:px-12">
                 <div className="max-w-5xl mx-auto">
                     <AnimatedSection>
-                        <div className="glass-card p-6 md:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center border border-white/5">
+                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz logo pod nadruk?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
                                 <p className="text-white/40 text-xs mt-1">od 890 zł · 10–14 dni</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
-                                <Link href="/strony-www" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony internetowe →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 2 490 zł · Next.js</p>
-                            </div>
-                            <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Koszulki, bluzy?</p>
-                                <Link href="/odziez" className="font-bold text-white hover:text-gold transition-colors text-sm">Nadruk na odzieży →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 49 zł/szt · bez minimum</p>
+                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też wizytówek?</p>
+                                <Link href="/druk" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk i papeteria →</Link>
+                                <p className="text-white/40 text-xs mt-1">wizytówki od 99 zł</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
-                                <Link href="/druk-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk w Rzeszowie →</Link>
-                                <p className="text-white/40 text-xs mt-1">odbiór osobisty · 1–3 dni</p>
+                                <Link href="/druk-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Odbiór osobisty →</Link>
+                                <p className="text-white/40 text-xs mt-1">bez kosztów wysyłki</p>
                             </div>
                         </div>
                     </AnimatedSection>
@@ -237,16 +240,16 @@ export default function DrukPage() {
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Prosty proces</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">
-                            Od briefu do drzwi w kilku krokach
+                            Od pomysłu do gotowej rzeczy
                         </h2>
                     </AnimatedSection>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                         <div className="hidden md:block absolute top-7 left-[calc(16.5%+1rem)] right-[calc(16.5%+1rem)] h-px bg-gradient-to-r from-gold/30 via-white/10 to-gold/30" />
                         {[
-                            { num: "1", title: "Wypełniasz brief", desc: "Mówisz mi co chcesz osiągnąć, ja pytam o resztę. Zajmuje to 15 minut." },
-                            { num: "2", title: "Projektuję i akceptujesz", desc: "Dostajesz projekt do wglądu. Poprawki do skutku — bez liczenia rund." },
-                            { num: "3", title: "Drukuję i wysyłam", desc: "Finalne pliki trafiają do druku. Gotowy produkt ląduje pod Twoją firmą." },
+                            { num: "1", title: "Mówisz co potrzebujesz", desc: "Wzór, ilość, rozmiary — swój lub mój projekt. Zajmuje to kilka minut." },
+                            { num: "2", title: "Akceptujesz wzór", desc: "Dostajesz podgląd nadruku na ubraniu, zanim cokolwiek wyląduje pod prasą." },
+                            { num: "3", title: "Odbierasz gotowe", desc: "Odbiór w Rzeszowie albo wysyłka kurierem — bez zbędnego czekania." },
                         ].map((step, i) => (
                             <AnimatedSection key={i} delay={i * 0.15} className="text-center">
                                 <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-bold text-xl mx-auto mb-4">
