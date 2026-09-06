@@ -3,6 +3,18 @@ import { Star, ExternalLink } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
 
+/**
+ * Polska odmiana: 1 opinia, 2-4 opinie, 5-21 opinii, 22-24 opinie...
+ * Reguła dotyczy końcówki liczby, z wyjątkiem nastek (12, 13, 14).
+ */
+function odmienOpinie(n: number): string {
+    const ostatnia = n % 10;
+    const dwieOstatnie = n % 100;
+    if (n === 1) return "opinia";
+    if (ostatnia >= 2 && ostatnia <= 4 && !(dwieOstatnie >= 12 && dwieOstatnie <= 14)) return "opinie";
+    return "opinii";
+}
+
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
     return (
@@ -63,7 +75,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                         <span className="flex flex-col gap-1">
                             <Stars rating={rating} size={16} />
                             <span className="text-white/50 text-xs">
-                                {total} {total === 1 ? "opinia" : total < 5 ? "opinie" : "opinii"} w Google
+                                {total} {odmienOpinie(total)} w Google
                             </span>
                         </span>
                         {mapsUrl && (
