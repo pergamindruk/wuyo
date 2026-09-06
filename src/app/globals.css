@@ -499,3 +499,34 @@ body {
     background-position: 50% center;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Liczniki w sekcji hero.
+   Podczas odliczania cyfry są lekko rozmyte i minimalnie mniejsze,
+   przez co ruch widać nawet kątem oka. Na końcu wskakują na ostro
+   z krótkim rozbłyskiem — to sygnał, że liczba jest już finalna.
+   ───────────────────────────────────────────────────────────── */
+.stat-number {
+  transition: filter 600ms ease-out, transform 600ms cubic-bezier(0.2, 1.1, 0.3, 1);
+  will-change: filter, transform;
+}
+
+.stat-number[data-phase="counting"] {
+  filter: blur(0.6px);
+  transform: scale(0.97);
+}
+
+.stat-number[data-phase="done"] {
+  filter: drop-shadow(0 0 16px rgba(255, 235, 82, 0.55));
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-number,
+  .stat-number[data-phase="counting"],
+  .stat-number[data-phase="done"] {
+    transition: none;
+    filter: none;
+    transform: none;
+  }
+}

@@ -1,66 +1,107 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
 
-function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: string }) {
-    const [current, setCurrent] = useState(0);
-    const [done, setDone] = useState(false);
+type StatProps = {
+    target: number;
+    suffix?: string;
+    /** Liczba miejsc po przecinku — 1 dla oceny „5,0”, 0 dla liczb całkowitych. */
+    decimals?: number;
+    /** Opóźnienie startu w ms. Liczniki ruszają po kolei, nie wszystkie naraz. */
+    delay?: number;
+};
+
+/** Formatowanie po polsku: przecinek dziesiętny, spacja jako separator tysięcy. */
+function format(value: number, decimals: number): string {
+    return value.toLocaleString("pl-PL", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    });
+}
+
+function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatProps) {
+    const reduceMotion = useReducedMotion();
+    const [current, setCurrent] = useState(reduceMotion ? target : 0);
+    const [phase, setPhase] = useState<"idle" | "counting" | "done">(reduceMotion ? "done" : "idle");
     const ref = useRef<HTMLSpanElement>(null);
     const isInView = useInView(ref as React.RefObject<Element>, { once: true, amount: 0.5 });
 
     useEffect(() => {
-        if (!isInView) return;
-        const duration = 1800;
-        const startTime = performance.now();
+        if (!isInView || reduceMotion) return;
 
-        const tick = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 4);
-            setCurrent(Math.round(eased * target));
-            if (progress < 1) {
-                requestAnimationFrame(tick);
-            } else {
-                setDone(true);
-            }
+        let frame = 0;
+        const duration = 2200;
+
+        // Hero jest nad zgięciem, więc bez opóźnienia całe odliczanie leci, zanim
+        // ktokolwiek zdąży na nie spojrzeć. Krótka pauza sprawia, że widać ruch.
+        const timer = window.setTimeout(() => {
+            setPhase("counting");
+            const startTime = performance.now();
+
+            const tick = (now: number) => {
+                const progress = Math.min((now - startTime) / duration, 1);
+                // expo-out: szybki start, długie, miękkie wyhamowanie na końcu
+                const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                setCurrent(eased * target);
+                if (progress < 1) {
+                    frame = requestAnimationFrame(tick);
+                } else {
+                    setCurrent(target);
+                    setPhase("done");
+                }
+            };
+            frame = requestAnimationFrame(tick);
+        }, delay);
+
+        return () => {
+            window.clearTimeout(timer);
+            cancelAnimationFrame(frame);
         };
-        requestAnimationFrame(tick);
-    }, [isInView, target]);
+    }, [isInView, target, delay, reduceMotion]);
 
     return (
         <span
             ref={ref}
-            className={`inline-block transition-[filter] duration-700 ${
-                done ? "drop-shadow-[0_0_16px_rgba(255,235,82,0.65)]" : ""
-            }`}
+            className="inline-block stat-number"
+            data-phase={phase}
+            // aria-label podaje wartość końcową, żeby czytnik ekranu nie recytował
+            // każdej klatki odliczania.
+            aria-label={`${format(target, decimals)}${suffix}`}
         >
-            {current}{suffix}
+            <span aria-hidden="true">
+                {format(current, decimals)}
+                {suffix}
+            </span>
         </span>
     );
 }
 
+const STATS: Array<{ value: StatProps; label: string }> = [
+    { value: { target: 156, suffix: "+", delay: 350 }, label: "projektów" },
+    { value: { target: 24, suffix: "h", delay: 550 }, label: "na wycenę" },
+    { value: { target: 5, decimals: 1, delay: 750 }, label: "ocena w Google" },
+];
+
 export function StatsCounter() {
     return (
-        <div className="flex items-stretch justify-center mt-14 gap-0">
-            {/* Stat 1 */}
-            <div className="flex flex-col items-center px-8 sm:px-14 md:px-20">
-                <span className="text-5xl sm:text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
-                    <AnimatedNumber target={156} suffix="+" />
-                </span>
-                <span className="text-white/35 text-[10px] uppercase tracking-[0.25em]">projektów</span>
-            </div>
-
-            {/* Divider */}
-            <div className="self-stretch w-px bg-white/10" />
-
-            {/* Stat 2 */}
-            <div className="flex flex-col items-center px-8 sm:px-14 md:px-20">
-                <span className="text-5xl sm:text-6xl md:text-7xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight" style={{ fontFamily: "var(--font-ava-meridian)" }}>
-                    <AnimatedNumber target={46} />
-                </span>
-                <span className="text-white/35 text-[10px] uppercase tracking-[0.25em]">branż</span>
-            </div>
+        <div className="flex items-stretch justify-center mt-14">
+            {STATS.map((stat, i) => (
+                <div key={stat.label} className="flex items-stretch">
+                    {i > 0 && <div className="self-stretch w-px bg-white/10" aria-hidden="true" />}
+                    <div className="flex flex-col items-center px-5 sm:px-10 md:px-14">
+                        <span
+                            className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight"
+                            style={{ fontFamily: "var(--font-ava-meridian)" }}
+                        >
+                            <AnimatedNumber {...stat.value} />
+                        </span>
+                        <span className="text-white/35 text-[10px] uppercase tracking-[0.25em] whitespace-nowrap">
+                            {stat.label}
+                        </span>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
