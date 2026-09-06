@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { getGoogleReviews } from "@/lib/google-reviews";
 import { GoogleReviews } from "@/components/GoogleReviews";
+import { staticGoogleReviews } from "@/data/google-reviews-static";
 
 type Testimonial = {
     id?: string;
@@ -67,6 +68,12 @@ export async function TestimonialsSection() {
     // żeby sekcja nigdy nie zniknęła ze strony.
     const google = await getGoogleReviews();
     if (google) return <GoogleReviews data={google} />;
+
+    // Bez kluczy API pokazujemy te same prawdziwe opinie, tylko przepisane
+    // ręcznie z profilu w Google. Wygląd i odnośniki identyczne.
+    if (staticGoogleReviews.reviews.length > 0) {
+        return <GoogleReviews data={staticGoogleReviews} />;
+    }
 
     const testimonials = await getTestimonials();
 

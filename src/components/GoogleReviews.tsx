@@ -2,18 +2,7 @@ import Image from "next/image";
 import { Star, ExternalLink } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
-
-/**
- * Polska odmiana: 1 opinia, 2-4 opinie, 5-21 opinii, 22-24 opinie...
- * Reguła dotyczy końcówki liczby, z wyjątkiem nastek (12, 13, 14).
- */
-function odmienOpinie(n: number): string {
-    const ostatnia = n % 10;
-    const dwieOstatnie = n % 100;
-    if (n === 1) return "opinia";
-    if (ostatnia >= 2 && ostatnia <= 4 && !(dwieOstatnie >= 12 && dwieOstatnie <= 14)) return "opinie";
-    return "opinii";
-}
+import { odmienOpinie, odstepCzasu } from "@/lib/polish-format";
 
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
@@ -97,8 +86,10 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                             <figure className="glass-card p-6 h-full flex flex-col gap-4">
                                 <div className="flex items-center justify-between gap-3">
                                     <Stars rating={review.rating} />
-                                    {review.relativeTime && (
-                                        <span className="text-white/35 text-xs">{review.relativeTime}</span>
+                                    {(review.relativeTime || odstepCzasu(review.publishTime)) && (
+                                        <span className="text-white/35 text-xs">
+                                            {review.relativeTime || odstepCzasu(review.publishTime)}
+                                        </span>
                                     )}
                                 </div>
 
