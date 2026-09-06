@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { getGoogleReviews } from "@/lib/google-reviews";
+import { GoogleReviews } from "@/components/GoogleReviews";
 
 type Testimonial = {
     id?: string;
@@ -60,6 +62,12 @@ async function getTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function TestimonialsSection() {
+    // Opinie z Google są źródłem podstawowym — prawdziwe i same się aktualizują.
+    // Gdy brakuje kluczy albo Google nie odpowie, wracamy do listy własnej,
+    // żeby sekcja nigdy nie zniknęła ze strony.
+    const google = await getGoogleReviews();
+    if (google) return <GoogleReviews data={google} />;
+
     const testimonials = await getTestimonials();
 
     const featured = testimonials.find(t => t.featured) ?? testimonials[0];
