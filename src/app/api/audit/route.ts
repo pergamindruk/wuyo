@@ -18,8 +18,11 @@ export async function POST(req: NextRequest) {
         if (isHoneypotTripped(hp)) {
             return NextResponse.json({ success: true }); // cicho odrzucamy bota
         }
-        if (!isValidEmail(email) || !isSafeHttpUrl(url)) {
-            return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
+        if (!isSafeHttpUrl(url)) {
+            return NextResponse.json({ error: "Sprawdź adres strony — potrzebuję pełnego linku." }, { status: 400 });
+        }
+        if (!isValidEmail(email)) {
+            return NextResponse.json({ error: "Sprawdź adres e-mail — coś się w nim nie zgadza." }, { status: 400 });
         }
         const emailClean = normalizeEmail(email);
 

@@ -130,11 +130,25 @@ export function ContactBrief() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...data, hp: honeypot }),
             });
-            if (!res.ok) throw new Error("network");
+            if (!res.ok) {
+                // Przy 400 serwer mówi konkretnie, co poprawić (np. zły adres) —
+                // pokazujemy to, żeby dało się wysłać ponownie. Przy awarii
+                // technicznej treść z serwera nic klientowi nie da, więc ogólnik.
+                if (res.status === 400) {
+                    const info = await res.json().catch(() => null);
+                    if (typeof info?.error === "string") throw new Error(info.error);
+                }
+                throw new Error("network");
+            }
             trackFormSubmit(path);
             setSubmitted(true);
-        } catch {
-            setError("Coś się posypało podczas wysyłania. Spróbuj napisać bezpośrednio na maila 😅");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "network";
+            setError(
+                message === "network"
+                    ? "Coś się posypało podczas wysyłania. Spróbuj napisać bezpośrednio na maila 😅"
+                    : message
+            );
         } finally {
             setSending(false);
         }

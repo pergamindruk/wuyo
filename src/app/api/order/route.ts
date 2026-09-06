@@ -201,8 +201,11 @@ export async function POST(req: NextRequest) {
         if (isHoneypotTripped(data.hp)) {
             return NextResponse.json({ success: true }); // cicho odrzucamy bota
         }
-        if (!data.name || !isValidEmail(data.email)) {
-            return NextResponse.json({ error: "Brak wymaganych pól: name, email" }, { status: 400 });
+        if (!data.name) {
+            return NextResponse.json({ error: "Podaj imię, żebym wiedział jak się do Ciebie zwracać." }, { status: 400 });
+        }
+        if (!isValidEmail(data.email)) {
+            return NextResponse.json({ error: "Sprawdź adres e-mail — coś się w nim nie zgadza." }, { status: 400 });
         }
         data.email = normalizeEmail(data.email);
         if (!Array.isArray(data.items) || data.items.length === 0) {

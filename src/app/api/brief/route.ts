@@ -175,8 +175,11 @@ export async function POST(req: NextRequest) {
         if (isHoneypotTripped(data.hp)) {
             return NextResponse.json({ success: true }); // cicho odrzucamy bota
         }
-        if (!isValidEmail(data.email) || !data.name) {
-            return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
+        if (!data.name) {
+            return NextResponse.json({ error: "Podaj imię, żebym wiedział jak się do Ciebie zwracać." }, { status: 400 });
+        }
+        if (!isValidEmail(data.email)) {
+            return NextResponse.json({ error: "Sprawdź adres e-mail — coś się w nim nie zgadza." }, { status: 400 });
         }
         // Klienci wklejają adresy ze spacją na końcu albo wielkimi literami.
         data.email = normalizeEmail(data.email);
