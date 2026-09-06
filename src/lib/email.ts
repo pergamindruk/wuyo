@@ -36,10 +36,37 @@ type SendPayload = Parameters<typeof resend.emails.send>[0];
 export async function sendEmail(payload: SendPayload, context: string): Promise<void> {
     const { data, error } = await resend.emails.send(payload);
 
-    if (error) {
-        console.error(`[email:${context}] Resend odrzucil wysylke:`, error);
-        throw new Error(`Wysylka maila nie powiodla sie (${context}): ${error.message ?? "nieznany blad"}`);
+    if (!error) {
+        console.info(`[email:${context}] wyslano, id=${data?.id}`);
+        return;
     }
 
-    console.info(`[email:${context}] wyslano, id=${data?.id}`);
+    console.error(`[email:${context}] Resend odrzucil wysylke:`, error);
+
+    // Adres w polu "odpowiedz do" pochodzi od klienta, więc mimo walidacji może
+    // się zdarzyć taki, którego dostawca poczty nie przyjmie. Powiadomienie jest
+    // ważniejsze niż wygoda odpisywania — ponawiamy bez tego pola, bo adres
+    // klienta i tak jest w treści wiadomości.
+    const odrzuconyReplyTo =
+        typeof error.message === "string" &&
+        error.message.includes("reply_to") &&
+        "replyTo" in payload &&
+        payload.replyTo;
+
+    if (odrzuconyReplyTo) {
+        const { replyTo: _pominiety, ...bezReplyTo } = payload as SendPayload & { replyTo?: unknown };
+        const ponowna = await resend.emails.send(bezReplyTo as SendPayload);
+
+        if (!ponowna.error) {
+            console.warn(`[email:${context}] wyslano bez pola reply_to, id=${ponowna.data?.id}`);
+            return;
+        }
+
+        console.error(`[email:${context}] ponowna wysylka rowniez odrzucona:`, ponowna.error);
+        throw new Error(
+            `Wysylka maila nie powiodla sie (${context}): ${ponowna.error.message ?? "nieznany blad"}`
+        );
+    }
+
+    throw new Error(`Wysylka maila nie powiodla sie (${context}): ${error.message ?? "nieznany blad"}`);
 }

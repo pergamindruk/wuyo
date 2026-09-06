@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { sendEmail, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
-import { escapeHtml, isValidEmail } from "@/lib/sanitize";
+import { escapeHtml, isValidEmail, normalizeEmail } from "@/lib/sanitize";
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
         }
 
         const safeName = escapeHtml(name);
+        const emailClean = normalizeEmail(email);
         const { error: dbError } = await supabase
             .from('leads')
             .insert([{
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
         await sendEmail({
             from: FROM_NOTIFICATION,
             to: TO_MATEUSZ,
-            replyTo: email,
+            replyTo: emailClean,
             subject: `🔥 Nowy lead z chatbota: ${safeName}`,
             html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #fff; border-radius: 12px;">

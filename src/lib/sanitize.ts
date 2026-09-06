@@ -10,10 +10,21 @@ export function escapeHtml(input: unknown): string {
         .replace(/'/g, "&#39;")
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Świadomie węższy niż "cokolwiek z małpą". Odrzuca znaki, których dostawca
+// poczty nie przyjmie w polu reply_to (nawiasy kątowe, przecinki, średniki,
+// cudzysłowy) — lepiej od razu poprosić klienta o poprawny adres, niż przyjąć
+// zgłoszenie i wywrócić się dopiero przy wysyłce powiadomienia.
+const EMAIL_RE = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/
+
+/** Obcina białe znaki i sprowadza do małych liter. Klienci wklejają adresy ze spacjami. */
+export function normalizeEmail(email: unknown): string {
+    return typeof email === "string" ? email.trim().toLowerCase() : ""
+}
 
 export function isValidEmail(email: unknown): email is string {
-    return typeof email === "string" && email.length <= 254 && EMAIL_RE.test(email)
+    if (typeof email !== "string") return false
+    const value = email.trim()
+    return value.length <= 254 && !value.includes("..") && EMAIL_RE.test(value)
 }
 
 // Tylko http(s) — blokuje javascript:/data: itp. wstrzyknięte w pole "url" (audyt strony)

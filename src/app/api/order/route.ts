@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
-import { escapeHtml, isValidEmail, isHoneypotTripped } from "@/lib/sanitize";
+import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
 
 interface CartItem {
     productId: string;
@@ -204,6 +204,7 @@ export async function POST(req: NextRequest) {
         if (!data.name || !isValidEmail(data.email)) {
             return NextResponse.json({ error: "Brak wymaganych pól: name, email" }, { status: 400 });
         }
+        data.email = normalizeEmail(data.email);
         if (!Array.isArray(data.items) || data.items.length === 0) {
             return NextResponse.json({ error: "Koszyk jest pusty" }, { status: 400 });
         }

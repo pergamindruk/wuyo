@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
-import { escapeHtml, isValidEmail, isHoneypotTripped } from "@/lib/sanitize";
+import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -178,6 +178,8 @@ export async function POST(req: NextRequest) {
         if (!isValidEmail(data.email) || !data.name) {
             return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
         }
+        // Klienci wklejają adresy ze spacją na końcu albo wielkimi literami.
+        data.email = normalizeEmail(data.email);
 
         const typeLabel: Record<string, string> = {
             branding: 'Branding',
