@@ -18,7 +18,7 @@ export type GoogleReview = {
     authorProfileUrl?: string;
     rating: number;
     text: string;
-    relativeTime: string;
+    relativeTime?: string;
     publishTime?: string;
 };
 

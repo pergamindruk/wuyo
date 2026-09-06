@@ -2,7 +2,8 @@ import Image from "next/image";
 import { Star, ExternalLink } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
-import { odmienOpinie, odstepCzasu } from "@/lib/polish-format";
+import { odmienOpinie } from "@/lib/polish-format";
+import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
@@ -96,14 +97,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                             }
                         >
                             <figure className="glass-card p-6 h-full flex flex-col gap-4">
-                                <div className="flex items-center justify-between gap-3">
-                                    <Stars rating={review.rating} />
-                                    {(review.relativeTime || odstepCzasu(review.publishTime)) && (
-                                        <span className="text-white/35 text-xs">
-                                            {review.relativeTime || odstepCzasu(review.publishTime)}
-                                        </span>
-                                    )}
-                                </div>
+                                <Stars rating={review.rating} />
 
                                 <blockquote className="text-white/75 leading-relaxed text-sm flex-1">
                                     &ldquo;{review.text}&rdquo;
@@ -123,9 +117,15 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                     ))}
                 </div>
 
-                <AnimatedSection className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-gold/20 bg-navy-light/40 backdrop-blur-sm px-6 py-5">
-                    <p className="text-white/70 text-sm text-center sm:text-left">
-                        Pracowaliśmy razem? Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.
+                <AnimatedSection className="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-gold/25 bg-navy-light/40 backdrop-blur-sm px-8 py-8 shadow-[0_0_40px_rgba(255,235,82,0.06)]">
+                    <p className="text-center md:text-left">
+                        <span className="eyebrow block mb-2">Pracowaliśmy razem?</span>
+                        <AnimatedShinyText
+                            shimmerWidth={160}
+                            className="mx-0 max-w-none block font-heading text-xl md:text-3xl font-bold leading-snug text-white/35 bg-gradient-to-r from-transparent via-gold to-transparent motion-reduce:animate-none motion-reduce:text-white/80"
+                        >
+                            Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.
+                        </AnimatedShinyText>
                     </p>
                     {writeReviewUrl && (
                         <a
