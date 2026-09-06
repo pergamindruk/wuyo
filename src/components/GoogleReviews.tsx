@@ -3,7 +3,6 @@ import { Star, ExternalLink } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
 import { odmienOpinie } from "@/lib/polish-format";
-import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
@@ -120,12 +119,9 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                 <AnimatedSection className="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-gold/25 bg-navy-light/40 backdrop-blur-sm px-8 py-8 shadow-[0_0_40px_rgba(255,235,82,0.06)]">
                     <p className="text-center md:text-left">
                         <span className="eyebrow block mb-2">Pracowaliśmy razem?</span>
-                        <AnimatedShinyText
-                            shimmerWidth={160}
-                            className="mx-0 max-w-none block font-heading text-xl md:text-3xl font-bold leading-snug text-white/35 bg-gradient-to-r from-transparent via-gold to-transparent motion-reduce:animate-none motion-reduce:text-white/80"
-                        >
+                        <span className="gold-flow block font-heading text-xl md:text-3xl font-bold leading-snug">
                             Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.
-                        </AnimatedShinyText>
+                        </span>
                     </p>
                     {writeReviewUrl && (
                         <a
