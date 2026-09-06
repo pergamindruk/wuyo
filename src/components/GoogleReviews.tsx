@@ -46,6 +46,10 @@ function Avatar({ src, name }: { src?: string; name: string }) {
  */
 export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
     const { rating, total, reviews, mapsUrl, writeReviewUrl } = data;
+    // Przy nieparzystej liczbie opinii ostatnia karta zostaje sama w rzędzie.
+    // Rozciągamy ją na obie kolumny i wyśrodkowujemy przy szerokości pozostałych,
+    // żeby nie wisiała przyklejona do lewej krawędzi.
+    const osieroconaOstatnia = reviews.length % 2 === 1;
 
     return (
         <section className="py-28 px-6 md:px-12 relative overflow-hidden">
@@ -82,7 +86,15 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {reviews.map((review, i) => (
-                        <AnimatedSection key={`${review.author}-${i}`} delay={i * 0.08}>
+                        <AnimatedSection
+                            key={`${review.author}-${i}`}
+                            delay={i * 0.08}
+                            className={
+                                osieroconaOstatnia && i === reviews.length - 1
+                                    ? "md:col-span-2 md:w-[calc(50%-0.5rem)] md:mx-auto"
+                                    : undefined
+                            }
+                        >
                             <figure className="glass-card p-6 h-full flex flex-col gap-4">
                                 <div className="flex items-center justify-between gap-3">
                                     <Stars rating={review.rating} />
