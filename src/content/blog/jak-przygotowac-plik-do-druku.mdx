@@ -1,0 +1,159 @@
+---
+title: "Jak przygotować plik do druku? Spady, CMYK i 5 błędów, przez które projekt wraca"
+excerpt: "Praktyczny przewodnik po przygotowaniu pliku do druku: spady, marginesy bezpieczeństwa, CMYK, rozdzielczość i krzywe. Plus checklista, którą przejdziesz przed wysłaniem projektu."
+date: "2026-09-06"
+readTime: "9 min"
+category: "Druk"
+image: "/realizacje/projekt-etykiet.webp"
+imageAlt: "Projekt etykiet przygotowany do druku — spady, znaczniki cięcia i kolory CMYK. Realizacja WUYO Studio"
+dateModified: "2026-09-06"
+---
+
+Większość plików, które wracają do poprawki, nie ma źle zaprojektowanej grafiki. Ma źle przygotowany plik. To dwie różne rzeczy — i tę drugą naprawisz w kwadrans, jeśli wiesz, czego szukać.
+
+Poniżej pięć rzeczy, które sprawdza każdy drukarz, zanim w ogóle spojrzy na projekt.
+
+## 1. Spady — 3 mm zapasu poza formatem
+
+Najczęstszy powód odesłania pliku.
+
+Papier po druku jest cięty w stosie, a gilotyna ma tolerancję rzędu 1 mm w każdą stronę. Jeśli Twoje tło kończy się dokładnie na krawędzi formatu, po cięciu zobaczysz białe paski. Nie czasem — prawie zawsze.
+
+Rozwiązanie: przedłuż tło i wszystkie elementy dochodzące do krawędzi o **3 mm poza format**.
+
+| Format docelowy | Format pliku ze spadem |
+|---|---|
+| Wizytówka 90 × 50 mm | 96 × 56 mm |
+| Ulotka A5 (148 × 210 mm) | 154 × 216 mm |
+| Ulotka A4 (210 × 297 mm) | 216 × 303 mm |
+| Plakat A3 (297 × 420 mm) | 303 × 426 mm |
+
+<Callout type="info">
+Spad dotyczy tylko elementów dochodzących do krawędzi. Jeśli projekt ma białe tło i nic go nie dotyka, spad nie jest potrzebny — choć i tak lepiej go dodać, bo nic nie kosztuje.
+</Callout>
+
+## 2. Margines bezpieczeństwa — 3–5 mm do wewnątrz
+
+Odwrotność spadu i błąd popełniany równie często.
+
+Ta sama tolerancja gilotyny działa też w drugą stronę. Jeśli tekst albo logo siedzi 1 mm od krawędzi, po cięciu może zostać przycięty albo znaleźć się niebezpiecznie blisko brzegu.
+
+Trzymaj wszystkie ważne elementy — tekst, logo, numer telefonu, kod QR — **minimum 3 mm od linii cięcia**. Przy wizytówkach wolę 5 mm, bo wygląda spokojniej.
+
+<GreenRed
+  green="Tło na spad 3 mm na zewnątrz, treść 5 mm do wewnątrz. Między jednym a drugim masz zapas na niedokładność cięcia — wystarczająco dużo, żeby nic się nie stało."
+  red="Tekst 1 mm od krawędzi i tło kończące się dokładnie na formacie. Dwa błędy naraz — po cięciu masz biały pasek z jednej strony i uciętą literę z drugiej."
+/>
+
+## 3. CMYK, nie RGB
+
+Ekran świeci światłem i miesza czerwony, zielony i niebieski. Drukarka nakłada farbę i miesza cyjan, magentę, żółty i czarny. To dwa różne światy i nie wszystko z jednego da się przenieść do drugiego.
+
+Co się psuje najbardziej przy konwersji:
+
+- **Intensywny błękit** — potrafi zmienić się w fioletowy
+- **Neonowa zieleń i pomarańcz** — na papierze zawsze będą bledsze, tego nie da się obejść
+- **Czysta czerń tekstu** — jeśli zostawisz ją jako RGB 0/0/0, drukarka może wydrukować ją z czterech farb i tekst wyjdzie nieostry
+
+Ustaw dokument w CMYK **od początku**, a nie konwertuj na końcu. Konwersja na końcu zawsze coś zmienia i zawsze zaskakuje.
+
+### Dwie sztuczki z czernią
+
+**Tekst** — używaj czystego czarnego: C0 M0 Y0 **K100**. Jedna farba, ostre krawędzie.
+
+**Duże czarne płaszczyzny** — czysty K100 wygląda na dużym polu jak ciemna szarość. Użyj czerni głębokiej, na przykład C40 M30 Y30 K100. Ale nigdy pod małym tekstem — tam wróć do K100.
+
+## 4. Rozdzielczość 300 dpi w skali 1:1
+
+Zdjęcie z internetu ma zwykle 72 dpi. Na ekranie wygląda dobrze, na papierze rozpada się na kwadraty.
+
+Zasada: **300 dpi w docelowym rozmiarze**. Zdjęcie 300 dpi powiększone dwukrotnie to w praktyce 150 dpi — powiększenie nie dodaje informacji, tylko rozciąga to, co jest.
+
+| Element | Wymagana rozdzielczość |
+|---|---|
+| Zdjęcia w druku małoformatowym | 300 dpi |
+| Grafika wektorowa (logo, ikony) | bez znaczenia — skaluje się bez straty |
+| Billboard, baner wielkoformatowy | 25–72 dpi (oglądany z daleka) |
+| Plakat A3–A1 | 150–300 dpi |
+
+Logo zawsze wstawiaj z pliku wektorowego (AI, EPS, SVG, PDF). Jeśli masz je tylko jako PNG albo JPG, to osobny problem — opisałem go w tekście [jak wybrać projektanta logo](/blog/jak-wybrac-projektanta-logo).
+
+## 5. Teksty zamienione na krzywe
+
+Jeśli w Twoim projekcie jest czcionka, której nie ma na komputerze drukarza, program podmieni ją na inną. Układ się rozjedzie, a Ty dowiesz się o tym po odbiorze.
+
+Dwa sposoby, żeby tego uniknąć:
+
+1. **Zamień teksty na krzywe** (Tekst → Utwórz kontury). Tekst przestaje być tekstem, staje się kształtem. Uwaga: po tej operacji nie da się już poprawić literówki, więc zapisz sobie wersję edytowalną osobno.
+2. **Osadź czcionki w PDF-ie** przy eksporcie. Wygodniejsze, bo plik zostaje edytowalny, i w większości przypadków wystarcza.
+
+<Callout type="warning">
+**Zanim zamienisz teksty na krzywe — przeczytaj projekt jeszcze raz.** To ostatni moment na wyłapanie literówki w numerze telefonu. Po druku 500 wizytówek jest już tylko dodruk na własny koszt.
+</Callout>
+
+## W czym to robić
+
+Nie każdy program nadaje się do przygotowania pliku do druku.
+
+| Program | Do druku? | Uwagi |
+|---|---|---|
+| Adobe Illustrator, InDesign | tak | Standard, pełna kontrola nad spadami i kolorami |
+| Affinity Designer, Publisher | tak | Tańsza alternatywa, robi wszystko co trzeba |
+| CorelDRAW | tak | Wciąż popularny w drukarniach |
+| Photoshop | z zastrzeżeniem | Tekst wychodzi mniej ostry, bo wszystko jest rastrem |
+| Canva | ryzykownie | Eksport PDF do druku daje spady, ale kolory zostają w RGB |
+| Word, PowerPoint | nie | Brak spadów, brak CMYK, nieprzewidywalne osadzanie czcionek |
+
+Jeśli pracujesz w Canvie, wybierz eksport **PDF do druku** i zaznacz opcję znaczników spadu. Kolory i tak przyjdą w RGB, więc uprzedź o tym drukarza — przy prostych projektach da się to obsłużyć, przy intensywnych kolorach lepiej oddać projekt komuś, kto zrobi to w CMYK-u.
+
+## Checklista przed wysłaniem pliku
+
+<CheckItem>Format zgodny z zamówieniem, ze spadem 3 mm z każdej strony</CheckItem>
+<CheckItem>Ważne elementy minimum 3 mm od linii cięcia</CheckItem>
+<CheckItem>Dokument w trybie CMYK, nie RGB</CheckItem>
+<CheckItem>Czarny tekst jako K100, nie jako mieszanka czterech farb</CheckItem>
+<CheckItem>Zdjęcia 300 dpi w docelowym rozmiarze</CheckItem>
+<CheckItem>Logo wstawione z pliku wektorowego</CheckItem>
+<CheckItem>Teksty na krzywych albo czcionki osadzone w PDF</CheckItem>
+<CheckItem>Eksport do PDF, nie do JPG</CheckItem>
+<CheckItem>Literówki sprawdzone przez drugą osobę</CheckItem>
+<CheckItem ok={false}>Plik w formacie tekstowym albo prezentacji, bez pytania czy drukarz to otworzy</CheckItem>
+<CheckItem ok={false}>Projekt zrobiony w rozmiarze na oko, do przeskalowania na miejscu</CheckItem>
+
+<CTABox
+  text="Nie chcesz się w to bawić? Przygotuję plik albo zrobię projekt od zera i wydrukuję u siebie."
+  href="/#kontakt"
+  label="Napisz do mnie"
+/>
+
+## Co jeśli nie masz projektu
+
+Jeśli po przeczytaniu tego myślisz, że nie masz na to czasu — to normalna reakcja i dobra decyzja. Przygotowanie pliku to godzina roboty dla kogoś, kto robi to codziennie, i pół dnia frustracji dla kogoś, kto robi to raz na rok.
+
+U mnie projekt i druk to jedno zlecenie, więc problem przygotowania pliku po prostu nie istnieje — plik przygotowuję sobie sam. Ceny znajdziesz w [cenniku](/cennik), a zakres na stronie [druk w Rzeszowie](/druk-rzeszow). Ile kosztuje sam druk, a ile projekt plus druk, rozpisałem w tekście [ile kosztuje druk wizytówek](/blog/ile-kosztuje-druk-wizytowek).
+
+## FAQ
+
+**Co to są spady w druku?**
+
+Spad to 3 mm zapasu tła wychodzącego poza docelowy format. Po wydrukowaniu papier jest cięty w stosie z tolerancją około 1 mm, więc bez spadu na krawędziach pojawiają się białe paski. Wizytówkę 90 × 50 mm projektujesz więc jako 96 × 56 mm.
+
+**Czy plik do druku musi być w CMYK?**
+
+Tak, jeśli zależy Ci na przewidywalnych kolorach. Drukarka pracuje na czterech farbach CMYK, a ekran na świetle RGB. Plik w RGB zostanie i tak przekonwertowany — tyle że bez Twojej kontroli, więc intensywne błękity i zielenie mogą wyjść zupełnie inaczej niż na monitorze.
+
+**Jaka rozdzielczość jest potrzebna do druku?**
+
+300 dpi w docelowym rozmiarze dla druku małoformatowego: wizytówki, ulotki, plakaty do A3. Przy billboardach i banerach wystarczy 25–72 dpi, bo ogląda się je z kilkunastu metrów. Grafika wektorowa nie ma rozdzielczości — skaluje się bez straty jakości.
+
+**W jakim formacie wysłać plik do druku?**
+
+PDF, najlepiej w standardzie PDF/X-1a albo PDF/X-4. Ma osadzone czcionki, zachowuje CMYK i zapisuje informację o spadach. JPG nadaje się tylko do bardzo prostych zleceń, a pliki tekstowe i prezentacje nie nadają się w ogóle.
+
+**Czy muszę zamieniać teksty na krzywe?**
+
+Nie musisz, jeśli poprawnie osadzisz czcionki w PDF-ie — to wystarcza w większości przypadków. Krzywe są pewniejsze, ale nieodwracalne: po zamianie nie poprawisz już literówki, więc zawsze zachowaj wersję edytowalną.
+
+**Czy Canva nadaje się do przygotowania pliku do druku?**
+
+Do prostych projektów tak, przy zachowaniu ostrożności. Wybierz eksport PDF do druku ze znacznikami spadu i uprzedź drukarza, że kolory są w RGB. Przy projektach z intensywnymi kolorami albo dużymi czarnymi płaszczyznami lepiej oddać plik komuś, kto przygotuje go w CMYK-u.

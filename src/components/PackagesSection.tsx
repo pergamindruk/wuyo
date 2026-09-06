@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, CreditCard, BookOpen, Gift, FileText, Frame, Magnet, Mail } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { motion, AnimatePresence } from "framer-motion";
+import { trackOrderSubmit } from "@/lib/tracking";
 
 // Pakiety biznesowe przeniesione do osobnej sekcji cennika (PricingSection / src/data/pricing.ts).
 
@@ -307,6 +308,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [note, setNote] = useState("");
+    const [honeypot, setHoneypot] = useState(""); // bot trap — niewidoczne dla ludzi
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -328,6 +330,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (honeypot) return; // cicho odrzucamy bota
         if (!name.trim() || !email.trim() || items.length === 0) return;
         setLoading(true);
         setStatus("idle");
@@ -335,9 +338,10 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
             const res = await fetch("/api/order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items, name: name.trim(), email: email.trim(), note: note.trim() }),
+                body: JSON.stringify({ items, name: name.trim(), email: email.trim(), note: note.trim(), hp: honeypot }),
             });
             if (!res.ok) throw new Error("Błąd serwera");
+            trackOrderSubmit(items.length);
             setStatus("success");
         } catch {
             setStatus("error");
@@ -448,6 +452,17 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
+                            {/* Honeypot — niewidoczne dla ludzi, boty je wypełniają */}
+                            <input
+                                type="text"
+                                name="company"
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                                style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0 }}
+                            />
                             <p className="text-white/60 text-xs uppercase tracking-widest font-semibold">Dane kontaktowe</p>
 
                             <div>

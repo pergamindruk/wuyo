@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resend, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
+import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
+import { createClient } from "@/lib/supabase/server";
+import { escapeHtml, isValidEmail, isHoneypotTripped } from "@/lib/sanitize";
 
 interface CartItem {
     productId: string;
@@ -15,6 +17,7 @@ interface OrderData {
     name: string;
     email: string;
     note: string;
+    hp?: string; // honeypot — puste pole niewidoczne dla ludzi
 }
 
 function buildOrderHtml(d: OrderData): string {
@@ -26,10 +29,10 @@ function buildOrderHtml(d: OrderData): string {
         .map(
             (item) => `
             <tr>
-                <td style="padding: 10px 14px; color: #eee; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${item.productName}</td>
-                <td style="padding: 10px 14px; color: #aaa; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${item.qty}</td>
+                <td style="padding: 10px 14px; color: #eee; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${escapeHtml(item.productName)}</td>
+                <td style="padding: 10px 14px; color: #aaa; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${escapeHtml(item.qty)}</td>
                 <td style="padding: 10px 14px; color: ${item.priceNum === 0 ? "#888" : "#FFD700"}; font-size: 14px; font-weight: 700; border-bottom: 1px solid #2a2a3e; text-align: right; white-space: nowrap;">${
-                    item.priceNum === 0 ? "wycena indywidualna" : item.price
+                    item.priceNum === 0 ? "wycena indywidualna" : escapeHtml(item.price)
                 }</td>
             </tr>`
         )
@@ -52,7 +55,7 @@ function buildOrderHtml(d: OrderData): string {
     const noteSection = d.note
         ? `<div style="margin-top: 24px; background: #1a1a2e; border-radius: 8px; padding: 14px 18px;">
                 <p style="color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0;">Notatka klienta</p>
-                <p style="color: #eee; font-size: 14px; margin: 0; white-space: pre-wrap;">${d.note}</p>
+                <p style="color: #eee; font-size: 14px; margin: 0; white-space: pre-wrap;">${escapeHtml(d.note)}</p>
            </div>`
         : "";
 
@@ -70,9 +73,9 @@ function buildOrderHtml(d: OrderData): string {
                     🛒 Zamówienie druku
                 </div>
 
-                <h2 style="color: #fff; font-size: 18px; margin: 0 0 4px 0;">${d.name}</h2>
+                <h2 style="color: #fff; font-size: 18px; margin: 0 0 4px 0;">${escapeHtml(d.name)}</h2>
                 <p style="color: #FFD700; margin: 0 0 28px 0; font-size: 14px;">
-                    <a href="mailto:${d.email}" style="color: #FFD700;">${d.email}</a>
+                    <a href="mailto:${encodeURIComponent(d.email)}" style="color: #FFD700;">${escapeHtml(d.email)}</a>
                 </p>
 
                 <table style="width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden; margin-bottom: 20px;">
@@ -101,17 +104,17 @@ function buildOrderHtml(d: OrderData): string {
 }
 
 function buildAutoReplyHtml(d: OrderData): string {
-    const firstName = d.name.split(" ")[0] ?? "Hej";
+    const firstName = escapeHtml(d.name.split(" ")[0] ?? "Hej");
     const hasMultiple = d.items.length >= 2;
 
     const itemList = d.items
         .map(
             (item) =>
                 `<li style="padding: 8px 0; border-bottom: 1px solid #1e293b; color: #e2e8f0; font-size: 14px;">
-                    <strong style="color:#d99e28;">${item.productName}</strong>
-                    <span style="color:#94a3b8;"> — ${item.qty} &nbsp; </span>
+                    <strong style="color:#d99e28;">${escapeHtml(item.productName)}</strong>
+                    <span style="color:#94a3b8;"> — ${escapeHtml(item.qty)} &nbsp; </span>
                     <span style="color:${item.priceNum === 0 ? "#64748b" : "#d99e28"}; font-weight: 700;">${
-                        item.priceNum === 0 ? "wycena indywidualna" : item.price
+                        item.priceNum === 0 ? "wycena indywidualna" : escapeHtml(item.price)
                     }</span>
                 </li>`
         )
@@ -183,7 +186,9 @@ function buildAutoReplyHtml(d: OrderData): string {
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
-    if (!rateLimit(`order:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs)) {
+    const supabase = await createClient();
+
+    if (!(await rateLimit(supabase, `order:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs))) {
         return NextResponse.json(
             { error: "Za dużo zapytań. Spróbuj za chwilę." },
             { status: 429, headers: { "Retry-After": "60" } }
@@ -193,7 +198,10 @@ export async function POST(req: NextRequest) {
     try {
         const data: OrderData = await req.json();
 
-        if (!data.name || !data.email) {
+        if (isHoneypotTripped(data.hp)) {
+            return NextResponse.json({ success: true }); // cicho odrzucamy bota
+        }
+        if (!data.name || !isValidEmail(data.email)) {
             return NextResponse.json({ error: "Brak wymaganych pól: name, email" }, { status: 400 });
         }
         if (!Array.isArray(data.items) || data.items.length === 0) {
@@ -202,20 +210,20 @@ export async function POST(req: NextRequest) {
 
         const firstName = data.name.split(" ")[0] ?? data.name;
 
-        await resend.emails.send({
+        await sendEmail({
             from: FROM_NOTIFICATION,
             to: TO_MATEUSZ,
             replyTo: data.email,
             subject: `🛒 Nowe zamówienie druku — ${data.name}`,
             html: buildOrderHtml(data),
-        });
+        }, "zamowienie-powiadomienie");
 
-        await resend.emails.send({
+        await sendEmail({
             from: FROM_CLIENT,
             to: data.email,
             subject: `Hej ${firstName}! Dostałem Twoje zamówienie 🎉`,
             html: buildAutoReplyHtml(data),
-        });
+        }, "zamowienie-autoodpowiedz");
 
         return NextResponse.json({ success: true });
     } catch (error) {

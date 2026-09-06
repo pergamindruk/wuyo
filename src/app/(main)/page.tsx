@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
 import { PackagesSection } from "@/components/PackagesSection";
+import { BlogTeaser } from "@/components/BlogTeaser";
 import { PricingSection } from "@/components/pricing/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
@@ -148,7 +149,7 @@ export default function Home() {
         {
             icon: <Layout size={28} />,
             title: "Strona, która sprzedaje za Ciebie",
-            desc: "Wykodowane od zera na React/Next.js. Od szybkich stron One-Page po większe serwisy. Co to znaczy dla Ciebie? Kuloodporne bezpieczeństwo, techniczne SEO i prędkość, która zachwyca Google.",
+            desc: "Wykodowana od zera na React/Next.js. Od szybkich stron One-Page po większe serwisy. Co to znaczy dla Ciebie? Kuloodporne bezpieczeństwo, techniczne SEO i prędkość, która zachwyca Google.",
             href: "/strony-www",
             wide: true,
         },
@@ -170,14 +171,14 @@ export default function Home() {
             icon: <Share2 size={28} />,
             title: "Social media, które zatrzymują scrollowanie",
             desc: "Wjeżdżam na pełnej na Twoje sociale. Karuzele, posty, rolki i miniatury, które zatrzymają scrollowanie i sprawią, że ludzie zaczną klikać.",
-            href: null,
+            href: "/cennik",
             wide: false,
         },
         {
             icon: <Box size={28} />,
             title: "Projekty graficzne, które robią robotę",
-            desc: "Potrzebujesz czegoś poza logo i stroną? Projektuję opakowania, etykiety, materiały POS, prezentacje, banery i infografiki — wszystko, czego marka potrzebuje, żeby wyglądać spójnie i profesjonalnie na każdym nośniku.",
-            href: null,
+            desc: "Potrzebujesz czegoś poza logo i stroną? Projektuję opakowania, etykiety, materiały POS, prezentacje, banery i infografiki — wszystko, czego marka potrzebuje, żeby wyglądać spójnie na każdym nośniku.",
+            href: "/cennik",
             wide: false,
         },
     ];
@@ -310,6 +311,9 @@ export default function Home() {
 
             {/* ═══════════════════════ FAQ ═══════════════════════ */}
             <FAQSection />
+
+            {/* ═══════════════════════ BLOG ═══════════════════════ */}
+            <BlogTeaser />
 
             {/* ═══════════════════════ AUDYT ═══════════════════════ */}
             <AuditSection />

@@ -1,22 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
-import { resend, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
+import { sendEmail, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
+import { escapeHtml, isValidEmail } from "@/lib/sanitize";
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
-    if (!rateLimit(`lead:${ip}`, LIMITS.lead.limit, LIMITS.lead.windowMs)) {
+    const supabase = await createClient();
+
+    if (!(await rateLimit(supabase, `lead:${ip}`, LIMITS.lead.limit, LIMITS.lead.windowMs))) {
         return NextResponse.json({ error: "Za dużo zapytań." }, { status: 429, headers: { 'Retry-After': '60' } })
     }
 
     try {
         const { name, email } = await req.json();
 
-        if (!name || !email) {
+        if (!name || !isValidEmail(email)) {
             return NextResponse.json({ error: "Brak danych" }, { status: 400 });
         }
 
-        const supabase = await createClient();
+        const safeName = escapeHtml(name);
         const { error: dbError } = await supabase
             .from('leads')
             .insert([{
@@ -28,10 +31,11 @@ export async function POST(req: NextRequest) {
 
         if (dbError) console.error("Database save error:", dbError);
 
-        await resend.emails.send({
+        await sendEmail({
             from: FROM_NOTIFICATION,
             to: TO_MATEUSZ,
-            subject: `🔥 Nowy lead z chatbota: ${name}`,
+            replyTo: email,
+            subject: `🔥 Nowy lead z chatbota: ${safeName}`,
             html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #0a0a0a; color: #fff; border-radius: 12px;">
             <h1 style="color: #FFD700; margin-bottom: 8px;">🔥 Nowy lead z chatbota!</h1>
@@ -39,11 +43,11 @@ export async function POST(req: NextRequest) {
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 12px; background: #1a1a1a; border-radius: 8px 8px 0 0; color: #FFD700; font-weight: bold;">👤 Imię</td>
-                <td style="padding: 12px; background: #1a1a1a; border-radius: 8px 8px 0 0; color: #fff;">${name}</td>
+                <td style="padding: 12px; background: #1a1a1a; border-radius: 8px 8px 0 0; color: #fff;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding: 12px; background: #111; color: #FFD700; font-weight: bold;">📧 E-mail</td>
-                <td style="padding: 12px; background: #111; color: #fff;"><a href="mailto:${email}" style="color: #FFD700;">${email}</a></td>
+                <td style="padding: 12px; background: #111; color: #fff;"><a href="mailto:${encodeURIComponent(email)}" style="color: #FFD700;">${escapeHtml(email)}</a></td>
               </tr>
               <tr>
                 <td style="padding: 12px; background: #1a1a1a; border-radius: 0 0 8px 8px; color: #FFD700; font-weight: bold;">🕐 Data</td>
@@ -53,7 +57,7 @@ export async function POST(req: NextRequest) {
             <p style="margin-top: 24px; color: #aaa; font-size: 14px;">Lead pochodzi z chatbota na stronie Wuyo. Został zapisany w panelu Laboratorium.</p>
           </div>
         `,
-        });
+        }, "lead-powiadomienie");
 
         return NextResponse.json({ success: true });
     } catch (error) {

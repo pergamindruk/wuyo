@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -38,7 +39,20 @@ export default function BlogPage() {
                     {allPosts.map((post, i) => (
                         <AnimatedSection key={post.slug} delay={i * 0.1}>
                             <Link href={`/blog/${post.slug}`} className="glass-card p-8 md:p-10 block group">
-                                <div className="flex items-center gap-3 mb-4">
+                                <div className="flex flex-col md:flex-row md:items-start md:gap-8">
+                                {post.image && (
+                                    <div className="relative w-full md:w-56 shrink-0 aspect-[4/3] mb-6 md:mb-0 rounded-xl overflow-hidden border border-white/10">
+                                        <Image
+                                            src={post.image}
+                                            alt={post.imageAlt ?? post.title}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 224px"
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                    </div>
+                                )}
+                                <div className="min-w-0">
+                                <div className="flex items-center gap-3 mb-4 flex-wrap">
                                     <span className="eyebrow text-xs">{post.category}</span>
                                     <span className="text-white/20">·</span>
                                     <span className="text-white/40 text-xs flex items-center gap-1">
@@ -54,6 +68,8 @@ export default function BlogPage() {
                                 <span className="inline-flex items-center gap-2 text-gold font-bold text-sm group-hover:gap-3 transition-all">
                                     Czytaj artykuł <ArrowRight size={16} />
                                 </span>
+                                </div>
+                                </div>
                             </Link>
                         </AnimatedSection>
                     ))}

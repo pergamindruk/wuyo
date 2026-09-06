@@ -40,3 +40,22 @@ export function trackWhatsAppClick() {
     })
     fbqEvent('Contact')
 }
+
+// Konwersja: zgloszenie do bezplatnego audytu strony
+export function trackAuditSubmit() {
+    gtagEvent('generate_lead', {
+        event_category: 'contact',
+        event_label: 'audyt',
+    })
+    fbqEvent('Lead', { content_name: 'audyt' })
+}
+
+// Konwersja: zlozenie zamowienia na druk
+export function trackOrderSubmit(itemCount: number) {
+    gtagEvent('generate_lead', {
+        event_category: 'order',
+        event_label: 'druk',
+        value: itemCount,
+    })
+    fbqEvent('Lead', { content_name: 'zamowienie-druk', num_items: itemCount })
+}

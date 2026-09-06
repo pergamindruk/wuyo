@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resend, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
+import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
+import { escapeHtml, isValidEmail, isHoneypotTripped } from "@/lib/sanitize";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -19,6 +20,7 @@ interface BriefData {
     email?: string;
     note?: string;
     budget?: string;
+    hp?: string; // honeypot — puste pole niewidoczne dla ludzi
 }
 
 const siteTypeLabel: Record<string, string> = {
@@ -64,8 +66,8 @@ function buildHtml(d: BriefData): string {
     const tableRows = rows
         .map(([k, v]) => `
             <tr>
-                <td style="padding: 10px 14px; background: #1a1a2e; color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; width: 35%; border-bottom: 1px solid #2a2a3e;">${k}</td>
-                <td style="padding: 10px 14px; color: #eee; font-size: 14px; border-bottom: 1px solid #2a2a3e; white-space: pre-wrap;">${v}</td>
+                <td style="padding: 10px 14px; background: #1a1a2e; color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; width: 35%; border-bottom: 1px solid #2a2a3e;">${escapeHtml(k)}</td>
+                <td style="padding: 10px 14px; color: #eee; font-size: 14px; border-bottom: 1px solid #2a2a3e; white-space: pre-wrap;">${escapeHtml(v)}</td>
             </tr>`)
         .join("");
 
@@ -82,9 +84,9 @@ function buildHtml(d: BriefData): string {
                 <div style="background: #FFD700; display: inline-block; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; color: #000; margin-bottom: 24px;">
                     ${pathLabel[d.path]}
                 </div>
-                <h2 style="color: #fff; font-size: 18px; margin: 0 0 4px 0;">${d.name ?? "Nieznany"}</h2>
+                <h2 style="color: #fff; font-size: 18px; margin: 0 0 4px 0;">${escapeHtml(d.name ?? "Nieznany")}</h2>
                 <p style="color: #FFD700; margin: 0 0 24px 0; font-size: 14px;">
-                    <a href="mailto:${d.email}" style="color: #FFD700;">${d.email ?? "—"}</a>
+                    <a href="mailto:${encodeURIComponent(d.email ?? "")}" style="color: #FFD700;">${escapeHtml(d.email ?? "—")}</a>
                 </p>
                 <table style="width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden;">
                     ${tableRows}
@@ -99,7 +101,7 @@ function buildHtml(d: BriefData): string {
 }
 
 function buildAutoReply(d: BriefData): string {
-    const firstName = d.name?.split(" ")[0] ?? "Hej";
+    const firstName = escapeHtml(d.name?.split(" ")[0] ?? "Hej");
     const serviceMap: Record<string, string> = {
         branding: "logo i identyfikację wizualną",
         web: "stronę internetową",
@@ -161,19 +163,22 @@ function buildAutoReply(d: BriefData): string {
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
-    if (!rateLimit(`brief:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs)) {
+    const supabase = await createClient();
+
+    if (!(await rateLimit(supabase, `brief:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs))) {
         return NextResponse.json({ error: "Za dużo zapytań. Spróbuj za chwilę." }, { status: 429, headers: { 'Retry-After': '60' } })
     }
 
     try {
         const data: BriefData = await req.json();
 
-        if (!data.email || !data.name) {
+        if (isHoneypotTripped(data.hp)) {
+            return NextResponse.json({ success: true }); // cicho odrzucamy bota
+        }
+        if (!isValidEmail(data.email) || !data.name) {
             return NextResponse.json({ error: "Brak wymaganych pól" }, { status: 400 });
         }
 
-
-        const supabase = await createClient();
         const typeLabel: Record<string, string> = {
             branding: 'Branding',
             web: 'Strona WWW',
@@ -198,20 +203,20 @@ export async function POST(req: NextRequest) {
             quick: "Szybkie zapytanie",
         };
 
-        await resend.emails.send({
+        await sendEmail({
             from: FROM_NOTIFICATION,
             to: TO_MATEUSZ,
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data),
-        });
+        }, "brief-powiadomienie");
 
-        await resend.emails.send({
+        await sendEmail({
             from: FROM_CLIENT,
             to: data.email!,
             subject: `Cześć ${data.name?.split(" ")[0] ?? ""}! Dostałem Twój brief 👋`,
             html: buildAutoReply(data),
-        });
+        }, "brief-autoodpowiedz");
 
         // Dodaj do Mailerlite
         try {

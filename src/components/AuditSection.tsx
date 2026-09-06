@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { AlertTriangle, Check } from "lucide-react";
+import { trackAuditSubmit } from "@/lib/tracking";
 
 export function AuditSection() {
     const [url, setUrl] = useState("");
@@ -25,9 +26,10 @@ export function AuditSection() {
             const res = await fetch("/api/audit", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url: url.trim(), email: email.trim() }),
+                body: JSON.stringify({ url: url.trim(), email: email.trim(), hp: honeypot }),
             });
             if (!res.ok) throw new Error();
+            trackAuditSubmit();
             setSubmitted(true);
         } catch {
             setError("Ups, coś się posypało. Spróbuj jeszcze raz! 😅");
