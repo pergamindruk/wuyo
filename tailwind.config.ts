@@ -71,7 +71,7 @@ const config: Config = {
 					'var(--font-syne)'
 				],
 				'cs-harley': [
-					'CS Harley',
+					'var(--font-cs-harley)',
 					'var(--font-syne)',
 					'sans-serif'
 				]

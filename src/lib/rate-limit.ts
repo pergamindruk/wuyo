@@ -1,21 +1,43 @@
-// Sliding window in-memory rate limiter — działa per Vercel instance
-// Wystarczający dla portfolio jednej osoby bez zewnętrznych zależności
+import type { SupabaseClient } from "@supabase/supabase-js"
 
-const store = new Map<string, number[]>()
+// Fallback w pamięci — używany tylko gdy baza akurat nie odpowiada.
+// Sam w sobie NIE wystarcza na serverless (każda instancja ma swoją pamięć),
+// dlatego główną ścieżką jest check_rate_limit() w Postgresie (supabase/migrations/004_rate_limits.sql).
+const memoryStore = new Map<string, number[]>()
 
-export function rateLimit(key: string, limit: number, windowMs: number): boolean {
+function memoryRateLimit(key: string, limit: number, windowMs: number): boolean {
     const now = Date.now()
     const windowStart = now - windowMs
-    const timestamps = (store.get(key) ?? []).filter(t => t > windowStart)
+    const timestamps = (memoryStore.get(key) ?? []).filter(t => t > windowStart)
 
     if (timestamps.length >= limit) {
-        store.set(key, timestamps)
+        memoryStore.set(key, timestamps)
         return false
     }
 
     timestamps.push(now)
-    store.set(key, timestamps)
+    memoryStore.set(key, timestamps)
     return true
+}
+
+export async function rateLimit(
+    supabase: SupabaseClient,
+    key: string,
+    limit: number,
+    windowMs: number
+): Promise<boolean> {
+    const { data, error } = await supabase.rpc("check_rate_limit", {
+        p_key: key,
+        p_limit: limit,
+        p_window_seconds: Math.floor(windowMs / 1000),
+    })
+
+    if (error) {
+        console.error("Rate-limit DB error, fallback do pamięci:", error.message)
+        return memoryRateLimit(key, limit, windowMs)
+    }
+
+    return data === true
 }
 
 export function getClientIp(req: Request): string {

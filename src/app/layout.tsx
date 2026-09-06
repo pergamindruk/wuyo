@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Syne, Goldman } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -15,6 +16,14 @@ const goldman = Goldman({
     subsets: ["latin"],
     weight: ["700"],
     variable: "--font-ava-meridian",
+    display: "swap",
+});
+const csHarley = localFont({
+    src: [
+        { path: "../../public/fonts/cs-harley-regular.woff2", weight: "400", style: "normal" },
+        { path: "../../public/fonts/cs-harley-bold.woff2", weight: "700", style: "normal" },
+    ],
+    variable: "--font-cs-harley",
     display: "swap",
 });
 
@@ -166,7 +175,7 @@ export default function RootLayout({
                     </Script>
                 )}
             </head>
-            <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${goldman.variable} font-sans antialiased bg-zinc-950`}>
+            <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${goldman.variable} ${csHarley.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Skip to content – ruch klawiaturowy (WCAG) */}
                 <a
                     href="#main-content"

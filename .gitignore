@@ -41,3 +41,9 @@ leads.json
 .vercel
 .env.local
 .env.local
+
+# Katalogi narzędziowe agentów — lokalne, nie wchodzą do repo
+.codex/
+.impeccable/
+.claude/skills/
+.agents/skills/impeccable/

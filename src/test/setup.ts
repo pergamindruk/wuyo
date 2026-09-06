@@ -1,6 +1,8 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
+process.env.RESEND_API_KEY = "re_test_dummy_key";
+
 vi.mock("next/navigation", () => ({
     useRouter: () => ({
         push: vi.fn(),

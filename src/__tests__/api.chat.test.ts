@@ -3,11 +3,11 @@ import { NextRequest } from "next/server";
 
 const mockInsert = vi.fn().mockResolvedValue({ data: null, error: null });
 const mockFrom = vi.fn().mockReturnValue({ insert: mockInsert });
-const mockSendMail = vi.fn().mockResolvedValue({ messageId: "mock-id" });
+const mockSendMail = vi.fn().mockResolvedValue({ data: { id: "mock-id" }, error: null });
 
-vi.mock("nodemailer", () => ({
-    default: {
-        createTransport: vi.fn().mockReturnValue({ sendMail: mockSendMail }),
+vi.mock("resend", () => ({
+    Resend: class {
+        emails = { send: mockSendMail };
     },
 }));
 
@@ -16,7 +16,7 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
-    rateLimit: vi.fn().mockReturnValue(true),
+    rateLimit: vi.fn().mockResolvedValue(true),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
     LIMITS: {
         chat:  { limit: 10, windowMs: 60_000 },
@@ -87,7 +87,7 @@ describe("/api/chat", () => {
 
     it("TC-5 zwraca 429 gdy rate limit przekroczony", async () => {
         const { rateLimit } = await import("@/lib/rate-limit");
-        vi.mocked(rateLimit).mockReturnValueOnce(false);
+        vi.mocked(rateLimit).mockResolvedValueOnce(false);
         const res = await POST(makeReq({ messages: [{ role: "user", content: "Test" }] }));
         expect(res.status).toBe(429);
         const body = await res.json();
@@ -198,7 +198,7 @@ describe("/api/brief", () => {
 
     it("TC-4 zwraca 429 gdy rate limit przekroczony", async () => {
         const { rateLimit } = await import("@/lib/rate-limit");
-        vi.mocked(rateLimit).mockReturnValueOnce(false);
+        vi.mocked(rateLimit).mockResolvedValueOnce(false);
         const res = await POST(makeReq({ path: "quick", name: "X", email: "x@test.pl" }, "/api/brief"));
         expect(res.status).toBe(429);
     });

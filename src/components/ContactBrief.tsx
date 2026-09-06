@@ -128,7 +128,7 @@ export function ContactBrief() {
             const res = await fetch("/api/brief", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify({ ...data, hp: honeypot }),
             });
             if (!res.ok) throw new Error("network");
             trackFormSubmit(path);
