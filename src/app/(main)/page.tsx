@@ -151,7 +151,7 @@ export default function Home() {
                 <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
 
                     {/* LEFT — tekst + CTA */}
-                    <AnimatedSection className="text-left" animateOnMount={true} hero={true}>
+                    <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
                         <HeroText />
                         <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
                             Obsługuję marki od startupu po skalowanie&nbsp;—{" "}
@@ -176,7 +176,7 @@ export default function Home() {
                     </AnimatedSection>
 
                     {/* RIGHT — ruchome kafelki z realizacjami (desktop only) */}
-                    <div className="hidden lg:block relative h-[82vh] max-h-[960px]">
+                    <div className="hidden lg:block relative h-[82vh] max-h-[960px] min-w-0">
                         <HeroProjectTiles />
                     </div>
 

@@ -63,13 +63,23 @@ function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatPr
     return (
         <span
             ref={ref}
-            className="inline-block stat-number"
+            className="relative inline-block stat-number"
             data-phase={phase}
             // aria-label podaje wartość końcową, żeby czytnik ekranu nie recytował
             // każdej klatki odliczania.
             aria-label={`${format(target, decimals)}${suffix}`}
         >
-            <span aria-hidden="true">
+            {/* Niewidoczna wartość końcowa rezerwuje szerokość. Bez niej licznik
+                rośnie z „0" do „156" i co klatkę przestawia szerokość kolumny,
+                przez co trzęsie się cały hero razem z kafelkami realizacji. */}
+            <span aria-hidden="true" className="invisible">
+                {format(target, decimals)}
+                {suffix}
+            </span>
+            <span
+                aria-hidden="true"
+                className="absolute inset-0 flex items-center justify-center"
+            >
                 {format(current, decimals)}
                 {suffix}
             </span>
@@ -85,7 +95,7 @@ const STATS: Array<{ value: StatProps; label: string }> = [
 
 export function StatsCounter() {
     return (
-        <div className="flex items-stretch justify-center mt-14">
+        <div className="flex items-stretch justify-center mt-14 [contain:layout]">
             {STATS.map((stat, i) => (
                 <div key={stat.label} className="flex items-stretch">
                     {i > 0 && <div className="self-stretch w-px bg-white/10" aria-hidden="true" />}
