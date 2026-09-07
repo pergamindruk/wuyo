@@ -288,8 +288,15 @@ export default function ChatBot() {
             {/* Floating Trigger Button */}
             <motion.button
                 onClick={() => setIsOpen((v) => !v)}
-                className="fixed bottom-6 right-4 sm:bottom-10 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden pr-4 pl-1.5 py-1.5 gap-3 group"
-                style={{ background: "rgba(10, 10, 10, 0.95)", border: "1px solid rgba(255, 215, 0, 0.3)", backdropFilter: "blur(10px)" }}
+                className="fixed right-4 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden pr-4 pl-1.5 py-1.5 gap-3 group"
+                style={{
+                    // Podnosi się nad pasek kontaktu, gdy ten jest widoczny na telefonie.
+                    bottom: "calc(var(--chat-bottom) + var(--mobile-bar-h, 0px))",
+                    transition: "bottom 300ms ease",
+                    background: "rgba(10, 10, 10, 0.95)",
+                    border: "1px solid rgba(255, 215, 0, 0.3)",
+                    backdropFilter: "blur(10px)",
+                }}
                 whileHover={{ scale: 1.05, border: "1px solid rgba(255, 215, 0, 0.8)" }}
                 whileTap={{ scale: 0.95 }}
                 animate={!isOpen ? {

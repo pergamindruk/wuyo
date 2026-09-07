@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone } from "lucide-react";
 import { trackPhoneClick, trackWhatsAppClick } from "@/lib/tracking";
 
@@ -16,9 +16,14 @@ const WHATSAPP = "https://wa.me/48725182053";
  * Pojawia się dopiero po opuszczeniu sekcji hero — na samej górze klient ma
  * przyciski w treści i nie warto mu zasłaniać ekranu. Znika przy formularzu
  * kontaktowym, żeby nie dublować tego, co i tak ma przed oczami.
+ *
+ * Pasek zgłasza swoją wysokość przez zmienną --mobile-bar-h, dzięki czemu
+ * dymek chatbota podnosi się dokładnie o tyle, ile trzeba, zamiast chować się
+ * pod paskiem.
  */
 export function MobileContactBar() {
     const [widoczny, setWidoczny] = useState(false);
+    const pasekRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const kontakt = document.getElementById("kontakt");
@@ -45,8 +50,32 @@ export function MobileContactBar() {
         };
     }, []);
 
+    // Wysokość mierzona z DOM, a nie wpisana na sztywno — zmiana paddingu czy
+    // rozmiaru czcionki nie rozjedzie odstępu pod chatbotem.
+    useEffect(() => {
+        const root = document.documentElement;
+
+        if (!widoczny) {
+            root.style.setProperty("--mobile-bar-h", "0px");
+            return;
+        }
+
+        const ustaw = () => {
+            const wysokosc = pasekRef.current?.offsetHeight ?? 0;
+            root.style.setProperty("--mobile-bar-h", `${wysokosc}px`);
+        };
+
+        ustaw();
+        window.addEventListener("resize", ustaw);
+        return () => {
+            window.removeEventListener("resize", ustaw);
+            root.style.setProperty("--mobile-bar-h", "0px");
+        };
+    }, [widoczny]);
+
     return (
         <div
+            ref={pasekRef}
             className={`md:hidden fixed inset-x-0 bottom-0 z-40 px-3 pb-3 pt-2 transition-all duration-300 ${
                 widoczny ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
             }`}

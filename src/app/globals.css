@@ -530,3 +530,19 @@ body {
     transform: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Odstęp dymka chatbota od dołu ekranu.
+   Na telefonie doliczana jest wysokość paska kontaktu, którą pasek
+   zgłasza w --mobile-bar-h. Bez tego dymek chowa się pod paskiem.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --chat-bottom: 1.5rem;
+  --mobile-bar-h: 0px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --chat-bottom: 2.5rem;
+  }
+}
