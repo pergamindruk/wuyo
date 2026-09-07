@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { PortfolioGallery } from "@/components/PortfolioGallery";
 import { ProcessSection } from "@/components/ProcessSection";
-import { AuditSection } from "@/components/AuditSection";
-import { FAQSection } from "@/components/FAQSection";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { ContactBrief } from "@/components/ContactBrief";
@@ -10,7 +8,6 @@ import { HeroText } from "@/components/HeroText";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
-import { PackagesSection } from "@/components/PackagesSection";
 import { BlogTeaser } from "@/components/BlogTeaser";
 import { PricingSection } from "@/components/pricing/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
@@ -82,61 +79,6 @@ const localBusinessSchema = {
     ],
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile to wszystko będzie kosztować?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Gram w otwarte karty. Najważniejsze pakiety masz w Cenniku. Jeśli potrzebujesz czegoś nietypowego, napisz maila — wycenię dokładnie co do złotówki przed startem prac, bez niespodzianek na końcu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Jak wygląda rozliczenie zapłaty?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Standardowo dzielimy sprawę na pół: 50% zaliczki przed otwarciem programów graficznych i 50% po zakończeniu projektu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Co jeśli projekt mi nie wejdzie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Zanim usiądę do projektowania, robimy solidny brief. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę — pracuję aż powiesz WOW!",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy dostanę pliki edytowalne i źródłowe?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak. Przekazuję wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile trwa projekt strony WWW?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Dla strony One-Page zazwyczaj tydzień od zebrania materiałów. Dużo zależy od szybkości dostarczenia treści i feedbacku.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Skąd będę wiedział, na jakim etapie jest mój projekt?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie.",
-            },
-        },
-    ],
-};
-
 export default function Home() {
     const services = [
         {
@@ -190,10 +132,6 @@ export default function Home() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
@@ -290,9 +228,14 @@ export default function Home() {
                         <p className="text-white/80 text-base font-medium text-center sm:text-left">
                             Nie wiesz od czego zacząć? Napisz — dostaniesz konkretny plan działania w 24h.
                         </p>
-                        <Link href="#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shrink-0 shadow-[0_0_20px_rgba(255,235,82,0.25)]">
-                            Napisz do mnie →
-                        </Link>
+                        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+                            <Link href="#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shadow-[0_0_20px_rgba(255,235,82,0.25)]">
+                                Napisz do mnie →
+                            </Link>
+                            <Link href="/audyt" className="px-6 py-3 rounded-full font-bold text-sm text-gold border border-gold/40 hover:bg-gold/10 hover:border-gold transition-colors whitespace-nowrap">
+                                Bezpłatny audyt
+                            </Link>
+                        </div>
                     </div>
                 </AnimatedSection>
             </section>
@@ -303,20 +246,18 @@ export default function Home() {
             {/* ═══════════════════════ REALIZACJE ═══════════════════════ */}
             <PortfolioGallery />
 
+            {/* Dowód przed ceną — klient najpierw widzi opinie, potem cennik. */}
+            {/* ═══════════════════════ OPINIE ═══════════════════════ */}
+            <TestimonialsSection />
+
+            {/* ═══════════════════════ ZAUFALI MI ═══════════════════════ */}
+            <TrustedBySection />
+
             {/* ═══════════════════════ CENNIK / PAKIETY ═══════════════════════ */}
             <PricingSection showFaq={false} showFinalCta={false} id="pakiety" />
 
-            {/* ═══════════════════════ DRUK & PAPETERIA ═══════════════════════ */}
-            <PackagesSection />
-
-            {/* ═══════════════════════ FAQ ═══════════════════════ */}
-            <FAQSection />
-
             {/* ═══════════════════════ BLOG ═══════════════════════ */}
             <BlogTeaser />
-
-            {/* ═══════════════════════ AUDYT ═══════════════════════ */}
-            <AuditSection />
 
             {/* ═══════════════════════ O NAS ═══════════════════════ */}
             <section id="o-mnie" className="py-28 px-6 md:px-12 relative overflow-hidden">
@@ -388,16 +329,10 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ═══════════════════════ OPINIE ═══════════════════════ */}
-            <TestimonialsSection />
-
             {/* ═══════════════════════ KONTAKT / BRIEF ═══════════════════════ */}
             <Suspense fallback={null}>
                 <ContactBrief />
             </Suspense>
-
-            {/* ═══════════════════════ ZAUFALI MI ═══════════════════════ */}
-            <TrustedBySection />
 
         </div>
     );

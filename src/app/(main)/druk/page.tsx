@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { PackagesSection } from "@/components/PackagesSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
@@ -276,6 +277,10 @@ export default function DrukPage() {
                     </AnimatedSection>
                 </div>
             </section>
+
+            {/* Zamawianie druku — przeniesione ze strony głównej, bo tutaj
+                trafia klient, który już wie, że chce druk. */}
+            <PackagesSection />
 
             {/* Opinie */}
             <TestimonialsSection />

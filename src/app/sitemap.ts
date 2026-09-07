@@ -168,6 +168,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.95,
         },
         {
+            url: `${baseUrl}/audyt`,
+            lastModified: new Date(),
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+        },
+        {
             url: `${baseUrl}/polityka-prywatnosci`,
             lastModified: new Date(),
             changeFrequency: "yearly",

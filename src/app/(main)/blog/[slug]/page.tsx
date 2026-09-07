@@ -59,7 +59,7 @@ export default async function ArticlePage({ params }: Props) {
     const isPortrait = !!post.imageSize && post.imageSize.height > post.imageSize.width;
 
     return (
-        <main id="main-content" className="flex-1 w-full">
+        <div className="flex-1 w-full">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -156,6 +156,6 @@ export default async function ArticlePage({ params }: Props) {
                     </Link>
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

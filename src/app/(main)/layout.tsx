@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import ChatBotLoader from "@/components/ChatBotLoader";
+import { MobileContactBar } from "@/components/MobileContactBar";
 
 export default function MainLayout({
     children,
@@ -13,6 +14,7 @@ export default function MainLayout({
             <Navbar />
             <main id="main-content" className="flex-1">{children}</main>
             <Footer />
+            <MobileContactBar />
             <ScrollToTop />
             <ChatBotLoader />
         </div>

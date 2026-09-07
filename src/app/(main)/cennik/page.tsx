@@ -3,6 +3,64 @@ import { ArrowLeft, Tag } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PricingSection } from "@/components/pricing/PricingSection";
+import { FAQSection } from "@/components/FAQSection";
+
+// Dane strukturalne FAQ mieszkają tam, gdzie widoczne są pytania —
+// Google wymaga, żeby schemat miał pokrycie w treści strony.
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Ile to wszystko będzie kosztować?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gram w otwarte karty. Najważniejsze pakiety masz w Cenniku. Jeśli potrzebujesz czegoś nietypowego, napisz maila — wycenię dokładnie co do złotówki przed startem prac, bez niespodzianek na końcu.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Jak wygląda rozliczenie zapłaty?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Standardowo dzielimy sprawę na pół: 50% zaliczki przed otwarciem programów graficznych i 50% po zakończeniu projektu.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Co jeśli projekt mi nie wejdzie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zanim usiądę do projektowania, robimy solidny brief. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę — pracuję aż powiesz WOW!",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Czy dostanę pliki edytowalne i źródłowe?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak. Przekazuję wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Ile trwa projekt strony WWW?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dla strony One-Page zazwyczaj tydzień od zebrania materiałów. Dużo zależy od szybkości dostarczenia treści i feedbacku.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Skąd będę wiedział, na jakim etapie jest mój projekt?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie.",
+            },
+        },
+    ],
+};
 
 import type { Metadata } from "next";
 
@@ -403,6 +461,13 @@ export default function PricingPage() {
                 </AnimatedSection>
 
             </div>
+
+            <FAQSection />
+
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
         </main>
     );
 }
