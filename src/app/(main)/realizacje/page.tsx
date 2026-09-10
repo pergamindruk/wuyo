@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PortfolioGallery } from "@/components/PortfolioGallery";
 import { projects } from "@/lib/projects";
+import { portfolioCollectionSchema } from "@/lib/portfolio-schema";
 
 export const metadata: Metadata = {
     title: "Realizacje – Portfolio projektów graficznych i stron WWW",
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl/realizacje",
     },
 };
+
+const portfolioSchema = portfolioCollectionSchema(projects);
 
 const stats = [
     { value: "156+", label: "zrealizowanych projektów" },
@@ -104,6 +107,11 @@ export default function RealizacjePage() {
                     </div>
                 </AnimatedSection>
             </section>
+
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(portfolioSchema) }}
+            />
         </div>
     );
 }
