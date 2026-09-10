@@ -48,13 +48,14 @@ export const metadata: Metadata = {
 const priceRanges = [
     {
         title: "Projekt graficzny",
-        note: "Sam projekt. Druk liczony osobno.",
+        note: "Sam projekt. Druk liczony osobno. Masz gotowe logo, zdjęcia i teksty? To skład, nie projekt — taniej.",
         items: [
             { name: "Logo i identyfikacja wizualna", price: "890 – 1 490 zł" },
             { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
             { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
             { name: "Opakowania i etykiety", price: "od 180 zł" },
             { name: "Grafiki na social media", price: "90 – 1 350 zł" },
+            { name: "Skład z Twoich gotowych materiałów", price: "od 200 zł" },
         ],
     },
     {
