@@ -9,11 +9,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek i Ulotek – projekt + druk | od 99 zł | WUYO",
-    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, małe nakłady bez minimum. Rzeszów + wysyłka kurierem →",
+    title: "Druk Wizytówek i Ulotek – projekt + druk od 299 zł | WUYO",
+    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł. Termin 1–3 dni, bez minimum →",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki od 99 zł, termin 1–3 dni. Rzeszów i cała Polska.",
+        description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki z projektem od 299 zł, sam druk od 99 zł. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/druk",
         type: "website",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
-        description: "Wizytówki od 99 zł, termin 1–3 dni. Projekt + druk w jednym miejscu.",
+        description: "Wizytówki z projektem od 299 zł, sam druk od 99 zł. Projekt + druk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -38,7 +38,7 @@ const faqSchema = {
             "name": "Ile kosztują wizytówki z projektem?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Wizytówki 50 szt. od 99 zł (sam druk) lub od 229 zł z projektem graficznym. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+                "text": "Wizytówki 50 szt. od 99 zł, jeśli masz gotowy projekt. Z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
             },
         },
         {
@@ -83,9 +83,9 @@ const drukSchema = {
         { "@type": "Country", "name": "Polska" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "229", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "249", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "279", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Wizytówki – projekt + druk", "price": "299", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Ulotki – projekt + druk", "price": "449", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Vouchery – projekt + druk", "price": "289", "priceCurrency": "PLN" },
     ],
 };
 
@@ -93,19 +93,19 @@ const products = [
     {
         name: "Wizytówki",
         desc: "Standard 85×55 mm, papier 350g, zaokrąglone rogi, mat lub gloss. Projekt unikalny — żadnych szablonów z internetu.",
-        price: "od 199 zł",
-        details: ["Projekt graficzny", "Druk dwustronny", "Papier 350g/m²", "Wykończenie mat lub gloss", "Min. 100 szt."],
+        price: "od 299 zł",
+        details: ["Projekt graficzny", "Druk dwustronny", "Papier 350g/m²", "Wykończenie mat lub gloss", "Od 50 szt."],
     },
     {
         name: "Ulotki",
         desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt który przyciąga wzrok i rzeczywiście skłania do działania.",
-        price: "od 250 zł",
+        price: "od 449 zł",
         details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Papier 130–170g/m²", "Min. 100 szt."],
     },
     {
         name: "Vouchery",
         desc: "Idealny prezent dla klientów — voucher który wygląda jak produkt premium, nie jak bilet parkingowy.",
-        price: "od 249 zł",
+        price: "od 289 zł",
         details: ["Projekt graficzny", "Format dowolny", "Perforacja lub bez", "Numeracja opcjonalna", "Min. 50 szt."],
     },
     {
@@ -117,13 +117,13 @@ const products = [
     {
         name: "Rollup / Banner",
         desc: "Na eventy, targi i wystawiennictwo. Projekt spójny z Twoją marką, gotowy do druku wielkogabarytowego.",
-        price: "od 300 zł",
+        price: "od 260 zł",
         details: ["Projekt graficzny", "Plik gotowy do druku (300 dpi)", "Konsultacja wymiarów", "Możliwość zamówienia druku", "Termin do 5 dni"],
     },
     {
         name: "Naklejki i etykiety",
         desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo lub na arkuszach.",
-        price: "od 169 zł",
+        price: "od 219 zł",
         details: ["Projekt graficzny", "Dowolny kształt i rozmiar", "Folie standardowe i premium", "Wersja do druku lokalnego", "Min. 50 szt."],
     },
 ];
@@ -220,7 +220,7 @@ export default function DrukPage() {
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Koszulki, bluzy?</p>
                                 <Link href="/odziez" className="font-bold text-white hover:text-gold transition-colors text-sm">Nadruk na odzieży →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 49 zł/szt · bez minimum</p>
+                                <p className="text-white/40 text-xs mt-1">od 79 zł/szt · bez minimum</p>
                             </div>
                             <div>
                                 <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>

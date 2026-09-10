@@ -9,10 +9,10 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Logo dla Firmy od 890 zł | Wycena w 24h | WUYO Rzeszów",
-    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 890 zł, identyfikacja od 1 490 zł. Bezpłatna wycena →",
+    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 890 zł, identyfikacja 1 490 zł. Bezpłatna wycena →",
     openGraph: {
         title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
-        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 800 zł. Termin 10–14 dni. Wycena w 24h.",
+        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 890 zł. Termin 10–14 dni. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/logo",
         type: "website",
@@ -45,7 +45,7 @@ const faqSchema = {
             "name": "Ile kosztuje zaprojektowanie logo?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Logotyp od 890 zł, pełna identyfikacja wizualna (logo + wizytówka + szablony social + księga znaku) od 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+                "text": "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
             },
         },
         {
@@ -142,13 +142,13 @@ const packages = [
     },
     {
         name: "Identyfikacja Wizualna",
-        price: "od 1 490 zł",
-        desc: "Pełny system wizualny — logo plus wszystko co potrzebne do spójnej komunikacji.",
+        price: "1 490 zł",
+        desc: "Pakiet Marka Start — logo plus wszystko, czego firma potrzebuje od pierwszego dnia.",
         includes: [
             "Wszystko z pakietu Logotyp +",
-            "Wizytówka (projekt + druk-ready)",
-            "Szablony social media (3 formaty)",
-            "Księga znaku (brand guidelines PDF)",
+            "Mini księga znaku (kolory, fonty, zasady)",
+            "Wizytówki 150 szt. — projekt dwustronny + druk",
+            "Stopka mailowa gotowa do wklejenia",
             "Pliki źródłowe (Figma / AI)",
         ],
         highlight: true,

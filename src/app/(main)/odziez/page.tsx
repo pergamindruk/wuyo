@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | od 49 zł | WUYO",
-    description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum ilościowego — od 1 sztuki. Rzeszów + wysyłka kurierem →",
+    title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | od 79 zł | WUYO",
+    description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum — od 1 sztuki za 79 zł, przy 20+ szt. 49 zł/szt. Rzeszów + wysyłka →",
     openGraph: {
         title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
         description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum ilościowego. Rzeszów i cała Polska.",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
-        description: "Nadruk DTF od 49 zł/szt. Bez minimum ilościowego. Projekt + nadruk w jednym miejscu.",
+        description: "Nadruk DTF od 79 zł/szt, przy 20+ szt. 49 zł/szt. Bez minimum. Projekt + nadruk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -100,14 +100,14 @@ const products = [
     {
         name: "Koszulki z nadrukiem",
         desc: "Twoje logo, hasło albo grafika na koszulce. Nadruk DTF — pełny kolor, trwały, nie pęka i nie blaknie przy praniu.",
-        price: "od 49 zł/szt",
-        details: ["Nadruk DTF, pełny kolor", "100% bawełna, 205g, unisex", "Bez minimum ilościowego — od 1 szt.", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
+        price: "od 79 zł/szt",
+        details: ["Nadruk DTF, pełny kolor", "100% bawełna, 205g, unisex", "Bez minimum — 1 szt. 79 zł, 5+ szt. 65 zł, 20+ szt. 49 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
         name: "Bluzy z nadrukiem",
         desc: "Bluza z kapturem albo bez, logo na piersi lub duży wzór na plecach. Sprawdza się na eventy firmowe i prezenty.",
-        price: "od 139 zł/szt",
-        details: ["Nadruk DTF, pełny kolor", "Bluza 280g, kaptur lub bez", "Bez minimum ilościowego — od 1 szt.", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
+        price: "od 199 zł/szt",
+        details: ["Nadruk DTF, pełny kolor", "Bluza 280g, kaptur lub bez", "Bez minimum — 1 szt. 199 zł, 5+ szt. 169 zł, 20+ szt. 139 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
         name: "Nadruk na Twojej odzieży",

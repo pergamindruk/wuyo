@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek Rzeszów – projekt + druk | od 99 zł | WUYO",
-    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie — projekt i druk w jednym miejscu. Wizytówki 50 szt. od 99 zł, termin 1–3 dni, odbiór w Rzeszowie lub wysyłka kurierem →",
+    title: "Druk Wizytówek Rzeszów – projekt + druk od 299 zł | WUYO",
+    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie — projekt i druk w jednym miejscu. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł. Odbiór w Rzeszowie →",
     keywords: [
         "druk wizytówek Rzeszów",
         "druk ulotek Rzeszów",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     ],
     openGraph: {
         title: "Druk Wizytówek i Ulotek Rzeszów | WUYO",
-        description: "Projekt i druk wizytówek, ulotek i naklejek w Rzeszowie. Małe nakłady, szybka realizacja. Od 99 zł.",
+        description: "Projekt i druk wizytówek, ulotek i naklejek w Rzeszowie. Małe nakłady, szybka realizacja. Z projektem od 299 zł, sam druk od 99 zł.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/druk-rzeszow",
         type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Druk Wizytówek i Ulotek Rzeszów | WUYO",
-        description: "Projekt + druk wizytówek i ulotek w Rzeszowie. Małe nakłady. Od 99 zł.",
+        description: "Projekt + druk wizytówek i ulotek w Rzeszowie. Małe nakłady. Z projektem od 299 zł, sam druk od 99 zł.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/druk-rzeszow" },
@@ -74,7 +74,7 @@ const faqSchema = {
             "name": "Ile kosztują wizytówki w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Wizytówki 50 szt. z projektem graficznym od 99 zł, 100 szt. z projektem od 199 zł. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+                "text": "Wizytówki 50 szt. z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. Jeśli masz gotowy plik, sam druk to od 99 zł za 50 szt. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
             },
         },
         {
@@ -105,10 +105,10 @@ const faqSchema = {
 };
 
 const products = [
-    { name: "Wizytówki", price: "od 99 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na 350g. Mat lub gloss. Możesz zamówić już od 20 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 350g", "Mat lub gloss", "Od 20 szt."] },
-    { name: "Ulotki", price: "od 250 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Papier 130–170g", "Min. 100 szt."] },
-    { name: "Vouchery", price: "od 249 zł / 50 szt.", desc: "Voucher który wygląda jak produkt premium. Perforacja, numeracja — opcjonalnie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
-    { name: "Naklejki i etykiety", price: "od 169 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 20 szt."] },
+    { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na 350g. Mat lub gloss. Możesz zamówić już od 20 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 350g", "Mat lub gloss", "Od 20 szt."] },
+    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Papier 130–170g", "Min. 100 szt."] },
+    { name: "Vouchery", price: "od 289 zł / 50 szt.", desc: "Voucher który wygląda jak produkt premium. Perforacja, numeracja — opcjonalnie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
+    { name: "Naklejki i etykiety", price: "od 219 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 20 szt."] },
 ];
 
 export default function DrukRzeszowPage() {
@@ -151,7 +151,7 @@ export default function DrukRzeszowPage() {
                 <div className="py-8 px-6 border-y border-white/5">
                     <div className="max-w-4xl mx-auto grid grid-cols-3 gap-6 text-center">
                         {[
-                            { stat: "od 99 zł", label: "wizytówki 50 szt. z projektem" },
+                            { stat: "od 299 zł", label: "wizytówki 50 szt. z projektem" },
                             { stat: "1–3 dni", label: "standardowy czas realizacji" },
                             { stat: "bez min.", label: "małe nakłady bez problemu" },
                         ].map((item, i) => (
@@ -205,7 +205,7 @@ export default function DrukRzeszowPage() {
                     </AnimatedSection>
                     <div className="space-y-4">
                         {[
-                            { q: "Ile kosztują wizytówki w Rzeszowie?", a: "50 szt. z projektem od 99 zł, 100 szt. z projektem od 199 zł. Projekt unikalny, druk dwustronny 350g, mat lub gloss." },
+                            { q: "Ile kosztują wizytówki w Rzeszowie?", a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk od 99 zł za 50 szt. Projekt unikalny, druk dwustronny 350g, mat lub gloss." },
                             { q: "Jak szybko dostanę wydruk?", a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu. Odbiór w Rzeszowie lub wysyłka kurierem." },
                             { q: "Czy można zamówić mały nakład?", a: "Tak — drukuję u siebie, więc możesz zamówić nawet 20 wizytówek czy naklejek bez żadnego problemu." },
                             { q: "Czy projektujesz i drukujesz jednocześnie?", a: "Tak — jedno zlecenie, jedna osoba, jeden kontakt. Projekt + druk w jednym miejscu." },

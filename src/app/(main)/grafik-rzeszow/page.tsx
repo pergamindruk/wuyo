@@ -106,7 +106,7 @@ const faqSchema = {
             "name": "Ile kosztuje grafik w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Logo dla firmy to koszt od 890 zł, pełna identyfikacja wizualna od 1 490 zł, strona internetowa od 2 490 zł, a wizytówki od 99 zł za 50 sztuk z projektem. Każda wycena jest stała — podaję cenę przed startem prac, bez niespodzianek na końcu.",
+                "text": "Logo dla firmy to koszt od 890 zł, pełna identyfikacja wizualna 1 490 zł, strona internetowa od 2 490 zł, a wizytówki z projektem od 299 zł za 50 sztuk (sam druk od 99 zł). Każda wycena jest stała — podaję cenę przed startem prac, bez niespodzianek na końcu.",
             },
         },
         {
@@ -303,7 +303,7 @@ export default function GrafikRzeszowPage() {
                         {[
                             {
                                 q: "Ile kosztuje grafik w Rzeszowie?",
-                                a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + wizytówka + szablony social): od 1 490 zł. Strona internetowa: od 2 490 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
+                                a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 2 490 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
                             },
                             {
                                 q: "Czy obsługujesz firmy spoza Rzeszowa?",

@@ -23,7 +23,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Cennik usług graficznych, druku i webowych | WUYO – Rzeszów",
-    description: "Jawne widełki: logo 890–2 190 zł, marka od 1 490 zł, druk wizytówek od 99 zł, strona od 2 490 zł. Projekt i druk w jednym miejscu, bez ukrytych kosztów.",
+    description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 2 490 zł. Projekt i druk w jednym miejscu.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
         description: "Pakiety z konkretnymi cenami i widełki dla pojedynczych usług — grafika, druk, odzież, strony www.",
@@ -50,7 +50,7 @@ const priceRanges = [
         title: "Projekt graficzny",
         note: "Sam projekt. Druk liczony osobno.",
         items: [
-            { name: "Logo i identyfikacja wizualna", price: "890 – 2 190 zł" },
+            { name: "Logo i identyfikacja wizualna", price: "890 – 1 490 zł" },
             { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
             { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
             { name: "Opakowania i etykiety", price: "od 180 zł" },
@@ -59,11 +59,11 @@ const priceRanges = [
     },
     {
         title: "Druk i papeteria",
-        note: "Sam druk z gotowego pliku. Zamawiasz 2+ produkty — każdy kolejny -15%.",
+        note: "Sam druk z gotowego pliku. Z projektem: wizytówki od 299 zł, ulotki od 449 zł, naklejki od 219 zł. Zamawiasz 2+ produkty — każdy kolejny -15%.",
         items: [
-            { name: "Wizytówki (50 – 300 szt.)", price: "99 – 299 zł" },
-            { name: "Ulotki A5 (50 – 300 szt.)", price: "119 – 359 zł" },
-            { name: "Naklejki i etykiety (50 – 200 szt.)", price: "89 – 229 zł" },
+            { name: "Wizytówki — sam druk (50 – 300 szt.)", price: "99 – 299 zł" },
+            { name: "Ulotki A5 — sam druk (50 – 300 szt.)", price: "119 – 359 zł" },
+            { name: "Naklejki i etykiety — sam druk (50 – 200 szt.)", price: "89 – 229 zł" },
             { name: "Vouchery, magnesy, koperty", price: "69 – 379 zł" },
             { name: "Plakaty", price: "od 29 zł / szt." },
         ],

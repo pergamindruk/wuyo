@@ -9,7 +9,7 @@ export interface PricingCardData {
     tagline: string;
     price: string;
     priceSuffix: string;
-    /** Ile to samo kosztuje kupowane osobno, np. "1 869 zł". Opcjonalne. */
+    /** Ile to samo kosztuje kupowane osobno, np. "2 119 zł". Opcjonalne. */
     listPrice?: string;
     /** Różnica na korzyść klienta, np. "379 zł". Renderowana obok listPrice. */
     saving?: string;
