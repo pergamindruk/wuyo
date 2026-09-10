@@ -25,6 +25,10 @@ export const faqs: FaqItem[] = [
         answer: "Zanim w ogóle usiądę do projektowania, robimy solidny brief (wypytuję Cię o wszystko). Dzięki temu wiem, czego potrzebujesz. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę, pracuję aż powiesz WOW!"
     },
     {
+        question: "Co jeśli drukarnia zwróci plik z uwagami?",
+        answer: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota."
+    },
+    {
         question: "Dostaję pliki edytowalne/źródłowe?",
         answer: "Pewnie. Jesteś szefem, płacisz za projekt, to go masz. Przekazuję Ci wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory."
     },

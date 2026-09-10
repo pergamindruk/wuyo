@@ -65,43 +65,37 @@ const localSchema = {
     ],
 };
 
+const faqs = [
+    {
+        q: "Ile kosztują wizytówki w Rzeszowie?",
+        a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk to od 99 zł za 50 szt. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+    },
+    {
+        q: "Jak szybko dostanę wydruk?",
+        a: "Wizytówki i naklejki standardowo 1–3 dni robocze od zatwierdzenia projektu. Odbiór osobisty w Rzeszowie lub wysyłka kurierem. Przy pilnych zleceniach nawet następnego dnia.",
+    },
+    {
+        q: "Czy można zamówić mały nakład?",
+        a: "Tak — drukuję u siebie, więc nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Możesz zamówić 20 czy 50 sztuk bez problemu.",
+    },
+    {
+        q: "Co jeśli drukarnia zwróci plik z uwagami?",
+        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+    },
+    {
+        q: "Czy projektujesz i drukujesz jednocześnie?",
+        a: "Tak — jedno zlecenie, jedna osoba, jeden kontakt. Nie musisz szukać oddzielnie grafika i drukarni ani tłumaczyć jednym, czego chcą drudzy.",
+    },
+];
+
 const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztują wizytówki w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wizytówki 50 szt. z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. Jeśli masz gotowy plik, sam druk to od 99 zł za 50 szt. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Jak szybko można dostać wydruk w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wizytówki i naklejki standardowo 1–3 dni robocze od zatwierdzenia projektu. Odbiór osobisty w Rzeszowie lub wysyłka kurierem. Przy pilnych zleceniach realizacja nawet następnego dnia.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy można zamówić mały nakład wizytówek?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak — drukuję u siebie, więc nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Możesz zamówić 20 czy 50 sztuk bez problemu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy zajmujesz się tylko projektem, czy też drukiem?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Jedno i drugie. Projektuję i drukuję — nie musisz szukać oddzielnie grafika i drukarni. Dostajesz gotowy produkt.",
-            },
-        },
-    ],
+    "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
 };
 
 const products = [
@@ -204,12 +198,7 @@ export default function DrukRzeszowPage() {
                         <h2 className="text-3xl font-bold text-white">Pytania o druk w Rzeszowie</h2>
                     </AnimatedSection>
                     <div className="space-y-4">
-                        {[
-                            { q: "Ile kosztują wizytówki w Rzeszowie?", a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk od 99 zł za 50 szt. Projekt unikalny, druk dwustronny 350g, mat lub gloss." },
-                            { q: "Jak szybko dostanę wydruk?", a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu. Odbiór w Rzeszowie lub wysyłka kurierem." },
-                            { q: "Czy można zamówić mały nakład?", a: "Tak — drukuję u siebie, więc możesz zamówić nawet 20 wizytówek czy naklejek bez żadnego problemu." },
-                            { q: "Czy projektujesz i drukujesz jednocześnie?", a: "Tak — jedno zlecenie, jedna osoba, jeden kontakt. Projekt + druk w jednym miejscu." },
-                        ].map((item, i) => (
+                        {faqs.map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.06}>
                                 <div className="glass-card p-5">
                                     <h3 className="font-bold text-white mb-2 text-sm">{item.q}</h3>
