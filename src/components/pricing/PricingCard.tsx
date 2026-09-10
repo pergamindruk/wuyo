@@ -33,12 +33,10 @@ export function PricingCard({ card }: { card: PricingCardData }) {
             <p className="text-white/50 text-sm leading-relaxed mb-6">{tagline}</p>
 
             <div className="mb-7">
-                <div>
-                    <span className={`text-4xl font-bold tabular-nums ${highlighted ? "text-gold" : "text-white"}`}>
-                        {price}
-                    </span>
-                    <span className="text-white/40 text-sm ml-2">{priceSuffix}</span>
+                <div className={`text-4xl font-bold tabular-nums ${highlighted ? "text-gold" : "text-white"}`}>
+                    {price}
                 </div>
+                <p className="text-white/40 text-sm mt-1">{priceSuffix}</p>
                 <p className="text-white/35 text-xs mt-2 h-4">
                     {listPrice && (
                         <>
