@@ -88,7 +88,7 @@ function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatPr
 }
 
 const STATS: Array<{ value: StatProps; label: string }> = [
-    { value: { target: 156, suffix: "+", delay: 350 }, label: "projektów" },
+    { value: { target: 100, suffix: "%", delay: 350 }, label: "praw do projektu" },
     { value: { target: 24, suffix: "h", delay: 550 }, label: "na wycenę" },
     { value: { target: 5, decimals: 1, delay: 750 }, label: "ocena w Google" },
 ];

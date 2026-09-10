@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, Search } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
@@ -192,6 +193,7 @@ export default function StronyInternetowerRzeszowPage() {
                         <p className="eyebrow mb-4">Cennik</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Pakiety stron internetowych</h2>
                         <p className="text-white/50 max-w-xl mx-auto mt-4">Wycena = cena końcowa. Bez stawki godzinowej, bez niespodzianek po fakturze.</p>
+                        <NettoNote className="mt-3" />
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {packages.map((pkg, i) => (

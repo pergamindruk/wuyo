@@ -4,6 +4,7 @@ import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight, Layers, FileText, Palette, Type } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
@@ -219,8 +220,8 @@ export default function LogoPage() {
                 <div className="py-8 px-6 border-y border-white/5">
                     <div className="max-w-4xl mx-auto grid grid-cols-3 gap-6 text-center">
                         {[
-                            { stat: "156+", label: "zaprojektowanych logo" },
-                            { stat: "46", label: "obsłużonych branż" },
+                            { stat: "5,0", label: "ocena w Google" },
+                            { stat: "24h", label: "na wycenę" },
                             { stat: "100%", label: "pliki wektorowe w cenie" },
                         ].map((item, i) => (
                             <div key={i}>
@@ -293,6 +294,7 @@ export default function LogoPage() {
                         <p className="eyebrow mb-4">Cennik</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Pakiety i ceny</h2>
                         <p className="text-white/50 max-w-xl mx-auto">Wycena = cena końcowa. Bez ukrytych kosztów, bez niespodzianek po fakturze.</p>
+                        <NettoNote className="mt-3" />
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-6">
                         {packages.map((pkg, i) => (

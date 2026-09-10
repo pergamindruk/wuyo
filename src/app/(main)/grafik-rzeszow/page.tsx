@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Phone, Mail, Star } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
@@ -259,6 +260,7 @@ export default function GrafikRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                    <NettoNote className="mt-6 text-center" />
                 </div>
             </section>
 
