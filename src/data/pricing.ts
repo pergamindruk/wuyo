@@ -1,5 +1,7 @@
 // Dane cennika — sekcja pakietów (jednorazowo + abonament).
-// Źródło: cennik-brief.md (sekcja 4). JDG zwolniona z VAT — ceny końcowe, bez netto/brutto.
+// Źródło: CENNIK.md w katalogu głównym repo — to jedyny obowiązujący cennik.
+// WAŻNE: wszystkie kwoty tutaj to ceny NETTO. Do faktury dochodzi 23% VAT.
+// Nie zmieniaj kwot bez równoległej zmiany w CENNIK.md.
 
 export interface PricingCardData {
     eyebrow: string;
@@ -7,6 +9,10 @@ export interface PricingCardData {
     tagline: string;
     price: string;
     priceSuffix: string;
+    /** Ile to samo kosztuje kupowane osobno, np. "1 869 zł". Opcjonalne. */
+    listPrice?: string;
+    /** Różnica na korzyść klienta, np. "379 zł". Renderowana obok listPrice. */
+    saving?: string;
     features: string[];
     delivery: string;
     cta: string;
@@ -26,7 +32,7 @@ export const sectionHeader = {
     eyebrow: "Cennik",
     title: "Przejrzysty cennik. Wiesz, ile zapłacisz, zanim zadzwonisz.",
     subtitle:
-        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Bez ukrytych kosztów, bez doliczania VAT.",
+        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Ceny netto, jawne od początku — bez ukrytych kosztów i dopłat po drodze.",
 };
 
 // Linijka à la carte — kwoty wyróżnione w komponencie.
@@ -45,11 +51,11 @@ export const perks = [
 export const pricingFaqs = [
     {
         q: "Czy do ceny dochodzi VAT?",
-        a: "Nie. Nie jestem płatnikiem VAT, więc podane ceny są cenami końcowymi — nic nie doliczam.",
+        a: "Tak — podane kwoty to ceny netto, do faktury dochodzi 23% VAT. Jeśli prowadzisz firmę i odliczasz VAT, Twój realny koszt to dokładnie kwota z cennika.",
     },
     {
         q: "Czy dostanę fakturę?",
-        a: "Tak. Wystawiam fakturę (zwolnioną z VAT), którą bez problemu wrzucisz w koszty firmy.",
+        a: "Tak, na każde zlecenie. Faktura VAT z pełnymi danymi — wrzucasz ją w koszty firmy i odliczasz VAT.",
     },
     {
         q: "Jak wygląda płatność?",
@@ -92,11 +98,14 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Wszystko, czego nowa firma potrzebuje, żeby od pierwszego dnia wyglądać poważnie.",
                 price: "1 490 zł",
-                priceSuffix: "jednorazowo",
+                priceSuffix: "netto, jednorazowo",
+                listPrice: "2 119 zł",
+                saving: "629 zł",
                 features: [
-                    "Logo + wersje pozioma, pionowa i mono",
-                    "Mini księga znaku (kolory, fonty, zasady) — w cenie",
-                    "Wizytówki 150 szt. — projekt + druk",
+                    "Logo w 3 wersjach: pozioma, pionowa, mono",
+                    "Mini księga znaku — kolory, fonty, zasady użycia",
+                    "Wizytówki 150 szt. — projekt dwustronny + druk",
+                    "Stopka mailowa gotowa do wklejenia",
                     "Pełne prawa do projektu + pliki źródłowe",
                 ],
                 delivery: "Czas realizacji: 7–10 dni roboczych",
@@ -109,15 +118,17 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Obecność online, która generuje zapytania — nie tylko ładnie wygląda.",
                 price: "3 490 zł",
-                priceSuffix: "jednorazowo",
+                priceSuffix: "netto, jednorazowo",
+                listPrice: "4 758 zł",
+                saving: "1 268 zł",
                 features: [
                     "Wszystko z pakietu Marka Start",
-                    "Indywidualna strona (do 5 podstron) — nie szablon",
-                    "Formularz kontaktowy + mapa",
+                    "Indywidualna strona do 5 podstron — pisana od zera, nie szablon",
+                    "Formularz kontaktowy + mapa dojazdu",
                     "Dopracowana wersja mobilna",
-                    "Podstawowe SEO lokalne",
-                    "Szkolenie: jak samemu edytować treść",
-                    "1. miesiąc opieki nad stroną gratis",
+                    "Podstawowe SEO lokalne — Rzeszów i okolice",
+                    "Szkolenie: jak samemu zmienić treść na stronie",
+                    "Pierwszy miesiąc opieki nad stroną w cenie",
                 ],
                 delivery: "Czas realizacji: 7–21 dni",
                 cta: "Chcę taką stronę",
@@ -130,13 +141,16 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Marka, strona i widoczność w Google — kompletny start pod klucz.",
                 price: "5 900 zł",
-                priceSuffix: "jednorazowo",
+                priceSuffix: "netto, jednorazowo",
+                listPrice: "7 059 zł",
+                saving: "1 159 zł",
                 features: [
-                    "Pełny branding + indywidualna strona",
-                    "Konfiguracja i optymalizacja wizytówki Google",
-                    "Pakiet startowy 5 grafik (social / druk)",
-                    "Strategia opinii na start",
-                    "3 miesiące opieki nad stroną w cenie",
+                    "Wszystko z pakietu Firma w Internecie",
+                    "Wizytówki 300 szt. zamiast 150 + ulotka A5",
+                    "Szablony grafik pod social media",
+                    "Wizytówka Google: założenie, konfiguracja, optymalizacja",
+                    "Strategia opinii — jak je zbierać i jak odpowiadać",
+                    "3 miesiące pełnej widoczności: prowadzenie Google, opinie, 5–6 grafik miesięcznie, raport",
                     "Priorytetowy czas realizacji",
                 ],
                 delivery: "Czas realizacji: 14–21 dni",
@@ -158,7 +172,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Twoja strona po prostu działa — Ty nie musisz o nią myśleć.",
                 price: "149 zł",
-                priceSuffix: "/ miesiąc",
+                priceSuffix: "netto / miesiąc",
                 features: [
                     "Strona działa non stop (serwer w cenie)",
                     "Pilnuję adresu strony, żeby nie wygasł",
@@ -176,7 +190,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Strona pod opieką + jesteś widoczny w Google, gdy ktoś szuka takiej firmy jak Twoja.",
                 price: "690 zł",
-                priceSuffix: "/ miesiąc",
+                priceSuffix: "netto / miesiąc",
                 features: [
                     "Wszystko z Opieki Strony (strona działa i jest chroniona)",
                     "Prowadzę Twoją wizytówkę w Google i na Mapach",
@@ -188,6 +202,24 @@ export const pricingGroups: PricingGroupData[] = [
                 cta: "Chcę być widoczny",
                 highlighted: true,
                 badge: "Najczęściej wybierany",
+            },
+            {
+                eyebrow: "Potrzebujesz grafiki co tydzień, nie co pół roku",
+                name: "Stały Opiekun",
+                tagline:
+                    "Masz grafika i marketing na stałe — bez zatrudniania kogokolwiek i bez czekania w kolejce.",
+                price: "1 290 zł",
+                priceSuffix: "netto / miesiąc",
+                features: [
+                    "Wszystko z Widoczności i Opieki",
+                    "Grafika bez limitu pozycji: posty, banery, ulotki, oferty",
+                    "Prowadzę Twoje social media — nie tylko projektuję",
+                    "Wchodzisz przede mną w kolejkę — robię Twoje rzeczy pierwsze",
+                    "Co miesiąc rozmawiamy: co działa, co zmieniamy",
+                ],
+                delivery: "Odpisuję do 48h, priorytet",
+                cta: "Zacznij abonament",
+                highlighted: false,
             },
         ],
     },

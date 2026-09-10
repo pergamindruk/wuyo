@@ -7,7 +7,8 @@ import type { PricingCardData } from "@/data/pricing";
  * plakietka nad kartą. Na mobile karta wyróżniona ląduje pierwsza (order-first).
  */
 export function PricingCard({ card }: { card: PricingCardData }) {
-    const { eyebrow, name, tagline, price, priceSuffix, features, delivery, cta, highlighted, badge } = card;
+    const { eyebrow, name, tagline, price, priceSuffix, listPrice, saving, features, delivery, cta, highlighted, badge } =
+        card;
 
     // Prefill formularza kontaktowego nazwą pakietu.
     const ctaHref = `/?pakiet=${encodeURIComponent(name)}#kontakt`;
@@ -32,10 +33,20 @@ export function PricingCard({ card }: { card: PricingCardData }) {
             <p className="text-white/50 text-sm leading-relaxed mb-6">{tagline}</p>
 
             <div className="mb-7">
-                <span className={`text-4xl font-bold tabular-nums ${highlighted ? "text-gold" : "text-white"}`}>
-                    {price}
-                </span>
-                <span className="text-white/40 text-sm ml-2">{priceSuffix}</span>
+                <div>
+                    <span className={`text-4xl font-bold tabular-nums ${highlighted ? "text-gold" : "text-white"}`}>
+                        {price}
+                    </span>
+                    <span className="text-white/40 text-sm ml-2">{priceSuffix}</span>
+                </div>
+                <p className="text-white/35 text-xs mt-2 h-4">
+                    {listPrice && (
+                        <>
+                            osobno <span className="line-through tabular-nums">{listPrice}</span>
+                            {saving && <span className="text-gold/70 ml-1.5">— oszczędzasz {saving}</span>}
+                        </>
+                    )}
+                </p>
             </div>
 
             <ul className="space-y-3 mb-8 flex-1">

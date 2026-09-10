@@ -40,7 +40,7 @@ export async function generateQuote(clientMessage: string) {
 
     "${clientMessage}"
 
-    CENNIK REFERENCYJNY WUYO (ceny koncowe, bez VAT, 2026, rynek rzeszowski):
+    CENNIK REFERENCYJNY WUYO (ceny NETTO, do faktury dochodzi 23% VAT, 2026, rynek rzeszowski):
 
     DRUK wlasny (projekt + druk lacznie, ceny calkowite dla klienta):
     - Wizytowki 100 szt. (projekt + druk): 200-250 zl

@@ -6,7 +6,15 @@ export interface FaqItem {
 export const faqs: FaqItem[] = [
     {
         question: "Ile to wszystko będzie kosztować?",
-        answer: "Gram w otwarte karty. Najważniejsze pakiety masz w Cenniku. Jeśli potrzebujesz czegoś nietypowego, napisz maila - wycenię dokładnie co do złotówki przed startem prac, bez niespodzianek na końcu."
+        answer: "Gram w otwarte karty. W Cenniku masz pakiety z konkretnymi cenami i widełki dla pojedynczych usług — od razu wiesz, w jakim rzędzie wielkości się poruszamy. Napisz, czego potrzebujesz, a policzę dokładnie co do złotówki przed startem prac."
+    },
+    {
+        question: "Czy do ceny doliczasz VAT?",
+        answer: "Tak. Kwoty w cenniku to ceny netto, do faktury dochodzi 23% VAT. Jeśli prowadzisz firmę i odliczasz VAT, Twój realny koszt to dokładnie ta kwota, którą widzisz w cenniku."
+    },
+    {
+        question: "Dostanę fakturę?",
+        answer: "Tak, na każde zlecenie. Faktura VAT z pełnymi danymi — wrzucasz ją w koszty firmy i odliczasz VAT."
     },
     {
         question: "Jak wygląda rozliczenie zapłaty?",

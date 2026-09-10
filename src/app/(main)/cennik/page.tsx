@@ -4,79 +4,36 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PricingSection } from "@/components/pricing/PricingSection";
 import { FAQSection } from "@/components/FAQSection";
+import { faqs } from "@/data/faq";
 
-// Dane strukturalne FAQ mieszkają tam, gdzie widoczne są pytania —
-// Google wymaga, żeby schemat miał pokrycie w treści strony.
+// Schemat FAQ generowany z tych samych danych, które renderuje FAQSection —
+// Google wymaga, żeby schemat miał pokrycie w treści strony, a jedno źródło
+// gwarantuje, że nie rozjadą się przy edycji.
 const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile to wszystko będzie kosztować?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Gram w otwarte karty. Najważniejsze pakiety masz w Cenniku. Jeśli potrzebujesz czegoś nietypowego, napisz maila — wycenię dokładnie co do złotówki przed startem prac, bez niespodzianek na końcu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Jak wygląda rozliczenie zapłaty?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Standardowo dzielimy sprawę na pół: 50% zaliczki przed otwarciem programów graficznych i 50% po zakończeniu projektu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Co jeśli projekt mi nie wejdzie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Zanim usiądę do projektowania, robimy solidny brief. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę — pracuję aż powiesz WOW!",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy dostanę pliki edytowalne i źródłowe?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak. Przekazuję wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile trwa projekt strony WWW?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Dla strony One-Page zazwyczaj tydzień od zebrania materiałów. Dużo zależy od szybkości dostarczenia treści i feedbacku.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Skąd będę wiedział, na jakim etapie jest mój projekt?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie.",
-            },
-        },
-    ],
+    "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+    })),
 };
 
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Cennik usług graficznych, druku i webowych | WUYO – Rzeszów",
-    description: "Transparentne ceny: logo od 890 zł, marka od 1 490 zł, wizytówki 99 zł/50 szt., strona od 2 490 zł. Projekt + druk w jednym miejscu. Bez ukrytych kosztów.",
+    description: "Jawne widełki: logo 890–2 190 zł, marka od 1 490 zł, druk wizytówek od 99 zł, strona od 2 490 zł. Projekt i druk w jednym miejscu, bez ukrytych kosztów.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Pełen cennik usług graficznych, druku, web design i social media. Transparentne ceny, zero niespodzianek.",
+        description: "Pakiety z konkretnymi cenami i widełki dla pojedynczych usług — grafika, druk, odzież, strony www.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/cennik",
     },
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Transparentne ceny usług graficznych i webowych. Logo od 890 zł, wizytówki od 99 zł, strona od 2 490 zł.",
+        description: "Jawne widełki: logo od 890 zł, druk wizytówek od 99 zł, strona od 2 490 zł. Wycena konkretna po jednej wiadomości.",
         images: ["/og-image.webp"],
     },
     alternates: {
@@ -84,139 +41,53 @@ export const metadata: Metadata = {
     },
 };
 
-// ─── Dane druku ────────────────────────────────────────────────────────────────
+// ─── Widełki cenowe (widok publiczny) ──────────────────────────────────────────
+// Klient widzi tylko zakresy. Pełny cennik pozycja po pozycji siedzi w CENNIK.md
+// w katalogu głównym repo i służy wyłącznie do wyceny konkretnego zlecenia.
 
-const printProducts = [
+const priceRanges = [
     {
-        name: "Wizytówki",
-        note: "dwustronne, 300g błysk",
-        variants: [
-            { qty: "50 szt.", price: "99 zł" },
-            { qty: "100 szt.", price: "159 zł" },
-            { qty: "150 szt.", price: "199 zł" },
-            { qty: "300 szt.", price: "299 zł" },
+        title: "Projekt graficzny",
+        note: "Sam projekt. Druk liczony osobno.",
+        items: [
+            { name: "Logo i identyfikacja wizualna", price: "890 – 2 190 zł" },
+            { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
+            { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
+            { name: "Opakowania i etykiety", price: "od 180 zł" },
+            { name: "Grafiki na social media", price: "90 – 1 350 zł" },
         ],
     },
     {
-        name: "Ulotki A5",
-        note: "dwustronne, pełny kolor",
-        variants: [
-            { qty: "50 szt.", price: "119 zł" },
-            { qty: "100 szt.", price: "189 zł" },
-            { qty: "150 szt.", price: "239 zł" },
-            { qty: "300 szt.", price: "359 zł" },
+        title: "Druk i papeteria",
+        note: "Sam druk z gotowego pliku. Zamawiasz 2+ produkty — każdy kolejny -15%.",
+        items: [
+            { name: "Wizytówki (50 – 300 szt.)", price: "99 – 299 zł" },
+            { name: "Ulotki A5 (50 – 300 szt.)", price: "119 – 359 zł" },
+            { name: "Naklejki i etykiety (50 – 200 szt.)", price: "89 – 229 zł" },
+            { name: "Vouchery, magnesy, koperty", price: "69 – 379 zł" },
+            { name: "Plakaty", price: "od 29 zł / szt." },
         ],
     },
     {
-        name: "Vouchery / bony",
-        note: "",
-        variants: [
-            { qty: "50 szt.", price: "109 zł" },
-            { qty: "100 szt.", price: "179 zł" },
+        title: "Odzież z nadrukiem",
+        note: "DTF, pełny kolor, bez minimum — od jednej sztuki.",
+        items: [
+            { name: "Koszulki", price: "49 – 79 zł / szt." },
+            { name: "Bluzy", price: "139 – 199 zł / szt." },
+            { name: "Nadruk na Twojej odzieży", price: "od 45 zł" },
         ],
     },
     {
-        name: "Naklejki i etykiety",
-        note: "",
-        variants: [
-            { qty: "50 szt.", price: "89 zł" },
-            { qty: "100 szt.", price: "149 zł" },
-            { qty: "200 szt.", price: "229 zł" },
-        ],
-    },
-    {
-        name: "Plakaty",
-        note: "",
-        variants: [
-            { qty: "A4", price: "od 29 zł/szt." },
-            { qty: "A3", price: "od 39 zł/szt." },
-            { qty: "10+ szt.", price: "cena do ustalenia" },
-        ],
-    },
-    {
-        name: "Magnesy reklamowe",
-        note: "z laminatem, format wizytówki",
-        variants: [
-            { qty: "50 szt.", price: "229 zł" },
-            { qty: "100 szt.", price: "379 zł" },
-        ],
-    },
-    {
-        name: "Koperty z nadrukiem",
-        note: "",
-        variants: [
-            { qty: "25 szt.", price: "69 zł" },
-            { qty: "50 szt.", price: "119 zł" },
+        title: "Strony internetowe",
+        note: "Next.js, SEO lokalne, dopracowana wersja mobilna.",
+        items: [
+            { name: "Landing Page / one-page", price: "od 2 490 zł" },
+            { name: "Strona firmowa do 5 podstron", price: "3 490 zł" },
+            { name: "Sklep internetowy", price: "od 6 900 zł" },
+            { name: "Stała opieka miesięczna", price: "149 – 1 290 zł / mc" },
         ],
     },
 ];
-
-// ─── Dane odzieży i nadruków ────────────────────────────────────────────────────
-
-const clothingProducts = [
-    {
-        name: "Koszulki z nadrukiem",
-        note: "DTF, pełny kolor, bez minimum",
-        variants: [
-            { qty: "1 szt.", price: "79 zł" },
-            { qty: "5+ szt.", price: "65 zł/szt." },
-            { qty: "20+ szt.", price: "49 zł/szt." },
-        ],
-    },
-    {
-        name: "Bluzy z nadrukiem",
-        note: "DTF, kaptur lub bez, bez minimum",
-        variants: [
-            { qty: "1 szt.", price: "199 zł" },
-            { qty: "5+ szt.", price: "169 zł/szt." },
-            { qty: "20+ szt.", price: "139 zł/szt." },
-        ],
-    },
-    {
-        name: "Nadruk na Twojej odzieży",
-        note: "przynosisz swoje, my wprasowujemy",
-        variants: [
-            { qty: "mały wzór (do A5)", price: "od 45 zł" },
-            { qty: "duży wzór (cały przód)", price: "od 65 zł" },
-        ],
-    },
-    {
-        name: "Personalizacja i inne",
-        note: "",
-        variants: [
-            { qty: "Imię / numer (dopłata)", price: "od 15 zł" },
-            { qty: "Napis flex/flock", price: "od 35 zł/szt." },
-            { qty: "Haft (min. 5 szt.)", price: "od 45 zł/szt." },
-        ],
-    },
-];
-
-// ─── Lokalny komponent: siatka produktów (druk / odzież) ───────────────────────
-
-function ProductGrid({ products }: { products: typeof printProducts }) {
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-            {products.map((product, i) => (
-                <AnimatedSection key={product.name} delay={0.05 * i}>
-                    <div className="bg-navy/50 border border-white/10 rounded-2xl p-6 h-full">
-                        <h4 className="font-bold text-white text-lg mb-1">{product.name}</h4>
-                        {product.note && (
-                            <p className="text-white/40 text-xs mb-3">{product.note}</p>
-                        )}
-                        <ul className="space-y-2 mt-3">
-                            {product.variants.map((v) => (
-                                <li key={v.qty} className="flex items-center justify-between gap-2">
-                                    <span className="text-white/70 text-sm">{v.qty}</span>
-                                    <span className="text-gold font-bold text-sm whitespace-nowrap">{v.price}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </AnimatedSection>
-            ))}
-        </div>
-    );
-}
 
 // ─── Helper: karta cenowa ──────────────────────────────────────────────────────
 
@@ -281,7 +152,7 @@ export default function PricingPage() {
                                     Gramy w <span className="text-gold">otwarte karty</span>.
                                 </h1>
                                 <p className="text-white/50 mt-3 max-w-xl text-sm md:text-base">
-                                    Zero niespodzianek na rachunku. Podane kwoty to ceny brutto (nie jestem płatnikiem VAT).
+                                    Zero niespodzianek na rachunku. Podane kwoty to ceny netto — do faktury dochodzi 23% VAT, który jako firma odliczasz.
                                 </p>
                             </div>
                             <Link
@@ -297,108 +168,29 @@ export default function PricingPage() {
                 {/* ── PAKIETY (nowa sekcja cennika) ──────────────────── */}
                 <PricingSection className="pb-12" id="pakiety" />
 
-                {/* ── PEŁNY CENNIK SZCZEGÓŁOWY ───────────────────────── */}
+                {/* ── WIDEŁKI CENOWE ─────────────────────────────────── */}
                 <AnimatedSection delay={0.05}>
                     <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12" />
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Pełny cennik szczegółowy</h2>
-                    <p className="text-white/50 text-sm mb-8">
-                        Pojedyncze usługi i produkty — jeśli potrzebujesz tylko części.
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                        Ile kosztują pojedyncze usługi
+                    </h2>
+                    <p className="text-white/50 text-sm mb-8 max-w-2xl">
+                        Widełki, żebyś wiedział, w jakim rzędzie wielkości się poruszamy. Dokładna
+                        kwota zależy od zakresu — napisz, co potrzebujesz, a policzę konkretnie.
                     </p>
                 </AnimatedSection>
 
-                {/* ── PROJEKTY GRAFICZNE ─────────────────────────────── */}
-                <AnimatedSection delay={0.05}>
-                    <h2 className="text-2xl font-bold text-white mb-5">Projekty graficzne</h2>
-                </AnimatedSection>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                    <AnimatedSection delay={0.1}>
-                        <PricingCard
-                            title="Logo"
-                            items={[
-                                { name: "Logo (3 wersje: pozioma, pionowa, mono)", price: "od 890 zł" },
-                                { name: "Logo + mini księga znaku (paleta, typografia, zasady)", price: "1 490 zł" },
-                            ]}
-                        />
-                    </AnimatedSection>
-                    <AnimatedSection delay={0.15}>
-                        <PricingCard
-                            title="Identyfikacja wizualna"
-                            items={[
-                                { name: "Brand Basic (logo + wizytówka)", price: "od 1 490 zł" },
-                                { name: "Brand Full (logo + księga + wizytówka + ulotka + szablon social)", price: "od 2 200 zł" },
-                            ]}
-                        />
-                    </AnimatedSection>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {priceRanges.map((group, i) => (
+                        <AnimatedSection key={group.title} delay={0.1 + 0.05 * i}>
+                            <PricingCard title={group.title} items={group.items} note={group.note} />
+                        </AnimatedSection>
+                    ))}
                 </div>
 
-                {/* ── SOCIAL MEDIA ────────────────────────────────────── */}
-                <AnimatedSection delay={0.2}>
-                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Social media</h2>
-                </AnimatedSection>
-
-                <AnimatedSection delay={0.25}>
-                    <PricingCard
-                        title="Grafiki i szablony social media"
-                        items={[
-                            { name: "Pojedyncza grafika", price: "80 zł" },
-                            { name: "Karuzela (do 6 slajdów)", price: "od 120 zł" },
-                            { name: "Miniaturka YouTube", price: "60 zł" },
-                            { name: "Zestaw startowy (post + karuzela + story + okładka + highlight)", price: "od 350 zł" },
-                            { name: "Pakiet miesięczny (12 grafik)", price: "od 799 zł/msc" },
-                        ]}
-                    />
-                </AnimatedSection>
-
-                {/* ── MATERIAŁY DRUKOWANE (sam projekt) ────────────────── */}
+                {/* Rabat na zamówienia łączone */}
                 <AnimatedSection delay={0.3}>
-                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Materiały drukowane — sam projekt</h2>
-                </AnimatedSection>
-
-                <AnimatedSection delay={0.35}>
-                    <PricingCard
-                        title="Projekt do druku (bez kosztów druku)"
-                        items={[
-                            { name: "Wizytówka (dwustronna)", price: "180 zł" },
-                            { name: "Ulotka A5/A6 (dwustronna)", price: "180 zł" },
-                            { name: "Plakat A3/A4", price: "210 zł" },
-                            { name: "Voucher / bon podarunkowy", price: "220 zł" },
-                            { name: "Naklejki / etykiety", price: "od 160 zł" },
-                            { name: "Baner reklamowy (roll-up, citylight, outdoor)", price: "od 329 zł" },
-                            { name: "Katalog / menu (do 8 stron)", price: "od 480 zł" },
-                            { name: "Certyfikat / dyplom", price: "210 zł" },
-                        ]}
-                    />
-                </AnimatedSection>
-
-                {/* ── OPAKOWANIA I ETYKIETY ─────────────────────────────── */}
-                <AnimatedSection delay={0.4}>
-                    <h2 className="text-2xl font-bold text-white mb-5 mt-10">Opakowania i etykiety</h2>
-                </AnimatedSection>
-
-                <AnimatedSection delay={0.45}>
-                    <PricingCard
-                        title="Projekt opakowania lub etykiety"
-                        items={[
-                            { name: "Etykieta produktowa (do 2 stron)", price: "od 180 zł" },
-                            { name: "Opakowanie (pudełko, torebka, sleeve)", price: "od 400 zł" },
-                        ]}
-                    />
-                </AnimatedSection>
-
-                {/* ── DRUK & PAPETERIA ──────────────────────────────────── */}
-                <AnimatedSection delay={0.5}>
-                    <div className="mt-14 mb-5">
-                        <h2 className="text-2xl font-bold text-white mb-2">Druk &amp; Papeteria</h2>
-                        <p className="text-white/50 text-sm">
-                            Ceny zawierają projekt + druk. Przy zamówieniu 2 lub więcej produktów — każdy kolejny -15%.
-                        </p>
-                    </div>
-                </AnimatedSection>
-
-                {/* Baner rabatowy */}
-                <AnimatedSection delay={0.55}>
-                    <div className="bg-[#ffeb52] text-[#1c1b17] rounded-2xl p-5 flex items-start gap-4 mb-8">
+                    <div className="bg-[#ffeb52] text-[#1c1b17] rounded-2xl p-5 flex items-start gap-4 mt-8">
                         <div className="shrink-0 mt-0.5">
                             <Tag size={22} />
                         </div>
@@ -413,36 +205,16 @@ export default function PricingPage() {
                     </div>
                 </AnimatedSection>
 
-                <ProductGrid products={printProducts} />
-
-                {/* ── ODZIEŻ I PERSONALIZACJA ────────────────────────────── */}
-                <AnimatedSection delay={0.5}>
-                    <div className="mt-14 mb-5">
-                        <h2 className="text-2xl font-bold text-white mb-2">Odzież &amp; Personalizacja</h2>
-                        <p className="text-white/50 text-sm">
-                            Nadruk DTF na koszulkach i bluzach — bez minimum ilościowego, od 1 sztuki. Więcej wariantów na{" "}
-                            <Link href="/odziez" className="text-gold hover:underline">stronie odzieży</Link>.
-                        </p>
-                    </div>
-                </AnimatedSection>
-
-                <ProductGrid products={clothingProducts} />
-
-                {/* ── STRONY WWW ───────────────────────────────────────── */}
-                <AnimatedSection delay={0.1}>
-                    <h2 className="text-2xl font-bold text-white mb-5 mt-14">Strony WWW</h2>
-                </AnimatedSection>
-
-                <AnimatedSection delay={0.15}>
-                    <PricingCard
-                        title="Projektowanie i wdrażanie stron internetowych"
-                        items={[
-                            { name: "Landing Page (React/Next.js, SEO, Core Web Vitals, responsywna)", price: "od 2 490 zł" },
-                            { name: "Sklep internetowy", price: "od 6 900 zł" },
-                            { name: "Strony rozbudowane", price: "wycena indywidualna" },
-                        ]}
-                        note="50% zaliczki przed startem. 50% po zakończeniu. Gram w otwarte karty — cena ustalona przed startem to cena końcowa."
-                    />
+                <AnimatedSection delay={0.35}>
+                    <p className="text-white/40 text-xs mt-6 max-w-2xl">
+                        Kwoty netto — do faktury dochodzi 23% VAT, który jako firma odliczasz.
+                        50% zaliczki przed startem, 50% po zakończeniu. Cena ustalona przed startem
+                        to cena końcowa. Więcej wariantów odzieży na{" "}
+                        <Link href="/odziez" className="text-gold hover:underline">
+                            stronie odzieży
+                        </Link>
+                        .
+                    </p>
                 </AnimatedSection>
 
                 {/* ── CTA KOŃCOWE ──────────────────────────────────────── */}
