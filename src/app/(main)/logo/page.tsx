@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PageFaq, type FaqEntry } from "@/components/PageFaq";
+import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight, Layers, FileText, Palette, Type } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -36,44 +38,32 @@ export const metadata: Metadata = {
     ],
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztuje zaprojektowanie logo?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile trwa projekt logo?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Standardowo 10–14 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Co dostaję razem z logo?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Pełen pakiet: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do drukarni. Paleta kolorów w HEX i CMYK, typografia firmowa, wszystkie warianty (kolor, mono, sygnet). Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy mogę samodzielnie edytować logo po projekcie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak — na życzenie przekazuję pliki źródłowe Figma lub Adobe Illustrator. Jeśli nie masz programów graficznych, wystarczą Ci pliki PNG i SVG do codziennego użytku.",
-            },
-        },
-    ],
-};
+// Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
+// wymaga, żeby dane strukturalne miały pokrycie w treści strony.
+const faqs: FaqEntry[] = [
+    {
+        q: "Ile kosztuje zaprojektowanie logo?",
+        a: "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+    },
+    {
+        q: "Ile trwa projekt logo?",
+        a: "Standardowo 10–14 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
+    },
+    {
+        q: "Co dostaję razem z logo?",
+        a: "Pełen pakiet: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do drukarni. Paleta kolorów w HEX i CMYK, typografia firmowa, wszystkie warianty (kolor, mono, sygnet). Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty.",
+    },
+    {
+        q: "Czy mogę samodzielnie edytować logo po projekcie?",
+        a: "Tak — na życzenie przekazuję pliki źródłowe Figma lub Adobe Illustrator. Jeśli nie masz programów graficznych, wystarczą Ci pliki PNG i SVG do codziennego użytku.",
+    },
+    {
+        q: "Co jeśli drukarnia zwróci plik z uwagami?",
+        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
 
 const serviceSchema = {
     "@context": "https://schema.org",
@@ -426,6 +416,8 @@ export default function LogoPage() {
             </section>
 
             {/* Kontakt */}
+            <PageFaq items={faqs} title="Pytania o projekt logo" />
+
             <Suspense fallback={null}>
                 <ContactBrief />
             </Suspense>

@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Grafik Rzeszów – logo od 890 zł, strony od 2 490 zł | WUYO",
-    description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, termin murowany, bezpośredni kontakt. Wycena bezpłatna, odpowiedź w 24h →",
+    description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, bezpośredni kontakt. Wycena w 24h, bezpłatnie →",
     keywords: [
         "grafik Rzeszów",
         "projektant graficzny Rzeszów",

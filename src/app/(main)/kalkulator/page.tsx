@@ -3,7 +3,7 @@ import { PriceCalculator } from "./PriceCalculator";
 
 export const metadata: Metadata = {
     title: "Kalkulator cen – ile kosztuje projekt graficzny?",
-    description: "Sprawdź orientacyjną wycenę swojego projektu w 60 sekund. Logo, strona WWW, materiały drukowane, social media — wybierz usługę i dowiedz się, czego się spodziewać.",
+    description: "Sprawdź orientacyjną wycenę projektu w 60 sekund. Logo, strona WWW, druk, social media — wybierz usługę i zobacz, czego się spodziewać.",
     alternates: { canonical: "https://wuyo.pl/kalkulator" },
     openGraph: {
         title: "Kalkulator wyceny WUYO – Logo, Strona, Druk, Social",

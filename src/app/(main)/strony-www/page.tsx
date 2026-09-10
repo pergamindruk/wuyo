@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PageFaq, type FaqEntry } from "@/components/PageFaq";
+import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight, Zap, Shield, Search, Smartphone } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -9,7 +11,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO Rzeszów",
-    description: "Tworzę strony na Next.js — ładują się w <1s, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 3 490 zł. Stała cena, termin murowany. Wycena w 24h →",
+    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 3 490 zł. Wycena w 24h →",
     openGraph: {
         title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO",
         description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 2 490 zł. Rzeszów i cała Polska.",
@@ -26,44 +28,28 @@ export const metadata: Metadata = {
     alternates: { canonical: "https://wuyo.pl/strony-www" },
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztuje strona internetowa?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 3 490 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile trwa zbudowanie strony internetowej?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Strona One-Page zazwyczaj tydzień od zatwierdzenia projektu graficznego. Strona Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy będę mógł samodzielnie edytować treści na stronie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak — podłączam lekki CMS (np. Sanity lub Contentlayer) jeśli tego potrzebujesz. W pakiecie Multi-Page edycja treści jest standardem. Możesz też po prostu pisać do mnie — drobne zmiany tekstu wchodzą w zakres wsparcia.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Dlaczego Next.js zamiast WordPressa?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Strona na Next.js ładuje się poniżej 1 sekundy, nie wymaga cotygodniowych aktualizacji pluginów i jest praktycznie niemożliwa do zhackowania bo nie ma backendu wystawionego na świat. WordPress jest wygodniejszy do samodzielnej edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości.",
-            },
-        },
-    ],
-};
+// Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
+// wymaga, żeby dane strukturalne miały pokrycie w treści strony.
+const faqs: FaqEntry[] = [
+    {
+        q: "Ile kosztuje strona internetowa?",
+        a: "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 3 490 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+    },
+    {
+        q: "Ile trwa zbudowanie strony internetowej?",
+        a: "Strona One-Page zazwyczaj tydzień od zatwierdzenia projektu graficznego. Strona Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
+    },
+    {
+        q: "Czy będę mógł samodzielnie edytować treści na stronie?",
+        a: "Tak — podłączam lekki CMS (np. Sanity lub Contentlayer) jeśli tego potrzebujesz. W pakiecie Multi-Page edycja treści jest standardem. Możesz też po prostu pisać do mnie — drobne zmiany tekstu wchodzą w zakres wsparcia.",
+    },
+    {
+        q: "Dlaczego Next.js zamiast WordPressa?",
+        a: "Strona na Next.js ładuje się poniżej 1 sekundy, nie wymaga cotygodniowych aktualizacji pluginów i jest praktycznie niemożliwa do zhackowania bo nie ma backendu wystawionego na świat. WordPress jest wygodniejszy do samodzielnej edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
 
 const serviceSchema = {
     "@context": "https://schema.org",
@@ -433,6 +419,8 @@ export default function StronyWwwPage() {
             </section>
 
             {/* Kontakt */}
+            <PageFaq items={faqs} title="Pytania o strony internetowe" />
+
             <Suspense fallback={null}>
                 <ContactBrief />
             </Suspense>

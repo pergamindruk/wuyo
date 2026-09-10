@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Printer, Scissors, Thermometer, Zap } from "luci
 import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const metadata: Metadata = {
-    title: "O mnie – Mateusz Machoś, projektant graficzny i web developer",
+    title: "O mnie – Mateusz Machoś, grafik i web developer | WUYO",
     description: "Cześć, jestem Mateusz. Projektant graficzny i web developer z Rzeszowa. Działam sam, co znaczy, że rozmawiasz bezpośrednio ze mną — bez agencyjnego ping-ponga.",
     alternates: { canonical: "https://wuyo.pl/o-mnie" },
     keywords: [

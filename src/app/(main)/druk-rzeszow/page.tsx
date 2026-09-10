@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Druk Wizytówek Rzeszów – projekt + druk od 299 zł | WUYO",
-    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie — projekt i druk w jednym miejscu. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł. Odbiór w Rzeszowie →",
+    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie. Projekt i druk w jednym miejscu: 50 szt. z projektem od 299 zł, sam druk od 99 zł. Odbiór na miejscu →",
     keywords: [
         "druk wizytówek Rzeszów",
         "druk ulotek Rzeszów",

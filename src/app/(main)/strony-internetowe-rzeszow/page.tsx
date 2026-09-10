@@ -8,8 +8,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony Internetowe Rzeszów – od 2 490 zł | Next.js, SEO | WUYO",
-    description: "Tworzę strony internetowe dla firm z Rzeszowa. Next.js – ładuje się w <1s, SEO wbudowane od zera. One-page od 2 490 zł, multi-page od 3 490 zł. Stała cena, wycena w 24h →",
+    title: "Strony Internetowe Rzeszów od 2 490 zł | Next.js | WUYO",
+    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 2 490 zł, multi-page od 3 490 zł. Wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
         "tworzenie stron internetowych Rzeszów",

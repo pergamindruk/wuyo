@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PageFaq, type FaqEntry } from "@/components/PageFaq";
+import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -8,7 +10,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | od 79 zł | WUYO",
+    title: "Nadruki na Odzieży Rzeszów – koszulki, bluzy od 79 zł",
     description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum — od 1 sztuki za 79 zł, przy 20+ szt. 49 zł/szt. Rzeszów + wysyłka →",
     openGraph: {
         title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
@@ -28,52 +30,32 @@ export const metadata: Metadata = {
     },
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Jaka jest minimalna ilość zamówienia?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Koszulki i bluzy z nadrukiem DTF robię od 1 sztuki — bez minimum. Przy haftowaniu minimum to 5 sztuk, bo to inna technologia.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy mogę przynieść własną koszulkę do nadruku?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak. Przynosisz swoją odzież — koszulkę, bluzę, torbę — a ja wprasowuję nadruk w Twoim wzorze. Cena zależy od wielkości nadruku, nie od ubrania.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile czasu zajmuje realizacja?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Nadruk DTF i flex/flock: 1–4 dni robocze, zależnie od ilości i tego czy potrzebujesz projektu od zera. Haft ustalam indywidualnie, bo termin zależy od nakładu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy zajmujesz się też projektem graficznym nadruku?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak — projekt i nadruk w jednym miejscu. Jeśli masz gotowy plik, wykorzystam go od razu. Jeśli nie, zaprojektuję grafikę pod Twój pomysł.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Co lepiej sprawdzi się na drużynowych koszulkach — nadruk czy haft?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Do numerów, imion i prostych logo na koszulkach sportowych lepszy jest nadruk DTF lub flex — jest tańszy i szybszy. Haft sprawdza się na czapkach, polówkach i odzieży roboczej, którą pierze się częściej.",
-            },
-        },
-    ],
-};
+// Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
+// wymaga, żeby dane strukturalne miały pokrycie w treści strony.
+const faqs: FaqEntry[] = [
+    {
+        q: "Jaka jest minimalna ilość zamówienia?",
+        a: "Koszulki i bluzy z nadrukiem DTF robię od 1 sztuki — bez minimum. Przy haftowaniu minimum to 5 sztuk, bo to inna technologia.",
+    },
+    {
+        q: "Czy mogę przynieść własną koszulkę do nadruku?",
+        a: "Tak. Przynosisz swoją odzież — koszulkę, bluzę, torbę — a ja wprasowuję nadruk w Twoim wzorze. Cena zależy od wielkości nadruku, nie od ubrania.",
+    },
+    {
+        q: "Ile czasu zajmuje realizacja?",
+        a: "Nadruk DTF i flex/flock: 1–4 dni robocze, zależnie od ilości i tego czy potrzebujesz projektu od zera. Haft ustalam indywidualnie, bo termin zależy od nakładu.",
+    },
+    {
+        q: "Czy zajmujesz się też projektem graficznym nadruku?",
+        a: "Tak — projekt i nadruk w jednym miejscu. Jeśli masz gotowy plik, wykorzystam go od razu. Jeśli nie, zaprojektuję grafikę pod Twój pomysł.",
+    },
+    {
+        q: "Co lepiej sprawdzi się na drużynowych koszulkach — nadruk czy haft?",
+        a: "Do numerów, imion i prostych logo na koszulkach sportowych lepszy jest nadruk DTF lub flex — jest tańszy i szybszy. Haft sprawdza się na czapkach, polówkach i odzieży roboczej, którą pierze się częściej.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
 
 const clothingSchema = {
     "@context": "https://schema.org",
@@ -284,6 +266,8 @@ export default function OdziezPage() {
             <TestimonialsSection />
 
             {/* Kontakt */}
+            <PageFaq items={faqs} title="Pytania o nadruki i personalizację" />
+
             <Suspense fallback={null}>
                 <ContactBrief />
             </Suspense>

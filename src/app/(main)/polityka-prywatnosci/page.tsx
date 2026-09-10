@@ -5,6 +5,9 @@ import { ArrowLeft } from "lucide-react";
 export const metadata = {
     title: "Polityka Prywatności | Wuyo – Dobra Grafa",
     description: "Informacje o przetwarzaniu danych osobowych, plikach cookies i sposobach ochrony Twojej prywatności na stronie Wuyo.",
+    alternates: {
+        canonical: "https://wuyo.pl/polityka-prywatnosci",
+    },
 };
 
 export default function PrivacyPolicyPage() {

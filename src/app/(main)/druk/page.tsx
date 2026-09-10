@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PageFaq, type FaqEntry } from "@/components/PageFaq";
+import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -29,44 +31,32 @@ export const metadata: Metadata = {
     },
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztują wizytówki z projektem?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wizytówki 50 szt. od 99 zł, jeśli masz gotowy projekt. Z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Jak szybko dostanę wydruk?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy mogę zamówić mały nakład — np. 20 wizytówek?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak. Nie mam minimalnego nakładu na wizytówki i naklejki — drukuję u siebie, więc nie obowiązują mnie minimalne ilości drukarni przemysłowych. Przy ulotkach minimum to 100 szt.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy zajmujesz się tylko projektem, czy też drukiem?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Jedno i drugie — projekt i druk w jednym miejscu. Nie musisz szukać oddzielnie grafika i drukarni, tłumaczyć specyfikacji ani wysyłać plików w odpowiednich formatach. Dostajesz gotowy produkt.",
-            },
-        },
-    ],
-};
+// Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
+// wymaga, żeby dane strukturalne miały pokrycie w treści strony.
+const faqs: FaqEntry[] = [
+    {
+        q: "Ile kosztują wizytówki z projektem?",
+        a: "Wizytówki 50 szt. od 99 zł, jeśli masz gotowy projekt. Z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+    },
+    {
+        q: "Jak szybko dostanę wydruk?",
+        a: "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
+    },
+    {
+        q: "Czy mogę zamówić mały nakład — np. 20 wizytówek?",
+        a: "Tak. Nie mam minimalnego nakładu na wizytówki i naklejki — drukuję u siebie, więc nie obowiązują mnie minimalne ilości drukarni przemysłowych. Przy ulotkach minimum to 100 szt.",
+    },
+    {
+        q: "Czy zajmujesz się tylko projektem, czy też drukiem?",
+        a: "Jedno i drugie — projekt i druk w jednym miejscu. Nie musisz szukać oddzielnie grafika i drukarni, tłumaczyć specyfikacji ani wysyłać plików w odpowiednich formatach. Dostajesz gotowy produkt.",
+    },
+    {
+        q: "Co jeśli drukarnia zwróci plik z uwagami?",
+        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
 
 const drukSchema = {
     "@context": "https://schema.org",
@@ -286,6 +276,8 @@ export default function DrukPage() {
             <TestimonialsSection />
 
             {/* Kontakt */}
+            <PageFaq items={faqs} title="Pytania o projekt i druk" />
+
             <Suspense fallback={null}>
                 <ContactBrief />
             </Suspense>
