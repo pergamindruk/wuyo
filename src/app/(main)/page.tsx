@@ -155,7 +155,7 @@ export default function Home() {
                         <HeroText />
                         <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
                             Projektuję i drukuję to, po czym ludzie oceniają Twoją firmę{" "}
-                            <span className="text-[#FFEB52] font-semibold">w pierwsze trzy sekundy.</span>
+                            <span className="text-[#FFEB52] font-semibold whitespace-nowrap">w pierwsze trzy sekundy.</span>
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6">
                             <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">

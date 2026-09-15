@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Syne, Goldman } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -27,6 +27,12 @@ const csHarley = localFont({
     display: "swap",
 });
 
+// color-scheme trafia do <meta> w HTML, więc działa jeszcze przed pobraniem CSS
+export const viewport: Viewport = {
+    colorScheme: "dark",
+    themeColor: "#FFEB52",
+};
+
 export const metadata: Metadata = {
     metadataBase: new URL("https://wuyo.pl"),
     title: {
@@ -41,9 +47,6 @@ export const metadata: Metadata = {
     icons: {
         icon: "/favicon-wuyo.png",
         apple: "/favicon-wuyo.png",
-    },
-    other: {
-        "theme-color": "#FFEB52",
     },
     openGraph: {
         type: "website",
@@ -152,7 +155,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="pl" className="scroll-smooth">
+        <html lang="pl" className="scroll-smooth" style={{ backgroundColor: "#1c1b17" }}>
             <head>
                 <script
                     type="application/ld+json"

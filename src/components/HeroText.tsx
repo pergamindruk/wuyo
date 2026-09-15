@@ -40,10 +40,10 @@ export function HeroText() {
                 <span aria-hidden="true">WRA<ZWithDot color="white" />ENIE</span>
             </span>
             <span
-                className="hero-word block text-[#FFEB52] font-cs-harley font-normal mt-2"
+                className="hero-word block font-cs-harley font-normal mt-2"
                 style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}
             >
-                MASZ TYLKO JEDNO.
+                <span className="gold-flow">MASZ TYLKO JEDNO.</span>
             </span>
         </h1>
     );

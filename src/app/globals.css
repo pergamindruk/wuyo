@@ -93,6 +93,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* Ciemne płótno od pierwszej klatki — bez tego przeglądarka maluje biel,
+     zanim arkusz stylów się zastosuje. */
+  color-scheme: dark;
+  background: var(--navy);
 }
 
 body {
