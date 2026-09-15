@@ -154,11 +154,8 @@ export default function Home() {
                     <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
                         <HeroText />
                         <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
-                            Obsługuję marki od startupu po skalowanie&nbsp;—{" "}
-                            <span className="text-[#FFEB52] font-semibold">Projekty graficzne,</span>{" "}
-                            <span className="text-[#FFEB52] font-semibold">Druk do A3+:</span>{" "}
-                            Wizytówki, ulotki, plakaty, zaproszenia, fotoobrazy, nadruki CD/DVD
-                            {" "}— KRÓTKIE SERIE, SZYBKO, OD RĘKI.
+                            Projektuję i drukuję to, po czym ludzie oceniają Twoją firmę{" "}
+                            <span className="text-[#FFEB52] font-semibold">w pierwsze trzy sekundy.</span>
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6">
                             <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
