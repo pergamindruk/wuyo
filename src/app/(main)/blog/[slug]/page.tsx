@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { getAllSlugs, getPost, extractFaq } from "@/lib/blog";
+import { getAllSlugs, getPost, getRelatedPosts, extractFaq } from "@/lib/blog";
 import { mdxComponents } from "@/components/blog/MDXComponents";
 import type { Metadata } from "next";
 import remarkGfm from "remark-gfm";
@@ -54,6 +54,7 @@ export default async function ArticlePage({ params }: Props) {
     }
 
     const faq = extractFaq(post.content);
+    const related = getRelatedPosts(slug);
     const imageUrl = post.image ? `https://wuyo.pl${post.image}` : "https://wuyo.pl/og-image.webp";
     // Zdjęcia pionowe zwężamy, żeby nie spychały treści artykułu poza ekran.
     const isPortrait = !!post.imageSize && post.imageSize.height > post.imageSize.width;
@@ -148,6 +149,36 @@ export default async function ArticlePage({ params }: Props) {
                     />
                 </div>
             </article>
+
+            {related.length > 0 && (
+                <section className="px-6 pb-4 max-w-3xl mx-auto">
+                    <div className="pt-10 border-t border-white/10">
+                        <h2 className="text-2xl font-bold text-white mb-8">Przeczytaj też</h2>
+                        <div className="grid gap-5 md:grid-cols-3">
+                            {related.map((item) => (
+                                <Link key={item.slug} href={`/blog/${item.slug}`} className="glass-card p-5 block group">
+                                    {item.image && (
+                                        <div className="relative w-full aspect-[4/3] mb-4 rounded-xl overflow-hidden border border-white/10">
+                                            <Image
+                                                src={item.image}
+                                                alt={item.imageAlt ?? item.title}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 220px"
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+                                        </div>
+                                    )}
+                                    <span className="eyebrow text-xs">{item.category}</span>
+                                    <h3 className="text-base font-bold text-white mt-2 mb-2 leading-snug group-hover:text-gold transition-colors">
+                                        {item.title}
+                                    </h3>
+                                    <span className="text-white/40 text-xs">{item.readTime} czytania</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <div className="px-6 pb-20 max-w-3xl mx-auto">
                 <div className="pt-10 border-t border-white/10">

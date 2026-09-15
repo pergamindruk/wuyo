@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractFaq, getAllPosts, getPost } from "@/lib/blog";
+import { extractFaq, getAllPosts, getPost, getRelatedPosts } from "@/lib/blog";
 
 describe("extractFaq", () => {
     it("wyciąga pary pytanie/odpowiedź z sekcji FAQ", () => {
@@ -64,6 +64,57 @@ describe("getImageSize", () => {
             expect(post.imageSize, post.slug).toBeDefined();
             expect(post.imageSize!.width, post.slug).toBeGreaterThan(100);
             expect(post.imageAlt, post.slug).toBeTruthy();
+        }
+    });
+});
+
+describe("getRelatedPosts", () => {
+    it("nie proponuje wpisu, który właśnie czytamy", () => {
+        for (const post of getAllPosts()) {
+            const related = getRelatedPosts(post.slug);
+            expect(related.map((r) => r.slug), post.slug).not.toContain(post.slug);
+        }
+    });
+
+    it("każdy wpis dostaje trzy propozycje", () => {
+        for (const post of getAllPosts()) {
+            expect(getRelatedPosts(post.slug).length, post.slug).toBe(3);
+        }
+    });
+
+    it("najpierw sięga po wpisy z tej samej kategorii", () => {
+        const posts = getAllPosts();
+        for (const post of posts) {
+            const sameCategory = posts.filter((p) => p.category === post.category && p.slug !== post.slug);
+            if (sameCategory.length === 0) continue;
+            const first = getRelatedPosts(post.slug)[0];
+            expect(first.category, post.slug).toBe(post.category);
+        }
+    });
+});
+
+describe("spójność wpisów", () => {
+    it("każdy wpis ma linki do innych artykułów — żadnych sierot", () => {
+        const posts = getAllPosts().map((m) => getPost(m.slug));
+        const inbound = new Map(posts.map((p) => [p.slug, 0]));
+        for (const post of posts) {
+            const links = new Set([...post.content.matchAll(/\]\((\/blog\/[a-z0-9-]+)\)/g)].map((m) => m[1].split("/").pop()!));
+            expect(links.size, `${post.slug} nie linkuje do innych wpisów`).toBeGreaterThan(0);
+            for (const target of links) {
+                expect(inbound.has(target), `${post.slug} linkuje do nieistniejącego ${target}`).toBe(true);
+                inbound.set(target, (inbound.get(target) ?? 0) + 1);
+            }
+        }
+        for (const [slug, count] of inbound) {
+            expect(count, `${slug} nie ma żadnego linku przychodzącego`).toBeGreaterThan(0);
+        }
+    });
+
+    it("ceny podane są z dopiskiem netto", () => {
+        for (const meta of getAllPosts()) {
+            const post = getPost(meta.slug);
+            if (!/price="/.test(post.content)) continue;
+            expect(/netto/i.test(post.content), `${post.slug} podaje ceny bez informacji o netto`).toBe(true);
         }
     });
 });

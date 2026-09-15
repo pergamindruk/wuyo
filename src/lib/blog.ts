@@ -92,6 +92,18 @@ export function getPost(slug: string): Post {
     return post;
 }
 
+/**
+ * Wpisy proponowane pod artykułem: najpierw z tej samej kategorii,
+ * potem najnowsze pozostałe. Bieżący wpis zawsze wypada z listy.
+ */
+export function getRelatedPosts(slug: string, limit = 3): PostMeta[] {
+    const all = getAllPosts().filter((p) => p.slug !== slug);
+    const current = all.length ? getAllPosts().find((p) => p.slug === slug) : undefined;
+    const sameCategory = current ? all.filter((p) => p.category === current.category) : [];
+    const rest = all.filter((p) => !sameCategory.includes(p));
+    return [...sameCategory, ...rest].slice(0, limit);
+}
+
 export function getAllSlugs(): string[] {
     if (!fs.existsSync(POSTS_DIR)) return [];
     return fs
