@@ -98,7 +98,7 @@ export default function Home() {
         {
             icon: <FileText size={28} />,
             title: "Druk, który robi wrażenie",
-            desc: "Wizytówki, ulotki, vouchery, katalogi, bannery — projektuję i drukuję. Zamawiasz gotowy projekt albo komplet z wydrukiem. Prosta sprawa, jedno miejsce.",
+            desc: "Wizytówki, ulotki, plakaty, vouchery, katalogi, zaproszenia i bannery — projektuję i drukuję u siebie, do formatu A3+. Zamawiasz sam projekt albo komplet z wydrukiem. Krótkie serie bez czekania na drukarnię.",
             href: "/druk",
             wide: false,
         },
