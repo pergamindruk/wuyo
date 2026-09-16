@@ -14,7 +14,7 @@ import type { GoogleReviewsData } from "@/lib/google-reviews";
  *
  * Daty są przybliżone do dnia — Google podaje tylko "2 miesiące temu",
  * a nie dokładną datę. Wystarczy, bo i tak wyświetlamy odstęp czasu.
- * Stan na 7 września 2026.
+ * Stan na 16 września 2026.
  */
 
 export const GOOGLE_PLACE_ID = "ChIJcxLR_WT7PEcRqW-PHRxBTMc";
@@ -23,10 +23,16 @@ export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writerev
 
 export const staticGoogleReviews: GoogleReviewsData = {
     rating: 5,
-    total: 5,
+    total: 6,
     mapsUrl: GOOGLE_PROFILE_URL,
     writeReviewUrl: GOOGLE_WRITE_REVIEW_URL,
     reviews: [
+        {
+            author: "Adam Kribus",
+            rating: 5,
+            text: "Z całego serca polecam współpracę. Zamówiłem opracowanie identyfikacji wizualnej - otrzymałem indywidualną ofertę do mojego budżetu. Bezproblemowa i szybka komunikacja, poprawki zgodnie z moimi sugestiami i co najważniejsze - świetny i dopasowany projekt :)",
+            publishTime: "2026-09-16",
+        },
         {
             author: "Dominika Szafrańska",
             rating: 5,

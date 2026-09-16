@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { odmienOpinie } from "@/lib/polish-format";
 import { staticGoogleReviews } from "@/data/google-reviews-static";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 describe("odmienOpinie", () => {
     it.each([
@@ -14,13 +16,26 @@ describe("odmienOpinie", () => {
 
 describe("opinie z Google", () => {
     it("wszystkie mają autora, treść i ocenę", () => {
-        expect(staticGoogleReviews.reviews).toHaveLength(5);
+        expect(staticGoogleReviews.reviews.length).toBeGreaterThan(0);
         for (const r of staticGoogleReviews.reviews) {
             expect(r.author.length, r.author).toBeGreaterThan(2);
             expect(r.text.length, r.author).toBeGreaterThan(20);
             expect(r.rating, r.author).toBeGreaterThanOrEqual(1);
             expect(r.rating, r.author).toBeLessThanOrEqual(5);
         }
+    });
+
+    it("licznik zgadza się z liczbą przepisanych opinii", () => {
+        // Po dopisaniu nowej opinii trzeba podbić też `total` i dane strukturalne w layout.tsx.
+        expect(staticGoogleReviews.total).toBe(staticGoogleReviews.reviews.length);
+    });
+
+    it("dane strukturalne podają tę samą liczbę opinii co strona", () => {
+        const layout = readFileSync(join(process.cwd(), "src/app/layout.tsx"), "utf-8");
+        const ratingCount = layout.match(/"ratingCount": "(\d+)"/)?.[1];
+        const reviewCount = layout.match(/"reviewCount": "(\d+)"/)?.[1];
+        expect(Number(ratingCount)).toBe(staticGoogleReviews.total);
+        expect(Number(reviewCount)).toBe(staticGoogleReviews.total);
     });
 
     it("ma działające odnośniki do profilu i wystawienia opinii", () => {
