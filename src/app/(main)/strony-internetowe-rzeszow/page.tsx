@@ -10,7 +10,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Strony Internetowe Rzeszów od 2 490 zł | Next.js | WUYO",
-    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 2 490 zł, multi-page od 3 490 zł. Wycena w 24h →",
+    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
         "tworzenie stron internetowych Rzeszów",
@@ -87,7 +87,7 @@ const faqSchema = {
             "name": "Ile kosztuje strona internetowa w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 3 490 zł. Każda wycena jest stała — znasz kwotę przed startem. Nie ma stawki godzinowej ani niespodzianek po fakturze.",
+                "text": "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — znasz kwotę przed startem. Nie ma stawki godzinowej ani niespodzianek po fakturze.",
             },
         },
         {
@@ -128,7 +128,7 @@ const packages = [
     },
     {
         name: "Multi-Page",
-        price: "od 3 490 zł",
+        price: "od 2 990 zł",
         time: "2–3 tygodnie",
         desc: "Serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie w Google.",
         items: ["Wszystko z One-Page +", "Podstrony usług z SEO", "Blog gotowy do publikacji", "Schema markup JSON-LD", "Google Search Console setup"],
@@ -258,7 +258,7 @@ export default function StronyInternetowerRzeszowPage() {
                     </AnimatedSection>
                     <div className="space-y-4">
                         {[
-                            { q: "Ile kosztuje strona internetowa w Rzeszowie?", a: "One-Page od 2 490 zł, Multi-Page od 3 490 zł. Stała cena przed startem — nie stawka godzinowa." },
+                            { q: "Ile kosztuje strona internetowa w Rzeszowie?", a: "One-Page od 2 490 zł, Multi-Page od 2 990 zł. Stała cena przed startem — nie stawka godzinowa." },
                             { q: "Ile trwa budowa strony?", a: "One-Page ok. tydzień, Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści." },
                             { q: "Obsługujesz firmy spoza Rzeszowa?", a: "Tak — wszystko idzie zdalnie. Rzeszów to moja baza, ale pracuję dla firm z całej Polski." },
                             { q: "Czy mogę samodzielnie edytować treści?", a: "Tak — dla Multi-Page podłączam lekki CMS. Do One-Page wystarczy napisanie do mnie, drobne zmiany wchodzą w zakres wsparcia." },

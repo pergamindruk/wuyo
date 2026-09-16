@@ -119,8 +119,8 @@ export const pricingGroups: PricingGroupData[] = [
                     "Obecność online, która generuje zapytania — nie tylko ładnie wygląda.",
                 price: "3 490 zł",
                 priceSuffix: "netto, jednorazowo",
-                listPrice: "4 758 zł",
-                saving: "1 268 zł",
+                listPrice: "5 258 zł",
+                saving: "1 768 zł",
                 features: [
                     "Wszystko z pakietu Marka Start",
                     "Indywidualna strona do 5 podstron — pisana od zera, nie szablon",
@@ -142,8 +142,8 @@ export const pricingGroups: PricingGroupData[] = [
                     "Marka, strona i widoczność w Google — kompletny start pod klucz.",
                 price: "5 900 zł",
                 priceSuffix: "netto, jednorazowo",
-                listPrice: "7 059 zł",
-                saving: "1 159 zł",
+                listPrice: "8 268 zł",
+                saving: "2 368 zł",
                 features: [
                     "Wszystko z pakietu Firma w Internecie",
                     "Wizytówki 300 szt. zamiast 150 + ulotka A5",

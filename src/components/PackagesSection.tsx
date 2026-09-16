@@ -32,7 +32,7 @@ export const packages = [
     {
         name: "Najpopularniejszy",
         persona: "Strona która sprzedaje — dla firm gotowych na poważną obecność w sieci",
-        price: "od 3 490 zł",
+        price: "od 2 990 zł",
         desc: "Strona zaprojektowana pod konwersję — przyciąga klientów, generuje zapytania i sprzedaje nawet gdy śpisz.",
         image: "/tworzenie-stron-www-rozwoj-v3.png",
         imageScale: "scale-100",

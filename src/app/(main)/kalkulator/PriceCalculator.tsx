@@ -67,7 +67,7 @@ function calcPrice(s: Selection): [number, number] | null {
         if (!s.wwwType) return null;
         if (s.wwwType === "onepage") { low = 2490; high = 3500; }
         else if (s.wwwType === "multipage") {
-            if (s.wwwPages === "1-5") { low = 3490; high = 5500; }
+            if (s.wwwPages === "1-5") { low = 2990; high = 5500; }
             else { low = 5900; high = 9000; }
         } else { low = 6900; high = 12000; }
     } else if (s.service === "druk") {

@@ -12,7 +12,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO Rzeszów",
-    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 3 490 zł. Wycena w 24h →",
+    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
     openGraph: {
         title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO",
         description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 2 490 zł. Rzeszów i cała Polska.",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje strona internetowa?",
-        a: "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 3 490 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+        a: "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
@@ -82,7 +82,7 @@ const serviceSchema = {
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Strona Firmowa Multi-Page" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "3490", "priceCurrency": "PLN", "minPrice": "3490" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "2990", "priceCurrency": "PLN", "minPrice": "2990" },
             },
         ],
     },
@@ -108,7 +108,7 @@ const packages = [
     },
     {
         name: "Strona Firmowa Multi-Page",
-        price: "od 3 490 zł",
+        price: "od 2 990 zł",
         desc: "Pełny serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie.",
         includes: [
             "Wszystko z one-page +",

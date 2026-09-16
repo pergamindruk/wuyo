@@ -83,7 +83,7 @@ const priceRanges = [
         note: "Next.js, SEO lokalne, dopracowana wersja mobilna.",
         items: [
             { name: "Landing Page / one-page", price: "od 2 490 zł" },
-            { name: "Strona firmowa do 5 podstron", price: "3 490 zł" },
+            { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
             { name: "Sklep internetowy", price: "od 6 900 zł" },
             { name: "Stała opieka miesięczna", price: "149 – 1 290 zł / mc" },
         ],
