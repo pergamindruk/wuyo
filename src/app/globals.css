@@ -504,6 +504,34 @@ body {
   }
 }
 
+/* Srebrny połysk na „PIERWSZE WRAŻENIE" — cichszy brat gold-flow:
+   jasne srebro, wolniejszy przebieg, żeby złoto zostało akcentem. */
+.silver-flow {
+  background-image: linear-gradient(
+    100deg,
+    #c9ced4 0%,
+    #eef0f2 22%,
+    #b8bec6 40%,
+    #ffffff 50%,
+    #b8bec6 60%,
+    #eef0f2 78%,
+    #c9ced4 100%
+  );
+  background-size: 200% auto;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gold-flow 9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .silver-flow {
+    animation: none;
+    background-position: 50% center;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    Liczniki w sekcji hero.
    Podczas odliczania cyfry są lekko rozmyte i minimalnie mniejsze,

@@ -27,17 +27,17 @@ export function HeroText() {
     return (
         <h1 className="mb-8 tracking-tight uppercase">
             <span
-                className="hero-word block text-white font-cs-harley font-bold"
+                className="hero-word block font-cs-harley font-bold"
                 style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0 }}
             >
-                PIERWSZE
+                <span className="silver-flow">PIERWSZE</span>
             </span>
             <span
-                className="hero-word block text-white font-cs-harley font-bold"
+                className="hero-word block font-cs-harley font-bold"
                 style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}
                 aria-label="WRAŻENIE"
             >
-                <span aria-hidden="true">WRA<ZWithDot color="white" />ENIE</span>
+                <span aria-hidden="true" className="silver-flow">WRA<ZWithDot color="#e4e7ea" />ENIE</span>
             </span>
             <span
                 className="hero-word block font-cs-harley font-normal mt-2"
