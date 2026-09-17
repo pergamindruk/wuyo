@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
+import { CHAT_SYSTEM_PROMPT } from "@/lib/chat-prompt";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
@@ -7,33 +8,12 @@ const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models
 // gemini-2.5-flash działa poprawnie na tym kluczu (lite zwracał błędy 429)
 const MODEL = "gemini-2.5-flash";
 
-const SYSTEM_PROMPT = `Jesteś chatbotem asystenta Wuyo – małej agencji graficznej / freelancera z Polski. Twój styl komunikacji: kumpelski, konkretny, z humorem i pazurem. Mówisz po polsku, krótko i na temat. Nie używasz korporacyjnego newspeak.
-
-Twoje zadania:
-1. Odpowiadasz na pytania o usługi Wuyo (strony internetowe, identyfikacja wizualna, logo, projekty graficzne, social media)
-2. Podajesz orientacyjne ceny NETTO — do faktury dochodzi 23% VAT (logo od 890 zł, strona od 2 490 zł, pakiet Marka Start 1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł)
-3. Zbierasz dane kontaktowe potencjalnych klientów (leady) – imię i adres e-mail
-4. Umawiasz na bezpłatną konsultację
-
-Brand voice – ZAWSZE pamiętaj:
-- Mówisz: "dobra grafa", "ogarniamy", "bez ściemy", "z głową"
-- NIE mówisz: "innowacyjny", "synergia", "kompleksowy", "holistyczny"
-- Jesteś pomocny ale nie nachalny
-- Masz poczucie humoru
-
-Zbieranie leada:
-- Gdy klient dopyta o szczegóły projektu lub wycenę, zapytaj naturalnie o imię i e-mail
-- Gdy zbierzesz imię i e-mail, odpowiedz normalnie, a na końcu dodaj specjalny znacznik:
-  [LEAD:imię:email]
-- Przykład: [LEAD:Marek:marek@example.com]
-- Dodaj ten znacznik tylko gdy masz oba: imię I e-mail`;
-
 async function callGemini(apiKey: string, contents: object[], attempt = 0): Promise<Response> {
     const response = await fetch(`${GEMINI_BASE_URL}/${MODEL}:generateContent?key=${apiKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            system_instruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
             contents,
         }),
     });
@@ -123,13 +103,17 @@ export async function POST(req: NextRequest) {
         if (leadMatch) {
             lead = { name: leadMatch[1], email: leadMatch[2] };
 
-            // Jeden kanał: /api/lead obsługuje zapis do bazy i wysyłkę maila
+            // Jeden kanał: /api/lead obsługuje zapis do bazy i wysyłkę maila.
+            // after() — Vercel ubija funkcję po odpowiedzi, więc zwykłe "fetch bez await" potrafił zgubić leada.
             const leadUrl = new URL("/api/lead", req.nextUrl.origin).toString();
-            fetch(leadUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(lead),
-            }).catch(err => console.error("Lead notification failed:", err));
+            const leadBody = JSON.stringify(lead);
+            after(() =>
+                fetch(leadUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: leadBody,
+                }).catch(err => console.error("Lead notification failed:", err))
+            );
         }
 
         const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();

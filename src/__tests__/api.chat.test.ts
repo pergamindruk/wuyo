@@ -11,6 +11,13 @@ vi.mock("resend", () => ({
     },
 }));
 
+// after() działa tylko w prawdziwym żądaniu Next — w testach wykonujemy callback od razu.
+const { mockAfter } = vi.hoisted(() => ({ mockAfter: vi.fn((cb: () => unknown) => { void cb(); }) }));
+vi.mock("next/server", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("next/server")>()),
+    after: mockAfter,
+}));
+
 vi.mock("@/lib/supabase/server", () => ({
     createClient: vi.fn().mockResolvedValue({ from: mockFrom }),
 }));
@@ -131,6 +138,8 @@ describe("/api/chat", () => {
         expect(body.message).not.toContain("[LEAD:");
         expect(body.message).toContain("Super!");
         expect(body.lead).toEqual({ name: "Marek", email: "marek@test.pl" });
+        expect(mockAfter).toHaveBeenCalledTimes(1);
+        expect(global.fetch).toHaveBeenLastCalledWith("http://localhost/api/lead", expect.objectContaining({ method: "POST" }));
     });
 });
 

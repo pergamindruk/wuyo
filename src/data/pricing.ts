@@ -231,3 +231,58 @@ export const allPricingCards: PricingCardData[] = pricingGroups.flatMap((g) => g
 export function findPricingCard(name: string): PricingCardData | undefined {
     return allPricingCards.find((c) => c.name === name);
 }
+
+export interface PriceRangeGroup {
+    title: string;
+    note: string;
+    items: { name: string; price: string }[];
+}
+
+// ─── Widełki cenowe (widok publiczny) ──────────────────────────────────────────
+// Klient widzi tylko zakresy. Pełny cennik pozycja po pozycji siedzi w CENNIK.md
+// w katalogu głównym repo i służy wyłącznie do wyceny konkretnego zlecenia.
+
+export const priceRanges: PriceRangeGroup[] = [
+    {
+        title: "Projekt graficzny",
+        note: "Sam projekt. Druk liczony osobno. Masz gotowe logo, zdjęcia i teksty? To skład, nie projekt — taniej.",
+        items: [
+            { name: "Logo i identyfikacja wizualna", price: "890 – 1 490 zł" },
+            { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
+            { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
+            { name: "Opakowania i etykiety", price: "od 180 zł" },
+            { name: "Grafiki na social media", price: "90 – 1 350 zł" },
+            { name: "Skład z Twoich gotowych materiałów", price: "od 200 zł" },
+        ],
+    },
+    {
+        title: "Druk i papeteria",
+        note: "Sam druk z gotowego pliku. Z projektem: wizytówki od 299 zł, ulotki od 449 zł, naklejki od 219 zł. Zamawiasz 2+ produkty — każdy kolejny -15%.",
+        items: [
+            { name: "Wizytówki — sam druk (50 – 300 szt.)", price: "99 – 299 zł" },
+            { name: "Ulotki A5 — sam druk (50 – 300 szt.)", price: "119 – 359 zł" },
+            { name: "Naklejki i etykiety — sam druk (50 – 200 szt.)", price: "89 – 229 zł" },
+            { name: "Vouchery, magnesy, koperty", price: "69 – 379 zł" },
+            { name: "Plakaty", price: "od 29 zł / szt." },
+        ],
+    },
+    {
+        title: "Odzież z nadrukiem",
+        note: "DTF, pełny kolor, bez minimum — od jednej sztuki.",
+        items: [
+            { name: "Koszulki", price: "49 – 79 zł / szt." },
+            { name: "Bluzy", price: "139 – 199 zł / szt." },
+            { name: "Nadruk na Twojej odzieży", price: "od 45 zł" },
+        ],
+    },
+    {
+        title: "Strony internetowe",
+        note: "Next.js, SEO lokalne, dopracowana wersja mobilna.",
+        items: [
+            { name: "Landing Page / one-page", price: "od 2 490 zł" },
+            { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
+            { name: "Sklep internetowy", price: "od 6 900 zł" },
+            { name: "Stała opieka miesięczna", price: "149 – 1 290 zł / mc" },
+        ],
+    },
+];

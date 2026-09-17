@@ -57,7 +57,7 @@ export default function ChatBot() {
         setIsLoading(true);
 
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 15_000);
+        const timeout = setTimeout(() => controller.abort(), 30_000);
 
         try {
             const response = await fetch("/api/chat", {
