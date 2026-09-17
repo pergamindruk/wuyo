@@ -167,8 +167,10 @@ export default function RootLayout({
                             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
                             strategy="afterInteractive"
                         />
+                        {/* traffic_type: wejścia z podglądów Vercela i localhosta oznaczamy jako
+                            ruch wewnętrzny, żeby filtr w GA4 mógł je wyciąć z raportów. */}
                         <Script id="ga4-init" strategy="afterInteractive">
-                            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+                            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}',{traffic_type:location.hostname==='wuyo.pl'?'external':'internal'});`}
                         </Script>
                     </>
                 )}

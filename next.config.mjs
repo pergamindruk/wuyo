@@ -54,16 +54,20 @@ const nextConfig = {
                         key: "Strict-Transport-Security",
                         value: "max-age=63072000; includeSubDomains; preload",
                     },
-                    // Content Security Policy – zezwala na Google Fonts, blokuje nieznane skrypty
+                    // Content Security Policy – zezwala na Google Fonts, blokuje nieznane skrypty.
+                    // connect-src musi obejmować *.google-analytics.com, bo GA4 wysyła zdarzenia
+                    // z Unii na region1.google-analytics.com, oraz googletagmanager.com, skąd tag
+                    // dociąga swój skrypt docelowy. Bez tych dwóch wpisów przeglądarka blokowała
+                    // każde zdarzenie GA4 i Piksela Meta.
                     {
                         key: "Content-Security-Policy",
                         value: [
                             "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com",
+                            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net",
                             "style-src 'self' 'unsafe-inline'",
                             "font-src 'self'",
                             "img-src 'self' data: blob: https:",
-                            "connect-src 'self' https://www.google-analytics.com https://generativelanguage.googleapis.com https://connect.mailerlite.com https://graph.facebook.com https://api.instagram.com https://*.supabase.co https://vercel.com",
+                            "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.facebook.com https://generativelanguage.googleapis.com https://connect.mailerlite.com https://graph.facebook.com https://api.instagram.com https://*.supabase.co https://vercel.com",
                             "frame-src 'self' https://www.google.com",
                         ].join("; "),
                     },
