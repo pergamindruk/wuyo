@@ -77,30 +77,32 @@ const personSchema = {
     ],
 };
 
+// Świadomie bez nazw i parametrów maszyn — konkurencja nie musi wiedzieć,
+// na czym pracuję. Karty mówią, co klient dostaje, nie co stoi w pracowni.
 const equipment = [
     {
         icon: <Printer size={22} />,
-        name: "Epson L18050 A3+",
-        desc: "Druk A3+ na papierach specjalnych i zwykłych. 6-kolorowy pigment — fotorealistyczna jakość.",
+        name: "Druk do formatu A3+",
+        desc: "Papiery zwykłe i specjalne, jakość fotograficzna. Wizytówki, ulotki, plakaty, naklejki.",
         tag: "Druk",
     },
     {
         icon: <Scissors size={22} />,
-        name: "Silhouette Cameo 5",
-        desc: "Ploter tnący do naklejek, wykrojników, personalizacji — cięcie w dowolnym kształcie.",
+        name: "Cięcie w dowolnym kształcie",
+        desc: "Naklejki i wykrojniki cięte po konturze, nie tylko prostokąty.",
         tag: "Wykrawanie",
     },
     {
         icon: <Thermometer size={22} />,
-        name: "Laminator + gilotyna",
-        desc: "Laminowanie mat i błysk do A3. Profesjonalne wykończenie materiałów drukowanych.",
+        name: "Laminowanie i cięcie",
+        desc: "Wykończenie mat albo błysk do A3 i równe krawędzie zamiast nożyczek.",
         tag: "Wykończenie",
     },
     {
         icon: <Zap size={22} />,
-        name: "Prasa termotransfer",
-        desc: "Transfer na tkaniny, koszulki, torby. Personalizacja gadżetów reklamowych bez minimum nakładu.",
-        tag: "Termotransfer",
+        name: "Nadruk na odzieży",
+        desc: "Koszulki, bluzy i torby. Personalizacja bez minimum nakładu, choćby jedna sztuka.",
+        tag: "Odzież",
     },
 ];
 

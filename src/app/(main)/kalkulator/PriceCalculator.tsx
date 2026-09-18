@@ -250,7 +250,7 @@ export function PriceCalculator() {
                                     <label className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${sel.drukPrint ? "border-gold bg-gold/5" : "border-white/10 hover:border-white/20"}`}>
                                         <input type="checkbox" checked={sel.drukPrint} onChange={e => update({ drukPrint: e.target.checked })} className="mt-0.5 accent-yellow-400" />
                                         <div>
-                                            <p className="text-white font-semibold text-sm">Druk u mnie (Epson A3+)</p>
+                                            <p className="text-white font-semibold text-sm">Druk u mnie (do A3+)</p>
                                             <p className="text-white/60 text-xs mt-0.5">Własny druk bezpośrednio — szybciej i taniej niż zewnętrzna drukarnia</p>
                                         </div>
                                     </label>

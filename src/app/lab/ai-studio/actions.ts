@@ -35,7 +35,7 @@ export async function generateQuote(clientMessage: string) {
     try {
         const model = getModel('quote')
 
-        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku (Epson L18050 A3+, ploter tnacy Cameo 5, laminator, gilotyna) - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
+        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku do formatu A3+, ciecia po konturze, laminowania i nadruku na odziezy - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
     Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
 
     "${clientMessage}"
