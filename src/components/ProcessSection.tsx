@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { Odslona } from "@/components/Odslona";
 import { MessageSquare, Calculator, Zap, Search, PackageCheck, Rocket } from "lucide-react";
 import { MagicCard } from "@/components/ui/magic-card";
 export function ProcessSection() {
@@ -62,12 +62,9 @@ export function ProcessSection() {
                     <div className="absolute top-[90px] left-[150px] w-max min-w-[1500px] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
 
                     {steps.map((step, index) => (
-                        <motion.div
+                        <Odslona
                             key={`desktop-${index}`}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            opoznienie={index * 0.1}
                             className="relative flex flex-col group min-w-[280px] max-w-[280px] w-full snap-start shrink-0"
                         >
                             {/* Center Node / Dot for top line */}
@@ -102,7 +99,7 @@ export function ProcessSection() {
                                     {step.desc}
                                 </p>
                             </MagicCard>
-                        </motion.div>
+                        </Odslona>
                     ))}
                 </div>
 
@@ -112,12 +109,11 @@ export function ProcessSection() {
                     <div className="absolute top-12 bottom-12 left-[49px] w-[2px] bg-gradient-to-b from-gold/30 via-white/10 to-transparent z-0" />
 
                     {steps.map((step, index) => (
-                        <motion.div
+                        <Odslona
                             key={`mobile-${index}`}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.4, delay: index * 0.1 }}
+                            kierunek="lewo"
+                            margines="-50px"
+                            opoznienie={index * 0.1}
                             className="relative flex items-stretch gap-6 group w-full"
                         >
                             {/* Process dot on the line */}
@@ -150,7 +146,7 @@ export function ProcessSection() {
                                     </p>
                                 </MagicCard>
                             </div>
-                        </motion.div>
+                        </Odslona>
                     ))}
                 </div>
             </div>

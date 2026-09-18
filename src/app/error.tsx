@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { RefreshCcw, Home } from "lucide-react";
 
 export default function Error({
@@ -21,11 +20,8 @@ export default function Error({
         <main className="min-h-screen bg-navy-dark flex items-center justify-center px-6 relative overflow-hidden">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/5 rounded-full blur-3xl pointer-events-none" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center max-w-lg relative z-10"
+            <div
+                className="wjazd text-center max-w-lg relative z-10"
             >
                 <div className="relative mb-6">
                     <span className="text-[160px] md:text-[200px] font-black leading-none text-white/5 select-none">
@@ -59,7 +55,7 @@ export default function Error({
                         Strona główna
                     </Link>
                 </div>
-            </motion.div>
+            </div>
         </main>
     );
 }

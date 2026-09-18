@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import { faqs } from "@/data/faq";
@@ -40,20 +39,15 @@ export function FAQSection() {
                                     </div>
                                 </button>
 
-                                <AnimatePresence>
-                                    {openIndex === index && (
-                                        <motion.div
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{ height: "auto", opacity: 1 }}
-                                            exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                        >
-                                            <div className="px-6 pb-6 text-white/60 leading-relaxed pt-2 border-t border-white/5 mx-6">
-                                                {faq.answer}
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                {/* Odpowiedź zostaje w kodzie strony także po zwinięciu —
+                                    wcześniej znikała z drzewa i nie było jej w źródle. */}
+                                <div className="rozwijka" data-otwarte={openIndex === index ? "tak" : undefined}>
+                                    <div className="rozwijka-srodek">
+                                        <div className="px-6 pb-6 text-white/60 leading-relaxed pt-2 border-t border-white/5 mx-6">
+                                            {faq.answer}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </AnimatedSection>
                     ))}

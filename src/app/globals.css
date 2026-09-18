@@ -598,3 +598,264 @@ body {
     --chat-bottom: 2.5rem;
   }
 }
+
+/* Odsłanianie sekcji przy przewijaniu — zastępuje framer-motion w AnimatedSection.
+   Ta sama krzywa i ten sam czas co wcześniej (0,8 s, cubic-bezier .16 1 .3 1),
+   tylko bez biblioteki animacji w pakiecie.
+   Nieprzezroczystość celowo zostaje 1: treść ma być widoczna dla czytników
+   ekranu i robotów nawet zanim animacja się odegra. */
+.odslon {
+  transform: translateY(50px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.odslon[data-odslon="hero"] {
+  transform: translateY(20px);
+}
+
+/* `none`, a nie translateY(0): element w spoczynku nie może zostawiać po sobie
+   kontekstu pozycjonowania, bo psułoby to elementy position:fixed w środku. */
+.odslon-gotowe,
+.odslon-gotowe[data-odslon="hero"] {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odslon,
+  .odslon[data-odslon="hero"] {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Przycisk „wróć na górę". Wcześniej sprężyna z framer-motion (stiffness 200,
+   damping 20) — krzywa poniżej ma to samo delikatne przeskoczenie celu. */
+.wskocz-na-gore {
+  opacity: 0;
+  transform: scale(0.5) translateY(20px);
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+}
+
+.wskocz-na-gore[data-widoczny="tak"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Baner zgód — wjazd od dołu, ten sam czas i krzywa co wcześniej. */
+.baner-zgod {
+  opacity: 0;
+  transform: translateY(24px);
+  /* `bottom` jechało wcześniej we własnym stylu przy elemencie — teraz
+     wszystkie przejścia banera są w jednym miejscu. */
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    bottom 300ms ease;
+}
+
+.baner-zgod[data-widoczny="tak"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wskocz-na-gore,
+  .baner-zgod {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Rozwijana lista „Oferta" w pasku. Wyśrodkowanie (-50%) musi siedzieć w tej
+   samej regule co animacja — `transform` to jedna właściwość, nie da się jej
+   ustawić z dwóch miejsc naraz. */
+.menu-rozwijane {
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-rozwijane[data-widoczny="tak"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Menu na telefonie — zjazd z góry. */
+.menu-mobilne {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.menu-mobilne[data-widoczny="tak"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-rozwijane,
+  .menu-mobilne {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Pojedyncze wejście treści przy wczytaniu — strony błędu i „nie znaleziono".
+   Wcześniej framer-motion, a ten jechał w pakiecie KAŻDEJ podstrony, bo granica
+   błędów jest częścią każdej trasy. Dla jednej animacji to był zły interes. */
+@keyframes wjazd {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wjazd {
+  animation: wjazd 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wjazd {
+    animation: none;
+  }
+}
+
+/* Pasek pod aktywną zakładką briefu — jedzie między kolumnami zamiast
+   przeskakiwać. Wcześniej robił to layoutId z framer-motion. */
+.pasek-zakladki {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Treść zakładki wjeżdża po przełączeniu. Animacja startuje od nowa,
+   bo React montuje panel na nowo przy zmianie `key`. */
+.panel-briefu {
+  animation: wjazd-panelu 0.2s ease-out both;
+}
+
+@keyframes wjazd-panelu {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pasek-zakladki {
+    transition: none;
+  }
+
+  .panel-briefu {
+    animation: none;
+  }
+}
+
+/* Rozwijane odpowiedzi (FAQ, cennik). Wysokości „auto" nie da się animować
+   wprost, ale siatka potrafi: 0fr → 1fr rozsuwa wiersz płynnie do naturalnej
+   wysokości. Wcześniej robił to framer-motion.
+   `visibility` wyłącza zwiniętą treść z odczytu przez czytniki ekranu, ale
+   zostawia ją w źródle strony — inaczej niż poprzednio, gdy znikała z drzewa. */
+.rozwijka {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition: grid-template-rows 0.3s ease-in-out, opacity 0.3s ease-in-out,
+    visibility 0s linear 0.3s;
+}
+
+.rozwijka[data-otwarte="tak"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition: grid-template-rows 0.3s ease-in-out, opacity 0.3s ease-in-out,
+    visibility 0s;
+}
+
+.rozwijka-srodek {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rozwijka {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Koszyk pakietów druku — kurtyna, szuflada i pływający przycisk.
+   Wcześniej framer-motion; sprężynę szuflady zastępuje krzywa z lekkim
+   wyhamowaniem, różnicy gołym okiem nie widać. */
+.kurtyna-koszyka {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.kurtyna-koszyka[data-widoczny="tak"] {
+  opacity: 1;
+}
+
+.szuflada-koszyka {
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.szuflada-koszyka[data-widoczny="tak"] {
+  transform: none;
+}
+
+/* Wyśrodkowanie w pionie musi jechać w tej samej regule co animacja wjazdu. */
+.przycisk-koszyka {
+  opacity: 0;
+  transform: translate(60px, -50%);
+  transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s ease;
+}
+
+.przycisk-koszyka[data-widoczny="tak"] {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kurtyna-koszyka,
+  .szuflada-koszyka,
+  .przycisk-koszyka {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Pojedyncze kafelki odsłaniane przewijaniem (kroki procesu).
+   W odróżnieniu od .odslon tutaj krycie faktycznie rośnie od zera — to drobne
+   elementy ozdobne, nie treść, którą musi zobaczyć robot wyszukiwarki. */
+.odslon-el {
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.odslon-dol {
+  transform: translateY(30px);
+}
+
+.odslon-lewo {
+  transform: translateX(-20px);
+  transition-duration: 0.4s;
+}
+
+.odslon-el.odslon-gotowe {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odslon-el {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

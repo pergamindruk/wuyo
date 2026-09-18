@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Eye, PenTool, MapPin, LifeBuoy } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PricingGroup } from "./PricingGroup";
@@ -136,23 +135,19 @@ export function PricingSection({
                                         </button>
                                     </h4>
 
-                                    <AnimatePresence initial={false}>
-                                        {open && (
-                                            <motion.div
-                                                id={`${id}-faq-panel-${i}`}
-                                                role="region"
-                                                aria-labelledby={`${id}-faq-btn-${i}`}
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            >
-                                                <div className="px-6 pb-6 text-white/60 leading-relaxed pt-2 border-t border-white/5 mx-6">
-                                                    {faq.a}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    <div
+                                        id={`${id}-faq-panel-${i}`}
+                                        role="region"
+                                        aria-labelledby={`${id}-faq-btn-${i}`}
+                                        className="rozwijka"
+                                        data-otwarte={open ? "tak" : undefined}
+                                    >
+                                        <div className="rozwijka-srodek">
+                                            <div className="px-6 pb-6 text-white/60 leading-relaxed pt-2 border-t border-white/5 mx-6">
+                                                {faq.a}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                             );
                         })}

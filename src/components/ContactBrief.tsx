@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
 import { packages } from "@/components/PackagesSection";
 import { findPricingCard } from "@/data/pricing";
@@ -217,7 +216,7 @@ export function ContactBrief() {
                 <div className="bg-navy-dark/60 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl backdrop-blur-xl">
 
                     {/* ZAKŁADKI */}
-                    <div role="tablist" aria-label="Typ briefu" className="grid grid-cols-3 border-b border-white/10 bg-navy/30">
+                    <div role="tablist" aria-label="Typ briefu" className="relative grid grid-cols-3 border-b border-white/10 bg-navy/30">
                         {([
                             { id: "quick" as Path, icon: <MessageSquare size={18} />, label: "Wiadomość", sub: "Szybki kontakt" },
                             { id: "branding" as Path, icon: <Star size={18} />, label: "Logo / Branding", sub: "Identyfikacja marki" },
@@ -236,32 +235,28 @@ export function ContactBrief() {
                                 <span className={`transition-colors ${path === tab.id ? "text-navy-dark" : ""}`} aria-hidden="true">{tab.icon}</span>
                                 <span className="font-bold text-xs md:text-sm leading-tight">{tab.label}</span>
                                 <span className={`text-[10px] hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/50"}`}>{tab.sub}</span>
-                                {path === tab.id && (
-                                    <motion.div
-                                        layoutId="tabBar"
-                                        className="absolute bottom-0 left-0 right-0 h-[3px] bg-gold rounded-t"
-                                        aria-hidden="true"
-                                    />
-                                )}
                             </button>
                         ))}
+                        {/* Jeden wspólny pasek zamiast osobnego w każdej zakładce.
+                            Kolumny są równe (grid-cols-3), więc pozycję da się wyliczyć
+                            bez mierzenia czegokolwiek w JavaScripcie. */}
+                        <span
+                            aria-hidden="true"
+                            className="pasek-zakladki absolute bottom-0 left-0 h-[3px] w-1/3 bg-gold rounded-t"
+                            style={{ transform: `translateX(${["quick", "branding", "web"].indexOf(path) * 100}%)` }}
+                        />
                     </div>
 
                     <div className="p-6 md:p-10">
 
                         {/* DYNAMICZNA CZĘŚĆ BRIEFU */}
-                        <AnimatePresence mode="popLayout">
-                            <motion.div
-                                key={path}
-                                role="tabpanel"
-                                id={`tabpanel-${path}`}
-                                aria-labelledby={`tab-${path}`}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -8 }}
-                                transition={{ duration: 0.2 }}
-                                className="mb-10 pb-10 border-b border-white/10 space-y-8"
-                            >
+                        <div
+                            key={path}
+                            role="tabpanel"
+                            id={`tabpanel-${path}`}
+                            aria-labelledby={`tab-${path}`}
+                            className="panel-briefu mb-10 pb-10 border-b border-white/10 space-y-8"
+                        >
                                 {path === "quick" && (
                                     <BriefField label="O co chodzi? 🎤" sub="Opisz co potrzebujesz, zapytaj o cenę, lub napisz kiedy możemy pogadać przez telefon.">
                                         <textarea
@@ -335,8 +330,7 @@ export function ContactBrief() {
                                         </BriefField>
                                     </>
                                 )}
-                            </motion.div>
-                        </AnimatePresence>
+                        </div>
 
                         {/* DANE KONTAKTOWE — zawsze widoczne */}
                         <div className="space-y-6">

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, CreditCard, BookOpen, Gift, FileText, Frame, Magnet, Mail } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMountTransition } from "@/lib/useMountTransition";
 import { trackOrderSubmit } from "@/lib/tracking";
 
 // Pakiety biznesowe przeniesione do osobnej sekcji cennika (PricingSection / src/data/pricing.ts).
@@ -246,16 +246,11 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
             </div>
 
             {/* Price breakdown + Add to cart — animated reveal */}
-            <AnimatePresence mode="wait">
-                {canAdd && (
-                    <motion.div
-                        key={`${selectedVariant!.qty}-${String(withDesign)}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.18 }}
-                        className="mt-auto flex flex-col gap-3"
-                    >
+            {canAdd && (
+                <div
+                    key={`${selectedVariant!.qty}-${String(withDesign)}`}
+                    className="panel-briefu mt-auto flex flex-col gap-3"
+                >
                         {/* Rozbicie ceny */}
                         {selectedVariant!.priceNum > 0 && (
                             <div className="bg-white/5 rounded-xl px-3 py-2.5 text-xs space-y-1">
@@ -290,21 +285,22 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                         >
                             {justAdded ? "Dodano ✓" : "Dodaj do koszyka"}
                         </button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                </div>
+            )}
         </div>
     );
 }
 
 // --- Cart Drawer ---
 interface CartDrawerProps {
+    /** Czy szuflada jest w stanie „otwarta" — steruje animacją CSS. */
+    widoczna: boolean;
     items: CartItem[];
     onRemove: (index: number) => void;
     onClose: () => void;
 }
 
-function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
+function CartDrawer({ items, onRemove, onClose, widoczna }: CartDrawerProps) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [note, setNote] = useState("");
@@ -353,22 +349,17 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
     return (
         <>
             {/* Backdrop */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            <div
+                data-widoczny={widoczna ? "tak" : undefined}
+                className="kurtyna-koszyka fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                 onClick={onClose}
                 aria-hidden="true"
             />
 
             {/* Drawer */}
-            <motion.aside
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#111109] border-l border-white/10 z-50 flex flex-col overflow-hidden"
+            <aside
+                data-widoczny={widoczna ? "tak" : undefined}
+                className="szuflada-koszyka fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#111109] border-l border-white/10 z-50 flex flex-col overflow-hidden"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Koszyk zamówienia"
@@ -534,7 +525,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                         </form>
                     )}
                 </div>
-            </motion.aside>
+            </aside>
         </>
     );
 }
@@ -543,6 +534,8 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
 export function PackagesSection({ showButton = true, className = "py-28 px-6 md:px-12" }: { showButton?: boolean; className?: string }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const { wDrzewie: szufladaWDrzewie, aktywny: szufladaAktywna } = useMountTransition(drawerOpen, 300);
+    const { wDrzewie: przyciskWDrzewie, aktywny: przyciskAktywny } = useMountTransition(cart.length > 0, 250);
 
     function handleAddToCart(item: CartItem) {
         setCart((prev) => [...prev, item]);
@@ -562,32 +555,29 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
     return (
         <section id="pakiety" className={`relative ${className}`}>
             {/* Floating cart button */}
-            <AnimatePresence>
-                {cart.length > 0 && (
-                    <motion.button
-                        initial={{ opacity: 0, x: 60 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 60 }}
-                        onClick={() => setDrawerOpen(true)}
-                        className="fixed top-1/2 -translate-y-1/2 right-0 z-30 bg-[#ffeb52] text-[#1c1b17] rounded-l-xl px-3 py-4 font-bold text-xs flex flex-col items-center gap-1.5 shadow-2xl hover:bg-[#ffe000] transition-colors"
-                        aria-label={`Otwórz koszyk (${cart.length} ${cart.length === 1 ? "pozycja" : "pozycje"})`}
-                    >
-                        <ShoppingCart size={18} />
-                        <span>{cart.length}</span>
-                    </motion.button>
-                )}
-            </AnimatePresence>
+            {przyciskWDrzewie && (
+                <button
+                    data-widoczny={przyciskAktywny ? "tak" : undefined}
+                    onClick={() => setDrawerOpen(true)}
+                    // Przesunięcie w pionie siedzi razem z animacją w .przycisk-koszyka,
+                    // bo `transform` to jedna właściwość i nie da się jej dzielić.
+                    className="przycisk-koszyka fixed top-1/2 right-0 z-30 bg-[#ffeb52] text-[#1c1b17] rounded-l-xl px-3 py-4 font-bold text-xs flex flex-col items-center gap-1.5 shadow-2xl hover:bg-[#ffe000] transition-colors"
+                    aria-label={`Otwórz koszyk (${cart.length} ${cart.length === 1 ? "pozycja" : "pozycje"})`}
+                >
+                    <ShoppingCart size={18} />
+                    <span>{cart.length}</span>
+                </button>
+            )}
 
             {/* Cart drawer */}
-            <AnimatePresence>
-                {drawerOpen && (
-                    <CartDrawer
-                        items={cart}
-                        onRemove={handleRemove}
-                        onClose={() => setDrawerOpen(false)}
-                    />
-                )}
-            </AnimatePresence>
+            {szufladaWDrzewie && (
+                <CartDrawer
+                    items={cart}
+                    onRemove={handleRemove}
+                    onClose={() => setDrawerOpen(false)}
+                    widoczna={szufladaAktywna}
+                />
+            )}
 
             {/* Nagłówek */}
             <AnimatedSection className="text-center mb-10 relative z-10">

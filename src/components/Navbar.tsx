@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Menu, X, House, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMountTransition } from "@/lib/useMountTransition";
 
 const SCROLL_DELAY_SAME_PAGE = 300; // czas na aktualizację DOM przed scrollem
 const SCROLL_DELAY_CROSS_PAGE = 600; // czas na załadowanie nowej strony przed scrollem
@@ -22,6 +22,7 @@ const USLUGI = [
 /** Rozwijana „Oferta" w pasku na desktopie. Na telefonie usługi idą płaską listą. */
 function OfertaMenu() {
     const [otwarte, setOtwarte] = useState(false);
+    const { wDrzewie: listaWDrzewie, aktywny: listaAktywna } = useMountTransition(otwarte, 180);
     const obszarRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
 
@@ -77,39 +78,37 @@ function OfertaMenu() {
                 />
             </button>
 
-            <AnimatePresence>
-                {otwarte && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                        // pt-4 to mostek dla kursora między przyciskiem a listą —
-                        // bez niego lista zamykałaby się w drodze do niej.
-                        className="absolute left-1/2 -translate-x-1/2 top-full pt-4"
-                    >
-                        <ul className="min-w-[13rem] rounded-2xl border border-white/10 bg-navy-dark p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
-                            {USLUGI.map((u) => (
-                                <li key={u.href}>
-                                    <Link
-                                        href={u.href}
-                                        onClick={() => setOtwarte(false)}
-                                        className={`block rounded-xl px-4 py-2.5 text-sm transition-colors hover:bg-white/5 hover:text-white ${pathname === u.href ? "text-gold" : "text-white/70"}`}
-                                    >
-                                        {u.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {listaWDrzewie && (
+                <div
+                    data-widoczny={listaAktywna ? "tak" : undefined}
+                    // pt-4 to mostek dla kursora między przyciskiem a listą —
+                    // bez niego lista zamykałaby się w drodze do niej.
+                    // Przesunięcie o -50% siedzi w .menu-rozwijane razem z animacją,
+                    // bo jedna właściwość `transform` nie pomieści dwóch źródeł.
+                    className="menu-rozwijane absolute left-1/2 top-full pt-4"
+                >
+                    <ul className="min-w-[13rem] rounded-2xl border border-white/10 bg-navy-dark p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
+                        {USLUGI.map((u) => (
+                            <li key={u.href}>
+                                <Link
+                                    href={u.href}
+                                    onClick={() => setOtwarte(false)}
+                                    className={`block rounded-xl px-4 py-2.5 text-sm transition-colors hover:bg-white/5 hover:text-white ${pathname === u.href ? "text-gold" : "text-white/70"}`}
+                                >
+                                    {u.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 }
 
 export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { wDrzewie: menuWDrzewie, aktywny: menuAktywne } = useMountTransition(isMobileMenuOpen, 200);
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
@@ -281,55 +280,50 @@ export function Navbar() {
             </header>
 
             {/* Mobile Menu Overlay */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        id="mobile-menu"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Menu mobilne"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
-                    >
-                        <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
-                            <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
-                                <House size={20} aria-hidden="true" />
-                                Strona główna
-                            </a>
-                            {/* Na telefonie usługi idą płaską listą pod nagłówkiem —
-                                rozwijane menu w szufladzie to jedno kliknięcie za dużo. */}
-                            <p className="text-xs font-bold uppercase tracking-widest text-white/50 -mb-2">Oferta</p>
-                            {USLUGI.map((u) => (
-                                <Link
-                                    key={u.href}
-                                    href={u.href}
-                                    onClick={closeMenu}
-                                    className="hover:text-gold transition-colors border-b border-white/5 pb-4 pl-4"
-                                >
-                                    {u.label}
-                                </Link>
-                            ))}
-                            <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
-                            <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
-                            <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
-                            <Link href="/o-mnie" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</Link>
-                            <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
-                        </nav>
-                        <div className="mt-10 mx-auto">
-                            <a
-                                href="/#kontakt"
-                                onClick={(e) => handleAnchorClick(e, "kontakt")}
-                                className="btn-gold px-8 py-3 text-sm rounded-full"
+            {menuWDrzewie && (
+                <div
+                    id="mobile-menu"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Menu mobilne"
+                    data-widoczny={menuAktywne ? "tak" : undefined}
+                    className="menu-mobilne fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
+                >
+                    <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
+                        <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
+                            <House size={20} aria-hidden="true" />
+                            Strona główna
+                        </a>
+                        {/* Na telefonie usługi idą płaską listą pod nagłówkiem —
+                            rozwijane menu w szufladzie to jedno kliknięcie za dużo. */}
+                        <p className="text-xs font-bold uppercase tracking-widest text-white/50 -mb-2">Oferta</p>
+                        {USLUGI.map((u) => (
+                            <Link
+                                key={u.href}
+                                href={u.href}
+                                onClick={closeMenu}
+                                className="hover:text-gold transition-colors border-b border-white/5 pb-4 pl-4"
                             >
-                                Napisz do mnie
-                            </a>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                {u.label}
+                            </Link>
+                        ))}
+                        <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
+                        <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
+                        <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
+                        <Link href="/o-mnie" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</Link>
+                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
+                    </nav>
+                    <div className="mt-10 mx-auto">
+                        <a
+                            href="/#kontakt"
+                            onClick={(e) => handleAnchorClick(e, "kontakt")}
+                            className="btn-gold px-8 py-3 text-sm rounded-full"
+                        >
+                            Napisz do mnie
+                        </a>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

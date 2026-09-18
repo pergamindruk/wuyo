@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
+import { useOdslona } from "@/lib/odslanianie";
 
 interface AnimatedSectionProps {
     children: ReactNode;
@@ -9,30 +9,43 @@ interface AnimatedSectionProps {
     id?: string;
     delay?: number;
     animateOnMount?: boolean;
-    /** Tryb hero: startuje z opacity:1 (widoczny od razu dla LCP), animuje tylko Y */
+    /** Tryb hero: mniejszy dystans, żeby pierwszy ekran nie skakał */
     hero?: boolean;
 }
 
-export function AnimatedSection({ children, className = "", id, delay = 0, animateOnMount = false, hero = false }: AnimatedSectionProps) {
-    const shouldReduceMotion = useReducedMotion();
+export function AnimatedSection({
+    children,
+    className = "",
+    id,
+    delay = 0,
+    animateOnMount = false,
+    hero = false,
+}: AnimatedSectionProps) {
+    // Sekcje odsłaniane przewijaniem podpinają się pod wspólny obserwator;
+    // te animowane od razu po wejściu na stronę nie potrzebują go wcale.
+    const refObserwowany = useOdslona<HTMLDivElement>();
+    const refOdRazu = useRef<HTMLDivElement>(null);
+    const ref = animateOnMount ? refOdRazu : refObserwowany;
 
-    // opacity zawsze 1 — treść dostępna dla AT i crawlerów; animujemy tylko Y
-    const initial = { opacity: 1, y: shouldReduceMotion ? 0 : (hero ? 20 : 50) };
-    const target = { opacity: 1, y: 0 };
-
-    const animationProps = animateOnMount
-        ? { animate: target }
-        : { whileInView: target, viewport: { once: true, margin: "-100px" } };
+    useEffect(() => {
+        if (!animateOnMount) return;
+        const element = refOdRazu.current;
+        if (!element) return;
+        // Klatka przerwy, inaczej przeglądarka scali oba stany w jeden
+        // i przejście w ogóle się nie odegra.
+        const klatka = requestAnimationFrame(() => element.classList.add("odslon-gotowe"));
+        return () => cancelAnimationFrame(klatka);
+    }, [animateOnMount]);
 
     return (
-        <motion.div
+        <div
+            ref={ref}
             id={id}
-            initial={initial}
-            {...animationProps}
-            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-            className={`w-full ${className}`}
+            data-odslon={hero ? "hero" : undefined}
+            style={delay ? { transitionDelay: `${delay}s` } : undefined}
+            className={`odslon w-full ${className}`}
         >
             {children}
-        </motion.div>
+        </div>
     );
 }

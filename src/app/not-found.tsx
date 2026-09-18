@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Home, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
@@ -10,11 +9,8 @@ export default function NotFound() {
             {/* Gradient glow background */}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center max-w-lg relative z-10"
+            <div
+                className="wjazd text-center max-w-lg relative z-10"
             >
                 {/* Numer błędu */}
                 <div className="relative mb-6">
@@ -49,7 +45,7 @@ export default function NotFound() {
                         Poprzednia strona
                     </button>
                 </div>
-            </motion.div>
+            </div>
         </main>
     );
 }

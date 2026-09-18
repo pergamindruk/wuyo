@@ -5,7 +5,7 @@
 // bo decyzja należy do konkretnej przeglądarki, nie do żądania.
 
 import { useCallback, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMountTransition } from "@/lib/useMountTransition";
 import Link from "next/link";
 import { Cookie, ChartNoAxesColumn, Megaphone, ShieldCheck } from "lucide-react";
 import {
@@ -57,24 +57,22 @@ export function CookieConsent() {
         setWidok("ukryty");
     }, []);
 
+    const { wDrzewie, aktywny } = useMountTransition(widok !== "ukryty", 350);
+
+    if (!wDrzewie) return null;
+
     return (
-        <AnimatePresence>
-            {widok !== "ukryty" && (
-                <motion.div
-                    role="dialog"
-                    aria-labelledby="zgody-naglowek"
-                    aria-describedby="zgody-opis"
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 24 }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    className="fixed left-0 right-0 z-[60] px-4 sm:left-6 sm:right-auto sm:px-0 sm:max-w-[26rem]"
-                    style={{
-                        // Podnosi się nad pasek kontaktu na telefonie, tak jak dymek czatu.
-                        bottom: "calc(1rem + var(--mobile-bar-h, 0px))",
-                        transition: "bottom 300ms ease",
-                    }}
-                >
+        <div
+            role="dialog"
+            aria-labelledby="zgody-naglowek"
+            aria-describedby="zgody-opis"
+            data-widoczny={aktywny ? "tak" : undefined}
+            className="baner-zgod fixed left-0 right-0 z-[60] px-4 sm:left-6 sm:right-auto sm:px-0 sm:max-w-[26rem]"
+            style={{
+                // Podnosi się nad pasek kontaktu na telefonie, tak jak dymek czatu.
+                bottom: "calc(1rem + var(--mobile-bar-h, 0px))",
+            }}
+        >
                     {/* Tło nieprzezroczyste, nie przyszybione — baner ląduje na samej górze hero
                         i przy 95% krycia złoty przycisk pod nim przebijał przez tekst. */}
                     <div className="rounded-3xl border border-white/10 bg-navy-dark p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
@@ -161,10 +159,8 @@ export function CookieConsent() {
                         >
                             Polityka prywatności
                         </Link>
-                    </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+                </div>
+        </div>
     );
 }
 
