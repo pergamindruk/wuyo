@@ -12,8 +12,8 @@ import { createClient } from '@/lib/supabase/server'
  * samo „ł" czy „ś" w adresie wywala żądanie błędem ERR_INVALID_CHAR i użytkownik
  * widzi „Coś poszło nie tak" zamiast komunikatu.
  */
-function przekierujZKomunikatem(tekst: string): never {
-    redirect(`/lab/login?message=${encodeURIComponent(tekst)}`)
+function przekierujZKomunikatem(tekst: string, rodzaj: 'blad' | 'info' = 'blad'): never {
+    redirect(`/lab/login?message=${encodeURIComponent(tekst)}&rodzaj=${rodzaj}`)
 }
 
 export async function login(formData: FormData) {
@@ -50,6 +50,6 @@ export async function wyslijReset(formData: FormData) {
         })
     }
 
-    przekierujZKomunikatem('Jeśli konto istnieje, link jest już w skrzynce')
+    przekierujZKomunikatem('Jeśli konto istnieje, link jest już w skrzynce', 'info')
 }
 

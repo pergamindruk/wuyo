@@ -1,7 +1,13 @@
 import { login, wyslijReset } from './actions'
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ message?: string }> }) {
-    const { message } = await searchParams
+export default async function LoginPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ message?: string; rodzaj?: string }>
+}) {
+    const { message, rodzaj } = await searchParams
+    // Komunikat o wysłanym linku to nie awaria — na czerwono wyglądałby jak błąd.
+    const info = rodzaj === 'info'
 
     return (
         <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-4">
@@ -15,7 +21,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 </div>
 
                 {message && (
-                    <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+                    <div
+                        className={`mb-4 p-3 rounded-lg border text-sm text-center ${
+                            info
+                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
+                                : 'bg-red-500/10 border-red-500/20 text-red-400'
+                        }`}
+                    >
                         {message.replace(/_/g, ' ')}
                     </div>
                 )}
