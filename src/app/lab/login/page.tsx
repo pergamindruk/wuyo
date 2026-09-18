@@ -1,4 +1,4 @@
-import { login } from './actions'
+import { login, wyslijReset } from './actions'
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ message?: string }> }) {
     const { message } = await searchParams
@@ -51,6 +51,15 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                             className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center"
                         >
                             Zaloguj się
+                        </button>
+                        {/* formNoValidate — reset potrzebuje tylko adresu, nie hasła,
+                            a pole hasła jest w tym formularzu wymagane. */}
+                        <button
+                            formAction={wyslijReset}
+                            formNoValidate
+                            className="w-full text-zinc-400 hover:text-white text-sm py-1 transition-colors"
+                        >
+                            Nie pamiętam hasła — wyślij link
                         </button>
                     </div>
                 </form>
