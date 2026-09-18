@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useCallback, useEffect } from "react"
-import { motion, useMotionTemplate, useMotionValue } from "motion/react"
+// framer-motion, nie motion/react — to ta sama biblioteka pod dwiema nazwami,
+// a dwa importy wysyłały do przeglądarki dwie kopie silnika animacji.
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 

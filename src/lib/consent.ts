@@ -83,9 +83,22 @@ export function applyConsent(choice: Pick<ConsentChoice, 'analytics' | 'marketin
         ad_personalization: yes(choice.marketing),
     })
 
-    // Piksel trzyma zdarzenia w kolejce od momentu 'revoke' i wysyła je po 'grant'.
+    // Piksel, jeśli już jest wczytany, dostaje 'grant' albo 'revoke'.
+    // Jeśli go nie ma, dociągnie go MetaPixel po tym zdarzeniu.
     setPixelConsent(choice.marketing)
+
+    window.dispatchEvent(
+        new CustomEvent<Pick<ConsentChoice, 'analytics' | 'marketing'>>(CONSENT_CHANGED_EVENT, {
+            detail: { analytics: choice.analytics, marketing: choice.marketing },
+        })
+    )
 }
 
 /** Zdarzenie, którym stopka prosi baner o ponowne otwarcie ustawień. */
 export const CONSENT_REOPEN_EVENT = 'wuyo:zgody-otworz'
+
+/**
+ * Zdarzenie po każdej decyzji. Nasłuchuje go Piksel Meta, który dociąga swój
+ * skrypt dopiero po zgodzie na marketing — zamiast wisieć na każdej stronie.
+ */
+export const CONSENT_CHANGED_EVENT = 'wuyo:zgody-zmienione'

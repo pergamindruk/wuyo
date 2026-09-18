@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PageTracker } from "@/components/PageTracker";
 import { CookieConsent } from "@/components/CookieConsent";
+import { MetaPixel } from "@/components/MetaPixel";
 import { CONSENT_STORAGE_KEY } from "@/lib/consent";
 import Script from "next/script";
 
@@ -186,13 +187,8 @@ export default function RootLayout({
                         </Script>
                     </>
                 )}
-                {META_PIXEL_ID && (
-                    /* Piksel nie zna Consent Mode, więc dostaje 'revoke' przed inicjalizacją.
-                       Trzyma zdarzenia w kolejce i wysyła je dopiero po zgodzie na marketing. */
-                    <Script id="meta-pixel" strategy="afterInteractive">
-                        {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('consent','revoke');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`}
-                    </Script>
-                )}
+                {/* Piksel Meta nie startuje z <head> — wczytuje go <MetaPixel /> dopiero
+                    po zgodzie na marketing. Szczegóły w src/components/MetaPixel.tsx. */}
             </head>
             <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${goldman.variable} ${csHarley.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Skip to content – ruch klawiaturowy (WCAG) */}
@@ -204,6 +200,7 @@ export default function RootLayout({
                 </a>
                 {children}
                 <CookieConsent />
+                {META_PIXEL_ID && <MetaPixel pixelId={META_PIXEL_ID} />}
                 <PageTracker />
                 <Analytics />
                 <SpeedInsights />
