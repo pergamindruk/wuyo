@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Syne, Goldman } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -18,17 +17,35 @@ const consentDefaultScript = `window.dataLayer=window.dataLayer||[];function gta
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
 try{var z=JSON.parse(localStorage.getItem('${CONSENT_STORAGE_KEY}'));if(z&&typeof z==='object'){gtag('consent','update',{analytics_storage:z.analytics?'granted':'denied',ad_storage:z.marketing?'granted':'denied',ad_user_data:z.marketing?'granted':'denied',ad_personalization:z.marketing?'granted':'denied'});}}catch(e){}`;
 
-const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
-const syne = Syne({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-syne", display: "swap" });
+// Fonty hostujemy u siebie, przycięte do znaków, których strona faktycznie używa
+// (łacina, Latin-1, polskie znaki, wybrana interpunkcja i symbole). Wersje z Google
+// Fonts ważyły 184 KB na każde wejście, bo pliki latin i latin-ext zmiennych fontów
+// niosły setki glifów dla języków, których tu nie ma.
+// Przelicza je scripts/fonty-subset.py, licencje w public/fonts/LICENCJE.md.
+const inter = localFont({
+    src: "../../public/fonts/inter-subset.woff2",
+    variable: "--font-inter",
+    weight: "100 900",
+    display: "swap",
+    adjustFontFallback: "Arial",
+});
+const syne = localFont({
+    src: "../../public/fonts/syne-subset.woff2",
+    variable: "--font-syne",
+    weight: "600 800",
+    display: "swap",
+    adjustFontFallback: "Arial",
+});
 // preload: false — tym krojem pisane są wielkie ozdobne napisy w tle i liczniki,
 // prawie zawsze poniżej pierwszego ekranu. Nie musi konkurować o łącze z fontem
 // tekstu i nagłówków. Wczytuje się normalnie, tylko bez priorytetu.
-const goldman = Goldman({
-    subsets: ["latin"],
-    weight: ["700"],
+const goldman = localFont({
+    src: "../../public/fonts/goldman-subset.woff2",
     variable: "--font-ava-meridian",
+    weight: "700",
     display: "swap",
     preload: false,
+    adjustFontFallback: "Arial",
 });
 const csHarley = localFont({
     src: [

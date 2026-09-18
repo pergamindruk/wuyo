@@ -47,3 +47,6 @@ leads.json
 .impeccable/
 .claude/skills/
 .agents/skills/impeccable/
+
+# Licencje fontów muszą jechać razem z plikami .woff2 (wymóg OFL, repo jest publiczne)
+!public/fonts/OFL-*.txt
