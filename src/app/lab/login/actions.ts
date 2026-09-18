@@ -4,6 +4,18 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+/**
+ * Przekierowanie z komunikatem dla użytkownika.
+ *
+ * Komunikat MUSI być zakodowany. `redirect()` w akcji serwerowej Next wkłada
+ * adres do nagłówka HTTP `x-action-redirect`, a nagłówki przyjmują tylko ASCII —
+ * samo „ł" czy „ś" w adresie wywala żądanie błędem ERR_INVALID_CHAR i użytkownik
+ * widzi „Coś poszło nie tak" zamiast komunikatu.
+ */
+function przekierujZKomunikatem(tekst: string): never {
+    redirect(`/lab/login?message=${encodeURIComponent(tekst)}`)
+}
+
 export async function login(formData: FormData) {
     const supabase = await createClient()
 
@@ -15,7 +27,7 @@ export async function login(formData: FormData) {
     const { error } = await supabase.auth.signInWithPassword(data)
 
     if (error) {
-        redirect('/lab/login?message=Nieprawidłowy_email_lub_hasło')
+        przekierujZKomunikatem('Nieprawidłowy e-mail lub hasło')
     }
 
     revalidatePath('/lab', 'layout')
@@ -38,6 +50,6 @@ export async function wyslijReset(formData: FormData) {
         })
     }
 
-    redirect('/lab/login?message=Jeśli_konto_istnieje,_link_jest_już_w_skrzynce')
+    przekierujZKomunikatem('Jeśli konto istnieje, link jest już w skrzynce')
 }
 
