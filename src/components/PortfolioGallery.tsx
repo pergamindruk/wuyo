@@ -104,7 +104,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                         >
                             {String(filteredProjects.length).padStart(2, "0")}
                         </motion.span>
-                        <span className="text-white/30 text-xs uppercase tracking-widest">projektów</span>
+                        <span className="text-white/50 text-xs uppercase tracking-widest">projektów</span>
                     </div>
                 </div>
 
@@ -119,7 +119,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                 className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-colors duration-200 ${
                                     activeTab === tab.id
                                         ? "text-white"
-                                        : "text-white/40 hover:text-white/70"
+                                        : "text-white/60 hover:text-white/70"
                                 }`}
                             >
                                 {tab.label}
@@ -299,7 +299,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                             {selectedProject.category}
                                         </p>
                                         {selectedProject.year && (
-                                            <p className="text-white/25 text-xs tracking-wide">{selectedProject.year}</p>
+                                            <p className="text-white/50 text-xs tracking-wide">{selectedProject.year}</p>
                                         )}
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                             />
                         </motion.div>
 
-                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/20 text-xs tracking-[0.2em] uppercase select-none">
+                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-[0.2em] uppercase select-none">
                             ESC lub klik aby zamknąć
                         </p>
                     </motion.div>

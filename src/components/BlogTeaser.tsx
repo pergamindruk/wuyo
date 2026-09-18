@@ -49,7 +49,7 @@ export function BlogTeaser() {
                                 <div className="flex items-center gap-3 mb-3">
                                     <span className="eyebrow text-[10px]">{post.category}</span>
                                     <span className="text-white/20" aria-hidden="true">·</span>
-                                    <span className="text-white/40 text-[11px] flex items-center gap-1">
+                                    <span className="text-white/60 text-[11px] flex items-center gap-1">
                                         <Clock size={11} aria-hidden="true" /> {post.readTime}
                                     </span>
                                 </div>

@@ -7,6 +7,12 @@ const POSTS_DIR = path.join(process.cwd(), "src/content/blog");
 export interface PostMeta {
     slug: string;
     title: string;
+    /**
+     * Krótszy tytuł wyłącznie dla wyników wyszukiwania. Google pokazuje około
+     * 60 znaków, a dobry nagłówek na stronie bywa dłuższy — bez tego pola
+     * trzeba by wybierać między jednym a drugim. Gdy go nie ma, idzie `title`.
+     */
+    seoTitle?: string;
     excerpt: string;
     date: string;
     readTime: string;

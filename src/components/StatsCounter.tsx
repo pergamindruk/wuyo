@@ -106,7 +106,7 @@ export function StatsCounter() {
                         >
                             <AnimatedNumber {...stat.value} />
                         </span>
-                        <span className="text-white/35 text-[10px] uppercase tracking-[0.25em] whitespace-nowrap">
+                        <span className="text-white/50 text-[10px] uppercase tracking-[0.25em] whitespace-nowrap">
                             {stat.label}
                         </span>
                     </div>

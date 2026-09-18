@@ -188,13 +188,13 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                 <div className="text-gold/70 mb-3">{product.icon}</div>
                 <h3 className="font-bold text-white text-lg mb-1">{product.name}</h3>
                 {product.note && (
-                    <p className="text-white/40 text-xs">{product.note}</p>
+                    <p className="text-white/60 text-xs">{product.note}</p>
                 )}
             </div>
 
             {/* Variant pills — ilość */}
             <div>
-                <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Ilość</p>
+                <p className="text-white/50 text-[10px] uppercase tracking-widest mb-2">Ilość</p>
                 <div className="flex flex-wrap gap-2">
                     {product.variants.map((v) => {
                         const isSelected = selectedVariant?.qty === v.qty;
@@ -217,7 +217,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
             {/* Projekt toggle */}
             <div>
-                <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Projekt</p>
+                <p className="text-white/50 text-[10px] uppercase tracking-widest mb-2">Projekt</p>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setWithDesign(false)}
@@ -239,7 +239,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                     >
                         Zamawiam z projektem
                         {withDesign !== true && (
-                            <span className="block text-[10px] text-white/30 font-normal">+{product.designFee} zł</span>
+                            <span className="block text-[10px] text-white/50 font-normal">+{product.designFee} zł</span>
                         )}
                     </button>
                 </div>
@@ -379,7 +379,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                     <button
                         ref={closeRef}
                         onClick={onClose}
-                        className="text-white/40 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+                        className="text-white/60 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
                         aria-label="Zamknij koszyk"
                     >
                         <X size={20} />
@@ -390,7 +390,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                 <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
                     {/* Items list */}
                     {items.length === 0 ? (
-                        <p className="text-white/40 text-sm text-center mt-8">Koszyk jest pusty</p>
+                        <p className="text-white/60 text-sm text-center mt-8">Koszyk jest pusty</p>
                     ) : (
                         <ul className="space-y-3">
                             {items.map((item, i) => (
@@ -407,7 +407,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                                         </span>
                                         <button
                                             onClick={() => onRemove(i)}
-                                            className="text-white/30 hover:text-white/70 transition-colors"
+                                            className="text-white/50 hover:text-white/70 transition-colors"
                                             aria-label={`Usuń ${item.productName}`}
                                         >
                                             <X size={14} />
@@ -437,7 +437,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
                                     <span className="text-[#ffeb52] font-bold">{totalNum} zł</span>
                                 )}
                                 {hasCustom && (
-                                    <span className="text-white/40 text-xs block">+ wycena ind. po kontakcie</span>
+                                    <span className="text-white/60 text-xs block">+ wycena ind. po kontakcie</span>
                                 )}
                             </div>
                         </div>
@@ -498,7 +498,7 @@ function CartDrawer({ items, onRemove, onClose }: CartDrawerProps) {
 
                             <div>
                                 <label className="text-white/60 text-xs mb-1.5 block" htmlFor="order-note">
-                                    Dodatkowe informacje <span className="text-white/30">(opcjonalnie)</span>
+                                    Dodatkowe informacje <span className="text-white/50">(opcjonalnie)</span>
                                 </label>
                                 <textarea
                                     id="order-note"

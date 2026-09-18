@@ -9,7 +9,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek Rzeszów – projekt + druk od 299 zł | WUYO",
+    title: "Druk wizytówek Rzeszów — z projektem od 299 zł",
     description: "Druk wizytówek, ulotek i naklejek w Rzeszowie. Projekt i druk w jednym miejscu: 50 szt. z projektem od 299 zł, sam druk od 99 zł. Odbiór na miejscu →",
     keywords: [
         "druk wizytówek Rzeszów",
@@ -218,19 +218,19 @@ export default function DrukRzeszowPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 890 zł · projekt od zera</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł · projekt od zera</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik w Rzeszowie</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Grafik w Rzeszowie</p>
                                 <Link href="/grafik-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Studio WUYO →</Link>
-                                <p className="text-white/40 text-xs mt-1">logo · strony · druk</p>
+                                <p className="text-white/60 text-xs mt-1">logo · strony · druk</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Opinie klientów</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Opinie klientów</p>
                                 <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">★ Google Maps →</a>
-                                <p className="text-white/40 text-xs mt-1">sprawdź co mówią klienci</p>
+                                <p className="text-white/60 text-xs mt-1">sprawdź co mówią klienci</p>
                             </div>
                         </div>
                     </AnimatedSection>

@@ -11,7 +11,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO Rzeszów",
+    title: "Strony internetowe od 2 490 zł — Next.js, SEO",
     description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
     openGraph: {
         title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO",
@@ -274,9 +274,9 @@ export default function StronyWwwPage() {
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="border-b border-white/10">
-                                            <th className="text-left p-4 text-white/40 font-medium">Kryterium</th>
+                                            <th className="text-left p-4 text-white/60 font-medium">Kryterium</th>
                                             <th className="text-center p-4 text-gold font-bold">Next.js (moje strony)</th>
-                                            <th className="text-center p-4 text-white/40 font-medium">WordPress</th>
+                                            <th className="text-center p-4 text-white/60 font-medium">WordPress</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
@@ -292,7 +292,7 @@ export default function StronyWwwPage() {
                                             <tr key={i}>
                                                 <td className="p-4 text-white/60">{row.c}</td>
                                                 <td className="p-4 text-center text-green-400 font-medium text-xs">{row.a}</td>
-                                                <td className="p-4 text-center text-white/40 text-xs">{row.b}</td>
+                                                <td className="p-4 text-center text-white/60 text-xs">{row.b}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -322,7 +322,7 @@ export default function StronyWwwPage() {
                                     <div className="mb-1">
                                         <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
                                         <p className={`text-2xl font-bold ${pkg.highlight ? "text-gold" : "text-white/80"}`}>{pkg.price}</p>
-                                        <p className="text-white/30 text-xs mt-1">⏱ {pkg.time}</p>
+                                        <p className="text-white/50 text-xs mt-1">⏱ {pkg.time}</p>
                                     </div>
                                     <p className="text-white/50 text-sm my-4 leading-relaxed">{pkg.desc}</p>
                                     <ul className="space-y-2 flex-1">
@@ -403,7 +403,7 @@ export default function StronyWwwPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
-                                <p className="text-white/40 text-xs mb-1">Z bloga</p>
+                                <p className="text-white/60 text-xs mb-1">Z bloga</p>
                                 <p className="font-bold text-white mb-1">Zanim zdecydujesz — przeczytaj</p>
                                 <p className="text-white/50 text-sm">Ile kosztuje strona i kiedy one-page wystarczy, a kiedy multi-page to konieczność.</p>
                             </div>

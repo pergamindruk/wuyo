@@ -12,7 +12,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk Wizytówek i Ulotek – projekt + druk od 299 zł | WUYO",
+    title: "Druk wizytówek i ulotek z projektem od 299 zł",
     description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł. Termin 1–3 dni, bez minimum →",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
@@ -200,24 +200,24 @@ export default function DrukPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 md:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center border border-white/5">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 890 zł · 10–14 dni</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł · 10–14 dni</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
                                 <Link href="/strony-www" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony internetowe →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 2 490 zł · Next.js</p>
+                                <p className="text-white/60 text-xs mt-1">od 2 490 zł · Next.js</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Koszulki, bluzy?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Koszulki, bluzy?</p>
                                 <Link href="/odziez" className="font-bold text-white hover:text-gold transition-colors text-sm">Nadruk na odzieży →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 79 zł/szt · bez minimum</p>
+                                <p className="text-white/60 text-xs mt-1">od 79 zł/szt · bez minimum</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
                                 <Link href="/druk-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk w Rzeszowie →</Link>
-                                <p className="text-white/40 text-xs mt-1">odbiór osobisty · 1–3 dni</p>
+                                <p className="text-white/60 text-xs mt-1">odbiór osobisty · 1–3 dni</p>
                             </div>
                         </div>
                     </AnimatedSection>
@@ -257,7 +257,7 @@ export default function DrukPage() {
             <section className="pb-4 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/40">
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/60">
                             <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
                                 ★ Opinie na Google Maps
                             </a>

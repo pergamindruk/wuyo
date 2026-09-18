@@ -91,18 +91,20 @@ export function AuditSection() {
                             />
                             <input
                                 type="text"
+                                aria-label="Adres strony do audytu"
                                 placeholder="Wklej link (np. www.mojastrona.pl)"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
-                                className="w-full bg-navy-dark border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-red-500/50 transition-colors placeholder:text-white/30"
+                                className="w-full bg-navy-dark border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-red-500/50 transition-colors placeholder:text-white/50"
                             />
                             <input
                                 type="email"
+                                aria-label="Twój adres e-mail"
                                 placeholder="Twój e-mail — tu wyślę audyt *"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full bg-navy-dark border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-red-500/50 transition-colors placeholder:text-white/30"
+                                className="w-full bg-navy-dark border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-red-500/50 transition-colors placeholder:text-white/50"
                             />
                             {error && <p className="text-red-400 text-sm px-2">{error}</p>}
                             <button

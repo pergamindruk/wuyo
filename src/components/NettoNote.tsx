@@ -7,7 +7,7 @@
  */
 export function NettoNote({ className = "" }: { className?: string }) {
     return (
-        <p className={`text-white/35 text-xs ${className}`}>
+        <p className={`text-white/50 text-xs ${className}`}>
             Kwoty netto — do faktury dochodzi 23% VAT.
         </p>
     );

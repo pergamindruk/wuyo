@@ -18,9 +18,9 @@ export function Footer() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
                         <div>
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Szybkie linki</h4>
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4">Szybkie linki</h4>
                             <ul className="space-y-3 text-sm">
                                 <li><Link href="/" className="text-white/60 hover:text-white transition-colors">Główna</Link></li>
                                 <li><Link href="/#portfolio" className="text-white/60 hover:text-white transition-colors">Portfolio</Link></li>
@@ -28,11 +28,22 @@ export function Footer() {
                                 <li><Link href="/strony-www" className="text-white/60 hover:text-white transition-colors">Strony internetowe</Link></li>
                                 <li><Link href="/druk" className="text-white/60 hover:text-white transition-colors">Druk & papeteria</Link></li>
                                 <li><Link href="/odziez" className="text-white/60 hover:text-white transition-colors">Odzież & personalizacja</Link></li>
-                                <li><Link href="/audyt" className="text-white/60 hover:text-white transition-colors">Bezpłatny audyt strony</Link></li>
+                                <li><Link href="/cennik" className="text-white/60 hover:text-white transition-colors">Cennik</Link></li>
+                                <li><Link href="/o-mnie" className="text-white/60 hover:text-white transition-colors">O mnie</Link></li>
+                            </ul>
+                        </div>
+                        {/* Strony lokalne trafiają do stopki, bo walczą o frazy z „rzeszów”,
+                            a linkował do nich dotąd tylko blog — pięć linków na stronę. */}
+                        <div>
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4">Rzeszów i okolice</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><Link href="/grafik-rzeszow" className="text-white/60 hover:text-white transition-colors">Grafik Rzeszów</Link></li>
+                                <li><Link href="/strony-internetowe-rzeszow" className="text-white/60 hover:text-white transition-colors">Strony internetowe Rzeszów</Link></li>
+                                <li><Link href="/druk-rzeszow" className="text-white/60 hover:text-white transition-colors">Druk wizytówek Rzeszów</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Znajdziesz mnie</h4>
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4">Znajdziesz mnie</h4>
                             <ul className="space-y-3 text-sm flex flex-col gap-2">
                                 <li><Link href="https://www.youtube.com/@wuyo.dobra.grafa" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Youtube size={18} className="group-hover:text-red-500 transition-colors" /> YouTube</Link></li>
                                 <li><Link href="https://www.instagram.com/wuyo.pl/" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"><Instagram size={18} className="group-hover:text-pink-500 transition-colors" /> Instagram</Link></li>
@@ -40,7 +51,7 @@ export function Footer() {
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Pogadajmy</h4>
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4">Pogadajmy</h4>
                             <ul className="space-y-3 text-sm">
                                 <li>
                                     <TrackedLink href="https://wa.me/48725182053" trackAs="whatsapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
@@ -62,7 +73,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/20">
+                <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/50">
                     <p>&copy; 2026 Wuyo – Dobra Grafa.</p>
 
                     <div className="flex items-center gap-4 opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500">

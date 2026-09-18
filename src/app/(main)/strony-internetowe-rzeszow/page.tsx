@@ -9,7 +9,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony Internetowe Rzeszów od 2 490 zł | Next.js | WUYO",
+    title: "Strony internetowe Rzeszów od 2 490 zł",
     description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
@@ -203,7 +203,7 @@ export default function StronyInternetowerRzeszowPage() {
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
                                         <p className={`text-2xl font-bold ${pkg.highlight ? "text-gold" : "text-white/80"}`}>{pkg.price}</p>
-                                        <p className="text-white/30 text-xs mt-1">⏱ {pkg.time}</p>
+                                        <p className="text-white/50 text-xs mt-1">⏱ {pkg.time}</p>
                                     </div>
                                     <p className="text-white/55 text-sm mb-5 leading-relaxed">{pkg.desc}</p>
                                     <ul className="space-y-2 flex-1">
@@ -280,19 +280,19 @@ export default function StronyInternetowerRzeszowPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 890 zł · projekt od zera</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł · projekt od zera</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Cennik szczegółowy</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Cennik szczegółowy</p>
                                 <Link href="/cennik" className="font-bold text-white hover:text-gold transition-colors text-sm">Pełny cennik →</Link>
-                                <p className="text-white/40 text-xs mt-1">wszystkie usługi i pakiety</p>
+                                <p className="text-white/60 text-xs mt-1">wszystkie usługi i pakiety</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Grafik z Rzeszowa</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Grafik z Rzeszowa</p>
                                 <Link href="/grafik-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">O studio WUYO →</Link>
-                                <p className="text-white/40 text-xs mt-1">logo · strony · druk</p>
+                                <p className="text-white/60 text-xs mt-1">logo · strony · druk</p>
                             </div>
                         </div>
                     </AnimatedSection>
@@ -305,7 +305,7 @@ export default function StronyInternetowerRzeszowPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
-                                <p className="text-white/40 text-xs mb-1">Z bloga</p>
+                                <p className="text-white/60 text-xs mb-1">Z bloga</p>
                                 <p className="font-bold text-white mb-1">Zanim zdecydujesz — przeczytaj</p>
                                 <p className="text-white/50 text-sm">One-page czy multi-page, ile kosztuje strona i jak wybrać wykonawcę.</p>
                             </div>

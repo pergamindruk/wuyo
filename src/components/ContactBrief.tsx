@@ -186,7 +186,7 @@ export function ContactBrief() {
                 {/* Szybki kontakt przez komunikatory */}
                 <div className="flex flex-col items-center gap-3 mb-10">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <span className="text-white/40 text-sm">Wolisz na szybko?</span>
+                        <span className="text-white/60 text-sm">Wolisz na szybko?</span>
                         <a
                             href={WA_LINK}
                             target="_blank"
@@ -207,7 +207,7 @@ export function ContactBrief() {
                             Messenger
                         </a>
                     </div>
-                    <p className="text-white/30 text-xs text-center">
+                    <p className="text-white/50 text-xs text-center">
                         💬 Możesz też skorzystać z{" "}
                         <span className="text-gold/80 font-semibold">chatbota AI</span>{" "}
                         w prawym dolnym rogu strony &mdash; odpowie od ręki!
@@ -231,11 +231,11 @@ export function ContactBrief() {
                                 id={`tab-${tab.id}`}
                                 onClick={() => switchPath(tab.id)}
                                 className={`relative flex flex-col items-center justify-center py-5 px-3 gap-2 transition-all duration-300 text-center
-                                    ${path === tab.id ? "bg-gold text-navy-dark" : "text-white/40 hover:text-white/70 hover:bg-white/5"}`}
+                                    ${path === tab.id ? "bg-gold text-navy-dark" : "text-white/60 hover:text-white/70 hover:bg-white/5"}`}
                             >
                                 <span className={`transition-colors ${path === tab.id ? "text-navy-dark" : ""}`} aria-hidden="true">{tab.icon}</span>
                                 <span className="font-bold text-xs md:text-sm leading-tight">{tab.label}</span>
-                                <span className={`text-[10px] hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/30"}`}>{tab.sub}</span>
+                                <span className={`text-[10px] hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/50"}`}>{tab.sub}</span>
                                 {path === tab.id && (
                                     <motion.div
                                         layoutId="tabBar"
@@ -342,7 +342,7 @@ export function ContactBrief() {
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1">Twoje dane kontaktowe 📬</h3>
-                                <p className="text-white/40 text-sm">Gdzie wysłać odpowiedź i wycenę?</p>
+                                <p className="text-white/60 text-sm">Gdzie wysłać odpowiedź i wycenę?</p>
                             </div>
 
                             {/* bot trap */}
@@ -393,7 +393,7 @@ export function ContactBrief() {
                                     {error ? (
                                         <p className="text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">⚠️ {error}</p>
                                     ) : (
-                                        <p className="text-white/30 text-xs">Administratorem danych jest Wuyo. Wysyłając wiadomość zgadzasz się, że je przechowam tylko po to, by odpisać. 😉</p>
+                                        <p className="text-white/50 text-xs">Administratorem danych jest Wuyo. Wysyłając wiadomość zgadzasz się, że je przechowam tylko po to, by odpisać. 😉</p>
                                     )}
                                 </div>
                                 <button
@@ -418,7 +418,7 @@ function BriefField({ label, sub, children }: { label: string; sub: string; chil
         <div className="space-y-2">
             <div>
                 <p className="font-bold text-white text-base">{label}</p>
-                <p className="text-white/40 text-sm">{sub}</p>
+                <p className="text-white/60 text-sm">{sub}</p>
             </div>
             {children}
         </div>

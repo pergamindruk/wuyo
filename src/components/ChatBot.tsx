@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { trackChatLead } from "@/lib/tracking";
 
 interface Message {
     role: "user" | "assistant";
@@ -68,6 +69,9 @@ export default function ChatBot() {
             });
 
             const data = await response.json();
+
+            // Serwer zwraca `lead`, gdy wyciągnął z rozmowy imię i e-mail.
+            if (data.lead) trackChatLead();
 
             if (data.message) {
                 setMessages((prev) => [...prev, { role: "assistant", content: data.message }]);

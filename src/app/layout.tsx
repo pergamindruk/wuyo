@@ -45,7 +45,9 @@ export const metadata: Metadata = {
     metadataBase: new URL("https://wuyo.pl"),
     title: {
         default: "WUYO – Logo, Strony WWW & Grafika | Rzeszów",
-        template: "%s | WUYO – Dobra Grafa",
+        // Sama „WUYO" zamiast „WUYO – Dobra Grafa": Google pokazuje około 60 znaków,
+        // a dłuższa końcówka zjadała je podstronom i wpisom blogowym.
+        template: "%s | WUYO",
     },
     description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 890 zł.",
     keywords: ["tworzenie stron internetowych", "projektant graficzny", "identyfikacja wizualna", "logo design", "strony www Rzeszów", "web design Polska", "Next.js", "grafika reklamowa", "strony internetowe dla firm"],

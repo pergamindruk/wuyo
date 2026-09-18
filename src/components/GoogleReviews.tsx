@@ -108,7 +108,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                                         <span className="block text-white font-bold text-sm truncate">
                                             {review.author}
                                         </span>
-                                        <span className="block text-white/40 text-xs">Opinia w Google</span>
+                                        <span className="block text-white/60 text-xs">Opinia w Google</span>
                                     </span>
                                 </figcaption>
                             </figure>
@@ -135,7 +135,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                     )}
                 </AnimatedSection>
 
-                <p className="text-white/30 text-xs mt-6">
+                <p className="text-white/50 text-xs mt-6">
                     Opinie pobierane bezpośrednio z profilu firmy w Google i odświeżane codziennie.
                 </p>
             </div>

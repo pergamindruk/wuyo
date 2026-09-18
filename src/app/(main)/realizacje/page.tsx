@@ -7,7 +7,7 @@ import { projects } from "@/lib/projects";
 import { portfolioCollectionSchema } from "@/lib/portfolio-schema";
 
 export const metadata: Metadata = {
-    title: "Realizacje – Portfolio projektów graficznych i stron WWW",
+    title: "Realizacje: logo, strony WWW i druk",
     description: "Portfolio WUYO: strony internetowe, logotypy, identyfikacja wizualna, materiały do druku i nadruki. Dowody zamiast obietnic — zobacz zrealizowane projekty.",
     alternates: {
         canonical: "https://wuyo.pl/realizacje",
@@ -45,7 +45,7 @@ export default function RealizacjePage() {
                     <AnimatedSection animateOnMount hero>
                         <Link
                             href="/"
-                            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm font-medium transition-colors mb-8 group"
+                            className="inline-flex items-center gap-2 text-white/60 hover:text-white/70 text-sm font-medium transition-colors mb-8 group"
                         >
                             <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                             Strona główna
@@ -69,7 +69,7 @@ export default function RealizacjePage() {
                                     >
                                         {s.value}
                                     </span>
-                                    <span className="text-white/40 text-xs uppercase tracking-widest mt-1">{s.label}</span>
+                                    <span className="text-white/60 text-xs uppercase tracking-widest mt-1">{s.label}</span>
                                 </div>
                             ))}
                         </div>

@@ -78,7 +78,7 @@ export function ProcessSection() {
                             <div className="absolute left-1/2 -top-[30px] w-px h-[30px] bg-gradient-to-b from-white/10 to-transparent -translate-x-1/2 z-10" />
 
                             {/* Step Number Badge directly on card */}
-                            <div className="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-navy border border-white/10 flex items-center justify-center text-xs font-bold text-white/30 group-hover:text-gold group-hover:border-gold/50 transition-colors z-30">
+                            <div className="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-navy border border-white/10 flex items-center justify-center text-xs font-bold text-white/50 group-hover:text-gold group-hover:border-gold/50 transition-colors z-30">
                                 0{index + 1}
                             </div>
 

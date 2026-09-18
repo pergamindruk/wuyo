@@ -143,7 +143,7 @@ export async function TestimonialsSection() {
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-white font-bold text-sm truncate">{t.name}</p>
-                                            <p className="text-white/40 text-xs truncate">{t.company}</p>
+                                            <p className="text-white/60 text-xs truncate">{t.company}</p>
                                         </div>
                                         <span className="ml-auto shrink-0 text-[10px] font-bold text-gold/60 border border-gold/15 rounded-full px-2 py-0.5 whitespace-nowrap">
                                             {t.service}

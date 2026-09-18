@@ -148,7 +148,7 @@ export function PriceCalculator() {
                     {/* ── Krok 1: Wybór usługi ── */}
                     {step === 1 && !done && (
                         <motion.div key="step1" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                            <p className="text-white/40 text-xs uppercase tracking-widest mb-2">Krok 1 z 3</p>
+                            <p className="text-white/60 text-xs uppercase tracking-widest mb-2">Krok 1 z 3</p>
                             <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Czego potrzebujesz?</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {SERVICES.map(s => (
@@ -159,7 +159,7 @@ export function PriceCalculator() {
                                     >
                                         <span className="text-2xl mb-3 block text-gold/70 group-hover:text-gold transition-colors">{s.emoji}</span>
                                         <p className="font-bold text-white group-hover:text-gold transition-colors mb-1">{s.label}</p>
-                                        <p className="text-white/40 text-xs leading-relaxed">{s.desc}</p>
+                                        <p className="text-white/60 text-xs leading-relaxed">{s.desc}</p>
                                     </button>
                                 ))}
                             </div>
@@ -169,10 +169,10 @@ export function PriceCalculator() {
                     {/* ── Krok 2: Szczegóły usługi ── */}
                     {step === 2 && !done && (
                         <motion.div key="step2" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
-                            <button onClick={() => update({ service: null, logoType: null, wwwType: null, drukType: null, socialPosts: null, wwwPages: null })} className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors group">
+                            <button onClick={() => update({ service: null, logoType: null, wwwType: null, drukType: null, socialPosts: null, wwwPages: null })} className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/70 text-sm mb-6 transition-colors group">
                                 <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> Wróć
                             </button>
-                            <p className="text-white/40 text-xs uppercase tracking-widest mb-2">Krok 2 z 3</p>
+                            <p className="text-white/60 text-xs uppercase tracking-widest mb-2">Krok 2 z 3</p>
                             <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Doprecyzuj szczegóły</h2>
 
                             {/* Logo options */}
@@ -184,7 +184,7 @@ export function PriceCalculator() {
                                             {([["wordmark", "Wordmark", "Samo słowo / napis"], ["monogram", "Monogram", "Inicjały / znak"], ["combo", "Kombinacja", "Znak + tekst"]] as const).map(([k, l, d]) => (
                                                 <button key={k} onClick={() => update({ logoType: k })} className={`p-4 rounded-xl border text-left transition-all text-sm ${sel.logoType === k ? "border-gold bg-gold/10 text-white" : "border-white/10 text-white/60 hover:border-white/30"}`}>
                                                     <span className="font-bold block mb-1">{l}</span>
-                                                    <span className="text-xs text-white/40">{d}</span>
+                                                    <span className="text-xs text-white/60">{d}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -193,7 +193,7 @@ export function PriceCalculator() {
                                         <input type="checkbox" checked={sel.brandbook} onChange={e => update({ brandbook: e.target.checked })} className="mt-0.5 accent-yellow-400" />
                                         <div>
                                             <p className="text-white font-semibold text-sm">Dodaj Brand Book</p>
-                                            <p className="text-white/40 text-xs mt-0.5">Pełna dokumentacja marki — kolory, typografia, użycie logotypu</p>
+                                            <p className="text-white/60 text-xs mt-0.5">Pełna dokumentacja marki — kolory, typografia, użycie logotypu</p>
                                         </div>
                                     </label>
                                     {sel.logoType && (
@@ -213,7 +213,7 @@ export function PriceCalculator() {
                                             {([["onepage", "One-Page", "Jedna strona, wszystko w sekcjach — idealna na start"], ["multipage", "Multi-Page", "Kilka podstron, rozbudowany serwis"], ["shop", "Sklep / E-commerce", "Pełny sklep z koszykiem i płatnościami"]] as const).map(([k, l, d]) => (
                                                 <button key={k} onClick={() => update({ wwwType: k, wwwPages: k !== "multipage" ? null : sel.wwwPages })} className={`w-full p-4 rounded-xl border text-left transition-all ${sel.wwwType === k ? "border-gold bg-gold/10" : "border-white/10 hover:border-white/30"}`}>
                                                     <span className="font-bold text-white block">{l}</span>
-                                                    <span className="text-white/40 text-xs">{d}</span>
+                                                    <span className="text-white/60 text-xs">{d}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -251,7 +251,7 @@ export function PriceCalculator() {
                                         <input type="checkbox" checked={sel.drukPrint} onChange={e => update({ drukPrint: e.target.checked })} className="mt-0.5 accent-yellow-400" />
                                         <div>
                                             <p className="text-white font-semibold text-sm">Druk u mnie (Epson A3+)</p>
-                                            <p className="text-white/40 text-xs mt-0.5">Własny druk bezpośrednio — szybciej i taniej niż zewnętrzna drukarnia</p>
+                                            <p className="text-white/60 text-xs mt-0.5">Własny druk bezpośrednio — szybciej i taniej niż zewnętrzna drukarnia</p>
                                         </div>
                                     </label>
                                     {sel.drukType && (
@@ -271,7 +271,7 @@ export function PriceCalculator() {
                                             {([["4", "4 posty / miesiąc", "Podstawowa aktywność — 1 post / tydzień"], ["8", "8 postów / miesiąc", "Regularna obecność — 2 posty / tydzień"], ["12+", "12+ postów / miesiąc", "Pełna intensywność — 3+ posty / tydzień"]] as const).map(([k, l, d]) => (
                                                 <button key={k} onClick={() => update({ socialPosts: k })} className={`w-full p-4 rounded-xl border text-left transition-all ${sel.socialPosts === k ? "border-gold bg-gold/10" : "border-white/10 hover:border-white/30"}`}>
                                                     <span className="font-bold text-white block">{l}</span>
-                                                    <span className="text-white/40 text-xs">{d}</span>
+                                                    <span className="text-white/60 text-xs">{d}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -291,11 +291,11 @@ export function PriceCalculator() {
                         <motion.div key="step3" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.25 }}>
                             <button
                                 onClick={() => update({ logoType: null, wwwType: null, drukType: null, socialPosts: null, wwwPages: null })}
-                                className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors group"
+                                className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/70 text-sm mb-6 transition-colors group"
                             >
                                 <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> Zmień szczegóły
                             </button>
-                            <p className="text-white/40 text-xs uppercase tracking-widest mb-2">Krok 3 z 3</p>
+                            <p className="text-white/60 text-xs uppercase tracking-widest mb-2">Krok 3 z 3</p>
                             <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Termin realizacji</h2>
 
                             <div className="space-y-2 mb-8">
@@ -313,7 +313,7 @@ export function PriceCalculator() {
                                                 {l}
                                                 {k !== "standard" && <Zap size={12} className="text-gold" />}
                                             </span>
-                                            <span className="text-white/40 text-xs">{time} · {note}</span>
+                                            <span className="text-white/60 text-xs">{time} · {note}</span>
                                         </div>
                                     </button>
                                 ))}
@@ -325,7 +325,7 @@ export function PriceCalculator() {
                                 <p className="text-4xl font-black text-gold" style={{ fontFamily: "var(--font-ava-meridian)" }}>
                                     {price[0].toLocaleString("pl-PL")} – {price[1].toLocaleString("pl-PL")} zł
                                 </p>
-                                <p className="text-white/40 text-xs mt-2">
+                                <p className="text-white/60 text-xs mt-2">
                                     Cena netto. Finalna wycena po krótkiej rozmowie o projekcie — zawsze stała, bez niespodzianek.
                                 </p>
                             </div>
@@ -342,7 +342,7 @@ export function PriceCalculator() {
                                 </button>
                             </div>
 
-                            <p className="text-center text-white/25 text-xs mt-6 flex items-center justify-center gap-1.5">
+                            <p className="text-center text-white/50 text-xs mt-6 flex items-center justify-center gap-1.5">
                                 <CheckCircle2 size={12} className="text-green-500/60" />
                                 Kalkulator to orientacja — dokładna wycena zawsze trafia w mailu
                             </p>

@@ -27,7 +27,7 @@ export function PricingCard({ card }: { card: PricingCardData }) {
                 </span>
             )}
 
-            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-5">{eyebrow}</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/60 mb-5">{eyebrow}</p>
 
             <h4 className={`text-2xl font-bold mb-2 ${highlighted ? "text-gold" : "text-white"}`}>{name}</h4>
             <p className="text-white/50 text-sm leading-relaxed mb-6">{tagline}</p>
@@ -36,8 +36,8 @@ export function PricingCard({ card }: { card: PricingCardData }) {
                 <div className={`text-4xl font-bold tabular-nums ${highlighted ? "text-gold" : "text-white"}`}>
                     {price}
                 </div>
-                <p className="text-white/40 text-sm mt-1">{priceSuffix}</p>
-                <p className="text-white/35 text-xs mt-2 h-4">
+                <p className="text-white/60 text-sm mt-1">{priceSuffix}</p>
+                <p className="text-white/50 text-xs mt-2 h-4">
                     {listPrice && (
                         <>
                             osobno <span className="line-through tabular-nums">{listPrice}</span>
@@ -61,7 +61,7 @@ export function PricingCard({ card }: { card: PricingCardData }) {
                 ))}
             </ul>
 
-            <p className="text-white/30 text-xs mb-5">{delivery}</p>
+            <p className="text-white/50 text-xs mb-5">{delivery}</p>
 
             <Link
                 href={ctaHref}

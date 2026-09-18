@@ -6,7 +6,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { AuditSection } from "@/components/AuditSection";
 
 export const metadata: Metadata = {
-    title: "Audyt strony i grafiki – bezpłatna analiza | WUYO – Rzeszów",
+    title: "Bezpłatny audyt strony i grafiki",
     description:
         "Wklej link do swojej strony, a powiem Ci wprost, co odstrasza klientów i co zmienić. Bezpłatnie, bez owijania w bawełnę, odpowiedź w 24–48 h.",
     openGraph: {
@@ -85,7 +85,7 @@ export default function AudytPage() {
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors text-sm mb-8"
+                        className="inline-flex items-center gap-2 text-white/60 hover:text-gold transition-colors text-sm mb-8"
                     >
                         <ArrowLeft size={14} aria-hidden="true" /> Strona główna
                     </Link>

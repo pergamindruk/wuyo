@@ -7,7 +7,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-    title: "Blog – porady o grafice i stronach WWW | WUYO",
+    title: "Blog: porady o grafice i stronach WWW",
     description: "Praktyczne porady o projektowaniu logo, tworzeniu stron internetowych i identyfikacji wizualnej. Bez lania wody — konkretna wiedza od projektanta z Rzeszowa.",
     openGraph: {
         title: "Blog WUYO – grafika i strony WWW bez ściemy",
@@ -55,11 +55,11 @@ export default function BlogPage() {
                                 <div className="flex items-center gap-3 mb-4 flex-wrap">
                                     <span className="eyebrow text-xs">{post.category}</span>
                                     <span className="text-white/20">·</span>
-                                    <span className="text-white/40 text-xs flex items-center gap-1">
+                                    <span className="text-white/60 text-xs flex items-center gap-1">
                                         <Clock size={12} /> {post.readTime} czytania
                                     </span>
                                     <span className="text-white/20">·</span>
-                                    <span className="text-white/40 text-xs">{new Date(post.date).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}</span>
+                                    <span className="text-white/60 text-xs">{new Date(post.date).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}</span>
                                 </div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-gold transition-colors leading-tight">
                                     {post.title}

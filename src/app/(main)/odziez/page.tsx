@@ -11,7 +11,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Nadruki na Odzieży Rzeszów – koszulki, bluzy od 79 zł",
+    title: "Nadruki na odzieży od 79 zł — Rzeszów",
     description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum — od 1 sztuki za 79 zł, przy 20+ szt. 49 zł/szt. Rzeszów + wysyłka →",
     openGraph: {
         title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
@@ -199,19 +199,19 @@ export default function OdziezPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz logo pod nadruk?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz logo pod nadruk?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 890 zł · 10–14 dni</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł · 10–14 dni</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Potrzebujesz też wizytówek?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też wizytówek?</p>
                                 <Link href="/druk" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk i papeteria →</Link>
-                                <p className="text-white/40 text-xs mt-1">wizytówki od 99 zł</p>
+                                <p className="text-white/60 text-xs mt-1">wizytówki od 99 zł</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Jesteś z Rzeszowa?</p>
                                 <Link href="/druk-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Odbiór osobisty →</Link>
-                                <p className="text-white/40 text-xs mt-1">bez kosztów wysyłki</p>
+                                <p className="text-white/60 text-xs mt-1">bez kosztów wysyłki</p>
                             </div>
                         </div>
                     </AnimatedSection>
@@ -251,7 +251,7 @@ export default function OdziezPage() {
             <section className="pb-4 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/40">
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/60">
                             <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
                                 ★ Opinie na Google Maps
                             </a>

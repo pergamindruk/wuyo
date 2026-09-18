@@ -22,7 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const post = getPost(slug);
         const ogImage = post.image ?? "/og-image.webp";
         return {
-            title: `${post.title} | WUYO`,
+            // Markę dokleja szablon z layoutu — tutaj byłaby drugi raz.
+            title: post.seoTitle ?? post.title,
             description: post.excerpt,
             openGraph: {
                 title: post.title,
@@ -105,16 +106,16 @@ export default async function ArticlePage({ params }: Props) {
                 <div className="max-w-3xl mx-auto">
                     <Link
                         href="/blog"
-                        className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors text-sm mb-8"
+                        className="inline-flex items-center gap-2 text-white/60 hover:text-gold transition-colors text-sm mb-8"
                     >
                         <ArrowLeft size={14} aria-hidden="true" /> Wróć do bloga
                     </Link>
                     <div className="flex items-center gap-3 mb-6">
                         <span className="eyebrow text-xs">{post.category}</span>
                         <span className="text-white/20" aria-hidden="true">·</span>
-                        <span className="text-white/40 text-xs">{post.readTime} czytania</span>
+                        <span className="text-white/60 text-xs">{post.readTime} czytania</span>
                         <span className="text-white/20" aria-hidden="true">·</span>
-                        <time className="text-white/40 text-xs" dateTime={post.date}>
+                        <time className="text-white/60 text-xs" dateTime={post.date}>
                             {new Date(post.date).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}
                         </time>
                     </div>
@@ -133,7 +134,7 @@ export default async function ArticlePage({ params }: Props) {
                                 className="w-full h-auto rounded-2xl border border-white/10"
                             />
                             {post.imageAlt && (
-                                <figcaption className="text-white/40 text-xs mt-3">{post.imageAlt}</figcaption>
+                                <figcaption className="text-white/60 text-xs mt-3">{post.imageAlt}</figcaption>
                             )}
                         </figure>
                     )}
@@ -172,7 +173,7 @@ export default async function ArticlePage({ params }: Props) {
                                     <h3 className="text-base font-bold text-white mt-2 mb-2 leading-snug group-hover:text-gold transition-colors">
                                         {item.title}
                                     </h3>
-                                    <span className="text-white/40 text-xs">{item.readTime} czytania</span>
+                                    <span className="text-white/60 text-xs">{item.readTime} czytania</span>
                                 </Link>
                             ))}
                         </div>
@@ -182,7 +183,7 @@ export default async function ArticlePage({ params }: Props) {
 
             <div className="px-6 pb-20 max-w-3xl mx-auto">
                 <div className="pt-10 border-t border-white/10">
-                    <Link href="/blog" className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors text-sm">
+                    <Link href="/blog" className="inline-flex items-center gap-2 text-white/60 hover:text-gold transition-colors text-sm">
                         <ArrowLeft size={14} aria-hidden="true" /> Więcej artykułów
                     </Link>
                 </div>

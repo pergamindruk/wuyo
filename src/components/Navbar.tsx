@@ -155,8 +155,16 @@ export function Navbar() {
                             Odzież
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
+                        <Link href="/cennik" className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            Cennik
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
                         <Link href="/blog" className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Blog
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <Link href="/o-mnie" className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            O mnie
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
                         <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="relative group transition-colors hover:text-white whitespace-nowrap">
@@ -211,7 +219,9 @@ export function Navbar() {
                             <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
                             <Link href="/druk" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Druk</Link>
                             <Link href="/odziez" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Odzież</Link>
+                            <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                             <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
+                            <Link href="/o-mnie" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</Link>
                             <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
                         </nav>
                         <div className="mt-10 mx-auto">

@@ -157,7 +157,7 @@ export function CookieConsent() {
 
                         <Link
                             href="/polityka-prywatnosci"
-                            className="mt-4 block text-center text-xs text-white/30 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
+                            className="mt-4 block text-center text-xs text-white/50 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
                         >
                             Polityka prywatności
                         </Link>

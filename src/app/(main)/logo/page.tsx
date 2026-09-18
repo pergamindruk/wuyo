@@ -11,7 +11,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Logo dla Firmy od 890 zł | Wycena w 24h | WUYO Rzeszów",
+    title: "Projektowanie logo od 890 zł — Rzeszów",
     description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 890 zł, identyfikacja 1 490 zł. Bezpłatna wycena →",
     openGraph: {
         title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
@@ -400,7 +400,7 @@ export default function LogoPage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
-                                <p className="text-white/40 text-xs mb-1">Z bloga</p>
+                                <p className="text-white/60 text-xs mb-1">Z bloga</p>
                                 <p className="font-bold text-white mb-1">Zanim zapłacisz — przeczytaj</p>
                                 <p className="text-white/50 text-sm">Ile kosztuje logo i jak wybrać projektanta żeby nie żałować.</p>
                             </div>

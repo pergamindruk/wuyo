@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Printer, Scissors, Thermometer, Zap } from "luci
 import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const metadata: Metadata = {
-    title: "O mnie – Mateusz Machoś, grafik i web developer | WUYO",
+    title: "Mateusz Machoś — grafik i web developer",
     description: "Cześć, jestem Mateusz. Projektant graficzny i web developer z Rzeszowa. Działam sam, co znaczy, że rozmawiasz bezpośrednio ze mną — bez agencyjnego ping-ponga.",
     alternates: { canonical: "https://wuyo.pl/o-mnie" },
     keywords: [
@@ -131,7 +131,7 @@ export default function OmniePage() {
 
                 <div className="max-w-6xl mx-auto relative z-10">
                     <AnimatedSection animateOnMount hero>
-                        <Link href="/" className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm font-medium transition-colors mb-8 group">
+                        <Link href="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white/70 text-sm font-medium transition-colors mb-8 group">
                             <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                             Strona główna
                         </Link>
@@ -269,7 +269,7 @@ export default function OmniePage() {
                         ].map((fact, i) => (
                             <AnimatedSection key={i} delay={i * 0.06}>
                                 <div className="glass-card px-6 py-5 flex flex-col gap-1">
-                                    <span className="text-white/35 text-[11px] uppercase tracking-widest font-semibold">{fact.label}</span>
+                                    <span className="text-white/50 text-[11px] uppercase tracking-widest font-semibold">{fact.label}</span>
                                     <span className="text-white font-bold text-base">{fact.value}</span>
                                 </div>
                             </AnimatedSection>
@@ -284,19 +284,19 @@ export default function OmniePage() {
                     <AnimatedSection>
                         <div className="glass-card p-6 grid sm:grid-cols-3 gap-4 text-center">
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Logo i branding</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Logo i branding</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Projektowanie logo →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 890 zł</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Strony internetowe</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Strony internetowe</p>
                                 <Link href="/strony-internetowe-rzeszow" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony dla firm →</Link>
-                                <p className="text-white/40 text-xs mt-1">od 2 490 zł</p>
+                                <p className="text-white/60 text-xs mt-1">od 2 490 zł</p>
                             </div>
                             <div>
-                                <p className="text-white/35 text-xs uppercase tracking-widest mb-2">Druk i wykończenie</p>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Druk i wykończenie</p>
                                 <Link href="/druk" className="font-bold text-white hover:text-gold transition-colors text-sm">Druk własny →</Link>
-                                <p className="text-white/40 text-xs mt-1">wizytówki, naklejki, ulotki</p>
+                                <p className="text-white/60 text-xs mt-1">wizytówki, naklejki, ulotki</p>
                             </div>
                         </div>
                     </AnimatedSection>

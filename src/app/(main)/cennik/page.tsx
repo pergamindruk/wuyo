@@ -23,7 +23,7 @@ const faqSchema = {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Cennik usług graficznych, druku i webowych | WUYO – Rzeszów",
+    title: "Cennik grafiki, druku i stron WWW — Rzeszów",
     description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 2 490 zł. Projekt i druk w jednym miejscu.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
@@ -74,7 +74,7 @@ function PricingCard({
                 ))}
             </div>
             {note && (
-                <p className="px-5 py-3 text-white/40 text-xs border-t border-white/5">{note}</p>
+                <p className="px-5 py-3 text-white/60 text-xs border-t border-white/5">{note}</p>
             )}
         </div>
     );
@@ -94,7 +94,7 @@ export default function PricingPage() {
                     <div className="mb-14">
                         <Link
                             href="/"
-                            className="inline-flex items-center gap-2 text-white/40 hover:text-gold transition-colors mb-6 font-medium text-sm"
+                            className="inline-flex items-center gap-2 text-white/60 hover:text-gold transition-colors mb-6 font-medium text-sm"
                         >
                             <ArrowLeft size={16} /> Wróć na stronę główną
                         </Link>
@@ -159,7 +159,7 @@ export default function PricingPage() {
                 </AnimatedSection>
 
                 <AnimatedSection delay={0.35}>
-                    <p className="text-white/40 text-xs mt-6 max-w-2xl">
+                    <p className="text-white/60 text-xs mt-6 max-w-2xl">
                         Kwoty netto — do faktury dochodzi 23% VAT, który jako firma odliczasz.
                         50% zaliczki przed startem, 50% po zakończeniu. Cena ustalona przed startem
                         to cena końcowa. Więcej wariantów odzieży na{" "}
