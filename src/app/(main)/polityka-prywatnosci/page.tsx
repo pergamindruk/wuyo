@@ -94,6 +94,16 @@ export default function PrivacyPolicyPage() {
                             <li>Podmiotem zamieszczającym na urządzeniu końcowym Użytkownika Serwisu pliki cookies oraz uzyskującym do nich dostęp jest operator Serwisu.</li>
                             <li>Pliki cookies wykorzystywane są w celach statystycznych, poprawnego działania witryny oraz technicznych.</li>
                             <li>Oprogramowanie do przeglądania stron internetowych (przeglądarka internetowa) zazwyczaj domyślnie dopuszcza przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać zmiany ustawień w tym zakresie lub zarządzać nimi bezpośrednio w ustawieniach przeglądarki.</li>
+                            <li>
+                                Serwis korzysta z narzędzi zewnętrznych, które zapisują własne pliki cookies:
+                                <ul className="list-disc pl-5 mt-2 space-y-2">
+                                    <li><strong>Google Analytics 4</strong> (Google Ireland Limited) — statystyka ruchu: liczba odwiedzin, źródła wejść, oglądane podstrony, wysłane formularze i kliknięcia w kontakt. Cookies analityczne.</li>
+                                    <li><strong>Piksel Meta</strong> (Meta Platforms Ireland Limited) — pomiar skuteczności reklam na Facebooku i Instagramie. Cookies marketingowe.</li>
+                                </ul>
+                                Oba narzędzia mogą przekazywać dane do Stanów Zjednoczonych na podstawie decyzji Komisji Europejskiej o odpowiednim stopniu ochrony (EU–US Data Privacy Framework).
+                            </li>
+                            <li>Cookies analityczne i marketingowe uruchamiają się dopiero po wyrażeniu zgody w banerze wyświetlanym przy pierwszej wizycie. Do tego momentu są zablokowane — Serwis korzysta z trybu zgody Google (Consent Mode v2). Cookies niezbędne do działania Serwisu nie wymagają zgody.</li>
+                            <li>Zgodę można w każdej chwili zmienić lub wycofać, klikając <strong>„Ustawienia ciasteczek”</strong> w stopce Serwisu. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania, które odbyło się przed jej wycofaniem.</li>
                         </ol>
                     </AnimatedSection>
 

@@ -5,10 +5,17 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PageTracker } from "@/components/PageTracker";
+import { CookieConsent } from "@/components/CookieConsent";
+import { CONSENT_STORAGE_KEY } from "@/lib/consent";
 import Script from "next/script";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
+
+// Kształt zapisu musi zgadzać się z tym, co zapisuje `saveConsent` w src/lib/consent.ts.
+const consentDefaultScript = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+try{var z=JSON.parse(localStorage.getItem('${CONSENT_STORAGE_KEY}'));if(z&&typeof z==='object'){gtag('consent','update',{analytics_storage:z.analytics?'granted':'denied',ad_storage:z.marketing?'granted':'denied',ad_user_data:z.marketing?'granted':'denied',ad_personalization:z.marketing?'granted':'denied'});}}catch(e){}`;
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
 const syne = Syne({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-syne", display: "swap" });
@@ -161,6 +168,11 @@ export default function RootLayout({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
+                {/* Consent Mode v2. Zwykły <script>, a nie next/script, bo musi wykonać się
+                    przed tagiem Google — inaczej pierwsze zdarzenia poszłyby bez zgody.
+                    Domyślnie wszystko zablokowane; zapisany wybór wracającego odwiedzającego
+                    czytamy z pamięci przeglądarki od razu, w tym samym skrypcie. */}
+                <script dangerouslySetInnerHTML={{ __html: consentDefaultScript }} />
                 {GA_ID && (
                     <>
                         <Script
@@ -175,8 +187,10 @@ export default function RootLayout({
                     </>
                 )}
                 {META_PIXEL_ID && (
+                    /* Piksel nie zna Consent Mode, więc dostaje 'revoke' przed inicjalizacją.
+                       Trzyma zdarzenia w kolejce i wysyła je dopiero po zgodzie na marketing. */
                     <Script id="meta-pixel" strategy="afterInteractive">
-                        {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`}
+                        {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('consent','revoke');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`}
                     </Script>
                 )}
             </head>
@@ -189,6 +203,7 @@ export default function RootLayout({
                     Przejdź do treści
                 </a>
                 {children}
+                <CookieConsent />
                 <PageTracker />
                 <Analytics />
                 <SpeedInsights />

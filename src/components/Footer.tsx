@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Youtube, Instagram, Facebook, MessageCircle, Mail } from "lucide-react";
 import { TrackedLink } from "@/components/TrackedLink";
+import { ConsentSettingsLink } from "@/components/ConsentSettingsLink";
 
 export function Footer() {
     return (
@@ -74,6 +75,7 @@ export function Footer() {
 
                     <div className="flex gap-6">
                         <Link href="/polityka-prywatnosci" className="hover:text-white/60 transition-colors">Polityka prywatności</Link>
+                        <ConsentSettingsLink className="cursor-pointer hover:text-white/60 transition-colors" />
                     </div>
                 </div>
             </div>
