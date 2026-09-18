@@ -20,11 +20,15 @@ try{var z=JSON.parse(localStorage.getItem('${CONSENT_STORAGE_KEY}'));if(z&&typeo
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
 const syne = Syne({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-syne", display: "swap" });
+// preload: false — tym krojem pisane są wielkie ozdobne napisy w tle i liczniki,
+// prawie zawsze poniżej pierwszego ekranu. Nie musi konkurować o łącze z fontem
+// tekstu i nagłówków. Wczytuje się normalnie, tylko bez priorytetu.
 const goldman = Goldman({
     subsets: ["latin"],
     weight: ["700"],
     variable: "--font-ava-meridian",
     display: "swap",
+    preload: false,
 });
 const csHarley = localFont({
     src: [
@@ -184,13 +188,19 @@ export default function RootLayout({
                 <script dangerouslySetInnerHTML={{ __html: consentDefaultScript }} />
                 {GA_ID && (
                     <>
+                        {/* lazyOnload, nie afterInteractive: gtag.js to 172 KB, czyli 22%
+                            wagi całej strony i największy pojedynczy plik, jaki pobiera
+                            przeglądarka. Wczytywany w trakcie ładowania odbierał łącze fontom
+                            i kodowi strony. Teraz startuje po wczytaniu strony.
+                            Cena: wejścia krótsze niż czas do zdarzenia load mogą nie zostać
+                            policzone — przy realnym łączu to ułamek wizyt. */}
                         <Script
                             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-                            strategy="afterInteractive"
+                            strategy="lazyOnload"
                         />
                         {/* traffic_type: wejścia z podglądów Vercela i localhosta oznaczamy jako
                             ruch wewnętrzny, żeby filtr w GA4 mógł je wyciąć z raportów. */}
-                        <Script id="ga4-init" strategy="afterInteractive">
+                        <Script id="ga4-init" strategy="lazyOnload">
                             {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}',{traffic_type:location.hostname==='wuyo.pl'?'external':'internal'});`}
                         </Script>
                     </>
