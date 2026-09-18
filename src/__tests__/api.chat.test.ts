@@ -18,8 +18,10 @@ vi.mock("next/server", async (importOriginal) => ({
     after: mockAfter,
 }));
 
-vi.mock("@/lib/supabase/server", () => ({
-    createClient: vi.fn().mockResolvedValue({ from: mockFrom }),
+// Trasy publiczne zapisują leady kluczem serwisowym, nie klientem z ciasteczek —
+// tabela `leads` ma RLS i anon nie ma do niej żadnej polityki.
+vi.mock("@/lib/supabase/admin", () => ({
+    createAdminClient: vi.fn().mockReturnValue({ from: mockFrom }),
 }));
 
 vi.mock("@/lib/rate-limit", () => ({

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
 
@@ -163,7 +163,7 @@ function buildAutoReply(d: BriefData): string {
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     if (!(await rateLimit(supabase, `brief:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs))) {
         return NextResponse.json({ error: "Za dużo zapytań. Spróbuj za chwilę." }, { status: 429, headers: { 'Retry-After': '60' } })

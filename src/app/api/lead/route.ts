@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { sendEmail, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { escapeHtml, isValidEmail, normalizeEmail } from "@/lib/sanitize";
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     if (!(await rateLimit(supabase, `lead:${ip}`, LIMITS.lead.limit, LIMITS.lead.windowMs))) {
         return NextResponse.json({ error: "Za dużo zapytań." }, { status: 429, headers: { 'Retry-After': '60' } })
