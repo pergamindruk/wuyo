@@ -67,7 +67,10 @@ const nextConfig = {
                             "style-src 'self' 'unsafe-inline'",
                             "font-src 'self'",
                             "img-src 'self' data: blob: https:",
-                            "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.facebook.com https://generativelanguage.googleapis.com https://connect.mailerlite.com https://graph.facebook.com https://api.instagram.com https://*.supabase.co https://vercel.com",
+                            // api.pwnedpasswords.com — sprawdzanie, czy nowe hasło do /lab
+                            // nie jest w bazach wycieków. Leci tam tylko pięć pierwszych
+                            // znaków skrótu SHA-1, nigdy samo hasło.
+                            "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.facebook.com https://generativelanguage.googleapis.com https://connect.mailerlite.com https://graph.facebook.com https://api.instagram.com https://*.supabase.co https://vercel.com https://api.pwnedpasswords.com",
                             "frame-src 'self' https://www.google.com",
                         ].join("; "),
                     },

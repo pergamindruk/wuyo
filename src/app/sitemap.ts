@@ -94,12 +94,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "weekly",
             priority: 0.8,
         },
-        {
-            url: `${baseUrl}/audyt`,
-            lastModified: new Date(),
-            changeFrequency: "monthly" as const,
-            priority: 0.7,
-        },
+        // /audyt świadomie poza mapą strony: link w stopce na każdej podstronie
+        // dał 2 odsłony i jedno zgłoszenie przez pół roku. Strona nadal działa
+        // pod swoim adresem, ale nie zgłaszamy jej już Google jako wartej uwagi.
         {
             url: `${baseUrl}/polityka-prywatnosci`,
             lastModified: new Date(),

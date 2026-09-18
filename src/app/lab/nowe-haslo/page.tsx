@@ -22,12 +22,52 @@ function bledyHasla(haslo: string): string[] {
     return bledy
 }
 
+/**
+ * Sprawdza hasło w bazie wykradzionych haseł HaveIBeenPwned.
+ *
+ * To samo, co robi płatna opcja „Prevent use of leaked passwords" w Supabase —
+ * ona też pyta HaveIBeenPwned, tylko jest dostępna od planu Pro. API jest
+ * publiczne i bezpłatne, więc pytamy sami.
+ *
+ * Hasło NIE opuszcza przeglądarki. Liczymy z niego skrót SHA-1 i wysyłamy
+ * pierwsze pięć znaków tego skrótu. Serwer odsyła wszystkie znane końcówki
+ * pasujące do tego prefiksu (kilkaset), a dopasowanie robimy już u siebie.
+ *
+ * Zwraca liczbę wyciekow albo 0. `null` = nie udało się sprawdzić.
+ */
+async function ileWyciekow(haslo: string): Promise<number | null> {
+    try {
+        const bajty = new TextEncoder().encode(haslo)
+        const skrot = await crypto.subtle.digest('SHA-1', bajty)
+        const hex = Array.from(new Uint8Array(skrot))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('')
+            .toUpperCase()
+
+        const odpowiedz = await fetch(`https://api.pwnedpasswords.com/range/${hex.slice(0, 5)}`)
+        if (!odpowiedz.ok) return null
+
+        const koncowka = hex.slice(5)
+        for (const linia of (await odpowiedz.text()).split('\n')) {
+            const [sufiks, ile] = linia.trim().split(':')
+            if (sufiks === koncowka) return Number(ile) || 1
+        }
+        return 0
+    } catch {
+        // Brak sieci albo API nie odpowiada. Nie blokujemy ustawienia hasła —
+        // zamknięcie jedynego konta administratora przez awarię cudzego serwera
+        // byłoby gorsze niż brak tego jednego sprawdzenia.
+        return null
+    }
+}
+
 export default function NoweHasloPage() {
     const router = useRouter()
     const [haslo, setHaslo] = useState('')
     const [powtorzone, setPowtorzone] = useState('')
     const [blad, setBlad] = useState<string | null>(null)
     const [zapisuje, setZapisuje] = useState(false)
+    const [status, setStatus] = useState<string | null>(null)
 
     const brakujace = bledyHasla(haslo)
     const zgodne = haslo.length > 0 && haslo === powtorzone
@@ -39,12 +79,25 @@ export default function NoweHasloPage() {
 
         setZapisuje(true)
         setBlad(null)
+        setStatus('Sprawdzam, czy hasło nie wyciekło…')
 
+        const wycieki = await ileWyciekow(haslo)
+        if (wycieki && wycieki > 0) {
+            setBlad(
+                `To hasło jest w bazach wykradzionych haseł — znalezione ${wycieki.toLocaleString('pl-PL')} razy. Wybierz inne.`
+            )
+            setStatus(null)
+            setZapisuje(false)
+            return
+        }
+
+        setStatus('Zapisuję hasło…')
         const supabase = createClient()
         const { error } = await supabase.auth.updateUser({ password: haslo })
 
         if (error) {
             setBlad(error.message)
+            setStatus(null)
             setZapisuje(false)
             return
         }
@@ -113,7 +166,7 @@ export default function NoweHasloPage() {
                         disabled={!mozeZapisac}
                         className="bg-yellow-400 text-zinc-950 font-bold rounded-lg px-4 py-2.5 transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                        {zapisuje ? 'Zapisuję…' : 'Ustaw hasło i wejdź'}
+                        {zapisuje ? (status ?? 'Zapisuję…') : 'Ustaw hasło i wejdź'}
                     </button>
                 </form>
             </div>
