@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 
 // Orby ładowane tylko po hydracji, żeby nie blokować TBT
@@ -41,14 +41,42 @@ export function HeroAmbientOrbs() {
 }
 
 export function HeroBackgroundText() {
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 600], [0, -70]);
-    const opacity = useTransform(scrollY, [0, 350], [1, 0]);
+    const ref = useRef<HTMLDivElement>(null);
+
+    // Wielkie „WUYO" w tle odjeżdża i znika przy przewijaniu. Wcześniej liczyła
+    // to biblioteka animacji; teraz jeden nasłuch przewijania wpisuje wartości
+    // do zmiennych CSS, a rysuje przeglądarka. Pomiar raz na klatkę, żeby nie
+    // liczyć przy każdym zdarzeniu przewijania.
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        let zaplanowane = false;
+
+        const przelicz = () => {
+            zaplanowane = false;
+            const przewiniete = window.scrollY;
+            const przesuniecie = -70 * Math.min(przewiniete / 600, 1);
+            const krycie = 1 - Math.min(przewiniete / 350, 1);
+            element.style.setProperty("--przesun", `${przesuniecie.toFixed(1)}px`);
+            element.style.setProperty("--krycie", krycie.toFixed(3));
+        };
+
+        const naPrzewijanie = () => {
+            if (zaplanowane) return;
+            zaplanowane = true;
+            requestAnimationFrame(przelicz);
+        };
+
+        przelicz();
+        window.addEventListener("scroll", naPrzewijanie, { passive: true });
+        return () => window.removeEventListener("scroll", naPrzewijanie);
+    }, []);
 
     return (
-        <motion.div
-            style={{ y, opacity }}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+        <div
+            ref={ref}
+            className="napis-w-tle absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
             aria-hidden
         >
             <span
@@ -57,7 +85,7 @@ export function HeroBackgroundText() {
             >
                 WUYO
             </span>
-        </motion.div>
+        </div>
     );
 }
 

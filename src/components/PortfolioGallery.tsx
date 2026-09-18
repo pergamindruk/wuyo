@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMountTransition } from "@/lib/useMountTransition";
+import { Odslona } from "@/components/Odslona";
 import { X, ExternalLink, Maximize2 } from "lucide-react";
 import { TABS, projects, type Project } from "@/lib/projects";
 
@@ -16,6 +17,8 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
     const tabsContainerRef = useRef<HTMLDivElement>(null);
     const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+    const { wDrzewie: panelWDrzewie, aktywny: panelAktywny } = useMountTransition(selectedProject !== null, 300);
+    const { wDrzewie: podgladWDrzewie, aktywny: podgladAktywny } = useMountTransition(fullscreenSrc !== null, 220);
 
     const filteredProjects = projects.filter(p =>
         activeTab === "Wszystkie" ? true : p.category === activeTab
@@ -93,17 +96,14 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
 
                     {/* Animated project count */}
                     <div className="flex flex-col items-start md:items-end gap-0.5 shrink-0">
-                        <motion.span
+                        <span
                             key={filteredProjects.length}
-                            initial={{ y: 8, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.3 }}
-                            className="text-5xl font-black leading-none"
+                            className="panel-briefu text-5xl font-black leading-none"
                             style={{ color: "rgba(255,235,82,0.2)", fontFamily: "var(--font-ava-meridian)" }}
                             aria-hidden
                         >
                             {String(filteredProjects.length).padStart(2, "0")}
-                        </motion.span>
+                        </span>
                         <span className="text-white/50 text-xs uppercase tracking-widest">projektów</span>
                     </div>
                 </div>
@@ -126,10 +126,11 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                             </button>
                         ))}
                         {/* Sliding gold indicator */}
-                        <motion.div
-                            className="absolute bottom-0 h-[2px] bg-gold pointer-events-none"
-                            animate={indicator}
-                            transition={{ type: "spring", stiffness: 400, damping: 36 }}
+                        {/* Pozycja mierzona w JS (zakładki mają różną szerokość),
+                            ale sam przejazd robi już CSS. */}
+                        <div
+                            className="pasek-kategorii absolute bottom-0 h-[2px] bg-gold pointer-events-none"
+                            style={{ left: indicator.left, width: indicator.width }}
                         />
                     </div>
                 </div>
@@ -139,19 +140,18 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                     key={activeTab}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 >
-                    <AnimatePresence>
-                        {visibleProjects.map((project, index) => (
-                            <motion.div
-                                key={project.id}
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.35, delay: Math.min(index, 8) * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                whileHover={{ scale: 1.6, zIndex: 30 }}
-                                onClick={() => openPanel(project)}
-                                className="group relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
-                                style={{ height: "280px", zIndex: 1 }}
-                            >
+                    {visibleProjects.map((project, index) => (
+                        <Odslona
+                            key={project.id}
+                            className="kafel-galerii group relative overflow-hidden rounded-2xl cursor-pointer bg-white/[0.03]"
+                            kierunek="brak"
+                            margines="0px"
+                            onClick={() => openPanel(project)}
+                            // Opóźnienie jako zmienna CSS, a nie transition-delay w stylu —
+                            // inaczej styl przy elemencie wygrywałby z regułą :hover
+                            // i powiększenie kafla też startowałoby z opóźnieniem.
+                            style={{ height: "280px", "--opoznienie": `${Math.min(index, 8) * 0.05}s` } as React.CSSProperties}
+                        >
                                 {/* Image */}
                                 <Image
                                     src={project.image}
@@ -191,9 +191,8 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                     {/* Gold line */}
                                     <div className="h-[2px] bg-gold mt-3 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-400 ease-out" />
                                 </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
+                        </Odslona>
+                    ))}
                 </div>
 
                 {/* Load more */}
@@ -210,29 +209,20 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
             </div>
 
             {/* ── Side drawer panel ────────────────────────────────── */}
-            <AnimatePresence>
-                {selectedProject && (
-                    <>
-                        {/* Backdrop */}
-                        <motion.div
-                            key="backdrop"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            onClick={closePanel}
-                            className="fixed inset-0 bg-navy-dark/80 backdrop-blur-md z-40"
-                        />
+            {panelWDrzewie && selectedProject && (
+                <>
+                    {/* Backdrop */}
+                    <div
+                        data-widoczny={panelAktywny ? "tak" : undefined}
+                        onClick={closePanel}
+                        className="kurtyna-koszyka fixed inset-0 bg-navy-dark/80 backdrop-blur-md z-40"
+                    />
 
-                        {/* Panel */}
-                        <motion.aside
-                            key="drawer"
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
-                            transition={{ type: "spring", stiffness: 280, damping: 32 }}
-                            className="fixed right-0 top-0 bottom-0 w-full sm:w-[460px] bg-[#1e1d19] z-50 flex flex-col shadow-2xl border-l border-white/5 overflow-hidden"
-                        >
+                    {/* Panel */}
+                    <aside
+                        data-widoczny={panelAktywny ? "tak" : undefined}
+                        className="szuflada-koszyka fixed right-0 top-0 bottom-0 w-full sm:w-[460px] bg-[#1e1d19] z-50 flex flex-col shadow-2xl border-l border-white/5 overflow-hidden"
+                    >
                             {/* Close */}
                             <button
                                 onClick={closePanel}
@@ -335,23 +325,17 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                     </a>
                                 )}
                             </div>
-                        </motion.aside>
-                    </>
-                )}
-            </AnimatePresence>
+                    </aside>
+                </>
+            )}
 
             {/* ── Fullscreen image overlay ─────────────────────── */}
-            <AnimatePresence>
-                {fullscreenSrc && (
-                    <motion.div
-                        key="fullscreen"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        onClick={() => setFullscreenSrc(null)}
-                        className="fixed inset-0 z-[70] bg-black/97 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
-                    >
+            {podgladWDrzewie && fullscreenSrc && (
+                <div
+                    data-widoczny={podgladAktywny ? "tak" : undefined}
+                    onClick={() => setFullscreenSrc(null)}
+                    className="kurtyna-podgladu fixed inset-0 z-[70] bg-black/97 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
+                >
                         <button
                             onClick={(e) => { e.stopPropagation(); setFullscreenSrc(null); }}
                             className="fixed top-5 right-5 z-[75] w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
@@ -360,14 +344,11 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                             <X size={16} />
                         </button>
 
-                        <motion.div
-                            initial={{ scale: 0.93 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0.93 }}
-                            transition={{ duration: 0.22, ease: "easeOut" }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="cursor-default"
-                        >
+                    <div
+                        data-widoczny={podgladAktywny ? "tak" : undefined}
+                        onClick={(e) => e.stopPropagation()}
+                        className="obraz-podgladu cursor-default"
+                    >
                             <Image
                                 src={fullscreenSrc}
                                 alt="Pełna rozdzielczość"
@@ -375,14 +356,13 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                 height={1440}
                                 className="max-w-[92vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
                             />
-                        </motion.div>
+                    </div>
 
                         <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-[0.2em] uppercase select-none">
                             ESC lub klik aby zamknąć
                         </p>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                </div>
+            )}
         </section>
     );
 }

@@ -629,11 +629,13 @@ body {
 }
 
 /* Przycisk „wróć na górę". Wcześniej sprężyna z framer-motion (stiffness 200,
-   damping 20) — krzywa poniżej ma to samo delikatne przeskoczenie celu. */
+   damping 20) — to współczynnik tłumienia 0,707, czyli przeskok celu rzędu
+   4–5%. Krzywa poniżej odwzorowuje właśnie tyle; popularne „back-out"
+   (1.56) przeskakuje dwa razy mocniej i wygląda jak odbijająca się piłka. */
 .wskocz-na-gore {
   opacity: 0;
   transform: scale(0.5) translateY(20px);
-  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1.2, 0.36, 1),
     box-shadow 0.2s ease;
 }
 
@@ -857,5 +859,87 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ── Galeria realizacji ─────────────────────────────────────────── */
+
+/* Pasek pod aktywną kategorią. Pozycję i szerokość mierzy JavaScript
+   (zakładki są różnej długości), przejazd robi już przeglądarka. */
+.pasek-kategorii {
+  transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Kafelek: wjazd przy przewijaniu i powiększenie pod kursorem muszą dzielić
+   jedną właściwość `transform`, więc obie wartości idą przez zmienne CSS. */
+.kafel-galerii {
+  --wjazd: 24px;
+  --skala: 1;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(var(--wjazd)) scale(var(--skala));
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: var(--opoznienie, 0s);
+}
+
+.kafel-galerii.odslon-gotowe {
+  --wjazd: 0px;
+  opacity: 1;
+}
+
+.kafel-galerii.odslon-gotowe:hover {
+  --skala: 1.6;
+  z-index: 30;
+  /* bez zerowania odziedziczyłby opóźnienie z układania kafelków */
+  transition-delay: 0s;
+  transition-duration: 0.3s;
+}
+
+/* Podgląd pełnoekranowy. */
+.kurtyna-podgladu {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.kurtyna-podgladu[data-widoczny="tak"] {
+  opacity: 1;
+}
+
+.obraz-podgladu {
+  transform: scale(0.93);
+  transition: transform 0.22s ease-out;
+}
+
+.obraz-podgladu[data-widoczny="tak"] {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pasek-kategorii,
+  .kurtyna-podgladu,
+  .obraz-podgladu {
+    transition-duration: 0.01ms;
+  }
+
+  .kafel-galerii {
+    --wjazd: 0px;
+    opacity: 1;
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Ozdobny napis w tle hero — wartości podaje nasłuch przewijania
+   w HeroClientEffects, ruch rysuje przeglądarka. */
+.napis-w-tle {
+  transform: translateY(var(--przesun, 0px));
+  opacity: var(--krycie, 1);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .napis-w-tle {
+    transform: none;
   }
 }
