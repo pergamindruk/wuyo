@@ -167,6 +167,12 @@ export default function RootLayout({
     return (
         <html lang="pl" className="scroll-smooth" style={{ backgroundColor: "#1c1b17" }}>
             <head>
+                {/* Nawiązanie połączenia z serwerem zbierającym zdarzenia GA4 zajmowało
+                    324 ms w krytycznej ścieżce. Przeglądarka robi to teraz z wyprzedzeniem.
+                    Świadomie BEZ connect.facebook.net — Piksel wczytuje się dopiero po
+                    zgodzie i preconnect łączyłby się z Facebookiem u każdego, kto jej nie da. */}
+                <link rel="preconnect" href="https://region1.google-analytics.com" />
+                <link rel="preconnect" href="https://www.googletagmanager.com" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

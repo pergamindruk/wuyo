@@ -197,17 +197,17 @@ export function Navbar() {
 
                 {/* Lewa strona - Wielkie Logo (wystające za Header) */}
                 <div className="flex-1 flex items-center justify-start">
-                    <motion.a
+                    {/* Zwykły <a> z animacją w CSS, nie motion.a. Framer Motion startował
+                        logo z opacity:0, a to jest element LCP strony — nic się nie pokazywało,
+                        dopóki nie ruszył JavaScript. Ten sam zabieg co przy hero. */}
+                    <a
                         href="/"
                         onClick={handleHomeClick}
                         aria-label="Wuyo – Dobra Grafa, strona główna"
-                        className={`absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
+                        className={`logo-in absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
                             ? "top-3 md:top-4 h-14 w-14 md:h-14 md:w-14"
                             : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem]"
                             }`}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     >
                         {scrolled ? (
                             <Image
@@ -227,7 +227,7 @@ export function Navbar() {
                                 priority
                             />
                         )}
-                    </motion.a>
+                    </a>
                 </div>
 
                 {/* Środek - Nawigacja (tylko desktop) */}
