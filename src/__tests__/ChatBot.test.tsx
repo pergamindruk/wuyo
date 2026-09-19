@@ -14,7 +14,7 @@ describe("ChatBot", () => {
 
     it("TC-1 renderuje przycisk triggera 'Porozmawiajmy' przy zamkniętym oknie", () => {
         render(<ChatBot />);
-        expect(screen.getByRole("button", { name: /Otwórz chat/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /Porozmawiajmy/i })).toBeInTheDocument();
         expect(screen.queryByRole("log")).not.toBeInTheDocument();
     });
 
@@ -22,7 +22,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
 
         expect(await screen.findByRole("log")).toBeInTheDocument();
         expect(
@@ -37,7 +37,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
         await screen.findByRole("log");
 
         const input = screen.getByRole("textbox", { name: /Wpisz wiadomość/i });
@@ -66,7 +66,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
         await screen.findByRole("log");
 
         const input = screen.getByRole("textbox", { name: /Wpisz wiadomość/i });
@@ -82,7 +82,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
         await screen.findByRole("log");
 
         const input = screen.getByRole("textbox", { name: /Wpisz wiadomość/i });
@@ -96,7 +96,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
         expect(screen.getByRole("log")).toBeInTheDocument();
 
         await user.click(screen.getByRole("button", { name: /Zamknij okno czatu/i }));
@@ -110,7 +110,7 @@ describe("ChatBot", () => {
         render(<ChatBot />);
         const user = userEvent.setup();
 
-        await user.click(screen.getByRole("button", { name: /Otwórz chat/i }));
+        await user.click(screen.getByRole("button", { name: /Porozmawiajmy/i }));
         await screen.findByRole("log");
 
         const sendBtn = screen.getByRole("button", { name: /Wyślij wiadomość/i });

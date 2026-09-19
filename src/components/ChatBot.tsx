@@ -315,14 +315,18 @@ export default function ChatBot() {
                     repeat: Infinity,
                     ease: "easeInOut"
                 } : {}}
-                // Nazwa musi zawierać widoczny napis na przycisku („Porozmawiajmy"),
-                // inaczej ktoś sterujący głosem nie ma jak go wywołać.
-                aria-label={isOpen ? "Zamknij czat" : "Porozmawiajmy — otwórz czat"}
+                // Po zamknięciu nazwą przycisku jest jego widoczny napis
+                // („Porozmawiajmy · Jestem online") — własna etykieta musiałaby go
+                // zawierać co do słowa, inaczej ktoś sterujący głosem nie ma jak
+                // przycisku wywołać. Po otwarciu widać tylko „Zamknij", więc
+                // dopowiadamy czego dotyczy.
+                aria-label={isOpen ? "Zamknij czat" : undefined}
                 aria-expanded={isOpen}
             >
                 <div className="relative">
                     <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-800">
-                        <Image src="/Profilowe_wuyo.webp" alt="Chat" width={48} height={48} className="w-full h-full object-cover" />
+                        {/* alt="" — zdjęcie stoi obok napisu, który już nazywa przycisk */}
+                        <Image src="/Profilowe_wuyo.webp" alt="" width={48} height={48} className="w-full h-full object-cover" />
                     </div>
                     <span className="absolute bottom-0 right-0 border-2 border-[#1a1a1a] w-3.5 h-3.5 rounded-full bg-green-500"></span>
                 </div>
