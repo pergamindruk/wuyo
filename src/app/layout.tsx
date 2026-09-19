@@ -38,7 +38,6 @@ const syne = localFont({
     variable: "--font-syne",
     weight: "600 800",
     display: "swap",
-    preload: false,
     adjustFontFallback: "Arial",
 });
 // preload: false — tym krojem pisane są wielkie ozdobne napisy w tle i liczniki,
