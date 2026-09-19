@@ -29,11 +29,16 @@ const inter = localFont({
     display: "swap",
     adjustFontFallback: "Arial",
 });
+// preload: false — Syne to nagłówki sekcji. W hero nie rysuje ani jednej litery
+// (cały napis to CS Harley), a pierwszy nagłówek Syne jest pod pierwszym ekranem.
+// Preload dawał mu priorytet arkusza stylów, który blokuje pierwsze malowanie,
+// i podbierał mu łącze. Wczytuje się normalnie, tylko bez pierwszeństwa.
 const syne = localFont({
     src: "../../public/fonts/syne-subset.woff2",
     variable: "--font-syne",
     weight: "600 800",
     display: "swap",
+    preload: false,
     adjustFontFallback: "Arial",
 });
 // preload: false — tym krojem pisane są wielkie ozdobne napisy w tle i liczniki,

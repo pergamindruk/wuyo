@@ -7,7 +7,18 @@ import { Odslona } from "@/components/Odslona";
 import { X, ExternalLink, Maximize2 } from "lucide-react";
 import { TABS, projects, type Project } from "@/lib/projects";
 
-export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { initialVisible?: number; hideHeader?: boolean }) {
+export function PortfolioGallery({
+    initialVisible = 9,
+    hideHeader = false,
+    // Na stronie głównej galeria leży daleko pod ekranem, więc jej zdjęcia nie
+    // mogą jechać jako pilne — zabierały łącze arkuszowi stylów, który blokuje
+    // pierwsze malowanie. Pilne są tylko tam, gdzie galeria JEST treścią strony.
+    naPierwszymEkranie = false,
+}: {
+    initialVisible?: number;
+    hideHeader?: boolean;
+    naPierwszymEkranie?: boolean;
+}) {
     const [activeTab, setActiveTab] = useState("Wszystkie");
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -158,7 +169,7 @@ export function PortfolioGallery({ initialVisible = 9, hideHeader = false }: { i
                                     alt={project.title}
                                     fill
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    priority={index < 3}
+                                    priority={naPierwszymEkranie && index < 3}
                                     className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                                     style={project.cardObjectPosition ? { objectPosition: project.cardObjectPosition } : undefined}
                                 />
