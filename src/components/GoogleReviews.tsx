@@ -7,7 +7,14 @@ import { odmienOpinie } from "@/lib/polish-format";
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
     return (
-        <span className="inline-flex items-center gap-0.5" aria-label={`Ocena ${rating} na 5`}>
+        <span
+            // role="img" — bez roli <span> jest „generyczny", a na takim ARIA
+            // zabrania aria-label i przeglądarka go ignoruje. Z tą rolą czytnik
+            // czyta całą grupkę gwiazdek jako jedną wartość.
+            role="img"
+            className="inline-flex items-center gap-0.5"
+            aria-label={`Ocena ${rating} na 5`}
+        >
             {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                     key={i}

@@ -315,7 +315,9 @@ export default function ChatBot() {
                     repeat: Infinity,
                     ease: "easeInOut"
                 } : {}}
-                aria-label={isOpen ? "Zamknij chat" : "Otwórz chat"}
+                // Nazwa musi zawierać widoczny napis na przycisku („Porozmawiajmy"),
+                // inaczej ktoś sterujący głosem nie ma jak go wywołać.
+                aria-label={isOpen ? "Zamknij czat" : "Porozmawiajmy — otwórz czat"}
                 aria-expanded={isOpen}
             >
                 <div className="relative">

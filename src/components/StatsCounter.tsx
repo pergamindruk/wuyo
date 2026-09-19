@@ -65,8 +65,10 @@ function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatPr
             ref={ref}
             className="relative inline-block stat-number"
             data-phase={phase}
-            // aria-label podaje wartość końcową, żeby czytnik ekranu nie recytował
-            // każdej klatki odliczania.
+            // role="img" — na zwykłym <span> ARIA zabrania aria-label i etykieta
+            // jest ignorowana. Z rolą czytnik podaje wartość końcową i nie
+            // recytuje każdej klatki odliczania.
+            role="img"
             aria-label={`${format(target, decimals)}${suffix}`}
         >
             {/* Niewidoczna wartość końcowa rezerwuje szerokość. Bez niej licznik

@@ -35,8 +35,11 @@ export function HeroText() {
             <span
                 className="hero-word block font-cs-harley font-bold"
                 style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}
-                aria-label="WRAŻENIE"
             >
+                {/* aria-label na zwykłym <span> jest przez ARIA zabroniony i tak czy tak
+                    ignorowany. Zamiast niego prawdziwy tekst — czytniki ekranu i roboty
+                    dostają słowo, a obok jedzie wersja rysowana z kropką nad Z. */}
+                <span className="sr-only">WRAŻENIE</span>
                 <span aria-hidden="true" className="silver-flow">WRA<ZWithDot color="#e4e7ea" />ENIE</span>
             </span>
             <span
