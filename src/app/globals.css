@@ -974,4 +974,11 @@ body {
 .tor-opinii {
   padding-inline: var(--margines-toru);
   scroll-padding-inline: var(--margines-toru);
+  /* Kafelki unoszą się pod kursorem o 4 px i rzucają cień w dół. `overflow-x`
+     obcina jednak także w pionie — przeglądarka nie pozwala przewijać w poziomie
+     i zarazem wypuszczać czegokolwiek poza górną i dolną krawędź. Dlatego dajemy
+     im zapas w środku toru i odejmujemy go marginesem, żeby układ strony
+     został tam, gdzie był. */
+  padding-block: 1rem 2.5rem;
+  margin-block: -1rem -2.5rem;
 }

@@ -53,7 +53,7 @@ export function ReviewsTrack({ children }: { children: ReactNode }) {
                 tabIndex={0}
                 role="region"
                 aria-label="Opinie klientów, przewijane w poziomie"
-                className="tor-opinii hide-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold/60 rounded-2xl"
+                className="tor-opinii hide-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold/60 rounded-2xl"
             >
                 {children}
             </div>
