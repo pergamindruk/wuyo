@@ -953,3 +953,25 @@ body {
   color: rgba(255, 235, 82, 0.4);
   font-family: var(--font-ava-meridian);
 }
+
+/* Tor opinii — przewija się przez całą szerokość okna, ale pierwsza karta
+   zaczyna się dokładnie pod nagłówkiem sekcji, a nie przy krawędzi ekranu.
+   64rem to szerokość kontenera treści (max-w-5xl), a 1,5/3rem to jego
+   wewnętrzny margines (px-6 / md:px-12) — bez tego drugiego składnika karty
+   wychodziły o te kilkadziesiąt pikseli za daleko w lewo. */
+.tor-opinii,
+.tor-opinii + div {
+  --margines-toru: max(1.5rem, calc((100vw - 64rem) / 2 + 1.5rem));
+}
+
+@media (min-width: 768px) {
+  .tor-opinii,
+  .tor-opinii + div {
+    --margines-toru: max(3rem, calc((100vw - 64rem) / 2 + 3rem));
+  }
+}
+
+.tor-opinii {
+  padding-inline: var(--margines-toru);
+  scroll-padding-inline: var(--margines-toru);
+}

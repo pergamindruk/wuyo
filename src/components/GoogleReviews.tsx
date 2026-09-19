@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Star, ExternalLink } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { ReviewsTrack } from "@/components/ReviewsTrack";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
 import { odmienOpinie } from "@/lib/polish-format";
 
@@ -53,16 +54,12 @@ function Avatar({ src, name }: { src?: string; name: string }) {
  */
 export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
     const { rating, total, reviews, mapsUrl, writeReviewUrl } = data;
-    // Przy nieparzystej liczbie opinii ostatnia karta zostaje sama w rzędzie.
-    // Rozciągamy ją na obie kolumny i wyśrodkowujemy przy szerokości pozostałych,
-    // żeby nie wisiała przyklejona do lewej krawędzi.
-    const osieroconaOstatnia = reviews.length % 2 === 1;
 
     return (
-        <section className="py-28 px-6 md:px-12 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden">
             <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-            <div className="max-w-5xl mx-auto relative z-10">
+            <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
                 <AnimatedSection className="mb-12">
                     <p className="eyebrow mb-3">Efekty mówią same za siebie</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">Co mówią klienci</h2>
@@ -90,39 +87,38 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                         )}
                     </div>
                 </AnimatedSection>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Tor jedzie przez całą szerokość okna — przy siedmiu opiniach siatka
+                dwukolumnowa rozpychała stronę na cztery rzędy w pionie. */}
+            <div className="relative z-10">
+                <ReviewsTrack>
                     {reviews.map((review, i) => (
-                        <AnimatedSection
+                        <figure
                             key={`${review.author}-${i}`}
-                            delay={i * 0.08}
-                            className={
-                                osieroconaOstatnia && i === reviews.length - 1
-                                    ? "md:col-span-2 md:w-[calc(50%-0.5rem)] md:mx-auto"
-                                    : undefined
-                            }
+                            className="glass-card p-6 flex flex-col gap-4 shrink-0 snap-start w-[19rem] sm:w-[21rem] lg:w-[23rem]"
                         >
-                            <figure className="glass-card p-6 h-full flex flex-col gap-4">
-                                <Stars rating={review.rating} />
+                            <Stars rating={review.rating} />
 
-                                <blockquote className="text-white/75 leading-relaxed text-sm flex-1">
-                                    &ldquo;{review.text}&rdquo;
-                                </blockquote>
+                            <blockquote className="text-white/75 leading-relaxed text-sm flex-1">
+                                &ldquo;{review.text}&rdquo;
+                            </blockquote>
 
-                                <figcaption className="flex items-center gap-3 pt-3 border-t border-white/10">
-                                    <Avatar src={review.authorPhotoUrl} name={review.author} />
-                                    <span className="min-w-0">
-                                        <span className="block text-white font-bold text-sm truncate">
-                                            {review.author}
-                                        </span>
-                                        <span className="block text-white/60 text-xs">Opinia w Google</span>
+                            <figcaption className="flex items-center gap-3 pt-3 border-t border-white/10">
+                                <Avatar src={review.authorPhotoUrl} name={review.author} />
+                                <span className="min-w-0">
+                                    <span className="block text-white font-bold text-sm truncate">
+                                        {review.author}
                                     </span>
-                                </figcaption>
-                            </figure>
-                        </AnimatedSection>
+                                    <span className="block text-white/60 text-xs">Opinia w Google</span>
+                                </span>
+                            </figcaption>
+                        </figure>
                     ))}
-                </div>
+                </ReviewsTrack>
+            </div>
 
+            <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
                 <AnimatedSection className="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-gold/25 bg-navy-light/40 backdrop-blur-sm px-8 py-8 shadow-[0_0_40px_rgba(255,235,82,0.06)]">
                     <p className="text-center md:text-left">
                         <span className="eyebrow block mb-2">Pracowaliśmy razem?</span>
