@@ -109,8 +109,7 @@ export function PortfolioGallery({
                     <div className="flex flex-col items-start md:items-end gap-0.5 shrink-0">
                         <span
                             key={filteredProjects.length}
-                            className="panel-briefu text-5xl font-black leading-none"
-                            style={{ color: "rgba(255,235,82,0.2)", fontFamily: "var(--font-ava-meridian)" }}
+                            className="numer-ozdobny panel-briefu text-5xl font-black leading-none"
                             aria-hidden
                         >
                             {String(filteredProjects.length).padStart(2, "0")}
@@ -289,8 +288,7 @@ export function PortfolioGallery({
                                 {/* Number + category + year */}
                                 <div className="flex items-start gap-4 mb-6">
                                     <span
-                                        className="text-5xl font-black leading-none shrink-0"
-                                        style={{ color: "rgba(255,235,82,0.22)", fontFamily: "var(--font-ava-meridian)" }}
+                                        className="numer-ozdobny text-5xl font-black leading-none shrink-0"
                                         aria-hidden
                                     >
                                         {String(projects.findIndex(p => p.id === selectedProject.id) + 1).padStart(2, "0")}

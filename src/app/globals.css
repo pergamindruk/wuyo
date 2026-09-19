@@ -943,3 +943,13 @@ body {
     transform: none;
   }
 }
+
+/* Wielkie numery porządkowe w galerii (liczba realizacji, numer projektu
+   w panelu). Krycie 0,40, nie 0,20: przy 0,20 kontrast wobec tła wynosił
+   1,77:1, a próg dla dużego tekstu to 3:1 — PageSpeed słusznie to zgłaszał
+   i psuło to ocenę dostępności. 0,40 daje 3,33:1. Napis jest wyraźniejszy,
+   ale nadal czyta się jako tło, nie jako treść. */
+.numer-ozdobny {
+  color: rgba(255, 235, 82, 0.4);
+  font-family: var(--font-ava-meridian);
+}
