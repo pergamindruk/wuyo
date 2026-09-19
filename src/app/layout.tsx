@@ -173,8 +173,8 @@ const jsonLd = {
         "ratingValue": "5.0",
         "bestRating": "5",
         "worstRating": "1",
-        "ratingCount": "6",
-        "reviewCount": "6",
+        "ratingCount": "7",
+        "reviewCount": "7",
     },
     "sameAs": [
         "https://www.facebook.com/wuyo.dobra.grafa",

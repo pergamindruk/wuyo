@@ -14,7 +14,7 @@ import type { GoogleReviewsData } from "@/lib/google-reviews";
  *
  * Daty są przybliżone do dnia — Google podaje tylko "2 miesiące temu",
  * a nie dokładną datę. Wystarczy, bo i tak wyświetlamy odstęp czasu.
- * Stan na 16 września 2026.
+ * Stan na 19 września 2026.
  */
 
 export const GOOGLE_PLACE_ID = "ChIJcxLR_WT7PEcRqW-PHRxBTMc";
@@ -23,10 +23,16 @@ export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writerev
 
 export const staticGoogleReviews: GoogleReviewsData = {
     rating: 5,
-    total: 6,
+    total: 7,
     mapsUrl: GOOGLE_PROFILE_URL,
     writeReviewUrl: GOOGLE_WRITE_REVIEW_URL,
     reviews: [
+        {
+            author: "Dominika Pawlowska",
+            rating: 5,
+            text: "Polecamy współpracę z Mateuszem! Przygotowywał dla nas grafikę na baner i naprawdę wykazał się ogromną cierpliwością do moich kolejnych pomysłów i poprawek 😅 Wszystko bez problemu zmieniał i dopracowywał, aż doszliśmy do efektu z którego jesteśmy wszyscy bardzo zadowoleni. Dzięki za cierpliwość i super podejście do klienta! Polecamy! 😊",
+            publishTime: "2026-09-18",
+        },
         {
             author: "Adam Kribus",
             rating: 5,
