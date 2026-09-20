@@ -60,9 +60,9 @@ const localSchema = {
         { "@type": "AdministrativeArea", "name": "Podkarpacie" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Wizytówki 50 szt. z projektem", "price": "99", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Wizytówki 100 szt. z projektem", "price": "199", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Ulotki z projektem", "price": "250", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Wizytówki 50 szt. z projektem", "price": "299", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Wizytówki 100 szt. z projektem", "price": "349", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Ulotki A5 100 szt. z projektem", "price": "449", "priceCurrency": "PLN" },
     ],
 };
 
