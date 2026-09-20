@@ -72,7 +72,6 @@ const personSchema = {
     "sameAs": [
         "https://www.facebook.com/wuyo.dobra.grafa",
         "https://www.instagram.com/wuyo.pl/",
-        "https://www.youtube.com/@wuyo.dobra.grafa",
         "https://share.google/2xca9wmLz1mI5NvIX",
     ],
 };
