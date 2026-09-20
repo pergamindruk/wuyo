@@ -73,9 +73,11 @@ const clothingSchema = {
         { "@type": "Country", "name": "Polska" },
     ],
     "offers": [
-        { "@type": "Offer", "name": "Koszulka z nadrukiem DTF", "price": "49", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Bluza z nadrukiem DTF", "price": "139", "priceCurrency": "PLN" },
-        { "@type": "Offer", "name": "Nadruk na własnej odzieży klienta", "price": "45", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Koszulka z nadrukiem DTF — 20+ szt.", "price": "49", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Bluza z nadrukiem DTF — 20+ szt.", "price": "139", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Nadruk na własnej odzieży klienta — mały wzór do A5", "price": "45", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Koszulka z nadrukiem DTF — 1 szt.", "price": "79", "priceCurrency": "PLN" },
+        { "@type": "Offer", "name": "Bluza z nadrukiem DTF — 1 szt.", "price": "199", "priceCurrency": "PLN" },
     ],
 };
 
