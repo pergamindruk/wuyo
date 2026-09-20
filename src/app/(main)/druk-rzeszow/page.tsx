@@ -72,16 +72,16 @@ const faqs = [
         a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk to od 99 zł za 50 szt. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
     },
     {
-        q: "Jak szybko dostanę wydruk?",
-        a: "Wizytówki i naklejki standardowo 1–3 dni robocze od zatwierdzenia projektu. Odbiór osobisty w Rzeszowie lub wysyłka kurierem. Przy pilnych zleceniach nawet następnego dnia.",
+        q: "Ile czekam na wydruk z odbiorem w Rzeszowie?",
+        a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu, a przy pilnych zleceniach nawet następnego dnia. Odbierzesz osobiście w Rzeszowie bez czekania na kuriera — drukuję u siebie, więc nie wysyłam nic do zewnętrznej drukarni i z powrotem.",
     },
     {
-        q: "Czy można zamówić mały nakład?",
-        a: "Tak — drukuję u siebie, więc nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Możesz zamówić 20 czy 50 sztuk bez problemu.",
+        q: "Czy zrobisz 20 wizytówek na ostatnią chwilę?",
+        a: "Tak. Drukuję u siebie na sprzęcie A3+, więc nie czekam na zapełnienie arkusza zbiorczego i nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Potrzebujesz 20 sztuk na jutrzejsze spotkanie w Rzeszowie — zrobię 20.",
     },
     {
-        q: "Co jeśli drukarnia zwróci plik z uwagami?",
-        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+        q: "Co jeśli mój plik nie nadaje się do druku?",
+        a: "Sprawdzam każdy plik przed drukiem i mówię wprost, co jest nie tak — najczęściej brakuje spadów, kolory są w RGB zamiast CMYK albo rozdzielczość jest za niska. Drobne poprawki robię przy okazji, a jeśli plik trzeba składać od nowa, podaję cenę zanim cokolwiek zrobię.",
     },
     {
         q: "Czy projektujesz i drukujesz jednocześnie?",
