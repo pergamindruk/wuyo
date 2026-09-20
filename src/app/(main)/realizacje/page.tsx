@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Realizacje WUYO – Portfolio projektów graficznych",
         description: "Sprawdź projekty zrealizowane dla prawdziwych firm. Logotypy, strony WWW, druk i grafiki social media.",
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/realizacje",
     },
 };

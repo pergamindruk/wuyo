@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "O mnie – Mateusz Machoś | WUYO – Dobra Grafa",
         description: "Kim jestem i jak pracuję. Mateusz Machoś — projektant graficzny, web developer, właściciel sprzętu poligraficznego.",
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/o-mnie",
     },
 };

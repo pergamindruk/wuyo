@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Kalkulator wyceny WUYO – Logo, Strona, Druk, Social",
         description: "Interaktywny kalkulator cen. Dowiedz się ile może kosztować Twój projekt przed pierwszym kontaktem.",
+        images: ["/og-image.webp"],
         url: "https://wuyo.pl/kalkulator",
     },
 };
