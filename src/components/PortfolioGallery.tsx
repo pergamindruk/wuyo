@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { Odslona } from "@/components/Odslona";
-import { X, ExternalLink, Maximize2 } from "lucide-react";
+import { X, ExternalLink, Maximize2, ChevronLeft, ChevronRight } from "lucide-react";
 import { TABS, projects, type Project } from "@/lib/projects";
 
 export function PortfolioGallery({
@@ -67,6 +67,20 @@ export function PortfolioGallery({
         document.body.style.overflow = "auto";
     };
 
+    // Wszystkie zdjęcia otwartego projektu — po nich przewija się podgląd
+    // pełnoekranowy, bez wychodzenia z niego.
+    const galeria = selectedProject ? [selectedProject.image, ...(selectedProject.images ?? [])] : [];
+    const indeksPodgladu = fullscreenSrc ? galeria.indexOf(fullscreenSrc) : -1;
+    const naStartDotyku = useRef<number | null>(null);
+
+    const przejdzDo = (krok: number) => {
+        if (galeria.length < 2 || indeksPodgladu < 0) return;
+        const nastepne = galeria[(indeksPodgladu + krok + galeria.length) % galeria.length];
+        setFullscreenSrc(nastepne);
+        // Szuflada pod spodem ma pokazywać to samo zdjęcie po zamknięciu podglądu.
+        setDrawerActiveImg(nastepne);
+    };
+
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
@@ -75,11 +89,15 @@ export function PortfolioGallery({
                 } else {
                     closePanel();
                 }
+            } else if (fullscreenSrc && e.key === "ArrowRight") {
+                przejdzDo(1);
+            } else if (fullscreenSrc && e.key === "ArrowLeft") {
+                przejdzDo(-1);
             }
         };
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
-    }, [fullscreenSrc]);
+    }, [fullscreenSrc, selectedProject]);
 
     return (
         <section id="portfolio" className="py-28 px-6 md:px-12 relative">
@@ -251,11 +269,19 @@ export function PortfolioGallery({
                                     className="object-contain p-6"
                                     sizes="460px"
                                 />
+                                {/* Całe zdjęcie jest przyciskiem powiększenia. Osobny przycisk zamiast
+                                    onClick na divie, żeby dało się go trafić klawiaturą. */}
+                                <button
+                                    onClick={() => setFullscreenSrc(drawerActiveImg || selectedProject.image)}
+                                    className="absolute inset-0 z-[5] cursor-zoom-in"
+                                    aria-label="Powiększ zdjęcie"
+                                />
                                 {/* Fullscreen button */}
                                 <button
                                     onClick={(e) => { e.stopPropagation(); setFullscreenSrc(drawerActiveImg || selectedProject.image); }}
-                                    className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-lg bg-navy-dark/70 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-navy-dark/90 transition-all opacity-0 group-hover/img:opacity-100"
+                                    className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-lg bg-navy-dark/70 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 md:text-white/50 hover:text-white hover:bg-navy-dark/90 transition-all md:opacity-0 md:group-hover/img:opacity-100 focus-visible:opacity-100"
                                     title="Pełna rozdzielczość"
+                                    aria-label="Pełna rozdzielczość"
                                 >
                                     <Maximize2 size={13} />
                                 </button>
@@ -343,6 +369,17 @@ export function PortfolioGallery({
                 <div
                     data-widoczny={podgladAktywny ? "tak" : undefined}
                     onClick={() => setFullscreenSrc(null)}
+                    onTouchStart={(e) => { naStartDotyku.current = e.touches[0].clientX; }}
+                    onTouchEnd={(e) => {
+                        if (naStartDotyku.current === null) return;
+                        const przesuniecie = e.changedTouches[0].clientX - naStartDotyku.current;
+                        naStartDotyku.current = null;
+                        if (Math.abs(przesuniecie) > 50) przejdzDo(przesuniecie < 0 ? 1 : -1);
+                    }}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={selectedProject ? `Podgląd: ${selectedProject.title}` : "Podgląd zdjęcia"}
+                    style={{ touchAction: "pan-y pinch-zoom" }}
                     className="kurtyna-podgladu fixed inset-0 z-[70] bg-black/97 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
                 >
                         <button
@@ -353,22 +390,43 @@ export function PortfolioGallery({
                             <X size={16} />
                         </button>
 
+                        {galeria.length > 1 && (
+                            <>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); przejdzDo(-1); }}
+                                    className="fixed left-2 sm:left-5 top-1/2 -translate-y-1/2 z-[75] w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
+                                    aria-label="Poprzednie zdjęcie"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); przejdzDo(1); }}
+                                    className="fixed right-2 sm:right-5 top-1/2 -translate-y-1/2 z-[75] w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
+                                    aria-label="Następne zdjęcie"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </>
+                        )}
+
                     <div
                         data-widoczny={podgladAktywny ? "tak" : undefined}
                         onClick={(e) => e.stopPropagation()}
                         className="obraz-podgladu cursor-default"
                     >
                             <Image
+                                key={fullscreenSrc}
                                 src={fullscreenSrc}
-                                alt="Pełna rozdzielczość"
+                                alt={selectedProject ? `${selectedProject.title} – zdjęcie ${indeksPodgladu + 1} z ${galeria.length}` : "Pełna rozdzielczość"}
                                 width={1920}
                                 height={1440}
-                                className="max-w-[92vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                                className="max-w-[92vw] max-h-[80vh] sm:max-h-[90vh] object-contain rounded-lg shadow-2xl"
                             />
                     </div>
 
-                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-[0.2em] uppercase select-none">
-                            ESC lub klik aby zamknąć
+                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-[0.2em] uppercase select-none text-center whitespace-nowrap">
+                            {galeria.length > 1 && indeksPodgladu >= 0 ? `${indeksPodgladu + 1} / ${galeria.length} · ` : ""}
+                            <span className="hidden sm:inline">← → przewijają · </span>ESC zamyka
                         </p>
                 </div>
             )}

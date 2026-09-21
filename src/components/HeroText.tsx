@@ -3,7 +3,9 @@
 
 function ZWithDot({ color = "white" }: { color?: string }) {
     return (
-        <span className="relative inline-block">
+        // inline-block tworzy własne pole, do którego nie sięga `background-clip: text`
+        // rodzica — bez własnego koloru litera byłaby przezroczysta i zostałaby sama kropka.
+        <span className="relative inline-block" style={{ color }}>
             Z
             <span
                 aria-hidden="true"

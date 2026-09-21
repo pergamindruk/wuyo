@@ -195,7 +195,7 @@ export function Navbar() {
             <header className="fixed top-0 left-0 right-0 z-50 h-20 md:h-24 px-6 md:px-12 lg:px-24 bg-navy/80 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between">
 
                 {/* Lewa strona - Wielkie Logo (wystające za Header) */}
-                <div className="flex-1 flex items-center justify-start">
+                <div className="flex-1 md:flex-none md:w-44 lg:flex-1 lg:w-auto flex items-center justify-start">
                     {/* Zwykły <a> z animacją w CSS, nie motion.a. Framer Motion startował
                         logo z opacity:0, a to jest element LCP strony — nic się nie pokazywało,
                         dopóki nie ruszył JavaScript. Ten sam zabieg co przy hero. */}
@@ -205,7 +205,7 @@ export function Navbar() {
                         aria-label="Wuyo – Dobra Grafa, strona główna"
                         className={`logo-in absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
                             ? "top-3 md:top-4 h-14 w-14 md:h-14 md:w-14"
-                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-64 lg:h-40 lg:w-[22rem]"
+                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-44 lg:h-40 lg:w-[22rem]"
                             }`}
                     >
                         {scrolled ? (
@@ -231,7 +231,7 @@ export function Navbar() {
 
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
-                    <nav aria-label="Nawigacja główna" className="flex items-center gap-6 lg:gap-8 text-sm font-medium text-white/70">
+                    <nav aria-label="Nawigacja główna" className="flex items-center gap-4 lg:gap-8 text-sm font-medium text-white/70">
                         <a
                             href="/"
                             onClick={handleHomeClick}
@@ -257,11 +257,11 @@ export function Navbar() {
                 </div>
 
                 {/* Prawa strona - Przycisk / Mobile Menu */}
-                <div className="flex-1 flex justify-end items-center gap-4">
+                <div className="flex-1 md:flex-none lg:flex-1 flex justify-end items-center gap-4">
                     <a
                         href="/#kontakt"
                         onClick={(e) => handleAnchorClick(e, "kontakt")}
-                        className="hidden md:inline-flex btn-gold px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_0_15px_rgba(255,235,82,0.15)] hover:shadow-[0_0_25px_rgba(255,235,82,0.3)]"
+                        className="hidden md:inline-flex btn-gold px-5 lg:px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_0_15px_rgba(255,235,82,0.15)] hover:shadow-[0_0_25px_rgba(255,235,82,0.3)]"
                     >
                         Napisz do mnie
                     </a>

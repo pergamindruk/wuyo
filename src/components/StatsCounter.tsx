@@ -101,14 +101,16 @@ export function StatsCounter() {
             {STATS.map((stat, i) => (
                 <div key={stat.label} className="flex items-stretch">
                     {i > 0 && <div className="self-stretch w-px bg-white/10" aria-hidden="true" />}
-                    <div className="flex flex-col items-center px-5 sm:px-10 md:px-14">
+                    {/* Trzy kolumny muszą się zmieścić w 320 px — poniżej `sm` podpisy
+                        są ciaśniejsze i mogą się łamać, dopiero wyżej idą w jednej linii. */}
+                    <div className="flex flex-col items-center px-2.5 max-[360px]:px-1.5 sm:px-8 md:px-10 lg:px-14">
                         <span
-                            className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight"
+                            className="text-4xl max-[360px]:text-[1.6rem] sm:text-5xl md:text-6xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight"
                             style={{ fontFamily: "var(--font-ava-meridian)" }}
                         >
                             <AnimatedNumber {...stat.value} />
                         </span>
-                        <span className="text-white/50 text-[10px] uppercase tracking-[0.25em] whitespace-nowrap">
+                        <span className="text-white/50 text-[9px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.25em] sm:whitespace-nowrap text-center">
                             {stat.label}
                         </span>
                     </div>

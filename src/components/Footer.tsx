@@ -8,7 +8,7 @@ export function Footer() {
     return (
         <footer className="bg-navy-dark border-t border-white/5 px-6 py-16 md:px-12">
             <div className="max-w-5xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+                <div className="flex flex-col lg:flex-row justify-between items-start gap-12 mb-12">
                     <div className="space-y-6">
                         <Link href="/" className="relative block h-16 w-56 md:h-24 md:w-80 transition-opacity duration-300 hover:opacity-80">
                             <Image src="/logo_wuya2.webp" alt="WUYO" fill className="object-contain object-left" />
@@ -18,7 +18,7 @@ export function Footer() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 lg:gap-12">
                         <div>
                             <h4 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4">Szybkie linki</h4>
                             <ul className="space-y-3 text-sm">

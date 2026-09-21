@@ -174,7 +174,7 @@ export default function OdziezPage() {
                         {products.map((product, i) => (
                             <AnimatedSection key={i} delay={i * 0.08}>
                                 <div className="glass-card p-8 h-full flex flex-col gap-5">
-                                    <div className="flex items-start justify-between gap-4">
+                                    <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
                                         <h3 className="text-xl font-bold text-white">{product.name}</h3>
                                         <span className="text-gold font-bold text-sm whitespace-nowrap">{product.price}</span>
                                     </div>
