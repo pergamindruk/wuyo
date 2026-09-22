@@ -37,7 +37,7 @@ export const sectionHeader = {
 
 // Linijka à la carte — kwoty wyróżnione w komponencie.
 export const aLaCarte = {
-    siteFrom: "2 490 zł",
+    siteFrom: "1 990 zł",
     logoFrom: "890 zł",
 };
 
@@ -71,7 +71,7 @@ export const pricingFaqs = [
     },
     {
         q: "Chcę tylko stronę albo tylko logo — da się?",
-        a: "Tak. Strona indywidualna od 2 490 zł, logo od 890 zł. Napisz po wycenę.",
+        a: "Tak. Strona indywidualna od 1 990 zł, logo od 890 zł. Napisz po wycenę.",
     },
     {
         q: "Czy mogę zrezygnować z abonamentu?",
@@ -93,6 +93,25 @@ export const pricingGroups: PricingGroupData[] = [
         subheading: "Jednorazowy projekt pod klucz. Płacisz raz, zostaje na lata.",
         cards: [
             {
+                eyebrow: "Testujesz pomysł, chcesz zacząć tanio",
+                name: "Marka Mini",
+                tagline:
+                    "Najmniejszy krok, żeby przestać działać bez logo i wizytówki w ręce.",
+                price: "1 090 zł",
+                priceSuffix: "netto, jednorazowo",
+                listPrice: "1 239 zł",
+                saving: "149 zł",
+                features: [
+                    "Dokładny brief na starcie — pierwsza koncepcja logo ma trafić od razu, plus 2 zapasowe kierunki",
+                    "Logo w 3 wersjach: pozioma, pionowa, mono",
+                    "Wizytówki 100 szt. — projekt dwustronny + druk",
+                    "Pełne prawa do projektu + pliki źródłowe",
+                ],
+                delivery: "Czas realizacji: 5–7 dni roboczych",
+                cta: "Zacznij od mini",
+                highlighted: false,
+            },
+            {
                 eyebrow: "Nowe firmy, rzemiosło, usługi lokalne",
                 name: "Marka Start",
                 tagline:
@@ -102,6 +121,7 @@ export const pricingGroups: PricingGroupData[] = [
                 listPrice: "2 119 zł",
                 saving: "629 zł",
                 features: [
+                    "Dokładny brief na starcie — pierwsza koncepcja logo ma trafić od razu, plus 2 zapasowe kierunki",
                     "Logo w 3 wersjach: pozioma, pionowa, mono",
                     "Mini księga znaku — kolory, fonty, zasady użycia",
                     "Wizytówki 150 szt. — projekt dwustronny + druk",
@@ -119,11 +139,12 @@ export const pricingGroups: PricingGroupData[] = [
                     "Obecność online, która generuje zapytania — nie tylko ładnie wygląda.",
                 price: "3 490 zł",
                 priceSuffix: "netto, jednorazowo",
-                listPrice: "5 258 zł",
-                saving: "1 768 zł",
+                listPrice: "5 308 zł",
+                saving: "1 818 zł",
                 features: [
                     "Wszystko z pakietu Marka Start",
                     "Indywidualna strona do 5 podstron — pisana od zera, nie szablon",
+                    "Domena i hosting na pierwszy rok w cenie",
                     "Formularz kontaktowy + mapa dojazdu",
                     "Dopracowana wersja mobilna",
                     "Podstawowe SEO lokalne — Rzeszów i okolice",
@@ -171,14 +192,14 @@ export const pricingGroups: PricingGroupData[] = [
                 name: "Opieka Strony",
                 tagline:
                     "Twoja strona po prostu działa — Ty nie musisz o nią myśleć.",
-                price: "149 zł",
+                price: "199 zł",
                 priceSuffix: "netto / miesiąc",
                 features: [
                     "Strona działa non stop (serwer w cenie)",
                     "Pilnuję adresu strony, żeby nie wygasł",
                     "Robię kopie — jak coś padnie, przywracam",
                     "Chronię przed włamaniem i sprawdzam, czy strona żyje",
-                    "Drobna zmiana co miesiąc (np. nowe godziny, numer)",
+                    "1 h drobnych zmian w miesiącu (np. nowe godziny, numer)",
                 ],
                 delivery: "Odpisuję do 48h",
                 cta: "Zadbaj o stronę",
@@ -277,12 +298,12 @@ export const priceRanges: PriceRangeGroup[] = [
     },
     {
         title: "Strony internetowe",
-        note: "Next.js, SEO lokalne, dopracowana wersja mobilna.",
+        note: "Next.js, SEO lokalne, dopracowana wersja mobilna. Domena i hosting na pierwszy rok w cenie.",
         items: [
-            { name: "Landing Page / one-page", price: "od 2 490 zł" },
+            { name: "Landing Page / one-page", price: "od 1 990 zł" },
             { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
             { name: "Sklep internetowy", price: "od 6 900 zł" },
-            { name: "Stała opieka miesięczna", price: "149 – 1 290 zł / mc" },
+            { name: "Stała opieka miesięczna", price: "199 – 1 290 zł / mc" },
         ],
     },
 ];

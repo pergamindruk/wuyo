@@ -24,7 +24,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Cennik grafiki, druku i stron WWW — Rzeszów",
-    description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 2 490 zł. Projekt i druk w jednym miejscu.",
+    description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 1 990 zł. Projekt i druk w jednym miejscu.",
     openGraph: {
         title: "Cennik | WUYO – Dobra Grafa",
         description: "Pakiety z konkretnymi cenami i widełki dla pojedynczych usług — grafika, druk, odzież, strony www.",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO – Dobra Grafa",
-        description: "Jawne widełki: logo od 890 zł, druk wizytówek od 99 zł, strona od 2 490 zł. Wycena konkretna po jednej wiadomości.",
+        description: "Jawne widełki: logo od 890 zł, druk wizytówek od 99 zł, strona od 1 990 zł. Wycena konkretna po jednej wiadomości.",
         images: ["/og-image.webp"],
     },
     alternates: {

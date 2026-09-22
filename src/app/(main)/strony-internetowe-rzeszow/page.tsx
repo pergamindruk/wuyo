@@ -9,8 +9,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony internetowe Rzeszów od 2 490 zł",
-    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
+    title: "Strony internetowe Rzeszów od 1 990 zł",
+    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
         "tworzenie stron internetowych Rzeszów",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     ],
     openGraph: {
         title: "Strony Internetowe Rzeszów | WUYO – Next.js, SEO, szybkie",
-        description: "Strony internetowe dla firm z Rzeszowa. Next.js, szybkie, SEO. One-page od 2 490 zł. Wycena w 24h.",
+        description: "Strony internetowe dla firm z Rzeszowa. Next.js, szybkie, SEO. One-page od 1 990 zł. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-internetowe-rzeszow",
         type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Strony Internetowe Rzeszów | WUYO",
-        description: "Tworzę strony www dla firm z Rzeszowa. Next.js, SEO, szybkie. Od 2 490 zł.",
+        description: "Tworzę strony www dla firm z Rzeszowa. Next.js, SEO, szybkie. Od 1 990 zł.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-internetowe-rzeszow" },
@@ -87,7 +87,7 @@ const faqSchema = {
             "name": "Ile kosztuje strona internetowa w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — znasz kwotę przed startem. Nie ma stawki godzinowej ani niespodzianek po fakturze.",
+                "text": "Strona One-Page od 1 990 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — znasz kwotę przed startem. Nie ma stawki godzinowej ani niespodzianek po fakturze.",
             },
         },
         {
@@ -120,7 +120,7 @@ const faqSchema = {
 const packages = [
     {
         name: "One-Page",
-        price: "od 2 490 zł",
+        price: "od 1 990 zł",
         time: "~tydzień",
         desc: "Jedna strona, jeden cel. Idealna dla freelancerów, coachów i nowych firm, które chcą szybko zaistnieć w sieci.",
         items: ["Projekt graficzny UI/UX", "Next.js + React", "Formularz kontaktowy", "SEO on-page", "Wdrożenie na hostingu klienta"],
@@ -174,7 +174,7 @@ export default function StronyInternetowerRzeszowPage() {
                     <div className="max-w-4xl mx-auto grid grid-cols-3 gap-6 text-center">
                         {[
                             { stat: "< 1s", label: "czas ładowania (LCP)" },
-                            { stat: "od 2 490 zł", label: "strona One-Page" },
+                            { stat: "od 1 990 zł", label: "strona One-Page" },
                             { stat: "24h", label: "czas na wycenę" },
                         ].map((item, i) => (
                             <div key={i}>
@@ -258,7 +258,7 @@ export default function StronyInternetowerRzeszowPage() {
                     </AnimatedSection>
                     <div className="space-y-4">
                         {[
-                            { q: "Ile kosztuje strona internetowa w Rzeszowie?", a: "One-Page od 2 490 zł, Multi-Page od 2 990 zł. Stała cena przed startem — nie stawka godzinowa." },
+                            { q: "Ile kosztuje strona internetowa w Rzeszowie?", a: "One-Page od 1 990 zł, Multi-Page od 2 990 zł. Stała cena przed startem — nie stawka godzinowa." },
                             { q: "Ile trwa budowa strony?", a: "One-Page ok. tydzień, Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści." },
                             { q: "Obsługujesz firmy spoza Rzeszowa?", a: "Tak — wszystko idzie zdalnie. Rzeszów to moja baza, ale pracuję dla firm z całej Polski." },
                             { q: "Czy mogę samodzielnie edytować treści?", a: "Tak — dla Multi-Page podłączam lekki CMS. Do One-Page wystarczy napisanie do mnie, drobne zmiany wchodzą w zakres wsparcia." },

@@ -14,7 +14,7 @@ export const packages = [
     {
         name: "Szybki start",
         persona: "Wejście na rynek — dla firm stawiających pierwsze kroki w sieci",
-        price: "od 2 490 zł",
+        price: "od 1 990 zł",
         desc: "Szybka, solidna strona, która działa od pierwszego dnia.",
         image: "/tworzenie-stron-www-start-v3.png",
         imageScale: "scale-100",

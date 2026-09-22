@@ -207,7 +207,7 @@ export default function DrukPage() {
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>
                                 <Link href="/strony-www" className="font-bold text-white hover:text-gold transition-colors text-sm">Strony internetowe →</Link>
-                                <p className="text-white/60 text-xs mt-1">od 2 490 zł · Next.js</p>
+                                <p className="text-white/60 text-xs mt-1">od 1 990 zł · Next.js</p>
                             </div>
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Koszulki, bluzy?</p>

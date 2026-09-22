@@ -65,7 +65,7 @@ function calcPrice(s: Selection): [number, number] | null {
         if (s.brandbook) { low += 600; high += 1000; }
     } else if (s.service === "www") {
         if (!s.wwwType) return null;
-        if (s.wwwType === "onepage") { low = 2490; high = 3500; }
+        if (s.wwwType === "onepage") { low = 1990; high = 3000; }
         else if (s.wwwType === "multipage") {
             if (s.wwwPages === "1-5") { low = 2990; high = 5500; }
             else { low = 5900; high = 9000; }

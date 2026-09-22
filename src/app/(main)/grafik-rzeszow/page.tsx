@@ -9,7 +9,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Grafik Rzeszów — logo od 890 zł, strony od 2 490 zł",
+    title: "Grafik Rzeszów — logo od 890 zł, strony od 1 990 zł",
     description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, bezpośredni kontakt. Wycena w 24h, bezpłatnie →",
     keywords: [
         "grafik Rzeszów",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     ],
     openGraph: {
         title: "Grafik Rzeszów – WUYO | Logo, strony www, druk",
-        description: "Projektant graficzny z Rzeszowa. Logo od 890 zł, strony www od 2 490 zł, druk wizytówek. Wycena bezpłatna, odpowiedź w 24h.",
+        description: "Projektant graficzny z Rzeszowa. Logo od 890 zł, strony www od 1 990 zł, druk wizytówek. Wycena bezpłatna, odpowiedź w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/grafik-rzeszow",
         type: "website",
@@ -106,7 +106,7 @@ const faqSchema = {
             "name": "Ile kosztuje grafik w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Logo dla firmy to koszt od 890 zł, pełna identyfikacja wizualna 1 490 zł, strona internetowa od 2 490 zł, a wizytówki z projektem od 299 zł za 50 sztuk (sam druk od 99 zł). Każda wycena jest stała — podaję cenę przed startem prac, bez niespodzianek na końcu.",
+                "text": "Logo dla firmy to koszt od 890 zł, pełna identyfikacja wizualna 1 490 zł, strona internetowa od 1 990 zł, a wizytówki z projektem od 299 zł za 50 sztuk (sam druk od 99 zł). Każda wycena jest stała — podaję cenę przed startem prac, bez niespodzianek na końcu.",
             },
         },
         {
@@ -146,7 +146,7 @@ const services = [
     },
     {
         title: "Strony internetowe",
-        price: "od 2 490 zł",
+        price: "od 1 990 zł",
         desc: "Piszę kod od zera — żadnego WordPressa, żadnych pluginów które się psują. Strona ładuje się szybko, działa na telefonie i Google ją widzi od pierwszego dnia.",
         href: "/strony-www",
         items: ["Next.js — poniżej 1s ładowania", "SEO techniczne wbudowane", "Wygląda i działa na każdym telefonie", "Wdrożenie na hostingu klienta"],
@@ -304,7 +304,7 @@ export default function GrafikRzeszowPage() {
                         {[
                             {
                                 q: "Ile kosztuje grafik w Rzeszowie?",
-                                a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 2 490 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
+                                a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 1 990 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
                             },
                             {
                                 q: "Czy obsługujesz firmy spoza Rzeszowa?",

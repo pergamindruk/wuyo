@@ -11,11 +11,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony internetowe od 2 490 zł — Next.js, SEO",
-    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 2 490 zł, multi-page od 2 990 zł. Wycena w 24h →",
+    title: "Strony internetowe od 1 990 zł — Next.js, SEO",
+    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
     openGraph: {
-        title: "Strony Internetowe od 2 490 zł | Next.js, SEO | WUYO",
-        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 2 490 zł. Rzeszów i cała Polska.",
+        title: "Strony Internetowe od 1 990 zł | Next.js, SEO | WUYO",
+        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 1 990 zł. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-www",
         type: "website",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
-        description: "Strony firmowe od 2 490 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
+        description: "Strony firmowe od 1 990 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
     alternates: { canonical: "https://wuyo.pl/strony-www" },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje strona internetowa?",
-        a: "Strona One-Page od 2 490 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+        a: "Strona One-Page od 1 990 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
@@ -77,7 +77,7 @@ const serviceSchema = {
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Strona One-Page" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "2490", "priceCurrency": "PLN", "minPrice": "2490" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "1990", "priceCurrency": "PLN", "minPrice": "1990" },
             },
             {
                 "@type": "Offer",
@@ -92,7 +92,7 @@ const serviceSchema = {
 const packages = [
     {
         name: "Strona One-Page",
-        price: "od 2 490 zł",
+        price: "od 1 990 zł",
         desc: "Jedna strona, jeden cel — maksymalna konwersja. Idealna dla freelancerów, coachów, nowych biznesów.",
         includes: [
             "Dedykowany projekt graficzny (UI/UX)",

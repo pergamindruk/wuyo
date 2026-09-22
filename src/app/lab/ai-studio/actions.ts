@@ -66,12 +66,12 @@ export async function generateQuote(clientMessage: string) {
     - Pelny Start (branding + strona + Google + 5 grafik + 3mc opieki): 5900 zl
 
     STRONY WWW (sama strona bez brandingu):
-    - Strona indywidualna: od 2490 zl
+    - Strona indywidualna: od 1990 zl
     - Strona firmowa: od 3490 zl
     - E-commerce / sklep: od 6900 zl
 
     ABONAMENT MIESIĘCZNY:
-    - Opieka Strony (hosting, aktualizacje, drobne zmiany): 149 zl/mc
+    - Opieka Strony (hosting, aktualizacje, drobne zmiany): 199 zl/mc
     - Widocznosc i Opieka (jw. + wizytowka Google + 5-6 grafik/mc): 690 zl/mc
 
     SOCIAL MEDIA / DIGITAL:
