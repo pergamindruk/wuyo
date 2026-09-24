@@ -91,12 +91,17 @@ const serviceSchema = {
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Logotyp (baza)" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "800", "priceCurrency": "PLN", "minPrice": "800" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "890", "priceCurrency": "PLN", "minPrice": "890" },
+            },
+            {
+                "@type": "Offer",
+                "itemOffered": { "@type": "Service", "name": "Logo + mini księga znaku" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "1190", "priceCurrency": "PLN" },
             },
             {
                 "@type": "Offer",
                 "itemOffered": { "@type": "Service", "name": "Pełna Identyfikacja Wizualna" },
-                "priceSpecification": { "@type": "PriceSpecification", "price": "2500", "priceCurrency": "PLN", "minPrice": "2500" },
+                "priceSpecification": { "@type": "PriceSpecification", "price": "1490", "priceCurrency": "PLN" },
             },
             {
                 "@type": "Offer",
@@ -128,6 +133,19 @@ const packages = [
             "Typografia firmowa",
             "Pliki: SVG, PNG, PDF",
             "Prawa autorskie majątkowe",
+        ],
+        highlight: false,
+    },
+    {
+        name: "Logo + mini księga znaku",
+        price: "1 190 zł",
+        desc: "Logo z zasadami użycia — drukarnia, haft czy grawer wiedzą, jak znak ma wyglądać.",
+        includes: [
+            "Wszystko z pakietu Logotyp +",
+            "Mini księga znaku (PDF)",
+            "Pole ochronne i minimalna wielkość",
+            "Kolory HEX, RGB i CMYK",
+            "Czego z logo nie robić",
         ],
         highlight: false,
     },
@@ -289,14 +307,14 @@ export default function LogoPage() {
 
             {/* Pakiety */}
             <section className="py-20 px-6 md:px-12 bg-white/[0.02]">
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-6xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Cennik</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Pakiety i ceny</h2>
                         <p className="text-white/50 max-w-xl mx-auto">Wycena = cena końcowa. Bez ukrytych kosztów, bez niespodzianek po fakturze.</p>
                         <NettoNote className="mt-3" />
                     </AnimatedSection>
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {packages.map((pkg, i) => (
                             <AnimatedSection key={i} delay={i * 0.1}>
                                 <div className={`glass-card p-6 flex flex-col h-full ${pkg.highlight ? "border border-gold/30" : ""}`}>
