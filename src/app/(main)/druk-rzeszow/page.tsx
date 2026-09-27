@@ -101,7 +101,7 @@ const faqSchema = {
 
 const products = [
     { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na papierze 300 g z błyskiem. Możesz zamówić już od 20 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 300 g", "Wykończenie błysk", "Od 20 szt."] },
-    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Papier 130–170g", "Min. 100 szt."] },
+    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Kreda 130 g", "Od 50 szt."] },
     { name: "Vouchery", price: "od 289 zł / 50 szt.", desc: "Voucher który wygląda jak produkt premium. Perforacja, numeracja — opcjonalnie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
     { name: "Naklejki i etykiety", price: "od 219 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 20 szt."] },
 ];

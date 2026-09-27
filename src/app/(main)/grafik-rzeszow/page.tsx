@@ -156,7 +156,7 @@ const services = [
         price: "od 99 zł",
         desc: "Mam własny sprzęt — drukuję u siebie, nie wysyłam do zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Bez minimum nakładu, bez tygodniowego czekania.",
         href: "/druk",
-        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Laminat mat lub błysk", "Ekspresowa realizacja"],
+        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Małe nakłady, bez minimum", "Ekspresowa realizacja"],
     },
     {
         title: "Grafika reklamowa",

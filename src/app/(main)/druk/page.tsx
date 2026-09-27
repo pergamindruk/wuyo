@@ -91,7 +91,7 @@ const products = [
         name: "Ulotki",
         desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt który przyciąga wzrok i rzeczywiście skłania do działania.",
         price: "od 449 zł",
-        details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Papier 130–170g/m²", "Min. 100 szt."],
+        details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Kreda 130 g", "Od 50 szt."],
     },
     {
         name: "Vouchery",

@@ -68,42 +68,45 @@ export const packages = [
     },
 ];
 
-const printProducts = [
+// designFee = dopłata za projekt przy danym nakładzie. Tam, gdzie CENNIK.md
+// (CZĘŚĆ 3) ma gotowy zestaw projekt + druk, wariant nadpisuje ją tak, żeby
+// suma równała się cenie zestawu. Bez zestawu — cena projektu z CZĘŚCI 1.2.
+const printProducts: PrintProduct[] = [
     {
-        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 130, icon: <CreditCard size={44} />,
+        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 190, icon: <CreditCard size={44} />,
         variants: [
-            { qty: "50 szt.", price: "99 zł", priceNum: 99 },
+            { qty: "50 szt.", price: "99 zł", priceNum: 99, designFee: 200 },
             { qty: "100 szt.", price: "159 zł", priceNum: 159 },
             { qty: "150 szt.", price: "199 zł", priceNum: 199 },
-            { qty: "300 szt.", price: "299 zł", priceNum: 299 },
+            { qty: "300 szt.", price: "299 zł", priceNum: 299, designFee: 180 },
         ],
     },
     {
-        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 130, icon: <BookOpen size={44} />,
+        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 300, icon: <BookOpen size={44} />,
         variants: [
             { qty: "50 szt.", price: "119 zł", priceNum: 119 },
-            { qty: "100 szt.", price: "189 zł", priceNum: 189 },
+            { qty: "100 szt.", price: "189 zł", priceNum: 189, designFee: 260 },
             { qty: "150 szt.", price: "239 zł", priceNum: 239 },
-            { qty: "300 szt.", price: "359 zł", priceNum: 359 },
+            { qty: "300 szt.", price: "359 zł", priceNum: 359, designFee: 230 },
         ],
     },
     {
-        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 170, icon: <Gift size={44} />,
+        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 180, icon: <Gift size={44} />,
         variants: [
             { qty: "50 szt.", price: "109 zł", priceNum: 109 },
             { qty: "100 szt.", price: "179 zł", priceNum: 179 },
         ],
     },
     {
-        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 110, icon: <Tag size={44} />,
+        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 160, icon: <Tag size={44} />,
         variants: [
-            { qty: "50 szt.", price: "89 zł", priceNum: 89 },
-            { qty: "100 szt.", price: "149 zł", priceNum: 149 },
+            { qty: "50 szt.", price: "89 zł", priceNum: 89, designFee: 130 },
+            { qty: "100 szt.", price: "149 zł", priceNum: 149, designFee: 130 },
             { qty: "200 szt.", price: "229 zł", priceNum: 229 },
         ],
     },
     {
-        id: "plakaty", name: "Plakaty", note: "", designFee: 160, icon: <Frame size={44} />,
+        id: "plakaty", name: "Plakaty", note: "", designFee: 350, icon: <Frame size={44} />,
         variants: [
             { qty: "A4", price: "od 29 zł/szt.", priceNum: 29 },
             { qty: "A3", price: "od 39 zł/szt.", priceNum: 39 },
@@ -136,11 +139,24 @@ type CartItem = {
     designFee: number;
 };
 
-type Variant = { qty: string; price: string; priceNum: number };
+type Variant = { qty: string; price: string; priceNum: number; designFee?: number };
+
+type PrintProduct = {
+    id: string;
+    name: string;
+    note: string;
+    designFee: number;
+    icon: React.ReactNode;
+    variants: Variant[];
+};
+
+function designFeeFor(product: PrintProduct, variant: Variant | null): number {
+    return variant?.designFee ?? product.designFee;
+}
 
 // --- Product Card ---
 interface ProductCardProps {
-    product: (typeof printProducts)[number];
+    product: PrintProduct;
     onAddToCart: (item: CartItem) => void;
 }
 
@@ -152,8 +168,9 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
     const totalPrice = selectedVariant
         ? selectedVariant.priceNum === 0
             ? 0
-            : selectedVariant.priceNum + (withDesign ? product.designFee : 0)
+            : selectedVariant.priceNum + (withDesign ? designFeeFor(product, selectedVariant) : 0)
         : 0;
+    const designFee = designFeeFor(product, selectedVariant);
 
     const priceLabel = selectedVariant
         ? selectedVariant.priceNum === 0
@@ -172,7 +189,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
             price: priceLabel,
             priceNum: totalPrice,
             withDesign,
-            designFee: withDesign ? product.designFee : 0,
+            designFee: withDesign ? designFee : 0,
         });
         setJustAdded(true);
         setTimeout(() => {
@@ -239,7 +256,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                     >
                         Zamawiam z projektem
                         {withDesign !== true && (
-                            <span className="block text-[10px] text-white/50 font-normal">+{product.designFee} zł</span>
+                            <span className="block text-[10px] text-white/50 font-normal">+{designFee} zł</span>
                         )}
                     </button>
                 </div>
@@ -261,7 +278,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                                 {withDesign && (
                                     <div className="flex justify-between text-white/50">
                                         <span>Projekt graficzny</span>
-                                        <span>+{product.designFee} zł</span>
+                                        <span>+{designFee} zł</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-[#ffeb52] font-bold pt-1 border-t border-white/10">
