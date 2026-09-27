@@ -12,6 +12,10 @@ interface Props {
     params: Promise<{ slug: string }>;
 }
 
+// Tylko wpisy z generateStaticParams. Bez tego nieistniejący adres (np. literówka
+// w linku) dostawał kod 200 z noindex zamiast prawdziwego 404 — soft 404 w GSC.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
     return getAllSlugs().map((slug) => ({ slug }));
 }

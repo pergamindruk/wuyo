@@ -12,8 +12,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk wizytówek i ulotek z projektem od 299 zł",
-    description: "Projekt i druk wizytówek, ulotek, voucherów w jednym miejscu. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł. Termin 1–3 dni, bez minimum →",
+    title: "Wizytówki i ulotki z projektem — zamów online, wysyłka",
+    description: "Zamów online projekt i druk wizytówek, ulotek i voucherów z wysyłką kurierem w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł, bez minimum →",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
         description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki z projektem od 299 zł, sam druk od 99 zł. Rzeszów i cała Polska.",
@@ -130,7 +130,7 @@ export default function DrukPage() {
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
 
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
-                    <p className="eyebrow mb-4">Projekt + druk</p>
+                    <p className="eyebrow mb-4">Projekt + druk · wysyłka w całej Polsce</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
                         Wizytówki, ulotki,<br />
                         <span className="bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent">
@@ -138,7 +138,8 @@ export default function DrukPage() {
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Jedno miejsce — projekt i druk. Nie musisz szukać drukarni, tłumaczyć specyfikacji ani przesyłać plików w 5 formatach. Dostajesz gotowy produkt pod drzwi.
+                        Jedno miejsce — projekt i druk. Nie musisz szukać drukarni, tłumaczyć specyfikacji ani przesyłać plików w 5 formatach. Dostajesz gotowy produkt pod drzwi. Jesteś z Rzeszowa?{" "}
+                        <Link href="/druk-rzeszow" className="text-gold hover:underline">Odbierz wizytówki osobiście</Link>.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link

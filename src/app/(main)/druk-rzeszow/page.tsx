@@ -9,8 +9,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Druk wizytówek Rzeszów — z projektem od 299 zł",
-    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie. Projekt i druk w jednym miejscu: 50 szt. z projektem od 299 zł, sam druk od 99 zł. Odbiór na miejscu →",
+    title: "Druk wizytówek Rzeszów — odbiór na miejscu, od 299 zł",
+    description: "Druk wizytówek, ulotek i naklejek w Rzeszowie. Drukuję u siebie, odbierasz osobiście w 1–3 dni robocze. 50 szt. z projektem od 299 zł, sam druk od 99 zł →",
     keywords: [
         "druk wizytówek Rzeszów",
         "druk ulotek Rzeszów",
