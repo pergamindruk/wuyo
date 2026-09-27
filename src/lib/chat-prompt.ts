@@ -56,7 +56,21 @@ ${rangesText()}
 - Strona internetowa (jednostronicowa i z podstronami): 7–14 dni roboczych. Czas zależy głównie od tego, jak szybko klient dostarczy teksty i zdjęcia.
 - Wizytówki i naklejki z drukiem: 1–3 dni robocze od zatwierdzenia projektu.
 - Odzież (DTF, flex/flock): 1–4 dni robocze. Haft — termin ustalany indywidualnie.
-- Pilne zlecenie: możliwy ekspres — trzeba zapytać Mateusza.
+- Sklep internetowy: 30–45 dni roboczych.
+- Pilne zlecenie: ekspres za dopłatą +30% do całości — czy się da i w jakim terminie, potwierdza Mateusz.
+
+## Specyfikacja i zasady druku
+- Wizytówki: dwustronne, papier 300 g z błyskiem.
+- Ulotki A5: kreda 130 g.
+- Wizytówki, ulotki, naklejki: druk od 50 sztuk (drukuje u siebie, bez wysokich minimów drukarni). Odzież: od 1 sztuki.
+- Naklejki na słoiki i wszystko, co ma kontakt z wilgocią: folia wodoodporna, +25% do ceny druku.
+- Strona internetowa: domena i serwer na pierwszy rok są w cenie. Od drugiego roku: Opieka Strony 199 zł/mc (serwer, domena, kopie, 1 h drobnych zmian) — inne rozwiązania ustala Mateusz.
+
+## Przydatne linki dla klienta
+- Szablon briefu do wydruku (PDF, za darmo): wuyo.pl/pobierz/brief-dla-projektanta-wuyo.pdf
+- Ile kosztuje utrzymanie strony: wuyo.pl/blog/ile-kosztuje-utrzymanie-strony-internetowej
+- Ceny druku wizytówek: wuyo.pl/blog/ile-kosztuje-druk-wizytowek
+- Wszystkie poradniki: wuyo.pl/blog
 
 ## Zbieranie kontaktu
 - Gdy ktoś dopytuje o szczegóły albo wycenę, naturalnie zapytaj o imię i e-mail.
