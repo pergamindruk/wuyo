@@ -9,7 +9,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Grafik Rzeszów — logo od 890 zł, strony od 1 990 zł",
+    title: "Grafik Rzeszów — projektant graficzny, logo od 890 zł",
     description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, bezpośredni kontakt. Wycena w 24h, bezpłatnie →",
     keywords: [
         "grafik Rzeszów",
@@ -189,11 +189,11 @@ export default function GrafikRzeszowPage() {
                         Rzeszów · Podkarpacie · cała Polska
                     </div>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Grafik z&nbsp;Rzeszowa,<br className="hidden md:block" />
-                        <span className="text-gold">który mówi wprost</span>
+                        Grafik i projektant graficzny<br className="hidden md:block" />
+                        <span className="text-gold"> z&nbsp;Rzeszowa</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Podaję cenę zanim zacznę. Trzymam termin. Nie masz do czynienia z pośrednikiem — rozmawiasz ze mną i ja robię projekt.
+                        Mówię wprost: podaję cenę, zanim zacznę, i trzymam termin. Nie masz do czynienia z pośrednikiem — rozmawiasz ze mną i ja robię projekt.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
