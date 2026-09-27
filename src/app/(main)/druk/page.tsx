@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztują wizytówki z projektem?",
-        a: "Wizytówki 50 szt. od 99 zł, jeśli masz gotowy projekt. Z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. W cenie druk dwustronny na papierze 350g i wykończenie mat lub gloss.",
+        a: "Wizytówki 50 szt. od 99 zł, jeśli masz gotowy projekt. Z projektem graficznym od 299 zł, 100 szt. z projektem od 349 zł. W cenie druk dwustronny na papierze 300 g z błyskiem.",
     },
     {
         q: "Jak szybko dostanę wydruk?",
@@ -83,9 +83,9 @@ const drukSchema = {
 const products = [
     {
         name: "Wizytówki",
-        desc: "Standard 85×55 mm, papier 350g, zaokrąglone rogi, mat lub gloss. Projekt unikalny — żadnych szablonów z internetu.",
+        desc: "Standard 85×55 mm, papier 300 g z błyskiem. Projekt unikalny — żadnych szablonów z internetu.",
         price: "od 299 zł",
-        details: ["Projekt graficzny", "Druk dwustronny", "Papier 350g/m²", "Wykończenie mat lub gloss", "Od 50 szt."],
+        details: ["Projekt graficzny", "Druk dwustronny", "Papier 300 g/m²", "Wykończenie błysk", "Od 50 szt."],
     },
     {
         name: "Ulotki",
@@ -202,7 +202,7 @@ export default function DrukPage() {
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
-                                <p className="text-white/60 text-xs mt-1">od 890 zł · 10–14 dni</p>
+                                <p className="text-white/60 text-xs mt-1">od 890 zł · 7–10 dni</p>
                             </div>
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz strony?</p>

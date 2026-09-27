@@ -52,9 +52,8 @@ ${rangesText()}
 
 ## Terminy orientacyjne (tak jak na stronie)
 - Pakiety: czas realizacji podany przy każdym pakiecie wyżej.
-- Logo: 10–14 dni roboczych od zatwierdzenia briefu.
-- Strona One-Page: zazwyczaj ok. tydzień od zatwierdzenia projektu graficznego.
-- Strona wielostronicowa: 2–3 tygodnie. Czas zależy głównie od tego, jak szybko klient dostarczy teksty i zdjęcia.
+- Logo: 7–10 dni roboczych od zatwierdzenia briefu.
+- Strona internetowa (jednostronicowa i z podstronami): 7–14 dni roboczych. Czas zależy głównie od tego, jak szybko klient dostarczy teksty i zdjęcia.
 - Wizytówki i naklejki z drukiem: 1–3 dni robocze od zatwierdzenia projektu.
 - Odzież (DTF, flex/flock): 1–4 dni robocze. Haft — termin ustalany indywidualnie.
 - Pilne zlecenie: możliwy ekspres — trzeba zapytać Mateusza.

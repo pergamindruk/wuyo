@@ -38,7 +38,7 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
-        a: "Strona One-Page zazwyczaj tydzień od zatwierdzenia projektu graficznego. Strona Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
+        a: "Strona powstaje w 7–14 dni roboczych, zarówno jednostronicowa, jak i z podstronami. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
     },
     {
         q: "Czy będę mógł samodzielnie edytować treści na stronie?",
@@ -101,9 +101,9 @@ const packages = [
             "Formularz kontaktowy",
             "Podstawowe SEO on-page",
             "Optymalizacja obrazów (WebP/AVIF)",
-            "Wdrożenie na hostingu klienta",
+            "Domena i hosting na 1. rok w cenie",
         ],
-        time: "tydzień",
+        time: "7–14 dni roboczych",
         highlight: false,
     },
     {
@@ -119,7 +119,7 @@ const packages = [
             "Sitemap + robots.txt",
             "Google Search Console setup",
         ],
-        time: "2–3 tygodnie",
+        time: "7–14 dni roboczych",
         highlight: true,
     },
     {

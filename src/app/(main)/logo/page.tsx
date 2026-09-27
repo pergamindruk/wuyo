@@ -11,11 +11,11 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Projektowanie logo od 890 zł — Rzeszów",
-    description: "Projektuję logo od zera — nie szablony. Pakiet plików + prawa autorskie w cenie. Termin 10–14 dni. Logotyp od 890 zł, identyfikacja 1 490 zł. Bezpłatna wycena →",
+    title: "Projektowanie logo Rzeszów — od 890 zł, 3 koncepcje",
+    description: "Projektowanie logo w Rzeszowie od zera — nie szablony. 3 koncepcje do wyboru, pakiet plików i prawa autorskie w cenie. Logo od 890 zł, identyfikacja 1 490 zł. Wycena w 24h →",
     openGraph: {
         title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
-        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 890 zł. Termin 10–14 dni. Wycena w 24h.",
+        description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 890 zł. Termin 7–10 dni roboczych. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/logo",
         type: "website",
@@ -44,11 +44,11 @@ export const metadata: Metadata = {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje zaprojektowanie logo?",
-        a: "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+        a: "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, logo ze 100 wizytówkami (projekt + druk, pakiet Marka Mini) 1 090 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
     },
     {
         q: "Ile trwa projekt logo?",
-        a: "Standardowo 10–14 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
+        a: "Standardowo 7–10 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
     },
     {
         q: "Co dostaję razem z logo?",
@@ -191,12 +191,12 @@ const process = [
     {
         n: "03",
         title: "Projekt",
-        desc: "2–3 koncepcje logo do wyboru. Każda z uzasadnieniem decyzji projektowych — nie tylko estetyka.",
+        desc: "3 koncepcje do wyboru: jedna główna, dopracowana pod Twój brief, i 2 alternatywne kierunki. Każda z uzasadnieniem decyzji projektowych — nie tylko estetyka.",
     },
     {
         n: "04",
         title: "Poprawki",
-        desc: "2 rundy poprawek wybranej koncepcji. Dobry brief = trafienie w oczekiwania za pierwszym razem.",
+        desc: "Poprawki wybranej koncepcji są w cenie — pracujemy do akceptacji. Dobry brief = trafienie w oczekiwania za pierwszym razem.",
     },
     {
         n: "05",
@@ -215,12 +215,12 @@ export default function LogoPage() {
             <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-20 md:pt-48 overflow-hidden">
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
-                    <p className="eyebrow mb-4">Projektowanie Logo · Rzeszów & cała Polska</p>
+                    <p className="eyebrow mb-4">Rzeszów · Podkarpacie · cała Polska</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Logo które <span className="text-gold">działa</span> —<br className="hidden md:block" /> nie tylko wygląda
+                        Projektowanie logo<br className="hidden md:block" /> <span className="text-gold">w Rzeszowie</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Projektuję logo z procesem, strategią i pełnym pakietem plików. Żadnych szablonów — każde logo powstaje od zera dla konkretnej firmy.
+                        Logo, które działa — nie tylko wygląda. Projektuję je z procesem, strategią i pełnym pakietem plików. Żadnych szablonów — każde logo powstaje od zera dla konkretnej firmy.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
@@ -375,15 +375,59 @@ export default function LogoPage() {
                     <AnimatedSection className="mt-6">
                         <div className="glass-card p-5 text-center">
                             <p className="text-white/60 text-sm">
-                                Średni czas realizacji: <strong className="text-white">10–14 dni roboczych</strong> od zatwierdzenia briefu.
+                                Średni czas realizacji: <strong className="text-white">7–10 dni roboczych</strong> od zatwierdzenia briefu.
                             </p>
                         </div>
                     </AnimatedSection>
                 </div>
             </section>
 
-            {/* Dla kogo */}
+            {/* Lokalnie — Rzeszów */}
             <section className="py-20 px-6 md:px-12 bg-white/[0.02]">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection className="text-center mb-12">
+                        <p className="eyebrow mb-4">Lokalnie</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Projektowanie logo dla firm z Rzeszowa</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto mt-4">
+                            Tworzenie logo to u mnie jedno zlecenie od briefu do gotowych plików — bez pośredników. Pracuję z Rzeszowa, dla firm z Podkarpacia i całej Polski.
+                        </p>
+                    </AnimatedSection>
+                    <div className="grid md:grid-cols-3 gap-4">
+                        {[
+                            {
+                                title: "Piszesz do mnie, nie do firmy",
+                                desc: "Nie ma działu obsługi ani project managera. Rozmawiasz z osobą, która projektuje Twoje logo.",
+                            },
+                            {
+                                title: "Logo od razu na wizytówkach",
+                                desc: "Wizytówki drukuję u siebie. Pakiet Marka Mini: logo + 100 wizytówek z projektem i drukiem za 1 090 zł.",
+                            },
+                            {
+                                title: "Cena znana przed startem",
+                                desc: "Dostajesz stałą wycenę, nie stawkę godzinową. Poprawki wybranej koncepcji są w cenie.",
+                            },
+                        ].map((item, i) => (
+                            <AnimatedSection key={i} delay={i * 0.08}>
+                                <div className="glass-card p-5 h-full">
+                                    <h3 className="font-bold text-white text-sm mb-2">{item.title}</h3>
+                                    <p className="text-white/55 text-xs leading-relaxed">{item.desc}</p>
+                                </div>
+                            </AnimatedSection>
+                        ))}
+                    </div>
+                    <AnimatedSection className="mt-6 text-center">
+                        <p className="text-white/50 text-sm">
+                            Potrzebujesz więcej niż logo? Zobacz, co robię jako{" "}
+                            <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>
+                            {" "}i jak wygląda{" "}
+                            <Link href="/druk-rzeszow" className="text-gold hover:underline">druk w Rzeszowie</Link>.
+                        </p>
+                    </AnimatedSection>
+                </div>
+            </section>
+
+            {/* Dla kogo */}
+            <section className="py-20 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-12">
                         <p className="eyebrow mb-4">Dla kogo</p>

@@ -34,7 +34,7 @@ export const faqs: FaqItem[] = [
     },
     {
         question: "Ile zazwyczaj trwa projekt strony WWW?",
-        answer: "Dla One-Page'a lecimy szybko – zwykle wyrabiam się w około tydzień od zebrania materiałów. Dużo zależy od tego, jak szybko dostarczysz mi treści, zdjęcia i jak sprawnie dajesz feedback. Żadnego bujania w chmurach – konkret praca."
+        answer: "Dla One-Page'a lecimy szybko – strona powstaje w 7–14 dni roboczych od zebrania materiałów. Dużo zależy od tego, jak szybko dostarczysz mi treści, zdjęcia i jak sprawnie dajesz feedback. Żadnego bujania w chmurach – konkret praca."
     },
     {
         question: "Skąd będę wiedział, na jakim etapie jest mój projekt?",

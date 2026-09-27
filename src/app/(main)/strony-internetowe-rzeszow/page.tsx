@@ -4,15 +4,19 @@ import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, Search } from "lucide-re
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
+import { PageFaq, type FaqEntry } from "@/components/PageFaq";
+import { faqPageSchema } from "@/lib/faq-schema";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Strony internetowe Rzeszów od 1 990 zł",
-    description: "Strony internetowe dla firm z Rzeszowa. Next.js, ładowanie poniżej sekundy, SEO od zera. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
+    title: "Strony internetowe Rzeszów — cennik 2026, od 1 990 zł",
+    description: "Cennik stron internetowych w Rzeszowie: one-page od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep od 6 900 zł. Domena i hosting na rok w cenie. Wycena w 24h →",
     keywords: [
         "strony internetowe Rzeszów",
+        "strony internetowe Rzeszów cennik",
+        "tanie strony internetowe Rzeszów",
         "tworzenie stron internetowych Rzeszów",
         "web design Rzeszów",
         "strony www Rzeszów",
@@ -72,64 +76,70 @@ const localSchema = {
         "@type": "OfferCatalog",
         "name": "Pakiety stron internetowych",
         "itemListElement": [
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Strona One-Page" }, "priceSpecification": { "@type": "PriceSpecification", "price": "1800", "priceCurrency": "PLN" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Strona Firmowa Multi-Page" }, "priceSpecification": { "@type": "PriceSpecification", "price": "2900", "priceCurrency": "PLN" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Strona One-Page" }, "priceSpecification": { "@type": "PriceSpecification", "price": "1990", "priceCurrency": "PLN", "minPrice": "1990" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Strona firmowa do 5 podstron" }, "priceSpecification": { "@type": "PriceSpecification", "price": "2990", "priceCurrency": "PLN" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sklep internetowy" }, "priceSpecification": { "@type": "PriceSpecification", "price": "6900", "priceCurrency": "PLN", "minPrice": "6900" } },
         ],
     },
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztuje strona internetowa w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Strona One-Page od 1 990 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — znasz kwotę przed startem. Nie ma stawki godzinowej ani niespodzianek po fakturze.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy tworzysz strony dla firm spoza Rzeszowa?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak — większość projektów realizuję zdalnie. Rzeszów i Podkarpacie to moja baza, ale obsługuję firmy z całej Polski. Cały kontakt przez WhatsApp, Messenger lub e-mail.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Ile trwa zbudowanie strony internetowej?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "One-Page: ok. tydzień od zatwierdzenia projektu graficznego. Multi-Page: 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści z Twojej strony.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Dlaczego Next.js zamiast WordPressa?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Next.js ładuje się poniżej 1 sekundy, nie wymaga aktualizacji pluginów i nie ma backendu do zhackowania. WordPress jest wygodniejszy do edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości — a to te trzy rzeczy decydują o tym, czy strona generuje klientów.",
-            },
-        },
-    ],
-};
+// Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
+// wymaga, żeby dane strukturalne miały pokrycie w treści strony.
+const faqs: FaqEntry[] = [
+    {
+        q: "Ile kosztuje strona internetowa w Rzeszowie?",
+        a: "Strona jednostronicowa (one-page) od 1 990 zł netto, strona firmowa do 5 podstron 2 990 zł netto, sklep internetowy od 6 900 zł netto. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
+    },
+    {
+        q: "Ile kosztuje utrzymanie strony po pierwszym roku?",
+        a: "Opieka Strony to 199 zł netto miesięcznie: serwer, domena, kopie zapasowe, zabezpieczenia i 1 godzina drobnych zmian w miesiącu. Rezygnujesz w każdej chwili z miesięcznym wyprzedzeniem.",
+    },
+    {
+        q: "Czy da się zrobić tanią stronę internetową w Rzeszowie?",
+        a: "Najtańsza opcja u mnie to strona jednostronicowa od 1 990 zł netto — jedna strona, jeden cel, formularz kontaktowy, SEO i domena z hostingiem na rok. Wystarcza nowej firmie, freelancerowi albo jednej usłudze. Tańsze oferty to zwykle gotowy szablon, który trudno potem wypozycjonować w Google.",
+    },
+    {
+        q: "Ile trwa zbudowanie strony internetowej?",
+        a: "7–14 dni roboczych, zarówno przy stronie jednostronicowej, jak i z podstronami. Czas zależy głównie od szybkości dostarczenia treści z Twojej strony.",
+    },
+    {
+        q: "Czy tworzysz strony dla firm spoza Rzeszowa?",
+        a: "Tak — większość projektów realizuję zdalnie. Rzeszów i Podkarpacie to moja baza, ale obsługuję firmy z całej Polski. Kontakt przez WhatsApp, Messenger lub e-mail.",
+    },
+    {
+        q: "Czy mogę samodzielnie edytować treści?",
+        a: "Tak — do strony z podstronami podłączam lekki CMS. Przy one-page wystarczy napisać do mnie: w Opiece Strony masz 1 godzinę drobnych zmian w miesiącu.",
+    },
+    {
+        q: "Dlaczego Next.js zamiast WordPressa?",
+        a: "Next.js ładuje się poniżej 1 sekundy, nie wymaga aktualizacji pluginów i nie ma backendu do zhackowania. WordPress jest wygodniejszy do edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości — a to te trzy rzeczy decydują o tym, czy strona przynosi klientów.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
+
+const priceTable = [
+    { name: "Strona jednostronicowa (one-page)", price: "od 1 990 zł" },
+    { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
+    { name: "Sklep internetowy", price: "od 6 900 zł" },
+    { name: "Dodatkowa sekcja na istniejącej stronie", price: "od 100 zł" },
+    { name: "Pakiet Firma w Internecie — logo, identyfikacja i strona do 5 podstron", price: "3 490 zł" },
+    { name: "Opieka Strony — serwer, domena, kopie, 1 h zmian", price: "199 zł / mc" },
+];
 
 const packages = [
     {
         name: "One-Page",
         price: "od 1 990 zł",
-        time: "~tydzień",
+        time: "7–14 dni roboczych",
         desc: "Jedna strona, jeden cel. Idealna dla freelancerów, coachów i nowych firm, które chcą szybko zaistnieć w sieci.",
-        items: ["Projekt graficzny UI/UX", "Next.js + React", "Formularz kontaktowy", "SEO on-page", "Wdrożenie na hostingu klienta"],
+        items: ["Projekt graficzny UI/UX", "Next.js + React", "Formularz kontaktowy", "SEO on-page", "Domena i hosting na 1. rok w cenie"],
         highlight: false,
     },
     {
         name: "Multi-Page",
         price: "od 2 990 zł",
-        time: "2–3 tygodnie",
+        time: "7–14 dni roboczych",
         desc: "Serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie w Google.",
         items: ["Wszystko z One-Page +", "Podstrony usług z SEO", "Blog gotowy do publikacji", "Schema markup JSON-LD", "Google Search Console setup"],
         highlight: true,
@@ -191,7 +201,7 @@ export default function StronyInternetowerRzeszowPage() {
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Cennik</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Pakiety stron internetowych</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Cennik stron internetowych w Rzeszowie (2026)</h2>
                         <p className="text-white/50 max-w-xl mx-auto mt-4">Wycena = cena końcowa. Bez stawki godzinowej, bez niespodzianek po fakturze.</p>
                         <NettoNote className="mt-3" />
                     </AnimatedSection>
@@ -221,6 +231,39 @@ export default function StronyInternetowerRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+
+                    <AnimatedSection className="mt-10">
+                        <div className="glass-card p-6 md:p-8">
+                            <h3 className="font-bold text-white mb-4">Pełny cennik stron — ceny netto</h3>
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="text-left text-white/50 border-b border-white/10">
+                                        <th scope="col" className="py-2 font-medium">Usługa</th>
+                                        <th scope="col" className="py-2 font-medium text-right">Cena</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {priceTable.map((row) => (
+                                        <tr key={row.name} className="border-b border-white/5 last:border-0">
+                                            <td className="py-2.5 pr-4 text-white/70">{row.name}</td>
+                                            <td className="py-2.5 text-right font-bold text-white whitespace-nowrap">{row.price}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <p className="text-white/50 text-xs mt-4">Domena i hosting na pierwszy rok są w cenie każdej strony.</p>
+                        </div>
+                    </AnimatedSection>
+
+                    <AnimatedSection className="mt-6">
+                        <div className="glass-card p-6 border-l-2 border-gold">
+                            <h3 className="font-bold text-white mb-2">Tania strona internetowa w Rzeszowie — kiedy ma sens</h3>
+                            <p className="text-white/60 text-sm leading-relaxed">
+                                Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł netto. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie — nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
+                                <Link href="/blog/strona-one-page-czy-multi-page" className="text-gold hover:underline">one page czy multi page</Link>.
+                            </p>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 
@@ -250,29 +293,7 @@ export default function StronyInternetowerRzeszowPage() {
             </section>
 
             {/* FAQ */}
-            <section className="py-20 px-6 md:px-12">
-                <div className="max-w-3xl mx-auto">
-                    <AnimatedSection className="text-center mb-12">
-                        <p className="eyebrow mb-4">FAQ</p>
-                        <h2 className="text-3xl font-bold text-white">Pytania o strony internetowe w Rzeszowie</h2>
-                    </AnimatedSection>
-                    <div className="space-y-4">
-                        {[
-                            { q: "Ile kosztuje strona internetowa w Rzeszowie?", a: "One-Page od 1 990 zł, Multi-Page od 2 990 zł. Stała cena przed startem — nie stawka godzinowa." },
-                            { q: "Ile trwa budowa strony?", a: "One-Page ok. tydzień, Multi-Page 2–3 tygodnie. Czas zależy głównie od szybkości dostarczenia treści." },
-                            { q: "Obsługujesz firmy spoza Rzeszowa?", a: "Tak — wszystko idzie zdalnie. Rzeszów to moja baza, ale pracuję dla firm z całej Polski." },
-                            { q: "Czy mogę samodzielnie edytować treści?", a: "Tak — dla Multi-Page podłączam lekki CMS. Do One-Page wystarczy napisanie do mnie, drobne zmiany wchodzą w zakres wsparcia." },
-                        ].map((item, i) => (
-                            <AnimatedSection key={i} delay={i * 0.06}>
-                                <div className="glass-card p-5">
-                                    <h3 className="font-bold text-white mb-2 text-sm">{item.q}</h3>
-                                    <p className="text-white/55 text-sm leading-relaxed">{item.a}</p>
-                                </div>
-                            </AnimatedSection>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <PageFaq items={faqs} title="Pytania o strony internetowe w Rzeszowie" />
 
             {/* CROSS-SELL */}
             <section className="py-12 px-6 md:px-12">

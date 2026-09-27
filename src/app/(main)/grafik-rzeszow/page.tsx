@@ -122,7 +122,7 @@ const faqSchema = {
             "name": "Jak długo trwa projekt logo w Rzeszowie?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Standardowy czas realizacji logo to 10–14 dni roboczych od zatwierdzenia briefu. Strona One-Page zazwyczaj tydzień. Przy pilnych zleceniach możliwy ekspresowy termin — zapytaj.",
+                "text": "Standardowy czas realizacji logo to 7–10 dni roboczych od zatwierdzenia briefu. Strona internetowa: 7–14 dni roboczych. Przy pilnych zleceniach możliwy ekspresowy termin — zapytaj.",
             },
         },
         {
@@ -312,7 +312,7 @@ export default function GrafikRzeszowPage() {
                             },
                             {
                                 q: "Ile czekam na gotowy projekt?",
-                                a: "Logo: 10–14 dni roboczych od briefu. Strona One-Page: ok. tydzień. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
+                                a: "Logo: 7–10 dni roboczych od briefu. Strona internetowa: 7–14 dni roboczych. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
                             },
                             {
                                 q: "Co dostaję razem z logo?",
