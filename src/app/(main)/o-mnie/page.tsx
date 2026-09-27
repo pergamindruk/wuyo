@@ -223,7 +223,7 @@ export default function OmniePage() {
                         <p className="eyebrow mb-3">Pod ręką, nie na zewnątrz</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Własny sprzęt poligraficzny</h2>
                         <p className="text-white/55 mt-4 max-w-2xl leading-relaxed">
-                            Większość grafików zleca druk na zewnątrz — ja drukuję sam. To znaczy szybciej, taniej i z pełną kontrolą nad jakością. Bez minimum nakładu, bez tygodniowego czekania.
+                            Większość grafików zleca druk na zewnątrz — ja drukuję sam. To znaczy szybciej, taniej i z pełną kontrolą nad jakością. Już od 50 sztuk, bez tygodniowego czekania.
                         </p>
                     </AnimatedSection>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

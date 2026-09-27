@@ -68,6 +68,8 @@ export async function generateQuote(clientMessage: string) {
     - Ulotka A5: jednostronna 260 zl, dwustronna 300 zl; ulotka A4 / skladana do DL: 330 zl
     - Plakat A3-A2: 350 zl; voucher: 220 zl; menu A4: 280 zl
     - Etykieta produktowa: od 180 zl; opakowanie (pudelko, torebka, sleeve): od 400 zl
+    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
+    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
     - Baner do 3 m2: od 260 zl; 3-8 m2: 390 zl; 8-15 m2: 490 zl; roll-up: 330 zl; szyld: od 450 zl
     - Social media: pojedyncza grafika 150 zl, karuzela do 6 slajdow od 220 zl, zestaw startowy od 550 zl, pakiet 4 / 8 / 12 grafik: 520 / 950 / 1350 zl
     - Praca godzinowa (poprawki, DTP): 100 zl/h, minimum 1 h

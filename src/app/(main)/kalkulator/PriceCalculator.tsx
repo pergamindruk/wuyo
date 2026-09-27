@@ -6,7 +6,7 @@ import { ArrowRight, ArrowLeft, Zap, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 type ServiceKey = "logo" | "www" | "druk" | "social";
-type TimelineKey = "standard" | "express" | "ultra";
+type TimelineKey = "standard" | "express";
 
 interface Selection {
     service: ServiceKey | null;
@@ -46,8 +46,8 @@ const SERVICES = [
 
 const TIMELINE_MULT: Record<TimelineKey, number> = {
     standard: 1,
-    express: 1.4,
-    ultra: 1.8,
+    // CENNIK.md, zasady: "Ekspres 24–48h: +30% do całości".
+    express: 1.3,
 };
 
 function calcPrice(s: Selection): [number, number] | null {
@@ -300,9 +300,8 @@ export function PriceCalculator() {
 
                             <div className="space-y-2 mb-8">
                                 {([
-                                    ["standard", "Standard", "~2 tygodnie", "Normalny tryb — bez dopłat"],
-                                    ["express", "Ekspres", "~5 dni roboczych", "+40% do ceny"],
-                                    ["ultra", "Ultra Ekspres", "~2 dni robocze", "+80% do ceny"],
+                                    ["standard", "Standard", "logo 7–10, strona 7–14 dni roboczych", "Normalny tryb — bez dopłat"],
+                                    ["express", "Ekspres", "szybszy termin, ustalany przy wycenie", "+30% do ceny"],
                                 ] as const).map(([k, l, time, note]) => (
                                     <button key={k} onClick={() => update({ timeline: k })} className={`w-full p-4 rounded-xl border text-left transition-all flex items-center gap-4 ${sel.timeline === k ? "border-gold bg-gold/10" : "border-white/10 hover:border-white/30"}`}>
                                         <div className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${sel.timeline === k ? "border-gold bg-gold" : "border-white/30"}`}>

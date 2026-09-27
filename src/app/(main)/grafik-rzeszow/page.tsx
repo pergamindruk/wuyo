@@ -154,9 +154,9 @@ const services = [
     {
         title: "Druk i papeteria",
         price: "od 99 zł",
-        desc: "Mam własny sprzęt — drukuję u siebie, nie wysyłam do zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Bez minimum nakładu, bez tygodniowego czekania.",
+        desc: "Mam własny sprzęt — drukuję u siebie, nie wysyłam do zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Już od 50 sztuk, bez tygodniowego czekania.",
         href: "/druk",
-        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Małe nakłady, bez minimum", "Ekspresowa realizacja"],
+        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Małe nakłady, od 50 sztuk", "Ekspresowa realizacja"],
     },
     {
         title: "Grafika reklamowa",
@@ -171,7 +171,7 @@ const reasons = [
     { n: "01", title: "Wiesz co dostajesz — zanim zapłacisz", desc: "Przed każdym projektem dostajesz stałą wycenę. Nie stawkę godzinową, nie \"zależy od zakresu\". Konkretna kwota, konkretny termin. Jeśli coś zmienisz w trakcie — mówię o tym od razu, nie na fakturze." },
     { n: "02", title: "Piszesz do mnie, nie do firmy", desc: "Nie ma tu działu obsługi klienta ani project managera. Piszesz do mnie, ja odpisuję, ja projektuję. Skraca to czas realizacji i eliminuje nieporozumienia które zdarzają się w agencjach." },
     { n: "03", title: "Logo, strona i druk — jedno zlecenie", desc: "Większość firm potrzebuje tych trzech rzeczy naraz. Możesz zlecić wszystko jednej osobie — nie tracisz czasu na szukanie osobnego grafika, web developera i drukarni." },
-    { n: "04", title: "Małe nakłady drukuję u siebie", desc: "Wizytówki, ulotki i naklejki drukuję sam — nie wysyłam do zewnętrznej drukarni. Możesz zamówić 20 sztuk zamiast 500. Możesz mieć je następnego dnia. Bez czekania, bez minimum." },
+    { n: "04", title: "Małe nakłady drukuję u siebie", desc: "Wizytówki, ulotki i naklejki drukuję sam — nie wysyłam do zewnętrznej drukarni. Możesz zamówić 50 sztuk zamiast 500. Możesz mieć je następnego dnia. Bez czekania." },
 ];
 
 export default function GrafikRzeszowPage() {
