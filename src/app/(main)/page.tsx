@@ -284,7 +284,7 @@ export default function Home() {
                             Ty robisz swoje.<br />Ja ogarniam resztę.
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>Działam sam — rozmawiasz ze mną, nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost co zrobię, ile to kosztuje i kiedy będzie gotowe.</p>
+                            <p>Działam sam — rozmawiasz ze mną, nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost co zrobię, ile to kosztuje i kiedy będzie gotowe. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
                             <p>Twoja strona czy marka mają jedno zadanie: zarabiać. Nie tylko wyglądać. Zajmuję się tym żebyś Ty mógł skupić się na tym, na czym znasz się najlepiej.</p>
                         </div>
 

@@ -42,43 +42,55 @@ export async function generateQuote(clientMessage: string) {
 
     CENNIK REFERENCYJNY WUYO (ceny NETTO, do faktury dochodzi 23% VAT, 2026, rynek rzeszowski):
 
-    DRUK wlasny (projekt + druk lacznie, ceny calkowite dla klienta):
-    - Wizytowki 100 szt. (projekt + druk): 200-250 zl
-    - Wizytowki 250 szt. (projekt + druk): 240-290 zl
-    - Ulotki A5 100 szt. (projekt + druk): 210-280 zl
-    - Ulotki A4 100 szt. (projekt + druk): 240-310 zl
-    - Plakat A3 (projekt + druk, 1 szt.): 60-100 zl
-    - Vouchery 100 szt. (projekt + druk): 200-280 zl
-    Adaptacje/warianty tego samego projektu: 50% ceny zestawu bazowego.
-    Rabat pakietowy przy 4+ pozycjach dla jednej marki: -10-15% od sumy.
+    Zrodlo: CENNIK.md (stan 27.09.2026). Nie podawaj cen spoza tej listy — przy nietypowym zakresie napisz "wycena indywidualna".
+
+    DRUK wlasny — ZESTAW projekt dwustronny + druk (ceny calkowite dla klienta):
+    - Wizytowki: 50 szt. 299 zl, 100 szt. 349 zl, 150 szt. 389 zl, 300 szt. 479 zl (papier 300 g, blysk)
+    - Ulotki A5: 100 szt. 449 zl, 300 szt. 589 zl (kreda 130 g)
+    - Vouchery: 50 szt. 289 zl, 100 szt. 359 zl
+    - Naklejki: 50 szt. 219 zl, 100 szt. 279 zl (folia wodoodporna +25% do druku)
+    - Menu restauracyjne projekt + druk: od 400 zl
+    SAM DRUK z gotowego pliku klienta:
+    - Wizytowki: 50 szt. 99 zl, 100 szt. 159 zl, 150 szt. 199 zl, 300 szt. 299 zl
+    - Ulotki A5: 50 szt. 119 zl, 100 szt. 189 zl, 150 szt. 239 zl, 300 szt. 359 zl
+    - Naklejki: 50 szt. 89 zl, 100 szt. 149 zl, 200 szt. 229 zl
+    - Plakaty: od 29 zl/szt.
+    Nigdy nie podawaj ceny samego druku klientowi, ktory nie ma jeszcze projektu.
+    Rabat: stali klienci i znajomi do 20% na druk, nigdy na projekt.
+    Ekspres 24-48h: +30% do calosci.
 
     PROJEKT GRAFICZNY (bez druku):
-    - Logo: od 890 zl (sam projekt), 1490 zl (z mini ksiega znaku)
-    - Marka / identyfikacja: od 1490 zl
-    - Wizytowka (sam projekt): 150-200 zl
-    - Ulotka A5 (sam projekt): 150-220 zl
-    - Ulotka A4 (sam projekt): 180-250 zl
-    - Rollup/Baner (sam projekt): 300-400 zl
+    - Logo (3 wersje: pozioma, pionowa, mono; 3 koncepcje do wyboru): od 890 zl
+    - Logo + mini ksiega znaku: 1190 zl
+    - Lifting istniejacego logo: od 1000 zl
+    - Mini ksiega znaku do istniejacego logo: 590 zl
+    - Wizytowka: jednostronna 160 zl, dwustronna 240 zl
+    - Ulotka A5: jednostronna 260 zl, dwustronna 300 zl; ulotka A4 / skladana do DL: 330 zl
+    - Plakat A3-A2: 350 zl; voucher: 220 zl; menu A4: 280 zl
+    - Etykieta produktowa: od 180 zl; opakowanie (pudelko, torebka, sleeve): od 400 zl
+    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
+    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
+    - Baner do 3 m2: od 260 zl; 3-8 m2: 390 zl; 8-15 m2: 490 zl; roll-up: 330 zl; szyld: od 450 zl
+    - Social media: pojedyncza grafika 150 zl, karuzela do 6 slajdow od 220 zl, zestaw startowy od 550 zl, pakiet 4 / 8 / 12 grafik: 520 / 950 / 1350 zl
+    - Praca godzinowa (poprawki, DTP): 100 zl/h, minimum 1 h
 
-    PAKIETY JEDNORAZOWE (projekt pod klucz):
-    - Marka Start (logo + mini ksiega + wizytowki 150szt projekt+druk): 1490 zl
-    - Firma w Internecie (Marka Start + strona do 5 podstron): 3490 zl
-    - Pelny Start (branding + strona + Google + 5 grafik + 3mc opieki): 5900 zl
+    PAKIETY JEDNORAZOWE:
+    - Marka Mini (logo + 100 wizytowek projekt+druk): 1090 zl
+    - Marka Start (logo + mini ksiega + 150 wizytowek projekt+druk + stopka mailowa): 1490 zl
+    - Firma w Internecie (Marka Start + strona do 5 podstron, szkolenie, 1 mc opieki): 3490 zl
+    - Pelny Start (Firma w Internecie + 300 wizytowek, ulotka A5, social, wizytowka Google, 3 mc Widocznosci i Opieki): 5900 zl
 
-    STRONY WWW (sama strona bez brandingu):
-    - Strona indywidualna: od 1990 zl
-    - Strona firmowa: od 3490 zl
-    - E-commerce / sklep: od 6900 zl
+    STRONY WWW (domena i hosting na 1. rok w cenie; realizacja 7-14 dni roboczych):
+    - Strona jednostronicowa (one-page): od 1990 zl
+    - Strona firmowa do 5 podstron: 2990 zl
+    - Sklep internetowy: od 6900 zl
 
-    ABONAMENT MIESIĘCZNY:
-    - Opieka Strony (hosting, aktualizacje, drobne zmiany): 199 zl/mc
-    - Widocznosc i Opieka (jw. + wizytowka Google + 5-6 grafik/mc): 690 zl/mc
+    ABONAMENT MIESIECZNY:
+    - Opieka Strony (serwer, domena, kopie, zabezpieczenia, 1 h drobnych zmian/mc): 199 zl/mc
+    - Widocznosc i Opieka (jw. + wizytowka Google, opinie, 5-6 grafik/mc, raport): 690 zl/mc
+    - Staly Opiekun (jw. + pelna grafika, prowadzenie social media, priorytet): 1290 zl/mc
 
-    SOCIAL MEDIA / DIGITAL:
-    - Social Media Kit: od 1200 zl
-    - Karuzela IG/LinkedIn: od 150 zl/post
-    - Pitch Deck: od 600 zl
-    - Szablon newslettera: od 300 zl
+    TERMINY: logo 7-10 dni roboczych, strona 7-14 dni roboczych, druk 1-3 dni robocze.
 
     Zadanie: Przeanalizuj to zapytanie i przygotuj odpowiedz dla wlasciciela WUYO. Odpowiedz ma zawierac:
     1. **Krotkie streszczenie:** Czego dokladnie chce klient i na czym mu zalezy.

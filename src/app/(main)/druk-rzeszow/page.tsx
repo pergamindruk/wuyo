@@ -41,7 +41,7 @@ const localSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Druk wizytówek i ulotek – Rzeszów",
-    "description": "Projekt graficzny i druk małej papeterii w Rzeszowie — wizytówki, ulotki, vouchery, naklejki. Małe nakłady bez minimum, szybka realizacja.",
+    "description": "Projekt graficzny i druk małej papeterii w Rzeszowie — wizytówki, ulotki, vouchery, naklejki. Małe nakłady od 50 sztuk, szybka realizacja.",
     "provider": {
         "@type": "LocalBusiness",
         "name": "WUYO – Dobra Grafa",
@@ -76,8 +76,8 @@ const faqs = [
         a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu, a przy pilnych zleceniach nawet następnego dnia. Odbierzesz osobiście w Rzeszowie bez czekania na kuriera — drukuję u siebie, więc nie wysyłam nic do zewnętrznej drukarni i z powrotem.",
     },
     {
-        q: "Czy zrobisz 20 wizytówek na ostatnią chwilę?",
-        a: "Tak. Drukuję u siebie na sprzęcie A3+, więc nie czekam na zapełnienie arkusza zbiorczego i nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Potrzebujesz 20 sztuk na jutrzejsze spotkanie w Rzeszowie — zrobię 20.",
+        q: "Czy zrobisz 50 wizytówek na ostatnią chwilę?",
+        a: "Tak. Drukuję u siebie na sprzęcie A3+, więc nie czekam na zapełnienie arkusza zbiorczego i nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Potrzebujesz 50 sztuk na jutrzejsze spotkanie w Rzeszowie — zrobię je.",
     },
     {
         q: "Co jeśli mój plik nie nadaje się do druku?",
@@ -100,10 +100,10 @@ const faqSchema = {
 };
 
 const products = [
-    { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na papierze 300 g z błyskiem. Możesz zamówić już od 20 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 300 g", "Wykończenie błysk", "Od 20 szt."] },
-    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Papier 130–170g", "Min. 100 szt."] },
+    { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na papierze 300 g z błyskiem. Możesz zamówić już od 50 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 300 g", "Wykończenie błysk", "Od 50 szt."] },
+    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Kreda 130 g", "Od 50 szt."] },
     { name: "Vouchery", price: "od 289 zł / 50 szt.", desc: "Voucher który wygląda jak produkt premium. Perforacja, numeracja — opcjonalnie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
-    { name: "Naklejki i etykiety", price: "od 219 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 20 szt."] },
+    { name: "Naklejki i etykiety", price: "od 219 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 50 szt."] },
 ];
 
 export default function DrukRzeszowPage() {

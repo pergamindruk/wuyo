@@ -13,7 +13,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Wizytówki i ulotki z projektem — zamów online, wysyłka",
-    description: "Zamów online projekt i druk wizytówek, ulotek i voucherów z wysyłką kurierem w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł, bez minimum →",
+    description: "Zamów online projekt i druk wizytówek, ulotek i voucherów z wysyłką kurierem w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł, już od 50 szt. →",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
         description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki z projektem od 299 zł, sam druk od 99 zł. Rzeszów i cała Polska.",
@@ -44,8 +44,8 @@ const faqs: FaqEntry[] = [
         a: "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
     },
     {
-        q: "Czy mogę zamówić mały nakład — np. 20 wizytówek?",
-        a: "Tak. Nie mam minimalnego nakładu na wizytówki i naklejki — drukuję u siebie, więc nie obowiązują mnie minimalne ilości drukarni przemysłowych. Przy ulotkach minimum to 100 szt.",
+        q: "Czy mogę zamówić mały nakład — np. 50 wizytówek?",
+        a: "Tak. Wizytówki, ulotki i naklejki drukuję u siebie od 50 sztuk — nie obowiązują mnie minimalne nakłady drukarni przemysłowych, które zwykle zaczynają od 250 sztuk.",
     },
     {
         q: "Czy zajmujesz się tylko projektem, czy też drukiem?",
@@ -91,7 +91,7 @@ const products = [
         name: "Ulotki",
         desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt który przyciąga wzrok i rzeczywiście skłania do działania.",
         price: "od 449 zł",
-        details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Papier 130–170g/m²", "Min. 100 szt."],
+        details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Kreda 130 g", "Od 50 szt."],
     },
     {
         name: "Vouchery",
