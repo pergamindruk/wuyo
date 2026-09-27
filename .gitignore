@@ -50,3 +50,6 @@ leads.json
 
 # Licencje fontów muszą jechać razem z plikami .woff2 (wymóg OFL, repo jest publiczne)
 !public/fonts/OFL-*.txt
+
+# Pliki do pobrania dla odwiedzajacych (szablony) - publiczne
+!public/pobierz/*.pdf
