@@ -251,7 +251,10 @@ export default function StronyInternetowerRzeszowPage() {
                                     ))}
                                 </tbody>
                             </table>
-                            <p className="text-white/50 text-xs mt-4">Domena i hosting na pierwszy rok są w cenie każdej strony.</p>
+                            <p className="text-white/50 text-xs mt-4">
+                                Domena i hosting na pierwszy rok są w cenie każdej strony. Co dalej i ile to kosztuje, rozpisałem w tekście{" "}
+                                <Link href="/blog/ile-kosztuje-utrzymanie-strony-internetowej" className="text-gold hover:underline">ile kosztuje utrzymanie strony</Link>.
+                            </p>
                         </div>
                     </AnimatedSection>
 
