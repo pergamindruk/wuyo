@@ -11,8 +11,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-    title: "Nadruki na odzieży od 79 zł — Rzeszów",
-    description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum — od 1 sztuki za 79 zł, przy 20+ szt. 49 zł/szt. Rzeszów + wysyłka →",
+    title: "Nadruk na koszulki Rzeszów — DTF od 1 sztuki",
+    description: "Nadruk DTF na koszulki i bluzy w Rzeszowie. Bez minimum: 1 koszulka 79 zł, przy 20+ szt. 49 zł/szt. Nadruk na Twojej odzieży od 45 zł. 1–4 dni robocze →",
     openGraph: {
         title: "Nadruki na Odzieży – koszulki, bluzy, personalizacja | WUYO",
         description: "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, haft. Bez minimum ilościowego. Rzeszów i cała Polska.",
@@ -131,15 +131,15 @@ export default function OdziezPage() {
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
 
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
-                    <p className="eyebrow mb-4">Nadruk + personalizacja</p>
+                    <p className="eyebrow mb-4">Nadruk DTF · Rzeszów · wysyłka w całej Polsce</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Koszulki, bluzy<br />
+                        Nadruki na koszulki<br />
                         <span className="bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent">
-                            i nadruki, które zostają.
+                            i bluzy w Rzeszowie
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Nadruk DTF, personalizacja imienna, haft. Bez minimum ilościowego — jedna koszulka albo cały zespół, jeden kontakt od projektu do gotowej rzeczy.
+                        Nadruki, które zostają: DTF, personalizacja imienna, haft. Bez minimum ilościowego — jedna koszulka albo cały zespół, jeden kontakt od projektu do gotowej rzeczy.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
