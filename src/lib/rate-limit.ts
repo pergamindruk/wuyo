@@ -21,11 +21,13 @@ function memoryRateLimit(key: string, limit: number, windowMs: number): boolean 
 }
 
 export async function rateLimit(
-    supabase: SupabaseClient,
+    supabase: SupabaseClient | null,
     key: string,
     limit: number,
     windowMs: number
 ): Promise<boolean> {
+    if (!supabase) return memoryRateLimit(key, limit, windowMs)
+
     const { data, error } = await supabase.rpc("check_rate_limit", {
         p_key: key,
         p_limit: limit,

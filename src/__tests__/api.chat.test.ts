@@ -232,4 +232,210 @@ describe("/api/brief", () => {
         expect(res.status).toBe(200);
         expect(mockSendMail).toHaveBeenCalledTimes(2);
     });
+
+    it("TC-7 cicho odrzuca bota, który wypełnił honeypot", async () => {
+        const res = await POST(makeReq(
+            { path: "quick", name: "Bot", email: "bot@test.pl", hp: "http://spam.example" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockInsert).not.toHaveBeenCalled();
+        expect(mockSendMail).not.toHaveBeenCalled();
+    });
+
+    it("TC-8 zwraca 400 z komunikatem o imieniu, gdy jest tylko e-mail", async () => {
+        const res = await POST(makeReq({ path: "quick", email: "anna@test.pl" }, "/api/brief"));
+        const body = await res.json();
+        expect(res.status).toBe(400);
+        expect(body.error).toMatch(/imię/i);
+        expect(mockInsert).not.toHaveBeenCalled();
+    });
+
+    it.each([
+        "anna@",
+        "anna@test",
+        "anna test@test.pl",
+        "<anna@test.pl>",
+        "a..b@test.pl",
+        "anna@test.pl, inny@test.pl",
+    ])("TC-9 zwraca 400 dla błędnego adresu %s i niczego nie zapisuje", async (email) => {
+        const res = await POST(makeReq({ path: "quick", name: "Anna", email }, "/api/brief"));
+        const body = await res.json();
+        expect(res.status).toBe(400);
+        expect(body.error).toMatch(/e-mail/i);
+        expect(mockInsert).not.toHaveBeenCalled();
+        expect(mockSendMail).not.toHaveBeenCalled();
+    });
+
+    it("TC-10 normalizuje adres ze spacjami i wielkimi literami", async () => {
+        const res = await POST(makeReq(
+            { path: "quick", name: "Anna", email: "  Anna@Test.PL ", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockInsert).toHaveBeenCalledWith([expect.objectContaining({ email: "anna@test.pl" })]);
+        expect(mockSendMail).toHaveBeenNthCalledWith(1, expect.objectContaining({ replyTo: "anna@test.pl" }));
+        expect(mockSendMail).toHaveBeenNthCalledWith(2, expect.objectContaining({ to: "anna@test.pl" }));
+    });
+
+    it("TC-11 escapuje HTML od klienta w obu mailach", async () => {
+        await POST(makeReq(
+            {
+                path: "quick",
+                name: "<script>alert(1)</script>",
+                email: "anna@test.pl",
+                quickMessage: "<img src=x onerror=alert(1)>",
+                note: "<b>pilne</b>",
+            },
+            "/api/brief"
+        ));
+        const [powiadomienie, autoodpowiedz] = mockSendMail.mock.calls.map(([p]) => p.html as string);
+        for (const html of [powiadomienie, autoodpowiedz]) {
+            expect(html).not.toContain("<script>");
+            expect(html).toContain("&lt;script&gt;");
+        }
+        expect(powiadomienie).not.toContain("<img src=x");
+        expect(powiadomienie).toContain("&lt;img src=x onerror=alert(1)&gt;");
+        expect(powiadomienie).toContain("&lt;b&gt;pilne&lt;/b&gt;");
+    });
+
+    it("TC-12 zwraca 500 gdy Resend odrzuca wysyłkę bez wyjątku", async () => {
+        mockSendMail.mockResolvedValueOnce({ data: null, error: { message: "domain is not verified" } });
+        const res = await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(500);
+        expect(mockSendMail).toHaveBeenCalledTimes(1);
+    });
+
+    it("TC-13 ponawia powiadomienie bez reply_to, gdy poczta odrzuca adres klienta", async () => {
+        mockSendMail.mockResolvedValueOnce({ data: null, error: { message: "Invalid `reply_to` field" } });
+        const res = await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockSendMail).toHaveBeenCalledTimes(3);
+        const ponowna = mockSendMail.mock.calls[1][0];
+        expect(ponowna).toEqual(expect.objectContaining({ to: "kontakt@wuyo.pl" }));
+        expect(ponowna).not.toHaveProperty("replyTo");
+        // adres klienta zostaje w treści, więc da się odpisać ręcznie
+        expect(ponowna.html).toContain("jan@test.pl");
+    });
+
+    it("TC-14 zwraca 200 gdy Mailerlite nie działa", async () => {
+        global.fetch = vi.fn().mockRejectedValue(new Error("network down"));
+        const res = await POST(makeReq(
+            { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockSendMail).toHaveBeenCalledTimes(2);
+    });
+
+    it("TC-15 ścieżka web: typ leada, temat i etykiety zamiast kluczy", async () => {
+        await POST(makeReq(
+            { path: "web", name: "Ewa Nowak", email: "ewa@test.pl", siteType: "landing", hasBranding: "nie" },
+            "/api/brief"
+        ));
+        expect(mockInsert).toHaveBeenCalledWith([expect.objectContaining({ type: "Strona WWW" })]);
+        const powiadomienie = mockSendMail.mock.calls[0][0];
+        expect(powiadomienie.subject).toContain("Strona WWW — Ewa Nowak");
+        expect(powiadomienie.html).toContain("Landing Page");
+        expect(powiadomienie.html).toContain("Nie, budujemy od zera");
+        expect(mockSendMail.mock.calls[1][0].subject).toContain("Cześć Ewa!");
+    });
+
+    it("TC-16 zapisuje budżet i notatkę w szczegółach leada", async () => {
+        await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", budget: "2000-3000 zł", note: "Na już" },
+            "/api/brief"
+        ));
+        expect(mockInsert).toHaveBeenCalledWith([
+            expect.objectContaining({ details: "Budżet: 2000-3000 zł. Notatka: Na już" }),
+        ]);
+    });
+
+    it("TC-17 zapisuje treść briefu w bazie, nie tylko w mailu", async () => {
+        await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Potrzebuję logo dla piekarni" },
+            "/api/brief"
+        ));
+        expect(mockInsert).toHaveBeenCalledWith([
+            expect.objectContaining({
+                details: "Budżet: Brak. Notatka: Brak | Wiadomość: Potrzebuję logo dla piekarni",
+            }),
+        ]);
+    });
+
+    it("TC-18 ścieżka branding: wypełnione pola trafiają do szczegółów, puste nie", async () => {
+        await POST(makeReq(
+            {
+                path: "branding", name: "Piotr", email: "piotr@test.pl",
+                companyName: "ACME", industry: "Piekarnia", audience: ["Rodziny", "Firmy"], inspiration: "  ",
+            },
+            "/api/brief"
+        ));
+        const { details } = mockInsert.mock.calls[0][0][0];
+        expect(details).toContain("Nazwa firmy/marki: ACME");
+        expect(details).toContain("Branża / co robi: Piekarnia");
+        expect(details).toContain("Grupa docelowa: Rodziny, Firmy");
+        expect(details).not.toContain("Inspiracje");
+    });
+
+    it("TC-19 ścieżka web: w szczegółach etykiety, nie klucze", async () => {
+        await POST(makeReq(
+            { path: "web", name: "Ewa", email: "ewa@test.pl", siteType: "sklep", hasBranding: "tak_czesc" },
+            "/api/brief"
+        ));
+        const { details } = mockInsert.mock.calls[0][0][0];
+        expect(details).toContain("Typ strony: Sklep internetowy");
+        expect(details).toContain("Posiadany branding: Mam tylko logo, reszta do ustalenia");
+    });
+
+    it("TC-20 przycina bardzo długą treść i zapisuje lead mimo błędnych typów pól", async () => {
+        const res = await POST(makeReq(
+            { path: "branding", name: "Jan", email: "jan@test.pl", companyName: 123, audience: "nie-tablica", inspiration: "x".repeat(5000) },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        const { details } = mockInsert.mock.calls[0][0][0];
+        expect(details).toHaveLength(2000);
+        expect(details).toContain("Nazwa firmy/marki: 123");
+    });
+
+    it("TC-21 zwraca 200 gdy powiadomienie doszło, a autoodpowiedź nie", async () => {
+        mockSendMail
+            .mockResolvedValueOnce({ data: { id: "ok" }, error: null })
+            .mockResolvedValueOnce({ data: null, error: { message: "mailbox unavailable" } });
+        const res = await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockSendMail).toHaveBeenCalledTimes(2);
+    });
+
+    it("TC-22 wysyła maile gdy nie da się utworzyć klienta bazy", async () => {
+        const { createAdminClient } = await import("@/lib/supabase/admin");
+        vi.mocked(createAdminClient).mockImplementationOnce(() => { throw new Error("Brak kluczy"); });
+        const res = await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockInsert).not.toHaveBeenCalled();
+        expect(mockSendMail).toHaveBeenCalledTimes(2);
+    });
+
+    it("TC-23 wysyła maile gdy zapis do bazy rzuca wyjątek", async () => {
+        mockInsert.mockRejectedValueOnce(new Error("fetch failed"));
+        const res = await POST(makeReq(
+            { path: "quick", name: "Jan", email: "jan@test.pl", quickMessage: "Test" },
+            "/api/brief"
+        ));
+        expect(res.status).toBe(200);
+        expect(mockSendMail).toHaveBeenCalledTimes(2);
+    });
 });

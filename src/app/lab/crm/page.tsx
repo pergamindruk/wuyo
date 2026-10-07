@@ -24,6 +24,7 @@ export default function CRMDashboard() {
     const [search, setSearch] = useState('')
     const [filterStatus, setFilterStatus] = useState('all')
     const [sortAsc, setSortAsc] = useState(false)
+    const [expandedId, setExpandedId] = useState<string | null>(null)
     const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
     const loadData = useCallback(async (s?: string, status?: string, asc?: boolean, p?: number) => {
@@ -216,9 +217,19 @@ export default function CRMDashboard() {
 
                                         {/* Detale */}
                                         <td className="px-6 py-4">
-                                            <p className="text-xs text-zinc-500 max-w-[220px] truncate" title={item.details}>
-                                                {item.details || '\u2014'}
-                                            </p>
+                                            {item.details ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                                                    aria-expanded={expandedId === item.id}
+                                                    title={expandedId === item.id ? 'Zwi\u0144' : 'Poka\u017c ca\u0142o\u015b\u0107'}
+                                                    className={`text-left text-xs text-zinc-500 hover:text-zinc-300 transition-colors ${expandedId === item.id ? 'max-w-[420px] whitespace-pre-wrap break-words' : 'block max-w-[220px] truncate'}`}
+                                                >
+                                                    {item.details}
+                                                </button>
+                                            ) : (
+                                                <p className="text-xs text-zinc-500">{'\u2014'}</p>
+                                            )}
                                         </td>
 
                                         {/* Akcje */}

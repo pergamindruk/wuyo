@@ -42,23 +42,45 @@ const pathLabel: Record<string, string> = {
     quick: "💬 Szybkie zapytanie",
 };
 
-function buildHtml(d: BriefData): string {
-    const rows: [string, string][] = [];
-
+// Pola zależne od ścieżki formularza — wspólne dla maila i zapisu w bazie.
+function pathRows(d: BriefData): [string, string][] {
     if (d.path === "branding") {
-        rows.push(["Nazwa firmy/marki", d.companyName ?? "—"]);
-        rows.push(["Branża / co robi", d.industry ?? "—"]);
-        rows.push(["Grupa docelowa", (d.audience?.join(", ")) || "—"]);
-        rows.push(["Inspiracje / podobające się marki", d.inspiration ?? "—"]);
+        return [
+            ["Nazwa firmy/marki", d.companyName ?? "—"],
+            ["Branża / co robi", d.industry ?? "—"],
+            ["Grupa docelowa", (Array.isArray(d.audience) ? d.audience.join(", ") : "") || "—"],
+            ["Inspiracje / podobające się marki", d.inspiration ?? "—"],
+        ];
     }
     if (d.path === "web") {
-        rows.push(["Typ strony", siteTypeLabel[d.siteType ?? ""] ?? d.siteType ?? "—"]);
-        rows.push(["Posiadany branding", brandingLabel[d.hasBranding ?? ""] ?? d.hasBranding ?? "—"]);
-        rows.push(["Inspiracje stron WWW", d.webInspiration ?? "—"]);
+        return [
+            ["Typ strony", siteTypeLabel[d.siteType ?? ""] ?? d.siteType ?? "—"],
+            ["Posiadany branding", brandingLabel[d.hasBranding ?? ""] ?? d.hasBranding ?? "—"],
+            ["Inspiracje stron WWW", d.webInspiration ?? "—"],
+        ];
     }
     if (d.path === "quick") {
-        rows.push(["Wiadomość", d.quickMessage ?? "—"]);
+        return [["Wiadomość", d.quickMessage ?? "—"]];
     }
+    return [];
+}
+
+// Treść briefu do kolumny `details`. Mail może nie dojść — wtedy lead w bazie
+// jest jedyną kopią, więc musi zawierać to, co klient faktycznie napisał.
+const DETAILS_MAX = 2000;
+
+function buildDetails(d: BriefData): string {
+    // String(): dane przychodzą z sieci, typ z interfejsu nie jest gwarancją.
+    const extra = pathRows(d)
+        .map(([k, v]): [string, string] => [k, String(v ?? "").trim()])
+        .filter(([, v]) => v && v !== "—")
+        .map(([k, v]) => ` | ${k}: ${v}`)
+        .join("");
+    return `Budżet: ${d.budget || 'Brak'}. Notatka: ${d.note || 'Brak'}${extra}`.slice(0, DETAILS_MAX);
+}
+
+function buildHtml(d: BriefData): string {
+    const rows = pathRows(d);
 
     rows.push(["Budżet orientacyjny", d.budget ?? "Nie podano"]);
     if (d.note) rows.push(["Dodatkowe uwagi", d.note]);
@@ -163,7 +185,15 @@ function buildAutoReply(d: BriefData): string {
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
-    const supabase = createAdminClient();
+
+    // Baza jest dodatkiem do maila, nie warunkiem. Gdy nie da się z nią połączyć,
+    // zgłoszenie i tak ma dojść pocztą.
+    let supabase: ReturnType<typeof createAdminClient> | null = null;
+    try {
+        supabase = createAdminClient();
+    } catch (error) {
+        console.error("Brief: brak połączenia z bazą, lead pójdzie tylko mailem:", error);
+    }
 
     if (!(await rateLimit(supabase, `brief:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs))) {
         return NextResponse.json({ error: "Za dużo zapytań. Spróbuj za chwilę." }, { status: 429, headers: { 'Retry-After': '60' } })
@@ -190,17 +220,22 @@ export async function POST(req: NextRequest) {
             quick: 'Szybki Kontakt'
         };
 
-        const { error: dbError } = await supabase
-            .from('leads')
-            .insert([{
-                name: data.name,
-                email: data.email,
-                type: typeLabel[data.path] || data.path,
-                details: `Budżet: ${data.budget || 'Brak'}. Notatka: ${data.note || 'Brak'}`
-            }]);
+        if (supabase) {
+            try {
+                const { error: dbError } = await supabase
+                    .from('leads')
+                    .insert([{
+                        name: data.name,
+                        email: data.email,
+                        type: typeLabel[data.path] || data.path,
+                        details: buildDetails(data)
+                    }]);
 
-        if (dbError) console.error("Database save error (brief):", dbError);
-
+                if (dbError) console.error("Database save error (brief):", dbError);
+            } catch (dbError) {
+                console.error("Database save error (brief):", dbError);
+            }
+        }
 
         const pathNames: Record<string, string> = {
             branding: "Logo/Identyfikacja",
@@ -216,12 +251,18 @@ export async function POST(req: NextRequest) {
             html: buildHtml(data),
         }, "brief-powiadomienie");
 
-        await sendEmail({
-            from: FROM_CLIENT,
-            to: data.email!,
-            subject: `Cześć ${data.name?.split(" ")[0] ?? ""}! Dostałem Twój brief 👋`,
-            html: buildAutoReply(data),
-        }, "brief-autoodpowiedz");
+        // Powiadomienie już doszło, więc zgłoszenie jest przyjęte. Błąd potwierdzenia
+        // dla klienta nie może zwrócić 500 — klient wysłałby brief drugi raz.
+        try {
+            await sendEmail({
+                from: FROM_CLIENT,
+                to: data.email!,
+                subject: `Cześć ${data.name?.split(" ")[0] ?? ""}! Dostałem Twój brief 👋`,
+                html: buildAutoReply(data),
+            }, "brief-autoodpowiedz");
+        } catch (error) {
+            console.error("Brief: autoodpowiedź nie wyszła, powiadomienie doszło:", error);
+        }
 
         // Dodaj do Mailerlite
         try {
