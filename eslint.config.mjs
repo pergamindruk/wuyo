@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import nextPlugin from '@next/eslint-plugin-next'
+import reactHooks from 'eslint-plugin-react-hooks'
 import tseslint from 'typescript-eslint'
 
 export default [
@@ -16,10 +17,15 @@ export default [
     },
     plugins: {
       '@next/next': nextPlugin,
+      'react-hooks': reactHooks,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
+
+      // Tylko dwie klasyczne reguły — bez zestawu kompilatora React z wersji 7.
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
 
       // Projekt ma sporo legacy kodu w Labie — na start trzymamy lint użyteczny,
       // ale bez wymuszania refactorów typu "usuń wszystkie any".
@@ -40,6 +46,9 @@ export default [
       'node_modules/**',
       'out/**',
       'coverage/**',
+      // Skrypty skilli — cudzy kod, nie część strony.
+      '.agents/**',
+      '.claude/**',
     ],
   },
 ]
