@@ -241,10 +241,6 @@ export function Navbar() {
                             <House size={18} aria-hidden="true" />
                         </a>
                         <OfertaMenu />
-                        <Link href="/cennik" className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Cennik
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
                         <Link href="/realizacje" className="relative group transition-colors hover:text-white whitespace-nowrap">
                             Realizacje
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
@@ -307,7 +303,6 @@ export function Navbar() {
                                 {u.label}
                             </Link>
                         ))}
-                        <Link href="/cennik" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Cennik</Link>
                         <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
                         <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
                         <Link href="/o-mnie" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</Link>

@@ -112,14 +112,14 @@ export default function Home() {
             icon: <Share2 size={28} />,
             title: "Social media, które zatrzymują scrollowanie",
             desc: "Wjeżdżam na pełnej na Twoje sociale. Karuzele, posty, rolki i miniatury, które zatrzymają scrollowanie i sprawią, że ludzie zaczną klikać.",
-            href: "/cennik",
+            href: "/#kontakt",
             wide: false,
         },
         {
             icon: <Box size={28} />,
             title: "Projekty graficzne, które robią robotę",
             desc: "Potrzebujesz czegoś poza logo i stroną? Projektuję opakowania, etykiety, materiały POS, prezentacje, banery i infografiki — wszystko, czego marka potrzebuje, żeby wyglądać spójnie na każdym nośniku.",
-            href: "/cennik",
+            href: "/#kontakt",
             wide: false,
         },
     ];

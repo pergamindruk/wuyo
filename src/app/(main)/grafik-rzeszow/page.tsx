@@ -376,9 +376,6 @@ export default function GrafikRzeszowPage() {
                                 <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
                                     Portfolio – Instagram →
                                 </a>
-                                <Link href="/cennik" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
-                                    Zobacz cennik →
-                                </Link>
                             </div>
                         </div>
                     </AnimatedSection>

@@ -226,9 +226,6 @@ export default function LogoPage() {
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
                             Zamów wycenę — odpiszę w 24h
                         </a>
-                        <Link href="/cennik" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
-                            Zobacz pełny cennik
-                        </Link>
                     </div>
                 </AnimatedSection>
             </section>

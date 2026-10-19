@@ -302,16 +302,11 @@ export default function StronyInternetowerRzeszowPage() {
             <section className="py-12 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection>
-                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-3 gap-6 text-center border border-white/5">
+                        <div className="glass-card p-6 md:p-8 grid md:grid-cols-2 gap-6 text-center border border-white/5">
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Potrzebujesz też logo?</p>
                                 <Link href="/logo" className="font-bold text-white hover:text-gold transition-colors text-sm">Logo dla firmy →</Link>
                                 <p className="text-white/60 text-xs mt-1">od 890 zł · projekt od zera</p>
-                            </div>
-                            <div>
-                                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Cennik szczegółowy</p>
-                                <Link href="/cennik" className="font-bold text-white hover:text-gold transition-colors text-sm">Pełny cennik →</Link>
-                                <p className="text-white/60 text-xs mt-1">wszystkie usługi i pakiety</p>
                             </div>
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Grafik z Rzeszowa</p>

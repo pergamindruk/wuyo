@@ -71,12 +71,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
-            url: `${baseUrl}/cennik`,
-            lastModified: new Date(),
-            changeFrequency: "monthly",
-            priority: 0.8,
-        },
-        {
             url: `${baseUrl}/druk`,
             lastModified: new Date(),
             changeFrequency: "monthly",

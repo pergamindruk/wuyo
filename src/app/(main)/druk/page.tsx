@@ -149,12 +149,6 @@ export default function DrukPage() {
                             <span className="font-bold text-lg text-navy">Zamów wycenę</span>
                             <ArrowRight size={20} className="text-navy group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <Link
-                            href="/cennik"
-                            className="relative px-10 py-4 rounded-full inline-flex items-center justify-center border border-gold/40 hover:border-gold hover:bg-gold/10 transition-all"
-                        >
-                            <span className="font-bold text-lg text-white">Zobacz cennik</span>
-                        </Link>
                     </div>
                 </AnimatedSection>
             </section>
