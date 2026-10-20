@@ -5,32 +5,65 @@ import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
-// gemini-2.5-flash działa poprawnie na tym kluczu (lite zwracał błędy 429)
+// Główny model + zapasowy, gdy główny jest przeciążony (Gemini zwraca wtedy 503).
 const MODEL = "gemini-2.5-flash";
+const FALLBACK_MODEL = "gemini-3.5-flash-lite";
 
-async function callGemini(apiKey: string, contents: object[], attempt = 0): Promise<Response> {
-    const response = await fetch(`${GEMINI_BASE_URL}/${MODEL}:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            system_instruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
-            contents,
-        }),
-    });
+// Statusy, przy których warto spróbować jeszcze raz: limit, przeciążenie, chwilowy błąd.
+const RETRYABLE = new Set([429, 500, 503, 504]);
+// Okienko czatu przerywa czekanie po 30 s, więc serwer musi się zmieścić wcześniej.
+const TOTAL_BUDGET_MS = 25_000;
 
-    if (response.status === 429 && attempt < 2) {
-        // Spróbuj ponownie po krótkim czasie (max 2 retry)
-        const errBody = await response.json().catch(() => ({}));
-        const retryDelaySec = parseInt(
-            errBody?.error?.details?.find((d: { retryDelay?: string }) => d.retryDelay)?.retryDelay ?? "5",
-            10
-        );
-        const waitSec = Math.min(retryDelaySec, 8);
-        await new Promise((r) => setTimeout(r, waitSec * 1000));
-        return callGemini(apiKey, contents, attempt + 1);
+// Google wkleja klucz do części komunikatów błędów. Nie może trafić do logów.
+const redact = (s: string) => s.replace(/AIza[\w-]{20,}|AQ\.[\w.-]{20,}/g, "***");
+
+async function callGemini(apiKey: string, contents: object[]): Promise<Response> {
+    const deadline = Date.now() + TOTAL_BUDGET_MS;
+    // Dwie próby na głównym modelu, potem jedna na zapasowym.
+    const plan = [MODEL, MODEL, FALLBACK_MODEL];
+    let last: Response | null = null;
+
+    for (let i = 0; i < plan.length; i++) {
+        const left = deadline - Date.now();
+        if (left < 2_000) break;
+
+        try {
+            // Klucz w nagłówku, nie w adresie: adres ląduje w logach i komunikatach błędów.
+            last = await fetch(`${GEMINI_BASE_URL}/${plan[i]}:generateContent`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+                body: JSON.stringify({
+                    system_instruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
+                    // Bez maxOutputTokens: Gemini 2.5 wlicza do limitu swoje "myślenie"
+                    // i przy 1024 urywał odpowiedzi w pół słowa.
+                    contents,
+                }),
+                signal: AbortSignal.timeout(left),
+            });
+        } catch (err) {
+            // Przekroczony czas albo zerwane połączenie: próbujemy dalej, póki jest czas.
+            console.error("Gemini fetch failed:", plan[i], redact(String(err)));
+            continue;
+        }
+
+        if (!RETRYABLE.has(last.status) || i === plan.length - 1) return last;
+
+        // Przy 429 Google podaje, ile odczekać. Przy 5xx wystarczy krótka pauza.
+        let waitMs = 1_000;
+        if (last.status === 429) {
+            const errBody = await last.json().catch(() => ({}));
+            const sec = parseInt(
+                errBody?.error?.details?.find((d: { retryDelay?: string }) => d.retryDelay)?.retryDelay ?? "3",
+                10
+            );
+            waitMs = Math.min(sec, 5) * 1000;
+        }
+        console.warn(`Gemini ${last.status} na ${plan[i]}, ponawiam`);
+        await new Promise((r) => setTimeout(r, Math.min(waitMs, Math.max(0, deadline - Date.now() - 2_000))));
     }
 
-    return response;
+    // Brak jakiejkolwiek odpowiedzi traktujemy jak przeciążenie.
+    return last ?? new Response(null, { status: 503 });
 }
 
 export async function POST(req: NextRequest) {
@@ -70,16 +103,16 @@ export async function POST(req: NextRequest) {
 
         const response = await callGemini(apiKey, contents);
 
-        if (response.status === 429) {
-            return NextResponse.json(
-                { error: "RATE_LIMIT", message: "Chwilowo dużo ruchu, spróbuj za chwilę! ⏳" },
-                { status: 503 }
-            );
+        if (RETRYABLE.has(response.status)) {
+            // Okienko czatu rozpoznaje RATE_LIMIT po polu `error` i pokazuje
+            // "chwilowo dużo ruchu". Nie wysyłamy `message`, bo wyglądałby jak odpowiedź AI.
+            console.error("Gemini niedostępny po ponowieniach:", response.status);
+            return NextResponse.json({ error: "RATE_LIMIT" }, { status: 503 });
         }
 
         if (!response.ok) {
             const errBody = await response.text();
-            console.error("Gemini API error:", response.status, errBody);
+            console.error("Gemini API error:", response.status, redact(errBody));
             return NextResponse.json(
                 { error: "Ups, problem z AI. Spróbuj jeszcze raz!" },
                 { status: 500 }
@@ -96,7 +129,22 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+        // Odpowiedź bywa podzielona na kilka części, a części "thought" to notatki modelu.
+        const parts: { text?: string; thought?: boolean }[] = data.candidates?.[0]?.content?.parts ?? [];
+        const responseText = parts.filter((p) => !p.thought && p.text).map((p) => p.text).join("");
+        if (data.candidates?.[0]?.finishReason === "MAX_TOKENS") {
+            console.warn("Gemini uciął odpowiedź (MAX_TOKENS)");
+        }
+
+        if (!responseText.trim()) {
+            // Pusta odpowiedź: np. blokada bezpieczeństwa albo ucięcie. Bez tego klient
+            // dostawał pusty dymek.
+            console.error("Gemini pusta odpowiedź, finishReason:", data.candidates?.[0]?.finishReason);
+            return NextResponse.json({
+                message: "Nie umiem na to odpowiedzieć. Napisz proszę inaczej albo zostaw e-mail, odezwę się osobiście.",
+                lead: null,
+            });
+        }
 
         const leadMatch = responseText.match(/\[LEAD:([^:]+):([^\]]+)\]/);
         let lead = null;

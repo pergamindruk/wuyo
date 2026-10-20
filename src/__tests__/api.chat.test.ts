@@ -439,3 +439,108 @@ describe("/api/brief", () => {
         expect(mockSendMail).toHaveBeenCalledTimes(2);
     });
 });
+
+// ── /api/chat: przeciążenie Gemini i bezpieczeństwo klucza ──────────────────
+describe("/api/chat odporność", () => {
+    let POST: (req: NextRequest) => Promise<Response>;
+    const ok = (text: string) => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ candidates: [{ content: { parts: [{ text }] } }] }),
+        text: async () => "",
+    } as unknown as Response);
+    const overloaded = {
+        ok: false,
+        status: 503,
+        json: async () => ({ error: { code: 503 } }),
+        text: async () => "high demand",
+    } as unknown as Response;
+
+    beforeEach(async () => {
+        vi.clearAllMocks();
+        process.env.WUYO_GEMINI_KEY = "test-key";
+        POST = (await import("@/app/api/chat/route")).POST;
+    });
+
+    afterEach(() => {
+        delete process.env.WUYO_GEMINI_KEY;
+        vi.useRealTimers();
+        vi.resetModules();
+    });
+
+    it("TC-R1 przy 503 ponawia, a potem przechodzi na model zapasowy", async () => {
+        vi.useFakeTimers();
+        global.fetch = vi.fn()
+            .mockResolvedValueOnce(overloaded)
+            .mockResolvedValueOnce(overloaded)
+            .mockResolvedValueOnce(ok("Odpowiedź z zapasowego"));
+
+        const resPromise = POST(makeReq({ messages: [{ role: "user", content: "Cena logo?" }] }));
+        await vi.runAllTimersAsync();
+        const res = await resPromise;
+
+        expect(res.status).toBe(200);
+        expect((await res.json()).message).toBe("Odpowiedź z zapasowego");
+        const urls = vi.mocked(global.fetch).mock.calls.map((c) => String(c[0]));
+        expect(urls[0]).toContain("gemini-2.5-flash:");
+        expect(urls[2]).toContain("gemini-3.5-flash-lite:");
+    });
+
+    it("TC-R2 zwraca RATE_LIMIT (503), gdy wszystkie próby są przeciążone", async () => {
+        vi.useFakeTimers();
+        global.fetch = vi.fn().mockResolvedValue(overloaded);
+
+        const resPromise = POST(makeReq({ messages: [{ role: "user", content: "Test" }] }));
+        await vi.runAllTimersAsync();
+        const res = await resPromise;
+
+        expect(res.status).toBe(503);
+        expect((await res.json()).error).toBe("RATE_LIMIT");
+    });
+
+    it("TC-R3 wysyła klucz w nagłówku, nigdy w adresie", async () => {
+        global.fetch = vi.fn().mockResolvedValue(ok("Hej"));
+        await POST(makeReq({ messages: [{ role: "user", content: "Test" }] }));
+
+        const [url, init] = vi.mocked(global.fetch).mock.calls[0];
+        expect(String(url)).not.toContain("test-key");
+        expect((init as RequestInit).headers).toMatchObject({ "x-goog-api-key": "test-key" });
+    });
+
+    it("TC-R4 pusta odpowiedź AI daje komunikat zamiast pustego dymka", async () => {
+        global.fetch = vi.fn().mockResolvedValue(ok(""));
+        const res = await POST(makeReq({ messages: [{ role: "user", content: "Test" }] }));
+        const body = await res.json();
+
+        expect(res.status).toBe(200);
+        expect(body.message.length).toBeGreaterThan(10);
+    });
+
+    it("TC-R5 skleja wiele części odpowiedzi i pomija notatki modelu", async () => {
+        global.fetch = vi.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ candidates: [{ content: { parts: [
+                { text: "myślę...", thought: true },
+                { text: "Logo " },
+                { text: "od 890 zł." },
+            ] } }] }),
+            text: async () => "",
+        } as unknown as Response);
+
+        const res = await POST(makeReq({ messages: [{ role: "user", content: "Cena?" }] }));
+        expect((await res.json()).message).toBe("Logo od 890 zł.");
+    });
+});
+
+// ── prompt czatu: ceny ukryte, dopóki cennik jest ukryty na stronie ────────
+describe("prompt czatu", () => {
+    it("TC-P1 bez SHOW_PRICES nie zawiera żadnej kwoty ani nazw pakietów", async () => {
+        const { CHAT_SYSTEM_PROMPT, SHOW_PRICES } = await import("@/lib/chat-prompt");
+        if (SHOW_PRICES) return;
+        expect(CHAT_SYSTEM_PROMPT).not.toMatch(/\d\s*zł/);
+        expect(CHAT_SYSTEM_PROMPT).not.toMatch(/Marka Mini|Marka Start/);
+        expect(CHAT_SYSTEM_PROMPT).toContain("kontakt@wuyo.pl");
+        expect(CHAT_SYSTEM_PROMPT).not.toContain("${");
+    });
+});
