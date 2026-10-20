@@ -9,7 +9,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
 import { BlogTeaser } from "@/components/BlogTeaser";
-import { PricingSection } from "@/components/pricing/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
@@ -157,7 +156,7 @@ export default function Home() {
                             <span className="text-[#FFEB52] font-semibold whitespace-nowrap">w pierwsze trzy sekundy.</span>
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6">
-                            <Link href="#pakiety" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
+                            <Link href="#oferta" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
                                 <span className="font-bold text-lg text-navy">Sprawdź ofertę</span>
                             </Link>
                             <Link href="#portfolio" className="relative px-10 py-4 rounded-full inline-flex items-center justify-center overflow-hidden transition-all group backdrop-blur-sm border border-gold/40 shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] hover:border-gold hover:bg-gold/10">
@@ -242,15 +241,12 @@ export default function Home() {
             {/* ═══════════════════════ REALIZACJE ═══════════════════════ */}
             <PortfolioGallery />
 
-            {/* Dowód przed ceną — klient najpierw widzi opinie, potem cennik. */}
             {/* ═══════════════════════ OPINIE ═══════════════════════ */}
             <TestimonialsSection />
 
             {/* ═══════════════════════ ZAUFALI MI ═══════════════════════ */}
             <TrustedBySection />
 
-            {/* ═══════════════════════ CENNIK / PAKIETY ═══════════════════════ */}
-            <PricingSection showFaq={false} showFinalCta={false} id="pakiety" />
 
             {/* ═══════════════════════ BLOG ═══════════════════════ */}
             <BlogTeaser />
