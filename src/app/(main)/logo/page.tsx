@@ -69,7 +69,7 @@ const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Projektowanie Logo i Identyfikacja Wizualna",
-    "description": "Projektowanie logo, logotypów i pełnej identyfikacji wizualnej dla firm i freelancerów. Dedykowany projekt, pliki wektorowe, prawa autorskie w cenie.",
+    "description": "Projektowanie logo, logotypów i pełnej identyfikacji wizualnej dla firm i freelancerów. Projekt od zera, pliki wektorowe, prawa autorskie w cenie.",
     "provider": {
         "@type": "Person",
         "name": "Mateusz Machoś",
@@ -124,7 +124,7 @@ const packages = [
     {
         name: "Logotyp",
         price: "od 890 zł",
-        desc: "Punkt wyjścia — profesjonalne logo gotowe do użycia od razu.",
+        desc: "Punkt wyjścia — logo gotowe do użycia od razu.",
         includes: [
             "Logo (wersja kolorowa + monochromatyczna)",
             "Sygnet / ikona (favicon, avatar)",

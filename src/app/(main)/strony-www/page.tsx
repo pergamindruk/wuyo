@@ -94,7 +94,7 @@ const packages = [
         price: "od 1 990 zł",
         desc: "Jedna strona, jeden cel — maksymalna konwersja. Idealna dla freelancerów, coachów, nowych biznesów.",
         includes: [
-            "Dedykowany projekt graficzny (UI/UX)",
+            "Projekt graficzny od zera, pod Twoją firmę",
             "Next.js + React (szybkie ładowanie)",
             "Responsywność (mobile first)",
             "Formularz kontaktowy",
