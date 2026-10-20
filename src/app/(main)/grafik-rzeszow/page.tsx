@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Phone, Mail, Star } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
@@ -211,7 +210,7 @@ export default function GrafikRzeszowPage() {
                 <div className="py-8 px-6 border-y border-white/5">
                     <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                         {[
-                            { stat: "od 2021", label: "działam w Rzeszowie" },
+                            { stat: "Rzeszów", label: "i cała Polska zdalnie" },
                             { stat: "150+", label: "zrealizowanych projektów" },
                             { stat: "24h", label: "i masz wycenę w skrzynce" },
                             { stat: "1 osoba", label: "piszesz do mnie, nie do działu" },
@@ -259,7 +258,6 @@ export default function GrafikRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
-                    <NettoNote className="mt-6 text-center" />
                 </div>
             </section>
 

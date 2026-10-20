@@ -105,7 +105,7 @@ export default function PricingPage() {
                                     Gramy w <span className="text-gold">otwarte karty</span>.
                                 </h1>
                                 <p className="text-white/50 mt-3 max-w-xl text-sm md:text-base">
-                                    Zero niespodzianek na rachunku. Podane kwoty to ceny netto — do faktury dochodzi 23% VAT, który jako firma odliczasz.
+                                    Zero niespodzianek na rachunku.
                                 </p>
                             </div>
                             <Link
@@ -160,7 +160,6 @@ export default function PricingPage() {
 
                 <AnimatedSection delay={0.35}>
                     <p className="text-white/60 text-xs mt-6 max-w-2xl">
-                        Kwoty netto — do faktury dochodzi 23% VAT, który jako firma odliczasz.
                         50% zaliczki przed startem, 50% po zakończeniu. Cena ustalona przed startem
                         to cena końcowa. Więcej wariantów odzieży na{" "}
                         <Link href="/odziez" className="text-gold hover:underline">

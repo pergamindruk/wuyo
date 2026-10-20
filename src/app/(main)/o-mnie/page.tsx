@@ -155,7 +155,7 @@ export default function OmniePage() {
                                     </div>
                                     {/* Badge */}
                                     <div className="absolute -bottom-4 -right-4 bg-gold text-navy-dark font-bold text-xs px-4 py-2 rounded-full shadow-lg">
-                                        Rzeszów · od 2021
+                                        Rzeszów · Podkarpacie
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +263,7 @@ export default function OmniePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[
                             { label: "Lokalizacja", value: "Rzeszów, Podkarpacie" },
-                            { label: "Działam od", value: "2021 roku" },
+                            { label: "Kontakt", value: "Bezpośrednio ze mną, bez pośredników" },
                             { label: "Specjalizacja", value: "Logo, strony WWW, druk" },
                             { label: "Technologia webowa", value: "Next.js, React, TypeScript" },
                             { label: "Obsługuję", value: "Małe i średnie firmy, lokalne biznesy" },

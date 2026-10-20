@@ -325,7 +325,7 @@ export function PriceCalculator() {
                                     {price[0].toLocaleString("pl-PL")} – {price[1].toLocaleString("pl-PL")} zł
                                 </p>
                                 <p className="text-white/60 text-xs mt-2">
-                                    Cena netto. Finalna wycena po krótkiej rozmowie o projekcie — zawsze stała, bez niespodzianek.
+                                    Finalna wycena po krótkiej rozmowie o projekcie — zawsze stała, bez niespodzianek.
                                 </p>
                             </div>
 

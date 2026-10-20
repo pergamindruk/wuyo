@@ -9,14 +9,6 @@ export const faqs: FaqItem[] = [
         answer: "Gram w otwarte karty. W Cenniku masz pakiety z konkretnymi cenami i widełki dla pojedynczych usług — od razu wiesz, w jakim rzędzie wielkości się poruszamy. Napisz, czego potrzebujesz, a policzę dokładnie co do złotówki przed startem prac."
     },
     {
-        question: "Czy do ceny doliczasz VAT?",
-        answer: "Tak. Kwoty w cenniku to ceny netto, do faktury dochodzi 23% VAT. Jeśli prowadzisz firmę i odliczasz VAT, Twój realny koszt to dokładnie ta kwota, którą widzisz w cenniku."
-    },
-    {
-        question: "Dostanę fakturę?",
-        answer: "Tak, na każde zlecenie. Faktura VAT z pełnymi danymi — wrzucasz ją w koszty firmy i odliczasz VAT."
-    },
-    {
         question: "Jak wygląda rozliczenie zapłaty?",
         answer: "Standardowo dzielimy sprawę na pół: 50% potężnej zaliczki (tzw. startowe) przed otwarciem programów graficznych, i 50% na mecie, kiedy Ty uśmiechasz się na widok gotowych materiałów."
     },

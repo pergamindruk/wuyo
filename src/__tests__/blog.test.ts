@@ -109,12 +109,4 @@ describe("spójność wpisów", () => {
             expect(count, `${slug} nie ma żadnego linku przychodzącego`).toBeGreaterThan(0);
         }
     });
-
-    it("ceny podane są z dopiskiem netto", () => {
-        for (const meta of getAllPosts()) {
-            const post = getPost(meta.slug);
-            if (!/price="/.test(post.content)) continue;
-            expect(/netto/i.test(post.content), `${post.slug} podaje ceny bez informacji o netto`).toBe(true);
-        }
-    });
 });

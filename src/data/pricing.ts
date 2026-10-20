@@ -1,6 +1,5 @@
 // Dane cennika — sekcja pakietów (jednorazowo + abonament).
 // Źródło: CENNIK.md w katalogu głównym repo — to jedyny obowiązujący cennik.
-// WAŻNE: wszystkie kwoty tutaj to ceny NETTO. Do faktury dochodzi 23% VAT.
 // Nie zmieniaj kwot bez równoległej zmiany w CENNIK.md.
 
 export interface PricingCardData {
@@ -32,7 +31,7 @@ export const sectionHeader = {
     eyebrow: "Cennik",
     title: "Przejrzysty cennik. Wiesz, ile zapłacisz, zanim zadzwonisz.",
     subtitle:
-        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Ceny netto, jawne od początku — bez ukrytych kosztów i dopłat po drodze.",
+        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Ceny jawne od początku — bez ukrytych kosztów i dopłat po drodze.",
 };
 
 // Linijka à la carte — kwoty wyróżnione w komponencie.
@@ -49,14 +48,6 @@ export const perks = [
 ];
 
 export const pricingFaqs = [
-    {
-        q: "Czy do ceny dochodzi VAT?",
-        a: "Tak — podane kwoty to ceny netto, do faktury dochodzi 23% VAT. Jeśli prowadzisz firmę i odliczasz VAT, Twój realny koszt to dokładnie kwota z cennika.",
-    },
-    {
-        q: "Czy dostanę fakturę?",
-        a: "Tak, na każde zlecenie. Faktura VAT z pełnymi danymi — wrzucasz ją w koszty firmy i odliczasz VAT.",
-    },
     {
         q: "Jak wygląda płatność?",
         a: "Zaliczka na start, reszta po akceptacji projektu. Abonament — z góry za dany miesiąc.",
@@ -98,7 +89,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Najmniejszy krok, żeby przestać działać bez logo i wizytówki w ręce.",
                 price: "1 090 zł",
-                priceSuffix: "netto, jednorazowo",
+                priceSuffix: "jednorazowo",
                 listPrice: "1 239 zł",
                 saving: "149 zł",
                 features: [
@@ -117,7 +108,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Wszystko, czego nowa firma potrzebuje, żeby od pierwszego dnia wyglądać poważnie.",
                 price: "1 490 zł",
-                priceSuffix: "netto, jednorazowo",
+                priceSuffix: "jednorazowo",
                 listPrice: "2 119 zł",
                 saving: "629 zł",
                 features: [
@@ -138,7 +129,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Obecność online, która generuje zapytania — nie tylko ładnie wygląda.",
                 price: "3 490 zł",
-                priceSuffix: "netto, jednorazowo",
+                priceSuffix: "jednorazowo",
                 listPrice: "5 308 zł",
                 saving: "1 818 zł",
                 features: [
@@ -162,7 +153,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Marka, strona i widoczność w Google — kompletny start pod klucz.",
                 price: "5 900 zł",
-                priceSuffix: "netto, jednorazowo",
+                priceSuffix: "jednorazowo",
                 listPrice: "8 268 zł",
                 saving: "2 368 zł",
                 features: [
@@ -193,7 +184,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Twoja strona po prostu działa — Ty nie musisz o nią myśleć.",
                 price: "199 zł",
-                priceSuffix: "netto / miesiąc",
+                priceSuffix: "/ miesiąc",
                 features: [
                     "Strona działa non stop (serwer w cenie)",
                     "Pilnuję adresu strony, żeby nie wygasł",
@@ -211,7 +202,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Strona pod opieką + jesteś widoczny w Google, gdy ktoś szuka takiej firmy jak Twoja.",
                 price: "690 zł",
-                priceSuffix: "netto / miesiąc",
+                priceSuffix: "/ miesiąc",
                 features: [
                     "Wszystko z Opieki Strony (strona działa i jest chroniona)",
                     "Prowadzę Twoją wizytówkę w Google i na Mapach",
@@ -230,7 +221,7 @@ export const pricingGroups: PricingGroupData[] = [
                 tagline:
                     "Masz grafika i marketing na stałe — bez zatrudniania kogokolwiek i bez czekania w kolejce.",
                 price: "1 290 zł",
-                priceSuffix: "netto / miesiąc",
+                priceSuffix: "/ miesiąc",
                 features: [
                     "Wszystko z Widoczności i Opieki",
                     "Grafika bez limitu pozycji: posty, banery, ulotki, oferty",

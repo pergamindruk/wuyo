@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, Search } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { NettoNote } from "@/components/NettoNote";
 import { Spotlight } from "@/components/ui/spotlight";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
@@ -88,15 +87,15 @@ const localSchema = {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje strona internetowa w Rzeszowie?",
-        a: "Strona jednostronicowa (one-page) od 1 990 zł netto, strona firmowa do 5 podstron 2 990 zł netto, sklep internetowy od 6 900 zł netto. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
+        a: "Strona jednostronicowa (one-page) od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep internetowy od 6 900 zł. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
     },
     {
         q: "Ile kosztuje utrzymanie strony po pierwszym roku?",
-        a: "Opieka Strony to 199 zł netto miesięcznie: serwer, domena, kopie zapasowe, zabezpieczenia i 1 godzina drobnych zmian w miesiącu. Rezygnujesz w każdej chwili z miesięcznym wyprzedzeniem.",
+        a: "Opieka Strony to 199 zł miesięcznie: serwer, domena, kopie zapasowe, zabezpieczenia i 1 godzina drobnych zmian w miesiącu. Rezygnujesz w każdej chwili z miesięcznym wyprzedzeniem.",
     },
     {
         q: "Czy da się zrobić tanią stronę internetową w Rzeszowie?",
-        a: "Najtańsza opcja u mnie to strona jednostronicowa od 1 990 zł netto — jedna strona, jeden cel, formularz kontaktowy, SEO i domena z hostingiem na rok. Wystarcza nowej firmie, freelancerowi albo jednej usłudze. Tańsze oferty to zwykle gotowy szablon, który trudno potem wypozycjonować w Google.",
+        a: "Najtańsza opcja u mnie to strona jednostronicowa od 1 990 zł — jedna strona, jeden cel, formularz kontaktowy, SEO i domena z hostingiem na rok. Wystarcza nowej firmie, freelancerowi albo jednej usłudze. Tańsze oferty to zwykle gotowy szablon, który trudno potem wypozycjonować w Google.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
@@ -203,7 +202,6 @@ export default function StronyInternetowerRzeszowPage() {
                         <p className="eyebrow mb-4">Cennik</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Cennik stron internetowych w Rzeszowie (2026)</h2>
                         <p className="text-white/50 max-w-xl mx-auto mt-4">Wycena = cena końcowa. Bez stawki godzinowej, bez niespodzianek po fakturze.</p>
-                        <NettoNote className="mt-3" />
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {packages.map((pkg, i) => (
@@ -234,7 +232,7 @@ export default function StronyInternetowerRzeszowPage() {
 
                     <AnimatedSection className="mt-10">
                         <div className="glass-card p-6 md:p-8">
-                            <h3 className="font-bold text-white mb-4">Pełny cennik stron — ceny netto</h3>
+                            <h3 className="font-bold text-white mb-4">Pełny cennik stron</h3>
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="text-left text-white/50 border-b border-white/10">
@@ -262,7 +260,7 @@ export default function StronyInternetowerRzeszowPage() {
                         <div className="glass-card p-6 border-l-2 border-gold">
                             <h3 className="font-bold text-white mb-2">Tania strona internetowa w Rzeszowie — kiedy ma sens</h3>
                             <p className="text-white/60 text-sm leading-relaxed">
-                                Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł netto. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie — nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
+                                Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie — nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
                                 <Link href="/blog/strona-one-page-czy-multi-page" className="text-gold hover:underline">one page czy multi page</Link>.
                             </p>
                         </div>
