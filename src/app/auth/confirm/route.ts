@@ -31,6 +31,18 @@ export async function GET(request: NextRequest) {
         }
     }
 
+    // Domyślny szablon maila Supabase (ConfirmationURL) odsyła tu z `?code=`.
+    // Działa tylko w tej samej przeglądarce, w której poproszono o link.
+    const code = searchParams.get('code')
+    if (code) {
+        const supabase = await createClient()
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+        if (!error) {
+            return NextResponse.redirect(new URL(bezpiecznyNext, request.url))
+        }
+    }
+
     return NextResponse.redirect(
         new URL('/lab/login?message=Link_wygasł_albo_został_już_użyty', request.url)
     )

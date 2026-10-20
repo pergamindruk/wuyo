@@ -1,4 +1,4 @@
-import { login, wyslijReset } from './actions'
+import { login, wyslijLinkLogowania, wyslijReset } from './actions'
 
 export default async function LoginPage({
     searchParams,
@@ -32,7 +32,8 @@ export default async function LoginPage({
                     </div>
                 )}
 
-                <form action={login} className="flex flex-col gap-4">
+                {/* Główna droga: link na maila, bez hasła. */}
+                <form action={wyslijLinkLogowania} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <label htmlFor="email" className="text-sm font-medium text-zinc-300">Email</label>
                         <input
@@ -40,32 +41,53 @@ export default async function LoginPage({
                             name="email"
                             type="email"
                             required
+                            autoComplete="email"
                             className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"
                             placeholder="admin@wuyo.pl"
                         />
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="password" className="text-sm font-medium text-zinc-300">Hasło</label>
+                    <button
+                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center"
+                    >
+                        Wyślij link do logowania
+                    </button>
+                    <p className="text-zinc-500 text-xs text-center -mt-1">
+                        Kliknij link w mailu — otwórz go w tej samej przeglądarce.
+                    </p>
+                </form>
+
+                {/* Zapasowo: stare logowanie hasłem. */}
+                <details className="mt-6 border-t border-zinc-800 pt-4">
+                    <summary className="text-zinc-400 hover:text-white text-sm cursor-pointer text-center">
+                        Zaloguj hasłem
+                    </summary>
+                    <form action={login} className="flex flex-col gap-4 mt-4">
                         <input
-                            id="password"
+                            name="email"
+                            type="email"
+                            required
+                            autoComplete="email"
+                            aria-label="Email"
+                            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"
+                            placeholder="admin@wuyo.pl"
+                        />
+                        <input
                             name="password"
                             type="password"
                             required
+                            autoComplete="current-password"
+                            aria-label="Hasło"
                             className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"
                             placeholder="••••••••"
                         />
-                    </div>
-
-                    <div className="flex flex-col gap-3 mt-4">
                         <button
                             formAction={login}
-                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center"
+                            className="w-full border border-zinc-700 hover:border-zinc-500 text-white font-bold py-2.5 rounded-lg transition-colors"
                         >
                             Zaloguj się
                         </button>
-                        {/* formNoValidate — reset potrzebuje tylko adresu, nie hasła,
-                            a pole hasła jest w tym formularzu wymagane. */}
+                        {/* formNoValidate — reset potrzebuje tylko adresu, nie hasła. */}
                         <button
                             formAction={wyslijReset}
                             formNoValidate
@@ -73,8 +95,8 @@ export default async function LoginPage({
                         >
                             Nie pamiętam hasła — wyślij link
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </details>
             </div>
         </div>
     )

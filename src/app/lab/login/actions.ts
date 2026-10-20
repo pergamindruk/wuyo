@@ -35,6 +35,30 @@ export async function login(formData: FormData) {
 }
 
 /**
+ * Logowanie bez hasła: wysyła na maila jednorazowy link, który od razu loguje.
+ *
+ * `shouldCreateUser: false` jest kluczowe — panel wpuszcza każdego
+ * zalogowanego, więc bez tego obcy adres założyłby sobie konto i wszedł do /lab.
+ * Komunikat zawsze ten sam, żeby formularz nie zdradzał, które adresy mają konto.
+ */
+export async function wyslijLinkLogowania(formData: FormData) {
+    const email = String(formData.get('email') ?? '').trim()
+
+    if (email) {
+        const supabase = await createClient()
+        await supabase.auth.signInWithOtp({
+            email,
+            options: {
+                shouldCreateUser: false,
+                emailRedirectTo: 'https://wuyo.pl/auth/confirm?next=/lab',
+            },
+        })
+    }
+
+    przekierujZKomunikatem('Jeśli konto istnieje, link do logowania jest już w skrzynce', 'info')
+}
+
+/**
  * Wysyła link do ustawienia nowego hasła na podany adres.
  *
  * Odpowiedź jest zawsze taka sama, niezależnie od tego, czy konto istnieje —
