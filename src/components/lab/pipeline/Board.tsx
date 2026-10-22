@@ -92,7 +92,7 @@ export function Board({ jobs, today, nowIso }: { jobs: PipelineJob[]; today: str
                                 <p className="mt-1 flex items-baseline gap-2">
                                     <span className="font-heading text-lg font-bold text-white">{formatPLN(sum)}</span>
                                     <span className="text-[10px] text-zinc-600">netto</span>
-                                    <span className="ml-auto text-xs text-zinc-500">{col.length} zl.</span>
+                                    <span className="ml-auto text-xs text-zinc-500">{col.length} {col.length === 1 ? "zlecenie" : col.length >= 2 && col.length <= 4 ? "zlecenia" : "zleceń"}</span>
                                 </p>
                             </header>
                             <div className="flex flex-col gap-2 min-h-12">
