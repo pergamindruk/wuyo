@@ -4,13 +4,14 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield, Star } from 'lucide-react'
+import { LogOut, Home, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield, Star, Radar } from 'lucide-react'
 
 const navGroups = [
     {
         label: 'Zarządzanie',
         items: [
             { href: '/lab', label: 'Dashboard', icon: Home },
+            { href: '/lab/centrum', label: 'Centrum Dowodzenia', icon: Radar },
             { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
             { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
             { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },
