@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { JobStage } from '@/lib/lab/today/types'
 import type { ActionResult } from '@/components/lab/pipeline/types'
 import { zlToGrosze } from '@/components/lab/pipeline/view'
+import { warsawIsoDate } from '@/lib/lab/today/format'
 
 type Supa = Awaited<ReturnType<typeof createClient>>
 
@@ -22,7 +23,7 @@ function done(): ActionResult {
 
 const fail = (error: string): ActionResult => ({ ok: false, error })
 const NO_AUTH = 'Brak dostępu. Zaloguj się ponownie.'
-const todayIso = () => new Date().toISOString().slice(0, 10)
+const todayIso = () => warsawIsoDate()
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
 function isStage(n: number): n is JobStage {

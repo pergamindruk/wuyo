@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { DEFAULT_MONTH_GOAL_GROSZE, STALE_OFFER_DAYS } from './constants'
-import { daysBetween, formatPLN } from './format'
+import { daysBetween, formatPLN, warsawIsoDate, warsawParts } from './format'
 import type {
     Activity, Job, MonthGoal, OneThing, QueueItem, Renewal, Subscription, SystemsStatus,
 } from './types'
@@ -8,10 +8,10 @@ import type {
 type Supa = Awaited<ReturnType<typeof createClient>>
 
 function monthBounds(now = new Date()) {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 1)
-    const iso = (d: Date) => d.toISOString().slice(0, 10)
-    return { start: iso(start), end: iso(end), daysLeft: Math.ceil((end.getTime() - now.getTime()) / 86_400_000) }
+    const { year, month, day } = warsawParts(now)
+    const iso = (y: number, m: number) => new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10)
+    const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate()
+    return { start: iso(year, month), end: iso(year, month + 1), daysLeft: daysInMonth - day + 1 }
 }
 
 /** Cel miesiąca: lab_settings.monthlyGoalGrosze, wpłaty (payments + opłacone finances bez dubli). */
@@ -88,7 +88,7 @@ export async function getJobs(supabase: Supa): Promise<Job[]> {
 }
 
 export async function getRenewalsDue(supabase: Supa, days = 30): Promise<Renewal[]> {
-    const until = new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10)
+    const until = warsawIsoDate(days)
     const { data } = await supabase.from('renewals').select('id, name, kind, due_at, cost_grosze')
         .lte('due_at', until).order('due_at')
     return (data ?? []) as Renewal[]
@@ -138,7 +138,7 @@ export function pickOneThing(input: {
     queue: QueueItem[]
 }): OneThing {
     const { systems, jobs, queue } = input
-    const today = new Date().toISOString().slice(0, 10)
+    const today = warsawIsoDate()
     const open = jobs.filter((j) => j.outcome === 'w_toku')
 
     if (systems.replies > 0) {

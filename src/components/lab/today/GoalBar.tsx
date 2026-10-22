@@ -1,4 +1,4 @@
-import { formatPLN } from '@/lib/lab/today/format'
+import { formatPLN, warsawDaysInMonth, warsawParts } from '@/lib/lab/today/format'
 import { SERVICES } from '@/lib/lab/today/constants'
 import type { MonthGoal } from '@/lib/lab/today/types'
 
@@ -7,9 +7,8 @@ export function GoalBar({ goal }: { goal: MonthGoal }) {
     const pct = goalGrosze > 0 ? Math.round((earnedGrosze / goalGrosze) * 100) : 0
     const missing = Math.max(goalGrosze - earnedGrosze, 0)
 
-    const now = new Date()
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-    const expectedPct = Math.min(Math.round((now.getDate() / daysInMonth) * 100), 100)
+    const daysInMonth = warsawDaysInMonth()
+    const expectedPct = Math.min(Math.round((warsawParts().day / daysInMonth) * 100), 100)
     const behind = pct < expectedPct
 
     const pack = SERVICES.find((s) => s.key === 'firma_w_internecie')

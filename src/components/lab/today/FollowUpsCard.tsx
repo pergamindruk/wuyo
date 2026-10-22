@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, CalendarClock, Hourglass, RefreshCw } from 'lucide-react'
 import { STALE_OFFER_DAYS } from '@/lib/lab/today/constants'
-import { daysBetween, formatPLN } from '@/lib/lab/today/format'
+import { daysBetween, formatPLN, warsawIsoDate } from '@/lib/lab/today/format'
 import type { Job, Renewal, Subscription } from '@/lib/lab/today/types'
 
 const MAX_ITEMS = 6
@@ -34,8 +34,8 @@ export function FollowUpsCard({ jobs, renewals, subscriptions }: {
     subscriptions: Subscription[]
 }) {
     const now = new Date()
-    const today = now.toISOString().slice(0, 10)
-    const horizon = new Date(now.getTime() + RENEWAL_WINDOW_DAYS * 86_400_000).toISOString().slice(0, 10)
+    const today = warsawIsoDate(0, now)
+    const horizon = warsawIsoDate(RENEWAL_WINDOW_DAYS, now)
     const items: Item[] = []
 
     for (const j of jobs) {

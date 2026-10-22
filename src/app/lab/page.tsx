@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getAlerts } from './actions'
 import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
+import { TZ, warsawMidnightMs } from '@/lib/lab/today/format'
 import {
     getActivities, getJobs, getMonthGoal, getQueue, getRenewalsDue, getSubscriptions, getSystems, pickOneThing,
 } from '@/lib/lab/today/queries'
@@ -25,7 +26,7 @@ export default async function TodayPage() {
 
     const now = new Date()
     const weekAgo = new Date(now.getTime() - 7 * 86_400_000).toISOString()
-    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+    const midnight = warsawMidnightMs(now)
 
     const [goal, queue, jobs, renewals, subscriptions, weekActivities, systems, alerts] = await Promise.all([
         getMonthGoal(supabase),
@@ -49,7 +50,7 @@ export default async function TodayPage() {
                 <div>
                     <h1 className="text-3xl font-bold leading-tight text-white">Dziś</h1>
                     <p className="mt-1 text-sm text-zinc-500">
-                        {now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' })}
+                        {now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ })}
                     </p>
                 </div>
                 <SystemsStrip systems={systems} />

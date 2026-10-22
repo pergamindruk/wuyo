@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { MAX_ATTEMPTS, NO_ANSWER_RETRY_DAYS, OUTCOMES, SERVICES } from '@/lib/lab/today/constants'
 import type { CallOutcome, QueueItem } from '@/lib/lab/today/types'
+import { warsawIsoDate } from '@/lib/lab/today/format'
 
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
@@ -34,7 +35,7 @@ export async function recordCallOutcome(
     const now = new Date()
     const note = opts?.note?.trim() ?? ''
     const outcomeLabel = OUTCOMES.find((o) => o.key === outcome)?.label ?? outcome
-    const noteLine = `[${now.toISOString().slice(0, 10)}] ${outcomeLabel}${note ? `: ${note}` : ''}`
+    const noteLine = `[${warsawIsoDate(0, now)}] ${outcomeLabel}${note ? `: ${note}` : ''}`
     const notes = item.notes ? `${item.notes}\n${noteLine}` : noteLine
 
     const patch: Record<string, unknown> = { notes, updated_at: now.toISOString() }
@@ -64,7 +65,7 @@ export async function recordCallOutcome(
             .select('id').single()
         if (clientError || !client) return { ok: false, error: 'Nie udało się utworzyć klienta.' }
 
-        const tomorrow = new Date(now.getTime() + DAY_MS).toISOString().slice(0, 10)
+        const tomorrow = warsawIsoDate(1, now)
         const { data: job, error: jobError } = await supabase
             .from('jobs')
             .insert({
