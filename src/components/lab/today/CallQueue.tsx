@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
-import { CalendarClock, ChevronDown, ExternalLink, Phone, Plus, SkipForward } from 'lucide-react'
+import { CalendarClock, ChevronDown, ExternalLink, Phone, Plus, Search, SkipForward } from 'lucide-react'
 import { CALL_OPENERS, OUTCOMES, SOURCE_LABEL } from '@/lib/lab/today/constants'
 import { telHref } from '@/lib/lab/today/format'
 import type { CallOutcome, QueueItem } from '@/lib/lab/today/types'
@@ -171,12 +171,24 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                         </a>
                     )}
 
-                    <a
-                        href={telHref(current.phone)}
-                        className="mt-5 flex min-h-16 w-full items-center justify-center gap-3 rounded-2xl bg-yellow-400 px-4 text-2xl font-bold text-zinc-950 transition-colors hover:bg-yellow-300 sm:w-auto sm:inline-flex sm:px-10"
-                    >
-                        <Phone size={24} /> {current.phone}
-                    </a>
+                    {current.phone ? (
+                        <a
+                            href={telHref(current.phone)}
+                            className="mt-5 flex min-h-16 w-full items-center justify-center gap-3 rounded-2xl bg-yellow-400 px-4 text-2xl font-bold text-zinc-950 transition-colors hover:bg-yellow-300 sm:w-auto sm:inline-flex sm:px-10"
+                        >
+                            <Phone size={24} /> {current.phone}
+                        </a>
+                    ) : (
+                        // CEIDG nie podaje telefonu — numer trzeba znaleźć w Google.
+                        <a
+                            href={`https://www.google.com/search?q=${encodeURIComponent(`${current.name} Rzeszów telefon`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-5 flex min-h-16 w-full items-center justify-center gap-3 rounded-2xl border border-yellow-400/60 px-4 text-lg font-bold text-yellow-300 transition-colors hover:bg-yellow-400/10 sm:w-auto sm:inline-flex sm:px-10"
+                        >
+                            <Search size={22} /> Brak numeru — szukaj w Google
+                        </a>
+                    )}
 
                     <div className="mt-4">
                         <button
