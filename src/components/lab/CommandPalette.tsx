@@ -42,6 +42,7 @@ const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: s
     { id: 'p-today', label: 'Dziś', href: '/lab', icon: Home, keys: ['g', 'd'] },
     { id: 'p-funnel', label: 'Lejek', href: '/lab/lejek', icon: Filter, keys: ['g', 'l'] },
     { id: 'p-centrum', label: 'Centrum Dowodzenia', href: '/lab/centrum', icon: Radar, keys: ['g', 'c'] },
+    { id: 'p-pliki', label: 'Raporty i pliki', href: '/lab/centrum/pliki', icon: Radar, keys: ['g', 'r'] },
     { id: 'p-crm', label: 'CRM i leady', href: '/lab/crm', icon: Inbox, keys: ['g', 'k'] },
     { id: 'p-projects', label: 'Portal klienta', href: '/lab/projects', icon: Hourglass },
     { id: 'p-finances', label: 'Finanse i dokumenty', href: '/lab/finances', icon: FileText },

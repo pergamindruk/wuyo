@@ -230,7 +230,11 @@ export default async function CentrumPage() {
                         Ostatnia synchronizacja: {agoLabel(syncMin)}
                     </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                    <Link href="/lab/centrum/pliki"
+                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] border border-yellow-400/40 text-yellow-300 bg-yellow-400/5 hover:bg-yellow-400/10">
+                        <FileText size={12} /> Raporty i pliki
+                    </Link>
                     <StatusPill ok={online} label={online ? 'Komputer online' : 'Brak sygnału z komputera'} />
                     <StatusPill ok={harveyOk} label={harveyOk ? 'Harvey pracuje' : 'Harvey wyłączony'} />
                     <StatusPill
@@ -256,8 +260,10 @@ export default async function CentrumPage() {
                     icon={<AlertTriangle size={14} />} tone="bad" />
                 <Kpi label="Adresy zweryfikowane" value={h.z_mailem_zweryfikowanym} hint={`z ${h.prospekty} znalezionych`}
                     icon={<MailCheck size={14} />} />
-                <Kpi label="Do zatwierdzenia" value={doZatwierdzenia} hint="Outbox Harveya"
-                    icon={<Mail size={14} />} tone={doZatwierdzenia > 0 ? 'warn' : 'default'} />
+                <Link href="/lab/centrum/pliki" className="contents">
+                    <Kpi label="Do zatwierdzenia" value={doZatwierdzenia} hint="Outbox Harveya · czytaj maile →"
+                        icon={<Mail size={14} />} tone={doZatwierdzenia > 0 ? 'warn' : 'default'} />
+                </Link>
                 <Kpi label="Wysłane" value={wyslane} icon={<Send size={14} />} />
                 <Kpi label="Odpowiedzi" value={h.rozmowy} icon={<Sparkles size={14} />}
                     tone={h.rozmowy > 0 ? 'good' : 'default'} />
@@ -316,6 +322,9 @@ export default async function CentrumPage() {
             {/* ── Leady ── */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 <Card title="Najsłabsze strony — dzwoń lub pisz" icon={<Globe size={12} />}>
+                    <Link href="/lab/centrum/pliki?p=raporty%2Faudyt-stron.csv" className="block -mt-2 mb-3 text-[11px] text-yellow-400/80 hover:text-yellow-400">
+                        Cały ranking audytu →
+                    </Link>
                     {a && a.najslabsze.length > 0 ? (
                         <ul className="divide-y divide-zinc-800">
                             {a.najslabsze.map((s) => (
@@ -356,7 +365,9 @@ export default async function CentrumPage() {
                             ))}
                         </ul>
                     ) : <p className="text-sm text-zinc-600">Brak firm bez strony z numerem telefonu.</p>}
-                    <p className="text-[11px] text-zinc-600 mt-3">Pełna lista: raporty/firmy-bez-strony.csv</p>
+                    <Link href="/lab/centrum/pliki?p=raporty%2Ffirmy-bez-strony.csv" className="inline-block text-[11px] text-yellow-400/80 hover:text-yellow-400 mt-3">
+                        Pełna lista firm bez strony →
+                    </Link>
                 </Card>
             </div>
 
@@ -393,9 +404,17 @@ export default async function CentrumPage() {
                             ))}
                         </ul>
                     ) : <p className="text-sm text-zinc-600">Nocna zmiana jeszcze nie działała.</p>}
-                    <p className="flex items-center gap-1.5 text-[11px] text-zinc-600 mt-3">
-                        <Clock size={11} /> Codziennie o 2:30
-                    </p>
+                    <div className="flex items-center justify-between gap-2 mt-3">
+                        <p className="flex items-center gap-1.5 text-[11px] text-zinc-600">
+                            <Clock size={11} /> Codziennie o 2:30
+                        </p>
+                        {d.nocna.ostatnia && (
+                            <Link href={`/lab/centrum/pliki?p=raporty%2Flog-${d.nocna.ostatnia}.txt`}
+                                className="text-[11px] text-yellow-400/80 hover:text-yellow-400">
+                                Pełny log →
+                            </Link>
+                        )}
+                    </div>
                 </Card>
 
                 <Card title={`Szkice bloga · ${d.blog.length}`} icon={<FileText size={12} />}>
@@ -403,10 +422,17 @@ export default async function CentrumPage() {
                         <ul className="flex flex-col gap-3">
                             {d.blog.map((b) => (
                                 <li key={b.slug}>
-                                    <p className="text-sm text-white leading-snug">{b.tytul}</p>
+                                    <Link href={`/lab/centrum/pliki?p=drafty-bloga%2F${b.slug}.mdx`}
+                                        className="text-sm text-white leading-snug hover:text-yellow-400">
+                                        {b.tytul}
+                                    </Link>
                                     <p className="text-[11px] text-zinc-500 mt-0.5">
                                         {b.data} · drafty-bloga/{b.slug}.mdx
-                                        {b.posty && <span className="text-emerald-400"> · 3 posty gotowe</span>}
+                                        {b.posty && (
+                                            <Link href={`/lab/centrum/pliki?p=raporty%2Fposty-${b.slug}.md`} className="text-emerald-400 hover:underline">
+                                                {' '}· 3 posty gotowe
+                                            </Link>
+                                        )}
                                     </p>
                                 </li>
                             ))}

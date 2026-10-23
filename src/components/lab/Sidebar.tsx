@@ -13,6 +13,7 @@ const navGroups = [
             { href: '/lab', label: 'Dziś', icon: Sun },
             { href: '/lab/lejek', label: 'Lejek', icon: Kanban },
             { href: '/lab/centrum', label: 'Centrum Dowodzenia', icon: Radar },
+            { href: '/lab/centrum/pliki', label: 'Raporty i pliki', icon: FileText },
             { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
             { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
             { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },

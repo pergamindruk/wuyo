@@ -11,6 +11,7 @@ const SEQUENCES: Record<string, string> = {
     d: '/lab',
     l: '/lab/lejek',
     c: '/lab/centrum',
+    r: '/lab/centrum/pliki',
     k: '/lab/crm',
 }
 
@@ -20,6 +21,7 @@ const SHORTCUTS: { keys: string[]; label: string }[] = [
     { keys: ['g', 'd'], label: 'Przejdź do: Dziś' },
     { keys: ['g', 'l'], label: 'Przejdź do: Lejek' },
     { keys: ['g', 'c'], label: 'Przejdź do: Centrum' },
+    { keys: ['g', 'r'], label: 'Przejdź do: Raporty i pliki' },
     { keys: ['g', 'k'], label: 'Przejdź do: CRM' },
     { keys: ['1', '–', '4'], label: 'Wynik rozmowy (ekran Dziś)' },
     { keys: ['S'], label: 'Pomiń firmę (ekran Dziś)' },
