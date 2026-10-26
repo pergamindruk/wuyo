@@ -36,17 +36,24 @@ CZĘŚĆ 1 (dla Mateusza, markdown, krótko):
 ## Branża i etap
 Branża (albo "nie wiem, dopytaj") i etap prowadzenia klienta 1-7.
 ## Wycena
-Tabela: pozycja z cennika | cena netto. Pod tabelą suma netto i brutto (x1,23). Jeśli pakiet wychodzi taniej niż pozycje osobno, zaproponuj pakiet.
+Dwa warianty w tabeli (pozycja z cennika | cena netto), każdy z sumą netto i brutto (x1,23):
+- Wariant A: minimum, które spełnia DOKŁADNIE to, o co prosi klient (pozycje osobno, najtańsze pasujące).
+- Wariant B: pakiet z cennika, jeśli któryś pasuje, z jednym zdaniem, co klient dostaje ekstra.
+Policz sumy naprawdę. Nie pisz, że pakiet jest tańszy, jeśli suma wariantu A jest niższa.
 Jeśli czegoś nie da się wycenić z cennika: "wycena indywidualna".
 ## Zapytaj klienta
-Maksymalnie 3 pytania, bez których nie da się wycenić dokładnie. Jeśli wszystko jasne: "nic".
+1-3 pytania o rzeczy, od których zależy cena albo start (np. czy ma zdjęcia i teksty, ile podstron, czy ma domenę). "nic" tylko gdy naprawdę wszystko wiadomo.
 
 Potem linia dokładnie: ${REPLY_MARK}
 
 CZĘŚĆ 2: gotowa odpowiedź do klienta ${channel === 'whatsapp'
         ? 'na WhatsApp: 2-5 krótkich zdań, bez powitania typu "Szanowny", bez podpisu'
         : 'mailem: max 3 akapity (wstęp / zakres i cena / zachęta do odpowiedzi), na końcu podpis "Mateusz Machos\\nWUYO, Rzeszów"'}.
-Czysty tekst, bez markdownu. Cena netto + dopisek o VAT. Bez obiecywania terminu. Głosem Mateusza.`
+Czysty tekst, bez markdownu. Głosem Mateusza, ale własnymi słowami (nie kopiuj zdań z sekcji GŁOS).
+- Odpowiedz na KAŻDE pytanie klienta. Pyta o cenę: podaj wariant A (netto + dopisek o VAT), pakiet B wspomnij jednym zdaniem.
+  Pyta o termin: "termin potwierdzę po sprawdzeniu kolejki, zwykle to kwestia dni, nie miesięcy" (bez konkretnej liczby dni).
+- Zakres: maksymalnie 3-4 krótkie zdania, bez wyliczania wszystkiego z pakietu.
+- Na końcu jedno pytanie z części "Zapytaj klienta" albo propozycja krótkiego telefonu.`
     try {
         const out = await generateWithFallback('quote', prompt)
         const [analysis, reply = ''] = out.split(REPLY_MARK)
