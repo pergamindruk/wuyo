@@ -21,7 +21,19 @@ export function getModel(preset: ModelPreset = 'content') {
     })
 }
 
+/** Generuje tekst; przy chwilowym przeciążeniu Gemini (503/429) ponawia do 2 razy. */
 export async function generateWithFallback(preset: ModelPreset, prompt: string): Promise<string> {
-    const result = await getModel(preset).generateContent(prompt)
-    return result.response.text()
+    let lastError: unknown
+    for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+            const result = await getModel(preset).generateContent(prompt)
+            return result.response.text()
+        } catch (e) {
+            lastError = e
+            const msg = e instanceof Error ? e.message : String(e)
+            if (!/503|429|overloaded|unavailable/i.test(msg)) throw e
+            await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)))
+        }
+    }
+    throw lastError
 }

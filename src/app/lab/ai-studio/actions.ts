@@ -2,118 +2,185 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { getModel } from '@/lib/gemini'
+import { generateWithFallback } from '@/lib/gemini'
+import { PRICING, REPLY_MARK, RULES, STUDIO_CONTEXT, VOICE } from '@/lib/lab/ai/context'
 
-// ─── Content Generator ───────────────────────────────────────
+type Result = { success: true; data: string } | { success: false; error: string }
 
-export async function generateContent(topic: string, platform: string) {
+function errorText(e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e)
+    if (/503|overloaded|unavailable/i.test(msg)) return 'Gemini jest chwilowo przeciążony. Spróbuj za minutę.'
+    return 'Nie udało się wygenerować: ' + msg.slice(0, 200)
+}
+
+// ─── Odpowiedz klientowi (wycena + gotowy mail) ─────────────────────────────
+
+export type ClientAnswer = { analysis: string; reply: string }
+
+export async function answerClient(clientMessage: string, channel: 'mail' | 'whatsapp'):
+    Promise<{ success: true; data: ClientAnswer } | { success: false; error: string }> {
+    const message = clientMessage.trim().slice(0, 6000)
+    if (!message) return { success: false, error: 'Wklej wiadomość od klienta.' }
+    const prompt = `${STUDIO_CONTEXT}
+
+WIADOMOŚĆ OD KLIENTA:
+"""
+${message}
+"""
+
+ZADANIE: przygotuj dla Mateusza dwie rzeczy.
+
+CZĘŚĆ 1 (dla Mateusza, markdown, krótko):
+## Czego chce
+1-2 zdania.
+## Branża i etap
+Branża (albo "nie wiem, dopytaj") i etap prowadzenia klienta 1-7.
+## Wycena
+Tabela: pozycja z cennika | cena netto. Pod tabelą suma netto i brutto (x1,23). Jeśli pakiet wychodzi taniej niż pozycje osobno, zaproponuj pakiet.
+Jeśli czegoś nie da się wycenić z cennika: "wycena indywidualna".
+## Zapytaj klienta
+Maksymalnie 3 pytania, bez których nie da się wycenić dokładnie. Jeśli wszystko jasne: "nic".
+
+Potem linia dokładnie: ${REPLY_MARK}
+
+CZĘŚĆ 2: gotowa odpowiedź do klienta ${channel === 'whatsapp'
+        ? 'na WhatsApp: 2-5 krótkich zdań, bez powitania typu "Szanowny", bez podpisu'
+        : 'mailem: max 3 akapity (wstęp / zakres i cena / zachęta do odpowiedzi), na końcu podpis "Mateusz Machos\\nWUYO, Rzeszów"'}.
+Czysty tekst, bez markdownu. Cena netto + dopisek o VAT. Bez obiecywania terminu. Głosem Mateusza.`
     try {
-        const model = getModel('content')
-
-        const prompt = `Jestes ekspertem ds. marketingu i copywritingu z roku 2026 dla marki WUYO (tworzenie stron internetowych premium, UI/UX, identyfikacja wizualna, grafika "Dobra Grafa"). Masz swiadomosc najnowszych trendow, algorytmow i standardow technologicznych.
-    Ton marki: nowoczesny, lekko hakerski, pewny siebie, premium, konkretny (unikaj lania wody, uzywaj technicznego, ale zrozumialego zargonu, stawiaj na jakosc i oszczednosc w pakiecie).
-
-    Zadanie: Napisz angazujacy post na platforme: ${platform}, na temat: "${topic}".
-    Uzyj odpowiedniego formatowania dla tej platformy (np. akapity, hasztagi, ewentualnie emoji, ale bez przesady). Wpis ma zachecic do interakcji lub pokazania ekspertyzy WUYO.`
-
-        const result = await model.generateContent(prompt)
-        const output = result.response.text()
-
-        // Auto-save to history
-        await saveGeneration('content', { topic, platform }, output)
-
-        return { success: true, data: output }
-    } catch (error: any) {
-        console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udalo sie wygenerowac tresci. Blad: ' + (error.message || JSON.stringify(error)) }
+        const out = await generateWithFallback('quote', prompt)
+        const [analysis, reply = ''] = out.split(REPLY_MARK)
+        const data = { analysis: analysis.trim(), reply: reply.trim() }
+        await saveGeneration('quote', { kind: 'odpowiedz', channel, clientMessage: message }, `${data.analysis}\n\n${REPLY_MARK}\n\n${data.reply}`)
+        return { success: true, data }
+    } catch (e) {
+        return { success: false, error: errorText(e) }
     }
 }
 
-// ─── Quote Analyzer ──────────────────────────────────────────
+// ─── Poprawki jednym kliknięciem ─────────────────────────────────────────────
 
-export async function generateQuote(clientMessage: string) {
+const REFINE: Record<string, string> = {
+    krocej: 'Skróć o połowę. Zostaw tylko to, co najważniejsze.',
+    luzniej: 'Napisz luźniej, bardziej jak w rozmowie. Dalej kulturalnie.',
+    oficjalniej: 'Napisz trochę bardziej oficjalnie (Pan/Pani), ale dalej krótko i bez korporacyjnych zwrotów.',
+    bez_ceny: 'Usuń wszystkie kwoty. Zamiast ceny zaproponuj krótką rozmowę telefoniczną, żeby dopytać szczegóły.',
+    whatsapp: 'Przerób na wiadomość WhatsApp: 2-4 krótkie zdania, bez podpisu.',
+    konkretniej: 'Dodaj jeden konkretny przykład albo liczbę z cennika, usuń ogólniki.',
+}
+
+export async function refineText(text: string, mode: string, custom = ''): Promise<Result> {
+    const instruction = mode === 'wlasne' ? custom.trim().slice(0, 500) : REFINE[mode]
+    if (!instruction || !text.trim()) return { success: false, error: 'Brak tekstu albo polecenia.' }
+    const prompt = `${VOICE}\n\n${RULES}\n\n${PRICING}\n\nTEKST:\n"""\n${text.slice(0, 8000)}\n"""\n\nPOLECENIE: ${instruction}\n\nZwróć TYLKO poprawiony tekst, bez komentarzy i bez cudzysłowów.`
     try {
-        const model = getModel('quote')
-
-        const prompt = `Jestes glownym analitykiem projektowym ("AI Mentor") z roku 2026 dla agencji WUYO ("Dobra Grafa") z Rzeszowa. Wlasciciel ma wlasny sprzet do druku do formatu A3+, ciecia po konturze, laminowania i nadruku na odziezy - dzieki temu koszt materialu to ok. 1/3 ceny outsource.
-    Oto wiadomosc od potencjalnego klienta z zapytaniem o projekt:
-
-    "${clientMessage}"
-
-    CENNIK REFERENCYJNY WUYO (ceny NETTO, do faktury dochodzi 23% VAT, 2026, rynek rzeszowski):
-
-    Zrodlo: CENNIK.md (stan 27.09.2026). Nie podawaj cen spoza tej listy — przy nietypowym zakresie napisz "wycena indywidualna".
-
-    DRUK wlasny — ZESTAW projekt dwustronny + druk (ceny calkowite dla klienta):
-    - Wizytowki: 50 szt. 299 zl, 100 szt. 349 zl, 150 szt. 389 zl, 300 szt. 479 zl (papier 300 g, blysk)
-    - Ulotki A5: 100 szt. 449 zl, 300 szt. 589 zl (kreda 130 g)
-    - Vouchery: 50 szt. 289 zl, 100 szt. 359 zl
-    - Naklejki: 50 szt. 219 zl, 100 szt. 279 zl (folia wodoodporna +25% do druku)
-    - Menu restauracyjne projekt + druk: od 400 zl
-    SAM DRUK z gotowego pliku klienta:
-    - Wizytowki: 50 szt. 99 zl, 100 szt. 159 zl, 150 szt. 199 zl, 300 szt. 299 zl
-    - Ulotki A5: 50 szt. 119 zl, 100 szt. 189 zl, 150 szt. 239 zl, 300 szt. 359 zl
-    - Naklejki: 50 szt. 89 zl, 100 szt. 149 zl, 200 szt. 229 zl
-    - Plakaty: od 29 zl/szt.
-    Nigdy nie podawaj ceny samego druku klientowi, ktory nie ma jeszcze projektu.
-    Rabat: stali klienci i znajomi do 20% na druk, nigdy na projekt.
-    Ekspres 24-48h: +30% do calosci.
-
-    PROJEKT GRAFICZNY (bez druku):
-    - Logo (3 wersje: pozioma, pionowa, mono; 3 koncepcje do wyboru): od 890 zl
-    - Logo + mini ksiega znaku: 1190 zl
-    - Lifting istniejacego logo: od 1000 zl
-    - Mini ksiega znaku do istniejacego logo: 590 zl
-    - Wizytowka: jednostronna 160 zl, dwustronna 240 zl
-    - Ulotka A5: jednostronna 260 zl, dwustronna 300 zl; ulotka A4 / skladana do DL: 330 zl
-    - Plakat A3-A2: 350 zl; voucher: 220 zl; menu A4: 280 zl
-    - Etykieta produktowa: od 180 zl; opakowanie (pudelko, torebka, sleeve): od 400 zl
-    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
-    - Magnes reklamowy (projekt): 130 zl; koperta z nadrukiem (projekt): 110 zl — jeszcze nierealizowane, zaznacz to w odpowiedzi
-    - Baner do 3 m2: od 260 zl; 3-8 m2: 390 zl; 8-15 m2: 490 zl; roll-up: 330 zl; szyld: od 450 zl
-    - Social media: pojedyncza grafika 150 zl, karuzela do 6 slajdow od 220 zl, zestaw startowy od 550 zl, pakiet 4 / 8 / 12 grafik: 520 / 950 / 1350 zl
-    - Praca godzinowa (poprawki, DTP): 100 zl/h, minimum 1 h
-
-    PAKIETY JEDNORAZOWE:
-    - Marka Mini (logo + 100 wizytowek projekt+druk): 1090 zl
-    - Marka Start (logo + mini ksiega + 150 wizytowek projekt+druk + stopka mailowa): 1490 zl
-    - Firma w Internecie (Marka Start + strona do 5 podstron, szkolenie, 1 mc opieki): 3490 zl
-    - Pelny Start (Firma w Internecie + 300 wizytowek, ulotka A5, social, wizytowka Google, 3 mc Widocznosci i Opieki): 5900 zl
-
-    STRONY WWW (domena i hosting na 1. rok w cenie; realizacja 7-14 dni roboczych):
-    - Strona jednostronicowa (one-page): od 1990 zl
-    - Strona firmowa do 5 podstron: 2990 zl
-    - Sklep internetowy: od 6900 zl
-
-    ABONAMENT MIESIECZNY:
-    - Opieka Strony (serwer, domena, kopie, zabezpieczenia, 1 h drobnych zmian/mc): 199 zl/mc
-    - Widocznosc i Opieka (jw. + wizytowka Google, opinie, 5-6 grafik/mc, raport): 690 zl/mc
-    - Staly Opiekun (jw. + pelna grafika, prowadzenie social media, priorytet): 1290 zl/mc
-
-    TERMINY: logo 7-10 dni roboczych, strona 7-14 dni roboczych, druk 1-3 dni robocze.
-
-    Zadanie: Przeanalizuj to zapytanie i przygotuj odpowiedz dla wlasciciela WUYO. Odpowiedz ma zawierac:
-    1. **Krotkie streszczenie:** Czego dokladnie chce klient i na czym mu zalezy.
-    2. **Sugerowany pakiet / pozycje z oferty:** Dopasuj konkretne pozycje z cennika.
-    3. **Estymacja wyceny:** Podaj konkretne kwoty (nie "od X") dla kazdej pozycji oraz lacznie. Jesli kilka elementow dla jednej marki - uwzglednij rabat pakietowy i zaznacz adaptacje. Wyceny musza byc zakorzenione w powyzszym cenniku - nie wymyslaj wyzsZych kwot.
-    4. **Szkic odpowiedzi do klienta:** Gotowy tekst w stylu WUYO (konkretny, "luzny z pazurem", bez lania wody), gotowy do skopiowania i edycji.
-
-    Sformatuj odpowiedz czytelnym Markdownem, uzywaj boldow, list.`
-
-        const result = await model.generateContent(prompt)
-        const output = result.response.text()
-
-        // Auto-save to history
-        await saveGeneration('quote', { clientMessage }, output)
-
-        return { success: true, data: output }
-    } catch (error: any) {
-        console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udalo sie wygenerowac estymacji wyceny. Blad: ' + (error.message || JSON.stringify(error)) }
+        return { success: true, data: (await generateWithFallback('content', prompt)).trim() }
+    } catch (e) {
+        return { success: false, error: errorText(e) }
     }
 }
 
-// ─── Pipeline: Create project from quote ─────────────────────
+// ─── Skrypt rozmowy dla firmy z kolejki telefonów ───────────────────────────
+
+export type CallCandidate = {
+    id: string
+    name: string
+    industry: string
+    phone: string
+    website: string
+    reason: string
+    problems: string[]
+    score: number
+}
+
+export async function getCallCandidates(limit = 12): Promise<CallCandidate[]> {
+    const supabase = await createClient()
+    const { data } = await supabase
+        .from('call_queue')
+        .select('id, name, industry, phone, website, reason, problems, score')
+        .in('status', ['do_kontaktu', 'nie_odebral', 'oddzwonic'])
+        .lte('next_at', new Date().toISOString())
+        .order('score', { ascending: false })
+        .limit(limit)
+    return (data ?? []) as CallCandidate[]
+}
+
+export async function generateCallScript(queueId: string): Promise<Result> {
+    const supabase = await createClient()
+    const { data: firm } = await supabase
+        .from('call_queue')
+        .select('name, industry, phone, website, reason, problems, notes')
+        .eq('id', queueId)
+        .maybeSingle()
+    if (!firm) return { success: false, error: 'Nie znalazłem tej firmy w kolejce.' }
+    const prompt = `${VOICE}\n\n${RULES}\n\n${PRICING}
+
+FIRMA: ${firm.name} (${firm.industry || 'branża nieznana'})
+Strona: ${firm.website || 'brak'}
+Powód telefonu: ${firm.reason}
+Problemy z audytu: ${(firm.problems as string[] | null)?.join('; ') || 'brak danych'}
+Notatki z wcześniejszych prób: ${firm.notes || 'brak'}
+
+ZADANIE: ściągawka do telefonu dla Mateusza. Markdown, krótko, mówione zdania (do przeczytania na głos):
+## Otwarcie (20 sekund)
+Kim jest, skąd dzwoni, jedno zdanie o tym, co zauważył u NICH (z problemów wyżej, prostymi słowami). Na końcu pytanie o zgodę na minutę rozmowy.
+## 2 pytania
+Pytania, które otwierają rozmowę o ich klientach (np. skąd dziś przychodzą klienci).
+## Jeśli powie...
+- "mam już stronę / mam kogoś"
+- "nie mam czasu"
+- "ile to kosztuje" (podaj widełki z cennika, netto + VAT)
+- "proszę wysłać maila"
+## Cel rozmowy
+Jeden następny krok (np. zgoda na wysłanie 2-3 uwag mailem albo spotkanie 15 min). Bez naciskania.
+Nie wymyślaj faktów o firmie spoza danych wyżej.`
+    try {
+        const out = (await generateWithFallback('content', prompt)).trim()
+        await saveGeneration('quote', { kind: 'telefon', queueId, firm: firm.name }, out)
+        return { success: true, data: out }
+    } catch (e) {
+        return { success: false, error: errorText(e) }
+    }
+}
+
+// ─── Post Creator ────────────────────────────────────────────────────────────
+
+const PLATFORM_GUIDE: Record<string, string> = {
+    instagram: 'krótkie akapity, emoji z umiarem (max 3), 5-8 hashtagów na końcu (w tym #rzeszów), max 2200 znaków',
+    facebook: 'jak rozmowa, może być dłuższy, 2-3 hashtagi na końcu',
+    both: 'pasuje na Instagram i Facebook: krótkie akapity, max 3 emoji, 5-7 hashtagów, max 2200 znaków',
+    linkedin: 'rzeczowo, konkretne liczby, 3-5 hashtagów na końcu, max 3000 znaków',
+    blog: 'artykuł z nagłówkami (##), min 600 słów, pierwsze zdanie = krótka odpowiedź, sekcja FAQ, bez hashtagów',
+}
+
+const TONE_GUIDE: Record<string, string> = {
+    poradnik: 'daj jedną konkretną rzecz, którą właściciel firmy może sprawdzić albo zrobić sam dziś',
+    realizacja: 'pokaż realizację: dla kogo, jaki był problem, co zrobiłeś, co się zmieniło. Tylko fakty z kontekstu, nic nie dopisuj',
+    pytanie: 'zacznij od pytania, które zadaje właściciel małej firmy (np. "ile to kosztuje"), odpowiedz konkretnie',
+    oferta: 'pokaż jedną usługę z ceną z cennika (netto + VAT), co klient dostaje, i zaproś do kontaktu',
+    za_kulisami: 'z życia studia: jak pracujesz, sprzęt, proces, coś szczerego. Pierwsza osoba',
+}
+
+export async function generatePostForPlatform(topic: string, tone: string, platform: string, extraContext: string): Promise<Result> {
+    const prompt = `${VOICE}\n\n${PRICING}
+
+Piszesz post Mateusza (WUYO, Rzeszów). Odbiorca: właściciel małej firmy, 40-55 lat, nie zna się na grafice.
+Platforma: ${platform}. Wytyczne: ${PLATFORM_GUIDE[platform] ?? PLATFORM_GUIDE.facebook}
+Rodzaj: ${TONE_GUIDE[tone] ?? TONE_GUIDE.poradnik}
+Temat: "${topic.slice(0, 1000)}"${extraContext ? `\nKontekst od Mateusza (fakty): "${extraContext.slice(0, 1500)}"` : ''}
+
+Nie wymyślaj realizacji, klientów, opinii ani liczb spoza kontekstu i cennika.
+Zwróć TYLKO gotowy post do skopiowania.`
+    try {
+        const out = (await generateWithFallback('content', prompt)).trim()
+        await saveGeneration('content', { topic, tone, platform, extraContext }, out)
+        return { success: true, data: out }
+    } catch (e) {
+        return { success: false, error: errorText(e) }
+    }
+}
+
+// ─── Pipeline: Create project from quote ─────────────────────────────────────
 
 export async function createProjectFromQuote(clientName: string, projectName: string, leadId?: string) {
     const { createProject } = await import('../projects/actions')
@@ -131,108 +198,59 @@ export async function createProjectFromQuote(clientName: string, projectName: st
     return project
 }
 
-// ─── History (ai_generations table) ──────────────────────────
+// ─── History (ai_generations table) ──────────────────────────────────────────
 
-async function saveGeneration(type: 'content' | 'quote', inputData: Record<string, any>, output: string) {
+export type Generation = {
+    id: string
+    type: 'content' | 'quote'
+    inputData: Record<string, string>
+    output: string
+    createdAt: string
+}
+
+async function saveGeneration(type: 'content' | 'quote', inputData: Record<string, string>, output: string) {
     try {
         const supabase = await createClient()
-        await supabase.from('ai_generations').insert({
-            type,
-            input_data: inputData,
-            output,
-        })
+        await supabase.from('ai_generations').insert({ type, input_data: inputData, output })
     } catch (e) {
         console.error('saveGeneration error:', e)
     }
 }
 
-export async function getGenerations(limit = 20) {
+export async function getGenerations(limit = 20): Promise<Generation[]> {
     const supabase = await createClient()
     const { data, error } = await supabase
         .from('ai_generations')
-        .select('*')
+        .select('id, type, input_data, output, created_at')
         .order('created_at', { ascending: false })
         .limit(limit)
 
-    if (error) {
+    if (error || !data) {
         console.error('getGenerations error:', error)
         return []
     }
 
-    return data.map((g: any) => ({
-        id: g.id,
-        type: g.type as 'content' | 'quote',
-        inputData: g.input_data,
-        output: g.output,
-        createdAt: g.created_at,
+    return data.map((g) => ({
+        id: g.id as string,
+        type: g.type as Generation['type'],
+        inputData: (g.input_data ?? {}) as Record<string, string>,
+        output: g.output as string,
+        createdAt: g.created_at as string,
     }))
 }
 
 export async function deleteGeneration(id: string) {
     const supabase = await createClient()
-    const { error } = await supabase
-        .from('ai_generations')
-        .delete()
-        .eq('id', id)
-
+    const { error } = await supabase.from('ai_generations').delete().eq('id', id)
     if (error) {
         console.error('deleteGeneration error:', error)
-        throw new Error('Nie udalo sie usunac wpisu')
+        throw new Error('Nie udało się usunąć wpisu')
     }
-
     revalidatePath('/lab/ai-studio')
     return true
 }
 
-// ─── Post Creator ─────────────────────────────────────────────────────────────
-
-export async function generatePostForPlatform(
-    topic: string,
-    tone: string,
-    platform: string,
-    extraContext: string
-) {
-    try {
-        const model = getModel('content')
-
-        const platformGuidelines: Record<string, string> = {
-            instagram: 'angażujące, krótkie akapity, emoji z umiarem (max 5–8), 5–10 hashtagów na końcu, max 2200 znaków',
-            facebook: 'konwersacyjny, może być dłuższy, 2–3 hashtagi na końcu, naturalne emoji bez przesady',
-            both: 'pasuje na Instagram i Facebook jednocześnie: krótkie akapity, emoji z umiarem, 5–7 hashtagów, max 2200 znaków',
-            linkedin: 'profesjonalny, konkretne fakty/liczby, akapity oddzielone spacją, hashtagi na końcu (3–5), max 3000 znaków',
-            blog: 'strukturyzowany artykuł z nagłówkami (##), wstęp-rozwinięcie-zakończenie, min 400 słów, SEO-friendly, bez hashtagów',
-        }
-
-        const toneGuidelines: Record<string, string> = {
-            ekspercki: 'buduj autorytet — dobre praktyki branżowe, konkretne liczby, pozycjonuj WUYO jako ekspertów',
-            storytelling: 'zacznij od konkretnej historii lub sytuacji z życia, wciągnij emocją, dopiero potem meritum',
-            edukacyjny: 'daj konkretną wartość: tipsy, lista "jak to zrobić", odpowiedź na pytanie "dlaczego warto"',
-            sprzedazowy: 'podkreślaj korzyści (nie features), buduj lekkie FOMO, zakończ wyraźnym ale subtelnym CTA',
-            viralowy: 'kontrowersyjna teza lub prowokujące pytanie otwierające post — cel: dyskusja w komentarzach',
-        }
-
-        const prompt = `Jesteś ekspertem od content marketingu marki WUYO — studio graficzne i web design "Dobra Grafa" z Rzeszowa. Ton marki: nowoczesny, pewny siebie, premium, konkretny (zero lania wody).
-
-Platforma: ${platform.toUpperCase()}
-Wytyczne platformy: ${platformGuidelines[platform] || platformGuidelines.facebook}
-
-Ton: ${tone.toUpperCase()}
-Wytyczne tonu: ${toneGuidelines[tone] || toneGuidelines.ekspercki}
-
-Temat: "${topic}"${extraContext ? `\nDodatkowy kontekst: "${extraContext}"` : ''}
-
-Zwróć TYLKO gotowy post do skopiowania. Zero wstępów, zero komentarzy, zero cudzysłowów owijających wynik.`
-
-        const result = await model.generateContent(prompt)
-        const output = result.response.text()
-
-        await saveGeneration('content', { topic, tone, platform, extraContext }, output)
-
-        return { success: true, data: output }
-    } catch (error: any) {
-        return { success: false, error: 'Błąd generowania: ' + (error.message || '') }
-    }
-}
+// ─── Publikacja ──────────────────────────────────────────────────────────────
 
 export async function publishDirectPost(
     topic: string,
