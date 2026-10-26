@@ -110,11 +110,12 @@ export async function getActivities(supabase: Supa, sinceIso: string): Promise<A
 /** Status komputera studia z centrum_snapshot (Harvey, nocna zmiana, sync). */
 export async function getSystems(supabase: Supa): Promise<SystemsStatus> {
     const { data } = await supabase.from('centrum_snapshot').select('data, updated_at').eq('key', 'latest').maybeSingle()
-    if (!data) return { syncMinutesAgo: null, online: false, harveyOk: false, nightShift: null, outboxPending: 0, replies: 0 }
+    if (!data) return { syncMinutesAgo: null, online: false, harveyOk: false, nightShift: null, outboxPending: 0, replies: 0, dyrygent: null }
     const d = data.data as {
         harvey_status?: { procesy: number; panel: boolean }
         nocna?: { ostatnia: string | null }
         harvey?: { outbox?: Record<string, number>; rozmowy?: number }
+        dyrygent?: { tresc: string; zmieniono: string } | null
     }
     const min = Math.round((Date.now() - new Date(data.updated_at as string).getTime()) / 60_000)
     return {
@@ -124,6 +125,7 @@ export async function getSystems(supabase: Supa): Promise<SystemsStatus> {
         nightShift: d.nocna?.ostatnia ?? null,
         outboxPending: d.harvey?.outbox?.pending_review ?? 0,
         replies: d.harvey?.rozmowy ?? 0,
+        dyrygent: d.dyrygent ?? null,
     }
 }
 

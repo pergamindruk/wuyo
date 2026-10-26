@@ -44,6 +44,7 @@ export interface ThreadMessage {
 
 /** Kolejność sekcji na liście; nieznane grupy lądują na końcu. */
 export const GROUP_ORDER = [
+    'Dyrygent',
     'Nocna zmiana',
     'Maile do zatwierdzenia',
     'Odpowiedzi klientów',

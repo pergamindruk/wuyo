@@ -98,4 +98,6 @@ export interface SystemsStatus {
     nightShift: string | null
     outboxPending: number
     replies: number
+    /** Ostatni raport Dyrygenta (narzedzia/dyrygent), markdown. */
+    dyrygent: { tresc: string; zmieniono: string } | null
 }

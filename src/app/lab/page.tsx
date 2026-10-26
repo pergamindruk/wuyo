@@ -14,6 +14,7 @@ import { SystemsStrip } from '@/components/lab/today/SystemsStrip'
 import { FollowUpsCard } from '@/components/lab/today/FollowUpsCard'
 import { WeekStatsCard } from '@/components/lab/today/WeekStatsCard'
 import { EveningCard } from '@/components/lab/today/EveningCard'
+import { ConductorCard } from '@/components/lab/today/ConductorCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -74,6 +75,7 @@ export default async function TodayPage() {
 
             <GoalBar goal={goal} />
             <OneThingCard thing={thing} />
+            {systems.dyrygent && <ConductorCard raport={systems.dyrygent} />}
             <CallQueue initialItems={queue} />
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
