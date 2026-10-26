@@ -184,7 +184,7 @@ function ClientAnswerTab({ initialMessage, leadId, client, restored }: {
 
 // ─── Telefon: ściągawka do rozmowy ───────────────────────────────────────────
 
-function CallTab() {
+function CallTab({ firmId }: { firmId: string | null }) {
     const [firms, setFirms] = useState<CallCandidate[] | null>(null)
     const [selected, setSelected] = useState<CallCandidate | null>(null)
     const [script, setScript] = useState('')
@@ -192,6 +192,14 @@ function CallTab() {
     const [pending, start] = useTransition()
 
     useEffect(() => { getCallCandidates().then(setFirms) }, [])
+
+    // Wejście z ekranu Dziś (?firma=...): od razu ściągawka dla tej firmy.
+    useEffect(() => {
+        if (!firmId || firms === null || selected) return
+        const found = firms.find((f) => f.id === firmId)
+        pick(found ?? { id: firmId, name: 'Firma z kolejki', industry: '', phone: '', website: '', reason: '', problems: [], score: 0 })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [firmId, firms])
 
     const pick = (f: CallCandidate) => {
         setSelected(f)
@@ -323,10 +331,12 @@ function AIStudioInner() {
     const [restored, setRestored] = useState<ClientAnswer | null>(null)
     const [postInit, setPostInit] = useState<PostCreatorInit | null>(null)
     const [postKey, setPostKey] = useState(0)
+    const [firmId, setFirmId] = useState<string | null>(null)
 
     useEffect(() => {
         const t = params.get('tab')
         if (t === 'telefon' || t === 'post' || t === 'historia') setTab(t)
+        if (t === 'telefon') setFirmId(params.get('firma'))
         if (t === 'quote' || t === 'odpowiedz') {
             setTab('odpowiedz')
             const c = params.get('client'), email = params.get('email'), details = params.get('details')
@@ -384,7 +394,7 @@ function AIStudioInner() {
             </nav>
 
             {tab === 'odpowiedz' && <ClientAnswerTab initialMessage={initialMessage} leadId={leadId} client={client} restored={restored} />}
-            {tab === 'telefon' && <CallTab />}
+            {tab === 'telefon' && <CallTab firmId={firmId} />}
             {tab === 'post' && <PostCreator key={postKey} initialData={postInit ?? undefined} />}
             {tab === 'historia' && <HistoryTab onOpen={openFromHistory} />}
         </div>

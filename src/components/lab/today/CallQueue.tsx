@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
-import { CalendarClock, ChevronDown, ExternalLink, Phone, Plus, Search, SkipForward } from 'lucide-react'
+import { CalendarClock, ChevronDown, ExternalLink, Phone, Plus, Search, SkipForward, Sparkles } from 'lucide-react'
 import { CALL_OPENERS, OUTCOMES, SOURCE_LABEL } from '@/lib/lab/today/constants'
 import { telHref } from '@/lib/lab/today/format'
 import type { CallOutcome, QueueItem } from '@/lib/lab/today/types'
@@ -190,7 +190,13 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                         </a>
                     )}
 
-                    <div className="mt-4">
+                    <div className="mt-4 flex flex-wrap items-center gap-x-5">
+                        <Link
+                            href={`/lab/ai-studio?tab=telefon&firma=${encodeURIComponent(current.id)}`}
+                            className="flex min-h-11 items-center gap-1.5 text-sm font-medium text-yellow-400 hover:text-yellow-300"
+                        >
+                            <Sparkles size={15} /> Ściągawka do rozmowy (AI)
+                        </Link>
                         <button
                             type="button"
                             onClick={() => setOpenerOpen((v) => !v)}
@@ -201,7 +207,7 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                             Jak zacząć rozmowę
                         </button>
                         {openerOpen && (
-                            <p className="mt-1 rounded-xl border border-zinc-800 bg-zinc-950/60 p-4 text-sm leading-relaxed text-zinc-300">
+                            <p className="mt-1 basis-full rounded-xl border border-zinc-800 bg-zinc-950/60 p-4 text-sm leading-relaxed text-zinc-300">
                                 {CALL_OPENERS[current.source]}
                             </p>
                         )}

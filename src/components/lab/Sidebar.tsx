@@ -7,27 +7,33 @@ import { usePathname } from 'next/navigation'
 import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield, Star, Radar, Kanban, Sun } from 'lucide-react'
 
 const navGroups = [
+    // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
     {
-        label: 'Zarządzanie',
+        label: 'Sprzedaż',
         items: [
             { href: '/lab', label: 'Dziś', icon: Sun },
+            { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
+            { href: '/lab/crm', label: 'Zapytania (CRM)', icon: Inbox },
             { href: '/lab/lejek', label: 'Lejek', icon: Kanban },
+        ],
+    },
+    {
+        label: 'Studio',
+        items: [
             { href: '/lab/centrum', label: 'Centrum Dowodzenia', icon: Radar },
             { href: '/lab/centrum/pliki', label: 'Raporty i pliki', icon: FileText },
-            { href: '/lab/crm', label: 'CRM & Leady', icon: Inbox },
             { href: '/lab/projects', label: 'Portal Klienta', icon: Hourglass },
             { href: '/lab/finances', label: 'Finanse i Dokumenty', icon: FileText },
         ],
     },
     {
-        label: 'Narzędzia',
+        label: 'Treści i dane',
         items: [
-            { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
             { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
             { href: '/lab/social-dashboard', label: 'Social Dashboard', icon: Zap },
-            { href: '/lab/analytics', label: 'Analytics', icon: BarChart3 },
-            { href: '/lab/testimonials', label: 'Testimoniale', icon: Star },
-            { href: '/lab/audit-log', label: 'Audit Log', icon: Shield },
+            { href: '/lab/testimonials', label: 'Opinie klientów', icon: Star },
+            { href: '/lab/analytics', label: 'Statystyki strony', icon: BarChart3 },
+            { href: '/lab/audit-log', label: 'Dziennik zmian', icon: Shield },
         ],
     },
 ]
