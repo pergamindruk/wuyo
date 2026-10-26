@@ -16,9 +16,8 @@ function errorText(e: unknown) {
 /** Sprząta typowe ślady AI, których model nie zawsze się trzyma: długie pauzy i zakazane słowa. */
 function clean(text: string) {
     return text
-        .replace(/\s+[—–]\s+/g, ', ')
-        .replace(/[—–]/g, '-')
-        .replace(/(?<!\p{L})(R|r)ozwiązani(e|a|u|em)(?!\p{L})/gu, (_m, r: string, end: string) => `${r === 'R' ? 'O' : 'o'}pcj${({ e: 'a', a: 'i', u: 'i', em: 'ą' } as Record<string, string>)[end]}`)
+        .replace(/(\d)[—–](\d)/g, '$1-$2')
+        .replace(/\s*[—–]\s*/g, ', ')
         .replace(/(?<!\p{L})(kompleksow|dedykowan|profesjonaln|innowacyjn)\p{L}*\s/giu, '')
         .trim()
 }
