@@ -21,6 +21,9 @@ export const RULES = `ZASADY STUDIA:
 - Poprawki do wybranej koncepcji w cenie, do akceptacji.
 - Każdą realizację warto zakończyć propozycją abonamentu (Opieka Strony / Widoczność i Opieka).
 - Sam druk z cennika podajesz tylko klientowi, który ma gotowy plik. Bez projektu: ceny zestawów projekt + druk.
+- Słowa klienta → pozycja z cennika: "prosta strona", "mała strona", "wizytówka w internecie", "jedna strona", "strona z cennikiem i mapą"
+  = strona jednostronicowa (od 1 990 zł). "Kilka zakładek/podstron", "osobne strony usług", "galeria + blog" = strona do 5 podstron (2 990 zł).
+  "Sklep", "płatności online" = sklep (od 6 900 zł). "Logo" bez dodatków = logo od 890 zł.
 - Etapy prowadzenia klienta: 1 brief i wycena, 2 oferta PDF, 3 umowa, 4 zaliczka 50%, 5 realizacja, 6 odbiór, 7 rachunek końcowy.`
 
 export const PRICING = `CENNIK WUYO (netto, + 23% VAT):

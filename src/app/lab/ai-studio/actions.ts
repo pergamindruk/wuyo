@@ -13,6 +13,16 @@ function errorText(e: unknown) {
     return 'Nie udało się wygenerować: ' + msg.slice(0, 200)
 }
 
+/** Sprząta typowe ślady AI, których model nie zawsze się trzyma: długie pauzy i zakazane słowa. */
+function clean(text: string) {
+    return text
+        .replace(/\s+[—–]\s+/g, ', ')
+        .replace(/[—–]/g, '-')
+        .replace(/(?<!\p{L})(R|r)ozwiązani(e|a|u|em)(?!\p{L})/gu, (_m, r: string, end: string) => `${r === 'R' ? 'O' : 'o'}pcj${({ e: 'a', a: 'i', u: 'i', em: 'ą' } as Record<string, string>)[end]}`)
+        .replace(/(?<!\p{L})(kompleksow|dedykowan|profesjonaln|innowacyjn)\p{L}*\s/giu, '')
+        .trim()
+}
+
 // ─── Odpowiedz klientowi (wycena + gotowy mail) ─────────────────────────────
 
 export type ClientAnswer = { analysis: string; reply: string }
@@ -52,12 +62,12 @@ CZĘŚĆ 2: gotowa odpowiedź do klienta ${channel === 'whatsapp'
 Czysty tekst, bez markdownu. Głosem Mateusza, ale własnymi słowami (nie kopiuj zdań z sekcji GŁOS).
 - Odpowiedz na KAŻDE pytanie klienta. Pyta o cenę: podaj wariant A (netto + dopisek o VAT), pakiet B wspomnij jednym zdaniem.
   Pyta o termin: "termin potwierdzę po sprawdzeniu kolejki, zwykle to kwestia dni, nie miesięcy" (bez konkretnej liczby dni).
-- Zakres: maksymalnie 3-4 krótkie zdania, bez wyliczania wszystkiego z pakietu.
+- Zakres: maksymalnie 3-4 krótkie zdania, bez wyliczania wszystkiego z pakietu. Każdy akapit max 4 zdania.
 - Na końcu jedno pytanie z części "Zapytaj klienta" albo propozycja krótkiego telefonu.`
     try {
         const out = await generateWithFallback('quote', prompt)
         const [analysis, reply = ''] = out.split(REPLY_MARK)
-        const data = { analysis: analysis.trim(), reply: reply.trim() }
+        const data = { analysis: clean(analysis), reply: clean(reply) }
         await saveGeneration('quote', { kind: 'odpowiedz', channel, clientMessage: message }, `${data.analysis}\n\n${REPLY_MARK}\n\n${data.reply}`)
         return { success: true, data }
     } catch (e) {
@@ -81,7 +91,7 @@ export async function refineText(text: string, mode: string, custom = ''): Promi
     if (!instruction || !text.trim()) return { success: false, error: 'Brak tekstu albo polecenia.' }
     const prompt = `${VOICE}\n\n${RULES}\n\n${PRICING}\n\nTEKST:\n"""\n${text.slice(0, 8000)}\n"""\n\nPOLECENIE: ${instruction}\n\nZwróć TYLKO poprawiony tekst, bez komentarzy i bez cudzysłowów.`
     try {
-        return { success: true, data: (await generateWithFallback('content', prompt)).trim() }
+        return { success: true, data: clean(await generateWithFallback('content', prompt)) }
     } catch (e) {
         return { success: false, error: errorText(e) }
     }
@@ -144,7 +154,7 @@ Pytania, które otwierają rozmowę o ich klientach (np. skąd dziś przychodzą
 Jeden następny krok (np. zgoda na wysłanie 2-3 uwag mailem albo spotkanie 15 min). Bez naciskania.
 Nie wymyślaj faktów o firmie spoza danych wyżej.`
     try {
-        const out = (await generateWithFallback('content', prompt)).trim()
+        const out = clean(await generateWithFallback('content', prompt))
         await saveGeneration('quote', { kind: 'telefon', queueId, firm: firm.name }, out)
         return { success: true, data: out }
     } catch (e) {
@@ -181,7 +191,7 @@ Temat: "${topic.slice(0, 1000)}"${extraContext ? `\nKontekst od Mateusza (fakty)
 Nie wymyślaj realizacji, klientów, opinii ani liczb spoza kontekstu i cennika.
 Zwróć TYLKO gotowy post do skopiowania.`
     try {
-        const out = (await generateWithFallback('content', prompt)).trim()
+        const out = clean(await generateWithFallback('content', prompt))
         await saveGeneration('content', { topic, tone, platform, extraContext }, out)
         return { success: true, data: out }
     } catch (e) {
