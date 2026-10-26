@@ -128,7 +128,9 @@ Powód telefonu: ${firm.reason}
 Problemy z audytu: ${(firm.problems as string[] | null)?.join('; ') || 'brak danych'}
 Notatki z wcześniejszych prób: ${firm.notes || 'brak'}
 
-ZADANIE: ściągawka do telefonu dla Mateusza. Markdown, krótko, mówione zdania (do przeczytania na głos):
+ZADANIE: ściągawka do telefonu dla Mateusza. Markdown, krótko, mówione zdania (do przeczytania na głos).
+Zacznij od razu od "## Otwarcie", bez żadnego wstępu. Nie pisz "Pan/Pani" z ukośnikiem: mów "Pan" albo bezosobowo.
+Przy cenie zawsze najpierw najtańsza pasująca opcja z cennika, droższy pakiet najwyżej jednym zdaniem.
 ## Otwarcie (20 sekund)
 Kim jest, skąd dzwoni, jedno zdanie o tym, co zauważył u NICH (z problemów wyżej, prostymi słowami). Na końcu pytanie o zgodę na minutę rozmowy.
 ## 2 pytania
