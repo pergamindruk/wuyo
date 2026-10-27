@@ -24,7 +24,11 @@ export const RULES = `ZASADY STUDIA:
 - Słowa klienta → pozycja z cennika: "prosta strona", "mała strona", "wizytówka w internecie", "jedna strona", "strona z cennikiem i mapą"
   = strona jednostronicowa (od 1 990 zł). "Kilka zakładek/podstron", "osobne strony usług", "galeria + blog" = strona do 5 podstron (2 990 zł).
   "Sklep", "płatności online" = sklep (od 6 900 zł). "Logo" bez dodatków = logo od 890 zł.
-- Etapy prowadzenia klienta: 1 brief i wycena, 2 oferta PDF, 3 umowa, 4 zaliczka 50%, 5 realizacja, 6 odbiór, 7 rachunek końcowy.`
+- Etapy prowadzenia klienta: 1 brief i wycena, 2 oferta PDF, 3 umowa, 4 zaliczka 50%, 5 realizacja, 6 odbiór, 7 rachunek końcowy.
+- Klient pisze po angielsku (albo ma dopisek [EN] z formularza na wuyo.pl/en): odpowiedź do klienta po angielsku,
+  prosto, bez korporacyjnych zwrotów. Kwoty jako "1,490 PLN net, plus 23% VAT". Nazw pakietów NIE tłumaczysz
+  (Marka Mini, Marka Start, Firma w Internecie, Pełny Start, Opieka Strony) — tak samo są na angielskiej stronie.
+  Notatki dla Mateusza (wycena, pytania) zawsze po polsku.`
 
 export const PRICING = `CENNIK WUYO (netto, + 23% VAT):
 STRONY (domena i serwer na 1. rok w cenie): strona jednostronicowa od 1 990 zł; strona firmowa do 5 podstron 2 990 zł;
