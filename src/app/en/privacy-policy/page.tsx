@@ -64,32 +64,56 @@ export default function PrivacyPolicyEnPage() {
                     </AnimatedSection>
 
                     <AnimatedSection delay={0.3}>
-                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Hosting</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Who processes your data on my behalf</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>The website is hosted (technically maintained) on the servers of <strong>Vercel Inc.</strong> (USA). Vercel processes data only on behalf of the Operator, to the extent needed to run the website.</li>
-                            <li>Vercel Inc. participates in the EU-U.S. Data Privacy Framework, so data is transferred to the USA under the European Commission adequacy decision (Art. 45 GDPR).</li>
-                            <li>We never sell your data.</li>
+                            <li>To run the Website I use companies that process data on my behalf (Art. 28 GDPR). They process data only on my instructions and only as needed to provide their service:
+                                <ul className="list-disc pl-5 mt-2 space-y-1">
+                                    <li><strong>Vercel Inc.</strong> (USA): website hosting. All data sent through the website passes through its servers, including form content. Vercel also collects anonymous visit and performance statistics (Vercel Analytics, Speed Insights) without cookies.</li>
+                                    <li><strong>Supabase Inc.</strong> (servers in Ireland, EU): the database where I store enquiries from forms and the chat, and anonymous data on visited pages.</li>
+                                    <li><strong>Resend</strong> (Plus Five Five Inc., USA): sending emails from the Website, i.e. notifications about your enquiry and confirmations sent to your address.</li>
+                                    <li><strong>Google</strong> (Gemini API): the chat on the website. Messages you type in the chat are sent to Google, which generates the reply. Do not enter sensitive data in the chat.</li>
+                                    <li><strong>Google Ireland Limited</strong> and <strong>Meta Platforms Ireland Limited</strong>: statistics and ad measurement, only with your consent (see § 5).</li>
+                                </ul>
+                            </li>
+                            <li>Some of these companies are based or have servers in the USA. Data is transferred outside the European Economic Area under the European Commission decision on the EU-U.S. Data Privacy Framework (Art. 45 GDPR) or under standard contractual clauses approved by the European Commission (Art. 46 GDPR).</li>
+                            <li>Your data may also be disclosed to public authorities where the law requires it, and invoice data to an accounting office.</li>
+                            <li>I never sell your data.</li>
                         </ol>
                     </AnimatedSection>
 
                     <AnimatedSection delay={0.4}>
-                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 4 Your rights and further information on how data is used</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 4 Legal bases, retention and your rights</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>In some situations the controller may pass your personal data to other recipients if this is necessary to perform the contract concluded with you. This applies to the following groups of recipients:
+                            <li>Legal bases for processing:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>the hosting company, under a data processing agreement,</li>
-                                    <li>authorised employees and associates.</li>
+                                    <li>answering your enquiry and preparing a quote: steps taken at your request before entering into a contract (Art. 6(1)(b) GDPR),</li>
+                                    <li>providing the ordered service: performance of a contract (Art. 6(1)(b) GDPR),</li>
+                                    <li>issuing invoices and keeping accounts: legal obligation (Art. 6(1)(c) GDPR),</li>
+                                    <li>establishing or defending legal claims and anonymous website statistics: legitimate interest of the Controller (Art. 6(1)(f) GDPR),</li>
+                                    <li>analytics and marketing cookies: your consent (Art. 6(1)(a) GDPR).</li>
                                 </ul>
                             </li>
-                            <li>Your personal data is processed by the controller no longer than necessary to carry out the related activities set out in separate regulations.</li>
-                            <li>You have the right to request from the controller:
+                            <li>How long I keep data:
+                                <ul className="list-disc pl-5 mt-2 space-y-1">
+                                    <li>enquiries that did not lead to cooperation: up to 12 months from the last contact,</li>
+                                    <li>client data: for the duration of cooperation, then until claims become time-barred,</li>
+                                    <li>invoices and accounting records: 5 years from the end of the year in which the tax payment deadline passed,</li>
+                                    <li>cookie data: until you withdraw consent or the cookie expires.</li>
+                                </ul>
+                            </li>
+                            <li>You have the right to request from the Controller:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li>access to your personal data,</li>
-                                    <li>its rectification, erasure or restriction of processing,</li>
-                                    <li>data portability.</li>
+                                    <li>rectification, erasure or restriction of processing,</li>
+                                    <li>data portability,</li>
+                                    <li>objection to processing based on legitimate interest,</li>
+                                    <li>withdrawal of consent at any time, without affecting the lawfulness of processing before withdrawal.</li>
                                 </ul>
                             </li>
-                            <li>Providing personal data is voluntary but necessary to handle enquiries and deliver the service.</li>
+                            <li>To exercise your rights, write to <strong>kontakt@wuyo.pl</strong>.</li>
+                            <li>You have the right to lodge a complaint with the President of the Personal Data Protection Office (Prezes UODO, ul. Stawki 2, 00-193 Warsaw, Poland).</li>
+                            <li>Your data is not used for automated decision-making, including profiling, that produces legal effects concerning you.</li>
+                            <li>Providing personal data is voluntary but necessary to handle your enquiry and provide the service.</li>
                         </ol>
                     </AnimatedSection>
 
@@ -117,6 +141,7 @@ export default function PrivacyPolicyEnPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Final provisions</h2>
                         <p>You always know where to find me. Email <strong>kontakt@wuyo.pl</strong> if you have any doubts or questions about your data.</p>
+                        <p className="mt-4 text-sm text-white/50">Last updated: 27 October 2026.</p>
                     </AnimatedSection>
                 </div>
             </div>

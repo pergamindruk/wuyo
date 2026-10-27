@@ -58,32 +58,56 @@ export default function PrivacyPolicyPage() {
                     </AnimatedSection>
 
                     <AnimatedSection delay={0.3}>
-                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Hosting</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Kto przetwarza Twoje dane na moje zlecenie</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>Serwis jest hostowany (technicznie utrzymywany) na serwerach firmy <strong>Vercel Inc.</strong> (USA). Vercel przetwarza dane wyłącznie na zlecenie Operatora, w zakresie potrzebnym do działania strony.</li>
-                            <li>Vercel Inc. uczestniczy w programie EU-U.S. Data Privacy Framework, dlatego przekazanie danych do USA odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (art. 45 RODO).</li>
-                            <li>Twoich danych nikomu nie sprzedajemy.</li>
+                            <li>Do działania Serwisu korzystam z usług firm, którym powierzam przetwarzanie danych (art. 28 RODO). Przetwarzają one dane tylko na moje zlecenie i w zakresie potrzebnym do wykonania usługi:
+                                <ul className="list-disc pl-5 mt-2 space-y-1">
+                                    <li><strong>Vercel Inc.</strong> (USA): hosting Serwisu. Przez jego serwery przechodzą wszystkie dane wysyłane przez stronę, w tym treść formularzy. Vercel zbiera też anonimowe statystyki odwiedzin i szybkości strony (Vercel Analytics, Speed Insights), bez plików cookies.</li>
+                                    <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy i czatu oraz anonimowe dane o odwiedzanych podstronach.</li>
+                                    <li><strong>Resend</strong> (Plus Five Five Inc., USA): wysyłka wiadomości e-mail z Serwisu, czyli powiadomień o Twoim zapytaniu i potwierdzeń wysłanych na Twój adres.</li>
+                                    <li><strong>Google</strong> (Gemini API): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Nie wpisuj w czacie danych wrażliwych.</li>
+                                    <li><strong>Google Ireland Limited</strong> i <strong>Meta Platforms Ireland Limited</strong>: statystyki i pomiar reklam, tylko po Twojej zgodzie (szczegóły w § 5).</li>
+                                </ul>
+                            </li>
+                            <li>Część z tych firm ma siedzibę lub serwery w USA. Przekazanie danych poza Europejski Obszar Gospodarczy odbywa się na podstawie decyzji Komisji Europejskiej w sprawie EU-U.S. Data Privacy Framework (art. 45 RODO) albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską (art. 46 RODO).</li>
+                            <li>Twoje dane mogą też trafić do organów publicznych, gdy wymaga tego prawo, a dane z faktur do biura rachunkowego.</li>
+                            <li>Twoich danych nikomu nie sprzedaję.</li>
                         </ol>
                     </AnimatedSection>
 
                     <AnimatedSection delay={0.4}>
-                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 4 Twoje prawa i dodatkowe informacje o sposobie wykorzystania danych</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 4 Podstawy prawne, czas przechowywania i Twoje prawa</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>W niektórych sytuacjach Administrator ma prawo przekazywać Twoje dane osobowe innym odbiorcom, jeśli będzie to niezbędne do wykonania zawartej z Tobą umowy. Dotyczy to takich grup odbiorców:
+                            <li>Podstawy przetwarzania danych:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>firma hostingowa na zasadzie powierzenia,</li>
-                                    <li>upoważnieni pracownicy i współpracownicy.</li>
+                                    <li>odpowiedź na zapytanie i przygotowanie wyceny: działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO),</li>
+                                    <li>realizacja zamówionej usługi: wykonanie umowy (art. 6 ust. 1 lit. b RODO),</li>
+                                    <li>wystawianie faktur i prowadzenie księgowości: obowiązek prawny (art. 6 ust. 1 lit. c RODO),</li>
+                                    <li>dochodzenie lub obrona przed roszczeniami oraz anonimowe statystyki działania strony: prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO),</li>
+                                    <li>cookies analityczne i marketingowe: Twoja zgoda (art. 6 ust. 1 lit. a RODO).</li>
                                 </ul>
                             </li>
-                            <li>Twoje dane osobowe przetwarzane przez Administratora nie dłużej, niż jest to konieczne do wykonania związanych z nimi czynności określonych osobnymi przepisami.</li>
+                            <li>Jak długo przechowuję dane:
+                                <ul className="list-disc pl-5 mt-2 space-y-1">
+                                    <li>zapytania, po których nie doszło do współpracy: do 12 miesięcy od ostatniego kontaktu,</li>
+                                    <li>dane klientów: przez czas współpracy, a potem do upływu terminu przedawnienia roszczeń,</li>
+                                    <li>faktury i dokumenty księgowe: 5 lat od końca roku, w którym minął termin zapłaty podatku,</li>
+                                    <li>dane z cookies: do wycofania zgody lub wygaśnięcia pliku cookie.</li>
+                                </ul>
+                            </li>
                             <li>Przysługuje Ci prawo żądania od Administratora:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li>dostępu do danych osobowych Ciebie dotyczących,</li>
                                     <li>ich sprostowania, usunięcia, ograniczenia przetwarzania,</li>
-                                    <li>przenoszenia danych.</li>
+                                    <li>przenoszenia danych,</li>
+                                    <li>sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie,</li>
+                                    <li>wycofania zgody w dowolnym momencie, bez wpływu na zgodność z prawem przetwarzania przed jej wycofaniem.</li>
                                 </ul>
                             </li>
-                            <li>Podanie danych osobowych jest dobrowolne, lecz niezbędne do obsługi procesów zapytania ofertowego i realizacji usługi.</li>
+                            <li>Żeby skorzystać ze swoich praw, napisz na <strong>kontakt@wuyo.pl</strong>.</li>
+                            <li>Masz prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</li>
+                            <li>Twoje dane nie są wykorzystywane do zautomatyzowanego podejmowania decyzji, w tym profilowania, które wywołuje wobec Ciebie skutki prawne.</li>
+                            <li>Podanie danych osobowych jest dobrowolne, lecz niezbędne do obsługi zapytania ofertowego i realizacji usługi.</li>
                         </ol>
                     </AnimatedSection>
 
@@ -111,6 +135,7 @@ export default function PrivacyPolicyPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Postanowienia końcowe</h2>
                         <p>Zawsze wiesz gdzie mnie znaleźć. Napisz na maila <strong>kontakt@wuyo.pl</strong> jeśli masz jakiekolwiek wątpliwości lub pytania o swoje dane.</p>
+                        <p className="mt-4 text-sm text-white/50">Ostatnia aktualizacja: 27.10.2026.</p>
                     </AnimatedSection>
                 </div>
             </div>
