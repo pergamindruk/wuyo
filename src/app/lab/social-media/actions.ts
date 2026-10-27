@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { generateWithFallback } from '@/lib/gemini'
+import { aiConfigured } from '@/lib/ai-endpoint'
 
 const GRAPH_API_VERSION = 'v21.0'
 
@@ -241,8 +242,8 @@ export async function generateYouTubeMetadata(
     topic: string,
     content: string
 ): Promise<{ success: true; data: YtMetadata } | { success: false; error: string }> {
-    if (!process.env.WUYO_GEMINI_KEY) {
-        return { success: false, error: 'Brak WUYO_GEMINI_KEY w .env.local' }
+    if (!aiConfigured()) {
+        return { success: false, error: 'Brak konfiguracji AI (GCP_SA_KEY_B64 albo WUYO_GEMINI_KEY)' }
     }
 
     try {

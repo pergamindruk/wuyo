@@ -2,9 +2,9 @@ import { NextRequest, NextResponse, after } from "next/server";
 import { CHAT_SYSTEM_PROMPT } from "@/lib/chat-prompt";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
+import { geminiTarget, type GeminiTarget } from "@/lib/ai-endpoint";
 
 export const dynamic = "force-dynamic";
-const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 // Główny model + zapasowy, gdy główny jest przeciążony (Gemini zwraca wtedy 503).
 const MODEL = "gemini-2.5-flash";
 const FALLBACK_MODEL = "gemini-3.5-flash-lite";
@@ -17,7 +17,7 @@ const TOTAL_BUDGET_MS = 25_000;
 // Google wkleja klucz do części komunikatów błędów. Nie może trafić do logów.
 const redact = (s: string) => s.replace(/AIza[\w-]{20,}|AQ\.[\w.-]{20,}/g, "***");
 
-async function callGemini(apiKey: string, contents: object[]): Promise<Response> {
+async function callGemini(target: GeminiTarget, contents: object[]): Promise<Response> {
     const deadline = Date.now() + TOTAL_BUDGET_MS;
     // Dwie próby na głównym modelu, potem jedna na zapasowym.
     const plan = [MODEL, MODEL, FALLBACK_MODEL];
@@ -28,12 +28,12 @@ async function callGemini(apiKey: string, contents: object[]): Promise<Response>
         if (left < 2_000) break;
 
         try {
-            // Klucz w nagłówku, nie w adresie: adres ląduje w logach i komunikatach błędów.
-            last = await fetch(`${GEMINI_BASE_URL}/${plan[i]}:generateContent`, {
+            // Vertex AI albo Gemini API - adres i nagłówki daje ai-endpoint.ts.
+            last = await fetch(target.url(plan[i]), {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+                headers: target.headers,
                 body: JSON.stringify({
-                    system_instruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
+                    systemInstruction: { parts: [{ text: CHAT_SYSTEM_PROMPT }] },
                     // Bez maxOutputTokens: Gemini 2.5 wlicza do limitu swoje "myślenie"
                     // i przy 1024 urywał odpowiedzi w pół słowa.
                     contents,
@@ -88,9 +88,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Wiadomość za długa" }, { status: 400 });
         }
 
-        const apiKey = process.env.WUYO_GEMINI_KEY;
-        if (!apiKey) {
-            console.error("WUYO_GEMINI_KEY is not set!");
+        const target = await geminiTarget();
+        if (!target) {
+            console.error("Brak konfiguracji AI: GCP_SA_KEY_B64 ani WUYO_GEMINI_KEY");
             return NextResponse.json({ error: "Błąd konfiguracji serwera" }, { status: 500 });
         }
 
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
         const firstUserIdx = allContents.findIndex((m) => m.role === "user");
         const contents = firstUserIdx >= 0 ? allContents.slice(firstUserIdx) : allContents;
 
-        const response = await callGemini(apiKey, contents);
+        const response = await callGemini(target, contents);
 
         if (RETRYABLE.has(response.status)) {
             // Okienko czatu rozpoznaje RATE_LIMIT po polu `error` i pokazuje
