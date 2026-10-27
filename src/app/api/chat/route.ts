@@ -163,7 +163,8 @@ export async function POST(req: NextRequest) {
         }
 
         const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();
-        return NextResponse.json({ message: cleanResponse, lead });
+        // Nagłówek bez sekretów: pozwala sprawdzić, czy ruch idzie przez Vertex (kredyt GCP).
+        return NextResponse.json({ message: cleanResponse, lead }, { headers: { "X-AI-Provider": target.provider } });
 
     } catch (error: any) {
         console.error("Chat API error details:", {
