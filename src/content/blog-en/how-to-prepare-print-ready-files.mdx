@@ -1,0 +1,163 @@
+---
+title: "How to prepare a print-ready file? Bleed, CMYK and 5 mistakes that get designs sent back"
+seoTitle: "How to prepare a print-ready file: bleed, CMYK, mistakes"
+excerpt: "Bleed, margins, CMYK, resolution and outlines: a guide to a print-ready file. With a checklist to go through before sending."
+date: "2026-09-08"
+dateModified: "2026-09-16"
+readTime: "8 min"
+category: "Print"
+image: "/realizacje/projekt-etykiet.webp"
+imageAlt: "Label design prepared for print: bleed, crop marks and CMYK colours. A WUYO Studio project"
+translationOf: "jak-przygotowac-plik-do-druku"
+---
+
+Most files sent back for correction don't have badly designed graphics. They have a badly prepared file. Those are two different things, and you can fix the second one in fifteen minutes if you know what to look for.
+
+Below are five things every printer checks before even looking at the design.
+
+## 1. Bleed: 3 mm beyond the format
+
+The most common reason a file is sent back.
+
+After printing, paper is cut in a stack, and a guillotine has a tolerance of about 1 mm either way. If your background ends exactly at the edge of the format, you'll see white strips after cutting. Not sometimes: almost always.
+
+The fix: extend the background and every element touching the edge **3 mm beyond the format**.
+
+| Final format | File size with bleed |
+|---|---|
+| Business card 90 × 50 mm | 96 × 56 mm |
+| A5 flyer (148 × 210 mm) | 154 × 216 mm |
+| A4 flyer (210 × 297 mm) | 216 × 303 mm |
+| A3 poster (297 × 420 mm) | 303 × 426 mm |
+
+<Callout type="info">
+Bleed only applies to elements reaching the edge. If the design has a white background and nothing touches the edge, bleed isn't needed, though it's still better to add it, as it costs nothing.
+</Callout>
+
+## 2. Safety margin: 3–5 mm inwards
+
+The opposite of bleed, and a mistake made just as often.
+
+The same guillotine tolerance works the other way too. If text or a logo sits 1 mm from the edge, after cutting it may be trimmed or end up dangerously close to the edge.
+
+Keep all important elements (text, logo, phone number, QR code) **at least 3 mm from the cut line**. For business cards I prefer 5 mm, as it looks calmer.
+
+<GreenRed
+  green="Background bleeding 3 mm outwards, content 5 mm inwards. Between them you have room for cutting inaccuracy, enough that nothing goes wrong."
+  red="Text 1 mm from the edge and a background ending exactly at the format. Two mistakes at once: after cutting there's a white strip on one side and a clipped letter on the other."
+/>
+
+## 3. CMYK, not RGB
+
+A screen emits light and mixes red, green and blue. A printer lays down ink and mixes cyan, magenta, yellow and black. They're two different worlds, and not everything from one can be carried over to the other.
+
+What suffers most in conversion:
+
+- **Intense blue:** can turn purple
+- **Neon green and orange:** will always be duller on paper; there's no way around it
+- **Pure black text:** if you leave it as RGB 0/0/0, the printer may print it from four inks and the text comes out blurry
+
+Set up the document in CMYK **from the start** rather than converting at the end. Converting at the end always changes something and always surprises.
+
+### Two tricks with black
+
+**Text:** use pure black: C0 M0 Y0 **K100**. One ink, sharp edges.
+
+**Large black areas:** pure K100 looks like dark grey on a large area. Use rich black, for example C40 M30 Y30 K100. But never under small text; there go back to K100.
+
+## 4. 300 dpi resolution at 1:1 scale
+
+A photo from the internet is usually 72 dpi. It looks fine on screen and falls apart into squares on paper.
+
+The rule: **300 dpi at the final size**. A 300 dpi photo enlarged twice is effectively 150 dpi: enlarging doesn't add information, it just stretches what's there.
+
+| Element | Required resolution |
+|---|---|
+| Photos in small-format print | 300 dpi |
+| Vector graphics (logo, icons) | irrelevant, they scale without loss |
+| Billboard, large-format banner | 25–72 dpi (viewed from a distance) |
+| A3–A1 poster | 150–300 dpi |
+
+Always place your logo from a vector file (AI, EPS, SVG, PDF). If you only have it as a PNG or JPG, that's a separate problem; I describe it in [how to choose a logo designer](/en/blog/how-to-choose-a-logo-designer).
+
+## 5. Text converted to outlines
+
+If your design uses a font the printer doesn't have, the software will substitute another. The layout will fall apart, and you'll find out when you collect the prints.
+
+Two ways to avoid it:
+
+1. **Convert text to outlines** (Type → Create Outlines). Text stops being text and becomes a shape. Note: after this you can't fix a typo, so save an editable version separately.
+2. **Embed the fonts in the PDF** when exporting. More convenient, as the file stays editable, and in most cases it's enough.
+
+<Callout type="warning">
+**Before converting text to outlines, read the design once more.** It's your last chance to catch a typo in the phone number. After printing 500 business cards, the only option is a reprint at your own cost.
+</Callout>
+
+## What to use
+
+Not every program is suitable for preparing a print file.
+
+| Program | For print? | Notes |
+|---|---|---|
+| Adobe Illustrator, InDesign | yes | The standard, full control over bleed and colour |
+| Affinity Designer, Publisher | yes | A cheaper alternative that does everything needed |
+| CorelDRAW | yes | Still popular at print shops |
+| Photoshop | with caveats | Text is less sharp, as everything is raster |
+| Canva | risky | "PDF Print" export gives bleed, but colours stay RGB |
+| Word, PowerPoint | no | No bleed, no CMYK, unpredictable font embedding |
+
+If you work in Canva, choose the **PDF Print** export and tick crop marks and bleed. The colours will still be RGB, so warn the printer: for simple designs it can be handled, but with intense colours it's better to hand the design to someone who'll do it in CMYK.
+
+## Checklist before sending the file
+
+<CheckItem>Format matching the order, with 3 mm bleed on every side</CheckItem>
+<CheckItem>Important elements at least 3 mm from the cut line</CheckItem>
+<CheckItem>Document in CMYK mode, not RGB</CheckItem>
+<CheckItem>Black text as K100, not a mix of four inks</CheckItem>
+<CheckItem>Photos at 300 dpi at the final size</CheckItem>
+<CheckItem>Logo placed from a vector file</CheckItem>
+<CheckItem>Text as outlines or fonts embedded in the PDF</CheckItem>
+<CheckItem>Exported to PDF, not JPG</CheckItem>
+<CheckItem>Typos checked by a second person</CheckItem>
+<CheckItem ok={false}>A word-processor or presentation file, without asking whether the printer can open it</CheckItem>
+<CheckItem ok={false}>A design made at a rough size, to be rescaled at the print shop</CheckItem>
+
+<CTABox
+  text="Don't want to deal with this? I'll prepare the file, or design from scratch and print in-house."
+  href="/en#kontakt"
+  label="Get in touch"
+/>
+
+## What if you don't have a design
+
+If after reading this you think you don't have time for it, that's a normal reaction and a good decision. Preparing a file is an hour's work for someone who does it daily, and half a day of frustration for someone who does it once a year.
+
+With me design and print are one job, so the file preparation problem simply doesn't exist: I prepare the file myself. The scope is on the [printing in Rzeszów](/en/printing-rzeszow) page. What print alone costs versus design plus print, I broke down in [how much does business card printing cost](/en/blog/business-card-printing-cost).
+
+The same rules apply to stickers, with one exception: die-cutting has a bigger tolerance than trimming. I explain it in the [custom stickers guide](/en/blog/custom-stickers-guide). For clothing there are a few more differences, described in [DTF or screen printing](/en/blog/dtf-or-screen-printing-t-shirts).
+
+## FAQ
+
+**What is bleed in printing?**
+
+Bleed is 3 mm of background extending beyond the final format. After printing, paper is cut in a stack with a tolerance of about 1 mm, so without bleed white strips appear at the edges. So you design a 90 × 50 mm business card as 96 × 56 mm.
+
+**Does a print file have to be in CMYK?**
+
+Yes, if you want predictable colours. A printer works with four CMYK inks, a screen with RGB light. An RGB file will be converted anyway, just without your control, so intense blues and greens may come out quite differently from your monitor.
+
+**What resolution is needed for print?**
+
+300 dpi at the final size for small-format print: business cards, flyers, posters up to A3. For billboards and banners 25–72 dpi is enough, as they're viewed from a dozen metres away. Vector graphics have no resolution and scale without quality loss.
+
+**What format should I send a print file in?**
+
+PDF, ideally PDF/X-1a or PDF/X-4. It embeds fonts, keeps CMYK and stores bleed information. JPG is only suitable for very simple jobs, and word-processor and presentation files aren't suitable at all.
+
+**Do I have to convert text to outlines?**
+
+Not if you embed fonts correctly in the PDF; that's enough in most cases. Outlines are safer but irreversible: after converting you can't fix a typo, so always keep an editable version.
+
+**Is Canva suitable for preparing a print file?**
+
+For simple designs, yes, with care. Choose the PDF Print export with bleed marks and warn the printer that colours are RGB. For designs with intense colours or large black areas, it's better to hand the file to someone who'll prepare it in CMYK.
