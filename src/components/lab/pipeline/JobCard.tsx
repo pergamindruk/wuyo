@@ -52,7 +52,7 @@ export function JobCard({ job, today, now, selected, dragging, onOpen, onDragSta
             {job.next_contact_at && (
                 <p className={`flex items-center gap-1.5 text-[11px] mt-2 ${overdue ? 'text-red-400 font-semibold' : 'text-zinc-500'}`}>
                     <CalendarClock size={12} />
-                    {overdue ? 'Zaległe: ' : ''}{shortDate(job.next_contact_at)}
+                    {job.next_contact_at === today ? 'Dziś' : <>{overdue ? 'Zaległe: ' : ''}{shortDate(job.next_contact_at)}</>}
                 </p>
             )}
 
