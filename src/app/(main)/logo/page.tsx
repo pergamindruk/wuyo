@@ -8,10 +8,11 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_RATING } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Projektowanie logo Rzeszów — od 890 zł, 3 koncepcje",
-    description: "Projektowanie logo w Rzeszowie od zera — nie szablony. 3 koncepcje do wyboru, pakiet plików i prawa autorskie w cenie. Logo od 890 zł, identyfikacja 1 490 zł. Wycena w 24h →",
+    description: "Projektowanie logo w Rzeszowie od zera, bez szablonów. 3 koncepcje, pliki i prawa autorskie w cenie. Logo od 890 zł, identyfikacja 1 490 zł.",
     openGraph: {
         title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
         description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 890 zł. Termin 7–10 dni roboczych. Wycena w 24h.",
@@ -110,14 +111,7 @@ const serviceSchema = {
         ],
     },
     "url": "https://wuyo.pl/logo",
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "5",
-        "reviewCount": "5",
-    },
+    "aggregateRating": BUSINESS_RATING,
 };
 
 const packages = [

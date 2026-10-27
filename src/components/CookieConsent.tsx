@@ -35,9 +35,16 @@ export function CookieConsent() {
             return;
         }
 
-        // Chwila zwłoki, żeby baner nie wjeżdżał w trakcie pierwszego malowania strony.
-        const timer = window.setTimeout(() => setWidok("baner"), 800);
-        return () => window.clearTimeout(timer);
+        // Baner dopiero 2,5 s po wczytaniu strony. Pokazany wcześniej (było 0,8 s) stawał się
+        // największym elementem na ekranie telefonu i Google liczył LCP od niego (3,5 s).
+        let timer: number | undefined;
+        const pokaz = () => { timer = window.setTimeout(() => setWidok("baner"), 2500); };
+        if (document.readyState === "complete") pokaz();
+        else window.addEventListener("load", pokaz, { once: true });
+        return () => {
+            window.removeEventListener("load", pokaz);
+            window.clearTimeout(timer);
+        };
     }, []);
 
     // Stopka otwiera ustawienia tym zdarzeniem — wycofanie zgody musi być
@@ -67,7 +74,7 @@ export function CookieConsent() {
             aria-labelledby="zgody-naglowek"
             aria-describedby="zgody-opis"
             data-widoczny={aktywny ? "tak" : undefined}
-            className="baner-zgod fixed left-0 right-0 z-[60] px-4 sm:left-6 sm:right-auto sm:px-0 sm:max-w-[26rem]"
+            className="baner-zgod fixed left-0 right-0 z-[60] px-4 sm:left-6 sm:right-auto sm:px-0 sm:max-w-[22rem]"
             style={{
                 // Podnosi się nad pasek kontaktu na telefonie, tak jak dymek czatu.
                 bottom: "calc(1rem + var(--mobile-bar-h, 0px))",
@@ -75,46 +82,44 @@ export function CookieConsent() {
         >
                     {/* Tło nieprzezroczyste, nie przyszybione — baner ląduje na samej górze hero
                         i przy 95% krycia złoty przycisk pod nim przebijał przez tekst. */}
-                    <div className="rounded-3xl border border-white/10 bg-navy-dark p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
-                        <div className="mb-4 flex items-center gap-3">
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold">
-                                <Cookie size={18} aria-hidden />
+                    <div className="rounded-3xl border border-white/10 bg-navy-dark p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
+                        <div className="mb-2 flex items-center gap-2.5">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold">
+                                <Cookie size={15} aria-hidden />
                             </span>
-                            <h2 id="zgody-naglowek" className="text-base font-bold text-white">
+                            <h2 id="zgody-naglowek" className="text-sm font-bold text-white">
                                 {widok === "baner" ? "Ciasteczka" : "Ustawienia ciasteczek"}
                             </h2>
                         </div>
 
                         {widok === "baner" ? (
                             <>
-                                <p id="zgody-opis" className="mb-5 text-sm leading-relaxed text-white/60">
-                                    Niezbędne działają zawsze — bez nich strona się nie uruchomi. Na analitykę
-                                    i marketing potrzebuję Twojej zgody. Możesz ją wycofać w każdej chwili.
+                                <p id="zgody-opis" className="mb-3 text-xs leading-relaxed text-white/60">
+                                    Analityka i marketing tylko za Twoją zgodą. Niezbędne działają zawsze,
+                                    zgodę wycofasz w stopce.
                                 </p>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     <button
                                         type="button"
                                         onClick={() => zdecyduj({ analytics: true, marketing: true })}
-                                        className="w-full cursor-pointer rounded-full bg-gold px-6 py-3 text-sm font-bold text-navy-dark transition-colors hover:bg-gold-light"
+                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-bold text-navy-dark transition-colors hover:bg-gold-light"
                                     >
-                                        Akceptuję wszystkie
+                                        Akceptuję
                                     </button>
-                                    <div className="flex gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => zdecyduj({ analytics: false, marketing: false })}
-                                            className="flex-1 cursor-pointer rounded-full border border-white/15 px-4 py-3 text-sm font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
-                                        >
-                                            Tylko niezbędne
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setWidok("ustawienia")}
-                                            className="flex-1 cursor-pointer rounded-full px-4 py-3 text-sm font-semibold text-white/50 transition-colors hover:text-white"
-                                        >
-                                            Wybieram sam
-                                        </button>
-                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => zdecyduj({ analytics: false, marketing: false })}
+                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
+                                    >
+                                        Tylko niezbędne
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setWidok("ustawienia")}
+                                        className="cursor-pointer whitespace-nowrap rounded-full px-2 py-2 text-xs font-semibold text-white/50 transition-colors hover:text-white"
+                                    >
+                                        Ustawienia
+                                    </button>
                                 </div>
                             </>
                         ) : (
@@ -155,7 +160,7 @@ export function CookieConsent() {
 
                         <Link
                             href="/polityka-prywatnosci"
-                            className="mt-4 block text-center text-xs text-white/50 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
+                            className="mt-2 block text-center text-[11px] text-white/50 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
                         >
                             Polityka prywatności
                         </Link>

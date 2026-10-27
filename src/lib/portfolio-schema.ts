@@ -1,4 +1,5 @@
 import type { Project } from "./projects";
+import { BUSINESS_NAME, BUSINESS_REF } from "@/lib/business-schema";
 
 const SITE = "https://wuyo.pl";
 
@@ -18,11 +19,7 @@ const AUTHOR = {
     "@type": "Person",
     name: "Mateusz Machoś",
     url: `${SITE}/o-mnie`,
-    worksFor: {
-        "@type": "Organization",
-        name: "WUYO – Dobra Grafa",
-        url: SITE,
-    },
+    worksFor: BUSINESS_REF,
 };
 
 function absolute(path: string) {
@@ -69,7 +66,7 @@ export function portfolioCollectionSchema(projects: Project[]) {
         inLanguage: "pl-PL",
         isPartOf: {
             "@type": "WebSite",
-            name: "WUYO – Dobra Grafa",
+            name: BUSINESS_NAME,
             url: SITE,
         },
         mainEntity: {

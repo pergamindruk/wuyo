@@ -8,10 +8,11 @@ import { faqPageSchema } from "@/lib/faq-schema";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_REF, BUSINESS_RATING } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Strony internetowe Rzeszów — cennik 2026, od 1 990 zł",
-    description: "Cennik stron internetowych w Rzeszowie: one-page od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep od 6 900 zł. Domena i hosting na rok w cenie. Wycena w 24h →",
+    description: "Strony internetowe w Rzeszowie: one-page od 1 990 zł, do 5 podstron 2 990 zł, sklep od 6 900 zł. Domena i hosting na rok w cenie. Wycena w 24h.",
     keywords: [
         "strony internetowe Rzeszów",
         "strony internetowe Rzeszów cennik",
@@ -45,27 +46,7 @@ const localSchema = {
     "@type": "Service",
     "name": "Tworzenie Stron Internetowych – Rzeszów",
     "description": "Projektowanie i programowanie stron internetowych dla firm z Rzeszowa i Podkarpacia. Next.js, szybkie ładowanie, SEO techniczne, responsywne.",
-    "provider": {
-        "@type": "LocalBusiness",
-        "name": "WUYO – Dobra Grafa",
-        "url": "https://wuyo.pl",
-        "telephone": "+48725182053",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Rzeszów",
-            "addressRegion": "Podkarpacie",
-            "postalCode": "35-203",
-            "addressCountry": "PL",
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "5.0",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "5",
-            "reviewCount": "5",
-        },
-    },
+    "provider": { ...BUSINESS_REF, "aggregateRating": BUSINESS_RATING },
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
         { "@type": "AdministrativeArea", "name": "Podkarpacie" },

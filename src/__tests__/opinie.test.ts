@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { odmienOpinie } from "@/lib/polish-format";
 import { staticGoogleReviews } from "@/data/google-reviews-static";
 import { readFileSync } from "fs";
+import { BUSINESS_RATING } from "@/lib/business-schema";
 import { join } from "path";
 
 describe("odmienOpinie", () => {
@@ -26,16 +27,22 @@ describe("opinie z Google", () => {
     });
 
     it("licznik zgadza się z liczbą przepisanych opinii", () => {
-        // Po dopisaniu nowej opinii trzeba podbić też `total` i dane strukturalne w layout.tsx.
+        // Po dopisaniu nowej opinii wystarczy podbić `total`, dane strukturalne biorą liczbę stąd.
         expect(staticGoogleReviews.total).toBe(staticGoogleReviews.reviews.length);
     });
 
     it("dane strukturalne podają tę samą liczbę opinii co strona", () => {
+        expect(Number(BUSINESS_RATING.ratingCount)).toBe(staticGoogleReviews.total);
+        expect(Number(BUSINESS_RATING.reviewCount)).toBe(staticGoogleReviews.total);
+    });
+
+    it("żadna strona nie wpisuje liczby opinii ręcznie, a layout (czyli blog) nie ma oceny", () => {
         const layout = readFileSync(join(process.cwd(), "src/app/layout.tsx"), "utf-8");
-        const ratingCount = layout.match(/"ratingCount": "(\d+)"/)?.[1];
-        const reviewCount = layout.match(/"reviewCount": "(\d+)"/)?.[1];
-        expect(Number(ratingCount)).toBe(staticGoogleReviews.total);
-        expect(Number(reviewCount)).toBe(staticGoogleReviews.total);
+        expect(layout).not.toMatch(/aggregateRating/i);
+        for (const page of ["page.tsx", "grafik-rzeszow/page.tsx", "logo/page.tsx", "strony-internetowe-rzeszow/page.tsx"]) {
+            const src = readFileSync(join(process.cwd(), "src/app/(main)", page), "utf-8");
+            expect(src, page).not.toMatch(/"ratingCount"/);
+        }
     });
 
     it("ma działające odnośniki do profilu i wystawienia opinii", () => {

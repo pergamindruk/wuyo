@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Printer, Scissors, Thermometer, Zap } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { BUSINESS_REF, BUSINESS_SAME_AS } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Mateusz Machoś — grafik i web developer",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
         "strony internetowe Rzeszów",
     ],
     openGraph: {
-        title: "O mnie – Mateusz Machoś | WUYO – Dobra Grafa",
+        title: "O mnie – Mateusz Machoś | WUYO Dobra Grafa",
         description: "Kim jestem i jak pracuję. Mateusz Machoś — projektant graficzny, web developer, właściciel sprzętu poligraficznego.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/o-mnie",
@@ -43,11 +44,7 @@ const personSchema = {
         "postalCode": "35-203",
         "addressCountry": "PL",
     },
-    "worksFor": {
-        "@type": "Organization",
-        "name": "WUYO – Studio Graficzne",
-        "url": "https://wuyo.pl",
-    },
+    "worksFor": BUSINESS_REF,
     "knowsAbout": [
         "Projektowanie logo",
         "Identyfikacja wizualna",
@@ -70,11 +67,7 @@ const personSchema = {
         },
         "skills": "Logo design, Brand identity, Next.js, React, SEO, Druk cyfrowy",
     },
-    "sameAs": [
-        "https://www.facebook.com/wuyo.dobra.grafa",
-        "https://www.instagram.com/wuyo.pl/",
-        "https://share.google/2xca9wmLz1mI5NvIX",
-    ],
+    "sameAs": BUSINESS_SAME_AS,
 };
 
 // Świadomie bez nazw i parametrów maszyn — konkurencja nie musi wiedzieć,

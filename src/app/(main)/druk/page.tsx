@@ -9,10 +9,11 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { PackagesSection } from "@/components/PackagesSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_REF } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
-    title: "Wizytówki i ulotki z projektem — zamów online, wysyłka",
-    description: "Zamów online projekt i druk wizytówek, ulotek i voucherów z wysyłką kurierem w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł, już od 50 szt. →",
+    title: "Wizytówki i ulotki z projektem, zamów online",
+    description: "Projekt i druk wizytówek, ulotek i voucherów z wysyłką w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł.",
     openGraph: {
         title: "Druk Wizytówek i Ulotek – projekt + druk | WUYO",
         description: "Projekt i druk małej papeterii w jednym miejscu. Wizytówki z projektem od 299 zł, sam druk od 99 zł. Rzeszów i cała Polska.",
@@ -63,11 +64,7 @@ const drukSchema = {
     "@type": "Service",
     "name": "Druk wizytówek, ulotek i voucherów",
     "description": "Projekt graficzny i druk małej papeterii — wizytówki, ulotki, vouchery, bannery, naklejki. Projekt + druk w jednym miejscu.",
-    "provider": {
-        "@type": "LocalBusiness",
-        "name": "WUYO – Dobra Grafa",
-        "url": "https://wuyo.pl",
-    },
+    "provider": BUSINESS_REF,
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
         { "@type": "Country", "name": "Polska" },

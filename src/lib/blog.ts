@@ -13,6 +13,11 @@ export interface PostMeta {
      * trzeba by wybierać między jednym a drugim. Gdy go nie ma, idzie `title`.
      */
     seoTitle?: string;
+    /**
+     * Krótszy opis tylko do wyników Google (do ~155 znaków). Zajawka pod tytułem
+     * na stronie może być dłuższa. Gdy pola nie ma, idzie `excerpt`.
+     */
+    seoDescription?: string;
     excerpt: string;
     date: string;
     readTime: string;

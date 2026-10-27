@@ -7,6 +7,7 @@ import { PageTracker } from "@/components/PageTracker";
 import { CookieConsent } from "@/components/CookieConsent";
 import { MetaPixel } from "@/components/MetaPixel";
 import { CONSENT_STORAGE_KEY } from "@/lib/consent";
+import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_SAME_AS } from "@/lib/business-schema";
 import Script from "next/script";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
@@ -74,10 +75,10 @@ export const metadata: Metadata = {
         // a dłuższa końcówka zjadała je podstronom i wpisom blogowym.
         template: "%s | WUYO",
     },
-    description: "Projektuję strony WWW, logo i identyfikację wizualną, która sprzedaje. React/Next.js, mobile-first, techniczne SEO. Termin murowany, cena bez niespodzianek. Od 890 zł.",
+    description: "Strony WWW, logo i identyfikacja wizualna dla firm z Rzeszowa. Szybkie strony na Next.js z SEO, logo od 890 zł. Cena bez niespodzianek.",
     keywords: ["tworzenie stron internetowych", "projektant graficzny", "identyfikacja wizualna", "logo design", "strony www Rzeszów", "web design Polska", "Next.js", "grafika reklamowa", "strony internetowe dla firm"],
-    authors: [{ name: "Wuyo – Dobra Grafa", url: "https://wuyo.pl" }],
-    creator: "Wuyo – Dobra Grafa",
+    authors: [{ name: "WUYO Dobra Grafa", url: "https://wuyo.pl" }],
+    creator: "WUYO Dobra Grafa",
     manifest: "/site.webmanifest",
     icons: {
         icon: "/favicon-wuyo.png",
@@ -87,21 +88,21 @@ export const metadata: Metadata = {
         type: "website",
         locale: "pl_PL",
         url: "https://wuyo.pl",
-        siteName: "Wuyo – Dobra Grafa",
-        title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
+        siteName: "WUYO Dobra Grafa",
+        title: "WUYO Dobra Grafa | Strony internetowe i grafika",
         description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 890 zł. Termin murowany, cena bez niespodzianek.",
         images: [
             {
                 url: "/og-image.webp",
                 width: 1200,
                 height: 630,
-                alt: "Wuyo – Dobra Grafa – agencja stron internetowych i identyfikacji wizualnej",
+                alt: "WUYO Dobra Grafa, studio stron internetowych i identyfikacji wizualnej",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Wuyo – Dobra Grafa | Strony internetowe i grafika",
+        title: "WUYO Dobra Grafa | Strony internetowe i grafika",
         description: "Grafik, który mówi prosto z mostu. Strony www, identyfikacja wizualna i grafiki social media od 890 zł.",
         images: ["/og-image.webp"],
     },
@@ -124,13 +125,16 @@ export const metadata: Metadata = {
     },
 };
 
+// Jedyny pełny opis firmy w danych strukturalnych. Inne strony odwołują się do niego
+// przez BUSINESS_ID. Ocena z Google NIE tutaj (szła na każdą stronę, także blog),
+// tylko na stronach, które pokazują opinie.
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
-    "@id": "https://wuyo.pl/#business",
-    "name": "WUYO – Dobra Grafa",
+    "@id": BUSINESS_ID,
+    "name": BUSINESS_NAME,
     "alternateName": "WUYO",
-    "description": "Projektowanie stron WWW, logo i identyfikacja wizualna. React/Next.js, mobile-first, techniczne SEO.",
+    "description": "Studio graficzne z Rzeszowa. Projektowanie logo, identyfikacja wizualna, strony internetowe na Next.js, druk wizytówek i ulotek dla małych i średnich firm.",
     "url": "https://wuyo.pl",
     "logo": "https://wuyo.pl/logo_wuya2.webp",
     "image": ["https://wuyo.pl/logo_wuya2.webp"],
@@ -139,20 +143,31 @@ const jsonLd = {
     "founder": {
         "@type": "Person",
         "name": "Mateusz Machoś",
-        "jobTitle": "Graphic Designer & Web Developer",
+        "jobTitle": "Projektant graficzny i twórca stron internetowych",
+        "url": "https://wuyo.pl/o-mnie",
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 50.0412,
+        "longitude": 21.9991,
     },
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
+        { "@type": "AdministrativeArea", "name": "Podkarpacie" },
         { "@type": "Country", "name": "Polska" },
     ],
     "serviceType": [
-        "Web Design",
-        "Graphic Design",
-        "Brand Identity",
-        "Logo Design",
-        "Social Media Graphics",
+        "Projektowanie logo",
+        "Identyfikacja wizualna",
+        "Tworzenie stron internetowych",
+        "Druk wizytówek i ulotek",
+        "Nadruk na odzieży",
+        "Grafika do mediów społecznościowych",
     ],
     "priceRange": "800–5000 PLN",
+    "currenciesAccepted": "PLN",
+    "paymentAccepted": "Przelew bankowy",
+    "openingHours": "Mo-Fr 08:00-18:00",
     "address": {
         "@type": "PostalAddress",
         "streetAddress": "ul. Siemieńskiego 17A/38",
@@ -168,19 +183,7 @@ const jsonLd = {
         "email": "kontakt@wuyo.pl",
         "telephone": "+48725182053",
     },
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "7",
-        "reviewCount": "7",
-    },
-    "sameAs": [
-        "https://www.facebook.com/wuyo.dobra.grafa",
-        "https://www.instagram.com/wuyo.pl/",
-        "https://share.google/2xca9wmLz1mI5NvIX",
-    ],
+    "sameAs": BUSINESS_SAME_AS,
 };
 
 export default function RootLayout({

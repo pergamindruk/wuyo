@@ -14,77 +14,71 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: p.slug.includes("rzeszow") ? 0.95 : 0.9,
     }));
 
+    // Strony stałe bez lastModified: nie znamy prawdziwej daty zmiany, a data wdrożenia
+    // przy każdym buildzie uczy Google, że tej wartości nie warto ufać (także przy blogu).
+    // Lista bloga zmienia się razem z najnowszym wpisem, więc dostaje jego datę.
+    const newestPost = blogEntries[0]?.lastModified;
+
     return [
         ...blogEntries,
         {
             url: `${baseUrl}/grafik-rzeszow`,
-            lastModified: new Date(),
             changeFrequency: "monthly" as const,
             priority: 0.95,
         },
         {
             url: `${baseUrl}/strony-internetowe-rzeszow`,
-            lastModified: new Date(),
             changeFrequency: "monthly" as const,
             priority: 0.95,
         },
         {
             url: `${baseUrl}/druk-rzeszow`,
-            lastModified: new Date(),
             changeFrequency: "monthly" as const,
             priority: 0.9,
         },
         {
             url: baseUrl,
-            lastModified: new Date(),
             changeFrequency: "weekly",
             priority: 1,
         },
         {
             url: `${baseUrl}/realizacje`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.95,
         },
         {
             url: `${baseUrl}/kalkulator`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.85,
         },
         {
             url: `${baseUrl}/o-mnie`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/logo`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.9,
         },
         {
             url: `${baseUrl}/strony-www`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.9,
         },
         {
             url: `${baseUrl}/druk`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/odziez`,
-            lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/blog`,
-            lastModified: new Date(),
+            lastModified: newestPost,
             changeFrequency: "weekly",
             priority: 0.8,
         },
@@ -93,7 +87,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         // pod swoim adresem, ale nie zgłaszamy jej już Google jako wartej uwagi.
         {
             url: `${baseUrl}/polityka-prywatnosci`,
-            lastModified: new Date(),
             changeFrequency: "yearly",
             priority: 0.3,
         },

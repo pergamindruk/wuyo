@@ -7,6 +7,7 @@ import { getAllSlugs, getPost, getRelatedPosts, extractFaq } from "@/lib/blog";
 import { mdxComponents } from "@/components/blog/MDXComponents";
 import type { Metadata } from "next";
 import remarkGfm from "remark-gfm";
+import { BUSINESS_ID, BUSINESS_NAME } from "@/lib/business-schema";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -25,13 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     try {
         const post = getPost(slug);
         const ogImage = post.image ?? "/og-image.webp";
+        const description = post.seoDescription ?? post.excerpt;
         return {
             // Markę dokleja szablon z layoutu — tutaj byłaby drugi raz.
             title: post.seoTitle ?? post.title,
-            description: post.excerpt,
+            description,
             openGraph: {
                 title: post.title,
-                description: post.excerpt,
+                description,
                 type: "article",
                 url: `https://wuyo.pl/blog/${slug}`,
                 images: [ogImage],
@@ -39,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             twitter: {
                 card: "summary_large_image",
                 title: post.title,
-                description: post.excerpt,
+                description,
                 images: [ogImage],
             },
             alternates: { canonical: `https://wuyo.pl/blog/${slug}` },
@@ -80,7 +82,8 @@ export default async function ArticlePage({ params }: Props) {
                         author: { "@type": "Person", name: "Mateusz Machoś", url: "https://wuyo.pl" },
                         publisher: {
                             "@type": "Organization",
-                            name: "WUYO – Dobra Grafa",
+                            "@id": BUSINESS_ID,
+                            name: BUSINESS_NAME,
                             url: "https://wuyo.pl",
                             logo: { "@type": "ImageObject", url: "https://wuyo.pl/logo_wuya2.webp" },
                         },

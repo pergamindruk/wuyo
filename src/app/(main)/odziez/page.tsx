@@ -8,6 +8,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_REF } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Nadruk na koszulki Rzeszów — DTF od 1 sztuki",
@@ -62,11 +63,7 @@ const clothingSchema = {
     "@type": "Service",
     "name": "Nadruki na odzieży i personalizacja",
     "description": "Nadruk DTF na koszulkach i bluzach, personalizacja imienna, napisy flex/flock, haft. Projekt i nadruk w jednym miejscu.",
-    "provider": {
-        "@type": "LocalBusiness",
-        "name": "WUYO – Dobra Grafa",
-        "url": "https://wuyo.pl",
-    },
+    "provider": BUSINESS_REF,
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
         { "@type": "Country", "name": "Polska" },

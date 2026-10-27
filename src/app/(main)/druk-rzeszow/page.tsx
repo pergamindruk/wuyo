@@ -6,6 +6,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_REF } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Druk wizytówek Rzeszów — odbiór na miejscu, od 299 zł",
@@ -41,19 +42,7 @@ const localSchema = {
     "@type": "Service",
     "name": "Druk wizytówek i ulotek – Rzeszów",
     "description": "Projekt graficzny i druk małej papeterii w Rzeszowie — wizytówki, ulotki, vouchery, naklejki. Małe nakłady od 50 sztuk, szybka realizacja.",
-    "provider": {
-        "@type": "LocalBusiness",
-        "name": "WUYO – Dobra Grafa",
-        "url": "https://wuyo.pl",
-        "telephone": "+48725182053",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Rzeszów",
-            "addressRegion": "Podkarpacie",
-            "postalCode": "35-203",
-            "addressCountry": "PL",
-        },
-    },
+    "provider": BUSINESS_REF,
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
         { "@type": "AdministrativeArea", "name": "Podkarpacie" },

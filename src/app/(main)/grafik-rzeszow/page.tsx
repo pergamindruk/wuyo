@@ -6,6 +6,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Grafik Rzeszów — projektant graficzny, logo od 890 zł",
@@ -38,62 +39,13 @@ export const metadata: Metadata = {
     alternates: { canonical: "https://wuyo.pl/grafik-rzeszow" },
 };
 
+// Pełny opis firmy w layout.tsx (to samo @id), tu tylko ocena: strona pokazuje opinie.
 const localSchema = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
-    "@id": "https://wuyo.pl/grafik-rzeszow#business",
-    "name": "WUYO – Grafik Rzeszów",
-    "description": "Projektant graficzny i web developer z Rzeszowa. Logo, identyfikacja wizualna, strony internetowe na Next.js, druk wizytówek i ulotek dla firm z Rzeszowa i całego Podkarpacia.",
-    "url": "https://wuyo.pl",
-    "telephone": "+48725182053",
-    "email": "kontakt@wuyo.pl",
-    "priceRange": "800–5000 PLN",
-    "openingHours": "Mo-Fr 08:00-18:00",
-    "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "ul. Siemieńskiego 17A/38",
-        "addressLocality": "Rzeszów",
-        "postalCode": "35-203",
-        "addressRegion": "Podkarpacie",
-        "addressCountry": "PL",
-    },
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 50.0412,
-        "longitude": 21.9991,
-    },
-    "areaServed": [
-        { "@type": "City", "name": "Rzeszów" },
-        { "@type": "AdministrativeArea", "name": "Podkarpacie" },
-        { "@type": "Country", "name": "Polska" },
-    ],
-    "serviceType": [
-        "Projektowanie logo",
-        "Identyfikacja wizualna",
-        "Tworzenie stron internetowych",
-        "Druk wizytówek",
-        "Grafika reklamowa",
-        "Social media design",
-    ],
-    "founder": {
-        "@type": "Person",
-        "name": "Mateusz Machoś",
-        "jobTitle": "Projektant graficzny i web developer",
-        "url": "https://wuyo.pl/o-mnie",
-    },
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "5",
-        "reviewCount": "5",
-    },
-    "sameAs": [
-        "https://www.facebook.com/wuyo.dobra.grafa",
-        "https://www.instagram.com/wuyo.pl/",
-        "https://share.google/2xca9wmLz1mI5NvIX",
-    ],
+    "@id": BUSINESS_ID,
+    "name": BUSINESS_NAME,
+    "aggregateRating": BUSINESS_RATING,
 };
 
 const faqSchema = {

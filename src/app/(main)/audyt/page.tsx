@@ -4,13 +4,14 @@ import { ArrowLeft, Search, Clock, MessageSquare } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { AuditSection } from "@/components/AuditSection";
+import { BUSINESS_REF } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
     title: "Bezpłatny audyt strony i grafiki",
     description:
         "Wklej link do swojej strony, a powiem Ci wprost, co odstrasza klientów i co zmienić. Bezpłatnie, bez owijania w bawełnę, odpowiedź w 24–48 h.",
     openGraph: {
-        title: "Audyt Bez Znieczulenia | WUYO – Dobra Grafa",
+        title: "Audyt Bez Znieczulenia | WUYO Dobra Grafa",
         description: "Bezpłatna, szczera analiza strony i materiałów graficznych. Odpowiedź w 24–48 h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/audyt",
@@ -31,17 +32,7 @@ const serviceSchema = {
     name: "Audyt Konwersji Bez Znieczulenia",
     description:
         "Bezpłatna analiza strony internetowej i materiałów graficznych pod kątem tego, co zniechęca klientów i co poprawić.",
-    provider: {
-        "@type": "LocalBusiness",
-        name: "WUYO – Dobra Grafa",
-        url: "https://wuyo.pl",
-        telephone: "+48725182053",
-        address: {
-            "@type": "PostalAddress",
-            addressLocality: "Rzeszów",
-            addressCountry: "PL",
-        },
-    },
+    provider: BUSINESS_REF,
     areaServed: [
         { "@type": "City", name: "Rzeszów" },
         { "@type": "Country", name: "Polska" },
