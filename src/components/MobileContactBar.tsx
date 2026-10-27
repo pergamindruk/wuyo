@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Phone } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { trackPhoneClick, trackWhatsAppClick } from "@/lib/tracking";
 import { usePathname } from "next/navigation";
 import { localeFromPath } from "@/lib/i18n";
@@ -96,6 +96,15 @@ export function MobileContactBar() {
                 >
                     <MessageCircle size={17} aria-hidden="true" />
                     WhatsApp
+                </a>
+                {/* Mail na pasku, bo klienci pytali, gdzie jest adres — był tylko w stopce. */}
+                <a
+                    href="mailto:kontakt@wuyo.pl"
+                    tabIndex={widoczny ? 0 : -1}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 text-white font-bold text-sm active:bg-white/10 transition-colors"
+                >
+                    <Mail size={17} aria-hidden="true" />
+                    Mail
                 </a>
                 <a
                     href={`tel:${TELEFON}`}

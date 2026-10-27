@@ -2,17 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
+import { Check, Send, Star, Monitor, MessageSquare, Briefcase, Mail, Phone, Copy } from "lucide-react";
 import { packages } from "@/components/PackagesSection";
 import { findPricingCard } from "@/data/pricing";
 import { pricingGroupsEn } from "@/data/pricing-en";
-import { trackFormSubmit, trackWhatsAppClick } from "@/lib/tracking";
+import { trackFormSubmit, trackPhoneClick, trackWhatsAppClick } from "@/lib/tracking";
 import { usePathname } from "next/navigation";
 import { localeFromPath, route } from "@/lib/i18n";
 
 /* ─ Linki kontaktowe ─ */
 const WA_LINK = "https://wa.me/48725182053";
 const MESSENGER_LINK = "https://m.me/wuyo.dobra.grafa";
+const EMAIL = "kontakt@wuyo.pl";
+const TELEFON = "+48725182053";
 
 /* ─────────── typy ─────────── */
 type Path = "quick" | "branding" | "web";
@@ -42,6 +44,7 @@ const T = {
         eyebrow: "Wyślij brief", h2: "Zacznijmy tworzyć wizerunek, który sprzedaje",
         lead: "Zaznacz opcje w poniższym briefie i zróbmy ten pierwszy krok. Dopracowana marka czeka na Ciebie na wciągnięcie ręki!",
         szybko: "Wolisz na szybko?", typBriefu: "Typ briefu",
+        mailLabel: "Napisz maila", telLabel: "Zadzwoń", kopiuj: "Kopiuj", skopiowano: "Skopiowano",
         tabs: [["Wiadomość", "Szybki kontakt"], ["Logo / Branding", "Identyfikacja marki"], ["Strona WWW", "Sklep, landing, wizytówka"]],
         quickLabel: "O co chodzi? 🎤", quickSub: "Opisz co potrzebujesz, zapytaj o cenę, lub napisz kiedy możemy pogadać przez telefon.",
         quickPh: "Hej Wuyo! Potrzebuję logo, mam otwarcie sklepu za 3 tygodnie... albo: zadzwoń do mnie na xxx-xxx-xxx",
@@ -71,6 +74,7 @@ const T = {
         eyebrow: "Send a brief", h2: "Let's build a brand that sells",
         lead: "Pick the options below and let's take the first step. Feel free to write in English.",
         szybko: "Prefer something quicker?", typBriefu: "Brief type",
+        mailLabel: "Email me", telLabel: "Call", kopiuj: "Copy", skopiowano: "Copied",
         tabs: [["Message", "Quick contact"], ["Logo / Branding", "Brand identity"], ["Website", "Shop, landing page, one-pager"]],
         quickLabel: "What do you need? 🎤", quickSub: "Describe what you need, ask about the price, or tell me when we can talk on the phone.",
         quickPh: "Hi WUYO! I need a logo, my shop opens in 3 weeks... or: call me on xxx-xxx-xxx",
@@ -106,6 +110,13 @@ export function ContactBrief() {
     const [submitted, setSubmitted] = useState(false);
     const [sending, setSending] = useState(false);
     const [error, setError] = useState("");
+    const [skopiowano, setSkopiowano] = useState(false);
+    const kopiujMail = () => {
+        navigator.clipboard?.writeText(EMAIL).then(() => {
+            setSkopiowano(true);
+            window.setTimeout(() => setSkopiowano(false), 2000);
+        }).catch(() => {});
+    };
     const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; message?: string }>({});
 
     const searchParams = useSearchParams();
@@ -242,6 +253,37 @@ export function ContactBrief() {
                     <p className="text-white/60 max-w-xl mx-auto">
                         {t.lead}
                     </p>
+                </div>
+
+                {/* Mail i telefon na widoku. Klienci szukali adresu mailowego, a był tylko w stopce.
+                    „Kopiuj” obok, bo link mailto nic nie robi u kogoś bez programu pocztowego. */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto mb-8">
+                    <div className="flex items-center gap-3 rounded-2xl border border-gold/30 bg-gold/5 px-5 py-4">
+                        <Mail size={22} className="text-gold shrink-0" aria-hidden="true" />
+                        <div className="min-w-0 flex-1">
+                            <p className="text-white/50 text-[11px] uppercase tracking-widest">{t.mailLabel}</p>
+                            <a href={`mailto:${EMAIL}`} className="block text-white font-bold text-lg hover:text-gold transition-colors truncate">{EMAIL}</a>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={kopiujMail}
+                            className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-white/70 hover:border-gold/50 hover:text-white transition-colors"
+                        >
+                            {skopiowano ? <Check size={13} aria-hidden="true" /> : <Copy size={13} aria-hidden="true" />}
+                            {skopiowano ? t.skopiowano : t.kopiuj}
+                        </button>
+                    </div>
+                    <a
+                        href={`tel:${TELEFON}`}
+                        onClick={trackPhoneClick}
+                        className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 hover:border-gold/40 transition-colors"
+                    >
+                        <Phone size={22} className="text-gold shrink-0" aria-hidden="true" />
+                        <div>
+                            <p className="text-white/50 text-[11px] uppercase tracking-widest">{t.telLabel}</p>
+                            <p className="text-white font-bold text-lg">+48 725 182 053</p>
+                        </div>
+                    </a>
                 </div>
 
                 {/* Szybki kontakt przez komunikatory */}

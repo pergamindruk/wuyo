@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, House, ChevronDown } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { counterpartPath, localeFromPath, route, type Locale } from "@/lib/i18n";
@@ -43,6 +43,33 @@ const TEKSTY = {
     },
 } as const;
 
+// Flagi jako SVG, nie emoji: Windows zamiast emoji flag pokazuje same litery „PL” / „GB”.
+function FlagPL() {
+    return (
+        <svg viewBox="0 0 16 10" width="16" height="10" aria-hidden="true" className="rounded-[2px] shrink-0 ring-1 ring-white/20">
+            <rect width="16" height="5" fill="#ffffff" />
+            <rect y="5" width="16" height="5" fill="#dc143c" />
+        </svg>
+    );
+}
+
+function FlagGB() {
+    // Przełącznik bywa na stronie dwa razy (pasek i menu mobilne) — id musi być unikalne.
+    const clipId = useId();
+    return (
+        <svg viewBox="0 0 60 30" width="16" height="10" aria-hidden="true" className="rounded-[2px] shrink-0 ring-1 ring-white/20">
+            <clipPath id={clipId}><rect width="60" height="30" /></clipPath>
+            <g clipPath={`url(#${clipId})`}>
+                <rect width="60" height="30" fill="#012169" />
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" strokeWidth="6" />
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" strokeWidth="2" />
+                <path d="M30,0 V30 M0,15 H60" stroke="#ffffff" strokeWidth="10" />
+                <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="6" />
+            </g>
+        </svg>
+    );
+}
+
 /**
  * Przełącznik PL / EN. Strony stałe mają pary w lib/i18n.ts. Wpis bloga ma inny adres
  * w każdym języku, więc odpowiednik czytamy z <link rel="alternate" hreflang> w <head>
@@ -74,9 +101,13 @@ function LanguageSwitch({ locale, onNavigate, className = "" }: { locale: Locale
             aria-label={TEKSTY[locale].jezyk}
             className={`inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
         >
-            <span className={locale === "pl" ? "text-gold" : ""}>PL</span>
+            <span className={`inline-flex items-center gap-1.5 ${locale === "pl" ? "text-gold" : "opacity-80"}`}>
+                <FlagPL /> PL
+            </span>
             <span aria-hidden="true" className="text-white/25">/</span>
-            <span className={locale === "en" ? "text-gold" : ""}>EN</span>
+            <span className={`inline-flex items-center gap-1.5 ${locale === "en" ? "text-gold" : "opacity-80"}`}>
+                <FlagGB /> EN
+            </span>
         </Link>
     );
 }
@@ -390,6 +421,11 @@ export function Navbar() {
                             {t.napisz}
                         </a>
                         <LanguageSwitch locale={locale} onNavigate={closeMenu} />
+                    </div>
+                    {/* Kontakt wprost w menu: klienci szukali maila, a był tylko w stopce. */}
+                    <div className="mt-8 flex flex-col items-center gap-2 text-sm">
+                        <a href="mailto:kontakt@wuyo.pl" className="text-gold font-bold text-base hover:text-white transition-colors">kontakt@wuyo.pl</a>
+                        <a href="tel:+48725182053" className="text-white/70 hover:text-white transition-colors">+48 725 182 053</a>
                     </div>
                 </div>
             )}

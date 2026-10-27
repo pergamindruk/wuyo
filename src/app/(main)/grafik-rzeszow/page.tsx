@@ -8,6 +8,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
+import { faqPageSchema } from "@/lib/faq-schema";
 
 export const metadata: Metadata = {
     title: "Grafik Rzeszów — projektant graficzny, logo od 890 zł",
@@ -49,44 +50,27 @@ const localSchema = {
     "aggregateRating": BUSINESS_RATING,
 };
 
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "Ile kosztuje grafik w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Logo dla firmy to koszt od 890 zł, pełna identyfikacja wizualna 1 490 zł, strona internetowa od 1 990 zł, a wizytówki z projektem od 299 zł za 50 sztuk (sam druk od 99 zł). Każda wycena jest stała — podaję cenę przed startem prac, bez niespodzianek na końcu.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Czy grafik z Rzeszowa obsługuje firmy spoza miasta?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Tak. Większość projektów realizuję zdalnie — przez Messenger, WhatsApp lub e-mail. Obsługuję firmy z całej Polski. Rzeszów i Podkarpacie to moja baza, ale zasięg jest ogólnopolski.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Jak długo trwa projekt logo w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Standardowy czas realizacji logo to 7–10 dni roboczych od zatwierdzenia briefu. Strona internetowa: 7–14 dni roboczych. Przy pilnych zleceniach możliwy ekspresowy termin — zapytaj.",
-            },
-        },
-        {
-            "@type": "Question",
-            "name": "Co wyróżnia WUYO spośród grafików w Rzeszowie?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Działam sam — nie ma pośredników ani asystentów. Masz bezpośredni kontakt ze mną przez cały projekt. Łączę grafikę z programowaniem, a małe nakłady drukuję u siebie — od logo po stronę i wydruk to jedno miejsce.",
-            },
-        },
-    ],
-};
+// Jedna lista zasila widoczne FAQ i dane dla Google (muszą mieć tę samą treść).
+const faqs = [
+    {
+        q: "Ile kosztuje grafik w Rzeszowie?",
+        a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 1 990 zł. Wizytówki 50 szt. z projektem i drukiem: od 299 zł, sam druk z Twojego pliku: od 99 zł. Ceny netto, dochodzi 23% VAT. Wszystkie ceny stałe — podaję je przed startem, nie po.",
+    },
+    {
+        q: "Czy obsługujesz firmy spoza Rzeszowa?",
+        a: "Tak. Projekt robi się zdalnie równie dobrze co na miejscu — większość moich klientów to firmy spoza Rzeszowa. Cały kontakt przez WhatsApp, Messenger lub e-mail (kontakt@wuyo.pl). Druk wysyłam kurierem.",
+    },
+    {
+        q: "Ile czekam na gotowy projekt?",
+        a: "Logo: 7–10 dni roboczych od briefu. Strona internetowa: 7–14 dni roboczych. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
+    },
+    {
+        q: "Co dostaję razem z logo?",
+        a: "Pełen pakiet plików: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do każdej drukarni. Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty. Pliki źródłowe Figma lub AI na życzenie.",
+    },
+];
+
+const faqSchema = faqPageSchema(faqs);
 
 const services = [
     {
@@ -252,24 +236,7 @@ export default function GrafikRzeszowPage() {
                         <h2 className="text-3xl font-bold text-white">Pytania o grafika w Rzeszowie</h2>
                     </AnimatedSection>
                     <div className="space-y-4">
-                        {[
-                            {
-                                q: "Ile kosztuje grafik w Rzeszowie?",
-                                a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 1 990 zł. Wizytówki 50 szt. z projektem: od 99 zł. Wszystkie ceny stałe — podaję je przed startem, nie po.",
-                            },
-                            {
-                                q: "Czy obsługujesz firmy spoza Rzeszowa?",
-                                a: "Tak. Projekt robi się zdalnie równie dobrze co na miejscu — większość moich klientów to firmy spoza Rzeszowa. Cały kontakt przez WhatsApp, Messenger lub e-mail. Druk wysyłam kurierem.",
-                            },
-                            {
-                                q: "Ile czekam na gotowy projekt?",
-                                a: "Logo: 7–10 dni roboczych od briefu. Strona internetowa: 7–14 dni roboczych. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
-                            },
-                            {
-                                q: "Co dostaję razem z logo?",
-                                a: "Pełen pakiet plików: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do każdej drukarni. Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty. Pliki źródłowe Figma lub AI na życzenie.",
-                            },
-                        ].map((item, i) => (
+                        {faqs.map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.06}>
                                 <div className="glass-card p-6">
                                     <div className="flex items-start gap-3">
