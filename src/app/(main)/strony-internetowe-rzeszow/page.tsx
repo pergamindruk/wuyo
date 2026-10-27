@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, Search } from "lucide-react";
+import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, PenLine } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
@@ -24,11 +24,13 @@ export const metadata: Metadata = {
         "projektowanie stron Rzeszów",
         "strony internetowe dla firm Rzeszów",
         "Next.js Rzeszów",
+        "WordPress Rzeszów",
+        "sklep WooCommerce Rzeszów",
         "web developer Rzeszów",
     ],
     openGraph: {
-        title: "Strony Internetowe Rzeszów | WUYO – Next.js, SEO, szybkie",
-        description: "Strony internetowe dla firm z Rzeszowa. Next.js, szybkie, SEO. One-page od 1 990 zł. Wycena w 24h.",
+        title: "Strony Internetowe Rzeszów | WUYO – Next.js, WordPress, SEO",
+        description: "Strony internetowe dla firm z Rzeszowa. Next.js albo WordPress, szybkie, z SEO. One-page od 1 990 zł. Wycena w 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-internetowe-rzeszow",
         type: "website",
@@ -36,7 +38,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Strony Internetowe Rzeszów | WUYO",
-        description: "Tworzę strony www dla firm z Rzeszowa. Next.js, SEO, szybkie. Od 1 990 zł.",
+        description: "Tworzę strony www dla firm z Rzeszowa. Next.js albo WordPress, SEO, szybkie. Od 1 990 zł.",
         images: ["/og-image.webp"],
     },
     alternates: alternatesFor("websitesRzeszow", "pl"),
@@ -46,7 +48,7 @@ const localSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Tworzenie Stron Internetowych – Rzeszów",
-    "description": "Projektowanie i programowanie stron internetowych dla firm z Rzeszowa i Podkarpacia. Next.js, szybkie ładowanie, SEO techniczne, responsywne.",
+    "description": "Projektowanie i programowanie stron internetowych dla firm z Rzeszowa i Podkarpacia. Next.js i WordPress, sklepy WooCommerce, szybkie ładowanie, SEO techniczne, responsywne.",
     "provider": { ...BUSINESS_REF, "aggregateRating": BUSINESS_RATING },
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
@@ -89,11 +91,11 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Czy mogę samodzielnie edytować treści?",
-        a: "Tak — do strony z podstronami podłączam lekki CMS. Przy one-page wystarczy napisać do mnie: w Opiece Strony masz 1 godzinę drobnych zmian w miesiącu.",
+        a: "Tak. Jeśli chcesz sam dodawać wpisy, realizacje albo produkty, zrobię stronę na WordPressie i pokażę Ci panel. Przy stronie na Next.js wystarczy napisać do mnie: w Opiece Strony masz 1 godzinę drobnych zmian w miesiącu.",
     },
     {
-        q: "Dlaczego Next.js zamiast WordPressa?",
-        a: "Next.js ładuje się poniżej 1 sekundy, nie wymaga aktualizacji pluginów i nie ma backendu do zhackowania. WordPress jest wygodniejszy do edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości — a to te trzy rzeczy decydują o tym, czy strona przynosi klientów.",
+        q: "Next.js czy WordPress — co wybrać?",
+        a: "Next.js, jeśli strona ma być szybką wizytówką, a zmiany robię ja. WordPress, jeśli chcesz sam zmieniać treść albo prowadzić sklep na WooCommerce. Robię obie. WordPress potrzebuje regularnych aktualizacji, dlatego taką stronę oddaję razem z opieką.",
     },
 ];
 
@@ -146,7 +148,7 @@ export default function StronyInternetowerRzeszowPage() {
                         <span className="text-gold">dla firm z Rzeszowa</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Piszę kod od zera — żadnego WordPressa, żadnych pluginów. Strona ładuje się w poniżej sekundy, Google ją widzi od pierwszego dnia, a Ty masz stałą cenę przed startem.
+                        Robię strony od zera w Next.js albo na WordPressie, jeśli chcesz sam zmieniać treść. Strona szybko się ładuje, Google ją widzi od pierwszego dnia, a Ty znasz cenę przed startem.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
@@ -250,18 +252,19 @@ export default function StronyInternetowerRzeszowPage() {
                 </div>
             </section>
 
-            {/* DLACZEGO NEXT.JS */}
+            {/* NEXT.JS CZY WORDPRESS */}
             <section className="py-20 px-6 md:px-12 bg-white/[0.02]">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-12">
                         <p className="eyebrow mb-4">Technologia</p>
-                        <h2 className="text-3xl font-bold text-white">Co zyskujesz zamiast WordPressa</h2>
+                        <h2 className="text-3xl font-bold text-white">Next.js czy WordPress?</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto mt-4">Robię obie. Wybierasz po tym, czy chcesz sam zmieniać treść.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-4">
                         {[
-                            { icon: <Zap size={20} className="text-gold" />, title: "Ładuje się w < 1s", desc: <span>Każda dodatkowa sekunda ładowania to -7% konwersji. Sprawdź swoją aktualną stronę w <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">PageSpeed Insights</a> — jeśli wynik to mniej niż 90, czas coś zmienić.</span> },
-                            { icon: <Search size={20} className="text-gold" />, title: "SEO od pierwszej linii", desc: "Google widzi pełen content od razu. Metadata, Open Graph, Schema markup — wbudowane w kod, nie jako plugin." },
-                            { icon: <Shield size={20} className="text-gold" />, title: "Zero problemów z bezpieczeństwem", desc: <span>Nie ma backendu wystawionego na świat. <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">Next.js</a> generuje statyczne pliki — nie ma czego hakować i nie ma cotygodniowych aktualizacji pluginów.</span> },
+                            { icon: <Zap size={20} className="text-gold" />, title: "Next.js: ładuje się w < 1s", desc: <span>Każda dodatkowa sekunda ładowania to -7% konwersji. Sprawdź swoją aktualną stronę w <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">PageSpeed Insights</a> — jeśli wynik to mniej niż 90, czas coś zmienić.</span> },
+                            { icon: <Shield size={20} className="text-gold" />, title: "Next.js: nic do zhakowania", desc: <span>Nie ma bazy danych wystawionej na świat. <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">Next.js</a> generuje statyczne pliki — nie ma czego hakować ani aktualizować co tydzień.</span> },
+                            { icon: <PenLine size={20} className="text-gold" />, title: "WordPress: sam zmieniasz treść", desc: "Wpisy, realizacje, oferta albo sklep WooCommerce — edytujesz w panelu. Aktualizacje i kopie zapasowe robię ja w ramach opieki." },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.08}>
                                 <div className="glass-card p-6">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Zap, Shield, Search, Smartphone } from "lucide-react";
+import { CheckCircle2, ArrowRight, Zap, Shield, PenLine, ShoppingCart } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
@@ -11,11 +11,11 @@ import { Suspense } from "react";
 import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-    title: "Strony internetowe od 1 990 zł — Next.js, SEO",
-    description: "Strony na Next.js — ładowanie poniżej sekundy, SEO od pierwszego dnia, bez WordPressa. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
+    title: "Strony internetowe od 1 990 zł — Next.js i WordPress, SEO",
+    description: "Strony na Next.js albo WordPressie — szybkie, z SEO od pierwszego dnia. Sklepy WooCommerce. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
     openGraph: {
-        title: "Strony Internetowe od 1 990 zł | Next.js, SEO | WUYO",
-        description: "Strony na Next.js — <1s ładowania, SEO wbudowane, bez WordPressa. Od 1 990 zł. Rzeszów i cała Polska.",
+        title: "Strony Internetowe od 1 990 zł | Next.js, WordPress, SEO | WUYO",
+        description: "Strony na Next.js albo WordPressie — szybkie, z SEO od startu. Od 1 990 zł. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/strony-www",
         type: "website",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Tworzenie Stron Internetowych dla Firm | WUYO",
-        description: "Strony firmowe od 1 990 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
+        description: "Strony firmowe od 1 990 zł — Next.js albo WordPress, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
     alternates: alternatesFor("websites", "pl"),
@@ -42,11 +42,15 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Czy będę mógł samodzielnie edytować treści na stronie?",
-        a: "Tak — podłączam lekki CMS (np. Sanity lub Contentlayer) jeśli tego potrzebujesz. W pakiecie Multi-Page edycja treści jest standardem. Możesz też po prostu pisać do mnie — drobne zmiany tekstu wchodzą w zakres wsparcia.",
+        a: "Tak. Jeśli chcesz sam dodawać wpisy, realizacje albo ofertę, zrobię stronę na WordPressie i pokażę Ci, jak korzystać z panelu. Przy stronie na Next.js możesz po prostu pisać do mnie — drobne zmiany robię w ramach opieki.",
     },
     {
-        q: "Dlaczego Next.js zamiast WordPressa?",
-        a: "Strona na Next.js ładuje się poniżej 1 sekundy, nie wymaga cotygodniowych aktualizacji pluginów i jest praktycznie niemożliwa do zhackowania bo nie ma backendu wystawionego na świat. WordPress jest wygodniejszy do samodzielnej edycji, ale gorszy dla SEO, bezpieczeństwa i szybkości.",
+        q: "Next.js czy WordPress — co wybrać?",
+        a: "Next.js, jeśli strona ma być szybką wizytówką, a zmiany robię ja. WordPress, jeśli chcesz sam zmieniać treść w panelu. Robię obie. WordPress potrzebuje regularnych aktualizacji, dlatego taką stronę oddaję razem z opieką.",
+    },
+    {
+        q: "Robisz sklepy na WooCommerce?",
+        a: "Tak. Sklep na WooCommerce, w którym sam dodajesz produkty i obsługujesz zamówienia. Podpinam płatności (PayU, Przelewy24 albo Tpay) i wysyłkę InPost. Sklep od 6 900 zł.",
     },
 ];
 
@@ -56,7 +60,7 @@ const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Tworzenie Stron Internetowych dla Firm",
-    "description": "Projektowanie i programowanie stron internetowych na Next.js — one-page, multi-page, sklepy e-commerce. Szybkie, responsywne, zoptymalizowane pod SEO.",
+    "description": "Projektowanie i programowanie stron internetowych na Next.js i WordPressie — one-page, multi-page, sklepy WooCommerce. Szybkie, responsywne, zoptymalizowane pod SEO.",
     "provider": {
         "@type": "Person",
         "name": "Mateusz Machoś",
@@ -140,7 +144,7 @@ const packages = [
 
 const techStack = [
     { name: "Next.js 16", desc: "Framework React — szybki rendering, SEO-friendly, gotowy na skalowanie." },
-    { name: "React 19", desc: "Komponenty, interaktywność, wydajność. Standard w nowoczesnym web dev." },
+    { name: "WordPress + WooCommerce", desc: "Gdy chcesz sam zmieniać treść albo prowadzić sklep. Lekki motyw i stały zestaw sprawdzonych wtyczek." },
     { name: "TypeScript", desc: "Bezpieczny kod bez błędów typowania — mniej bugów w produkcji." },
     { name: "Tailwind CSS", desc: "Spójny design system, lekkie style, bez zbędnego CSS." },
     { name: "Hosting", desc: "Wdrożenie na hostingu klienta — wspieram konfigurację domeny, SSL i środowiska produkcyjnego." },
@@ -161,7 +165,7 @@ const process = [
     {
         n: "03",
         title: "Programowanie",
-        desc: "Kodowanie w Next.js. Responsywność, optymalizacja obrazów, formularze, animacje — wszystko w jednym.",
+        desc: "Budowa w Next.js albo na WordPressie. Responsywność, optymalizacja obrazów, formularze, animacje — wszystko w jednym.",
     },
     {
         n: "04",
@@ -191,7 +195,7 @@ export default function StronyWwwPage() {
                         <span className="text-gold">pracują na Ciebie</span> 24/7
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Projektuję i programuję strony na Next.js — szybkie, responsywne i zoptymalizowane pod SEO od pierwszego dnia. Bez WordPressa, bez pluginów, bez niespodzianek.
+                        Projektuję i programuję strony na Next.js albo WordPressie — szybkie, responsywne i przygotowane pod Google od pierwszego dnia. Technologię dobieram do tego, jak chcesz pracować ze stroną.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
@@ -208,7 +212,7 @@ export default function StronyWwwPage() {
                         {[
                             { stat: "< 1s", label: "czas ładowania (LCP)" },
                             { stat: "100/100", label: "PageSpeed score" },
-                            { stat: "Next.js", label: "framework bez kompromisów" },
+                            { stat: "Next.js / WP", label: "technologia pod Twoje potrzeby" },
                         ].map((item, i) => (
                             <div key={i}>
                                 <p className="text-2xl md:text-3xl font-bold text-gold">{item.stat}</p>
@@ -219,35 +223,35 @@ export default function StronyWwwPage() {
                 </div>
             </AnimatedSection>
 
-            {/* Dlaczego Next.js */}
+            {/* Next.js czy WordPress */}
             <section className="py-20 px-6 md:px-12">
                 <div className="max-w-5xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Technologia</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Dlaczego Next.js zamiast WordPressa?</h2>
-                        <p className="text-white/50 max-w-2xl mx-auto">WordPress jest wygodny dla właścicieli. Next.js jest lepszy dla Twojej firmy — szybszy, bezpieczniejszy i lepiej indeksowany przez Google.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Next.js czy WordPress?</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto">Robię obie. Wybór zależy od jednego pytania: chcesz sam zmieniać treść, czy wolisz, żebym robił to ja?</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6 mb-10">
                         {[
                             {
                                 icon: <Zap size={22} className="text-gold" />,
-                                title: "Szybkość która konwertuje",
-                                desc: "Strona na Next.js ładuje się poniżej 1 sekundy. Każda sekunda opóźnienia to -7% konwersji (Google, 2024). WordPress z pluginami — 3–8 sekund.",
-                            },
-                            {
-                                icon: <Search size={22} className="text-gold" />,
-                                title: "SEO od pierwszej linii kodu",
-                                desc: "Server-side rendering = Google widzi pełen content od razu. Metadata, Open Graph, Schema markup — wbudowane, nie dodawane przez plugin który może się posypać.",
+                                title: "Next.js: szybkość, która sprzedaje",
+                                desc: "Strona ładuje się poniżej 1 sekundy, a Google widzi całą treść od razu. Każda sekunda opóźnienia to -7% konwersji (Google, 2024).",
                             },
                             {
                                 icon: <Shield size={22} className="text-gold" />,
-                                title: "Zero problemów z bezpieczeństwem",
-                                desc: "WordPress ma 90%+ udział w atakach na strony CMS. Next.js to statyczny output — nie ma czego hackować. Nie ma bazy danych wystawionej na świat.",
+                                title: "Next.js: nic do zhakowania",
+                                desc: "Strona bez bazy danych i bez wtyczek. Nie ma czego aktualizować co tydzień. Zmiany w treści robię ja w ramach opieki.",
                             },
                             {
-                                icon: <Smartphone size={22} className="text-gold" />,
-                                title: "Mobile first bez kompromisów",
-                                desc: "Projektuję od telefonu w górę. Tailwind CSS gwarantuje perfekcyjne wyświetlanie na każdym urządzeniu — bez \"responsywnych pluginów\" które psują layout.",
+                                icon: <PenLine size={22} className="text-gold" />,
+                                title: "WordPress: sam zmieniasz treść",
+                                desc: "Wpisy, realizacje, oferta — dodajesz w prostym panelu, bez pisania do mnie. Lekki motyw i stały zestaw sprawdzonych wtyczek, więc strona dalej jest szybka.",
+                            },
+                            {
+                                icon: <ShoppingCart size={22} className="text-gold" />,
+                                title: "WooCommerce: sklep, który prowadzisz sam",
+                                desc: "Sam dodajesz produkty i obsługujesz zamówienia. Płatności PayU, Przelewy24 albo Tpay, wysyłka InPost. Aktualizacje i kopie zapasowe robię ja.",
                             },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.1}>
@@ -272,24 +276,24 @@ export default function StronyWwwPage() {
                                     <thead>
                                         <tr className="border-b border-white/10">
                                             <th className="text-left p-4 text-white/60 font-medium">Kryterium</th>
-                                            <th className="text-center p-4 text-gold font-bold">Next.js (moje strony)</th>
-                                            <th className="text-center p-4 text-white/60 font-medium">WordPress</th>
+                                            <th className="text-center p-4 text-gold font-bold">Next.js</th>
+                                            <th className="text-center p-4 text-gold font-bold">WordPress</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {[
-                                            { c: "Czas ładowania", a: "< 1s", b: "3–8s (zależy od pluginów)" },
-                                            { c: "PageSpeed score", a: "90–100/100", b: "40–70/100 typowo" },
-                                            { c: "Bezpieczeństwo", a: "Brak backendu = brak ataków", b: "Cotygodniowe aktualizacje pluginów" },
-                                            { c: "SEO", a: "Wbudowane, spójne", b: "Plugin Yoast — zależy od konfiguracji" },
-                                            { c: "Koszty utrzymania", a: "Hosting klienta (zależnie od dostawcy)", b: "Hosting + SSL + domeny + pluginy premium" },
-                                            { c: "Awarie / downtime", a: "Minimalne", b: "Aktualizacja pluginu może posypać stronę" },
-                                            { c: "Edycja treści", a: "Prosto przez kod lub CMS", b: "Panel WordPress — wygodny" },
+                                            { c: "Dla kogo", a: "Wizytówka, rzadkie zmiany, liczy się szybkość", b: "Blog, realizacje, oferta zmieniana często, sklep" },
+                                            { c: "Kto zmienia treść", a: "Ja, w ramach opieki", b: "Ty, sam w panelu" },
+                                            { c: "Czas ładowania", a: "< 1s", b: "Szybki przy lekkim motywie, który stosuję" },
+                                            { c: "SEO", a: "Wbudowane w kod", b: "Wtyczka Rank Math, ustawiona przeze mnie" },
+                                            { c: "Bezpieczeństwo", a: "Brak bazy danych do ataku", b: "Regularne aktualizacje — robię je ja" },
+                                            { c: "Sklep", a: "Na zamówienie, pod wycenę", b: "WooCommerce — produkty i zamówienia w panelu" },
+                                            { c: "Opieka", a: "Opcjonalna", b: "Konieczna — aktualizacje to stała praca" },
                                         ].map((row, i) => (
                                             <tr key={i}>
                                                 <td className="p-4 text-white/60">{row.c}</td>
-                                                <td className="p-4 text-center text-green-400 font-medium text-xs">{row.a}</td>
-                                                <td className="p-4 text-center text-white/60 text-xs">{row.b}</td>
+                                                <td className="p-4 text-center text-white/80 text-xs">{row.a}</td>
+                                                <td className="p-4 text-center text-white/80 text-xs">{row.b}</td>
                                             </tr>
                                         ))}
                                     </tbody>

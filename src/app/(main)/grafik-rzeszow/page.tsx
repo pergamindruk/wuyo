@@ -83,7 +83,7 @@ const services = [
     {
         title: "Strony internetowe",
         price: "od 1 990 zł",
-        desc: "Piszę kod od zera — żadnego WordPressa, żadnych pluginów które się psują. Strona ładuje się szybko, działa na telefonie i Google ją widzi od pierwszego dnia.",
+        desc: "Robię strony od zera w Next.js albo na WordPressie, gdy chcesz sam zmieniać treść. Strona ładuje się szybko, działa na telefonie i Google ją widzi od pierwszego dnia.",
         href: "/strony-www",
         items: ["Next.js — poniżej 1s ładowania", "SEO techniczne wbudowane", "Wygląda i działa na każdym telefonie", "Wdrożenie na hostingu klienta"],
     },

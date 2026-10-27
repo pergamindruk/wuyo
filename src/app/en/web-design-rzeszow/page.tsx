@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { CheckCircle2, MapPin, Zap, Search, Shield } from "lucide-react";
+import { CheckCircle2, MapPin, Zap, Shield, PenLine } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     alternates: alternatesFor("websitesRzeszow", "en"),
     openGraph: {
         title: "Web design in Rzeszów | WUYO",
-        description: "Fast Next.js websites for businesses in Rzeszów. One-page from 1,990 PLN. Quote within 24h.",
+        description: "Fast websites on Next.js or WordPress for businesses in Rzeszów. One-page from 1,990 PLN. Quote within 24h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/en/web-design-rzeszow",
         locale: "en_GB",
@@ -32,14 +32,15 @@ const faqs: FaqEntry[] = [
     { q: "Can I get a cheap website in Rzeszów?", a: "My cheapest option is a one-page site from 1,990 PLN: one page, one goal, a contact form, SEO, and domain and hosting for a year. Enough for a new business, a freelancer or a single service. Cheaper offers are usually a ready-made template that is hard to rank in Google." },
     { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send the content." },
     { q: "Can the website be in English, Polish or both?", a: "Yes. I can build the site in English, Polish or both languages with a language switch, so you can reach both Polish customers and other foreigners in Rzeszów." },
-    { q: "Can I edit the content myself?", a: "Yes. For multi-page sites I connect a lightweight CMS. For a one-page site just message me: Website Care includes 1 hour of small changes a month." },
+    { q: "Can I edit the content myself?", a: "Yes. If you want to add posts, projects or products yourself, I build the site on WordPress and show you the dashboard. With a Next.js site just message me: Website Care includes 1 hour of small changes a month." },
+    { q: "Next.js or WordPress: which should I choose?", a: "Next.js if the site is a fast business card and I make the changes. WordPress if you want to edit content yourself or run a WooCommerce shop. I build both. WordPress needs regular updates, so I hand it over together with a care plan." },
 ];
 
 const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Web design in Rzeszów",
-    "description": "Website design and development for businesses in Rzeszów and Podkarpackie. Next.js, fast loading, technical SEO, responsive.",
+    "description": "Website design and development for businesses in Rzeszów and Podkarpackie. Next.js and WordPress, WooCommerce shops, fast loading, technical SEO, responsive.",
     "provider": { ...BUSINESS_REF, "aggregateRating": BUSINESS_RATING },
     "areaServed": [{ "@type": "City", "name": "Rzeszów" }, { "@type": "AdministrativeArea", "name": "Podkarpackie" }, { "@type": "Country", "name": "Poland" }],
     "inLanguage": "en",
@@ -60,9 +61,9 @@ const packages = [
 ];
 
 const benefits = [
-    { icon: <Zap size={20} className="text-gold" />, title: "Loads in under 1s", desc: "Every extra second of loading loses visitors. Check your current site in PageSpeed Insights: if the score is under 90, it's time for a change." },
-    { icon: <Search size={20} className="text-gold" />, title: "SEO from the first line", desc: "Google sees the full content straight away. Metadata, Open Graph and schema markup are built into the code, not added as a plugin." },
-    { icon: <Shield size={20} className="text-gold" />, title: "Far fewer security worries", desc: "No backend exposed to the internet. Next.js generates static files, so there is very little to hack and no weekly plugin updates." },
+    { icon: <Zap size={20} className="text-gold" />, title: "Next.js: loads in under 1s", desc: "Every extra second of loading loses visitors. Check your current site in PageSpeed Insights: if the score is under 90, it's time for a change." },
+    { icon: <Shield size={20} className="text-gold" />, title: "Next.js: nothing to hack", desc: "No database exposed to the internet. Next.js generates static files, so there is very little to hack and nothing to update every week." },
+    { icon: <PenLine size={20} className="text-gold" />, title: "WordPress: you edit the content", desc: "Posts, projects, offers or a WooCommerce shop: you edit them in the dashboard. I take care of updates and backups as part of the care plan." },
 ];
 
 export default function WebDesignRzeszowPage() {
@@ -83,7 +84,7 @@ export default function WebDesignRzeszowPage() {
                         <span className="text-gold">businesses in Rzeszów</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        I write the code from scratch: no WordPress, no plugins. Your site loads in under a second, Google sees it from day one and you get a fixed price before we start.
+                        I build sites from scratch in Next.js, or on WordPress if you want to edit content yourself. Your site loads fast, Google sees it from day one and you get a fixed price before we start.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">Write to me, quote in 24h</a>
@@ -170,7 +171,8 @@ export default function WebDesignRzeszowPage() {
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-12">
                         <p className="eyebrow mb-4">Technology</p>
-                        <h2 className="text-3xl font-bold text-white">What you get instead of WordPress</h2>
+                        <h2 className="text-3xl font-bold text-white">Next.js or WordPress?</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto mt-4">I build both. You choose based on whether you want to edit the content yourself.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-4">
                         {benefits.map((item, i) => (

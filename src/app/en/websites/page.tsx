@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CheckCircle2, Zap, Shield, Search, Smartphone } from "lucide-react";
+import { CheckCircle2, Zap, Shield, PenLine, ShoppingCart } from "lucide-react";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -13,12 +13,12 @@ import { alternatesFor } from "@/lib/i18n";
 // Ceny i zakresy 1:1 z polskiej strony /strony-www. Zmiana ceny = zmiana w obu plikach.
 
 export const metadata: Metadata = {
-    title: "Websites from 1,990 PLN: Next.js, SEO, fast",
-    description: "Business websites built with Next.js: load in under a second, SEO from day one, no WordPress. One-page from 1,990 PLN, multi-page from 2,990 PLN. Quote within 24h.",
+    title: "Websites from 1,990 PLN: Next.js and WordPress, SEO",
+    description: "Business websites built with Next.js or WordPress: fast, with SEO from day one. WooCommerce shops too. One-page from 1,990 PLN, multi-page from 2,990 PLN. Quote within 24h.",
     alternates: alternatesFor("websites", "en"),
     openGraph: {
-        title: "Websites from 1,990 PLN | Next.js, SEO | WUYO",
-        description: "Fast Next.js websites with SEO built in. From 1,990 PLN. Rzeszów, Poland and remote.",
+        title: "Websites from 1,990 PLN | Next.js, WordPress, SEO | WUYO",
+        description: "Fast websites on Next.js or WordPress, with SEO built in. From 1,990 PLN. Rzeszów, Poland and remote.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/en/websites",
         type: "website",
@@ -29,15 +29,16 @@ export const metadata: Metadata = {
 const faqs: FaqEntry[] = [
     { q: "How much does a website cost?", a: "A one-page site starts at 1,990 PLN and a multi-page business website at 2,990 PLN. Every quote is fixed: I give you an exact amount before work starts, with no surprises on the invoice. Prices net, plus 23% VAT." },
     { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send content and feedback." },
-    { q: "Will I be able to edit the content myself?", a: "Yes. I connect a lightweight CMS if you need one; in the multi-page package content editing is standard. You can also simply message me: small text changes are part of the support." },
-    { q: "Why Next.js instead of WordPress?", a: "A Next.js site loads in under a second, needs no weekly plugin updates and is very hard to hack because there is no backend exposed to the internet. WordPress is easier to edit yourself, but worse for SEO, security and speed." },
+    { q: "Will I be able to edit the content myself?", a: "Yes. If you want to add posts, projects or offers yourself, I build the site on WordPress and show you how to use the dashboard. With a Next.js site you can simply message me: small changes are part of Website Care." },
+    { q: "Next.js or WordPress: which should I choose?", a: "Next.js if the site is a fast business card and I make the changes. WordPress if you want to edit content yourself in a dashboard. I build both. WordPress needs regular updates, so I hand it over together with a care plan." },
+    { q: "Do you build WooCommerce shops?", a: "Yes. A WooCommerce shop where you add products and handle orders yourself. I connect payments (PayU, Przelewy24 or Tpay) and InPost shipping. Shops start at 6,900 PLN." },
 ];
 
 const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Business website design and development",
-    "description": "Website design and development with Next.js: one-page sites, multi-page business websites and online shops. Fast, responsive and SEO-ready.",
+    "description": "Website design and development with Next.js and WordPress: one-page sites, multi-page business websites and WooCommerce shops. Fast, responsive and SEO-ready.",
     "provider": BUSINESS_REF,
     "areaServed": ["Rzeszów", "Poland", "Europe"],
     "url": "https://wuyo.pl/en/websites",
@@ -72,25 +73,25 @@ const packages = [
 ];
 
 const reasons = [
-    { icon: <Zap size={22} className="text-gold" />, title: "Speed that converts", desc: "A Next.js site loads in under a second. Every extra second of waiting costs you visitors. WordPress with a pile of plugins often takes 3–8 seconds." },
-    { icon: <Search size={22} className="text-gold" />, title: "SEO from the first line of code", desc: "Server-side rendering means Google sees the full content straight away. Metadata, Open Graph and schema markup are built in, not bolted on with a plugin that can break." },
-    { icon: <Shield size={22} className="text-gold" />, title: "Far fewer security worries", desc: "WordPress sites are the most common target of CMS attacks. A Next.js site is mostly static output with no database exposed to the internet, so there is very little to attack." },
-    { icon: <Smartphone size={22} className="text-gold" />, title: "Truly mobile first", desc: "I design from the phone up. Your site looks right on every device, without \"responsive plugins\" that break the layout." },
+    { icon: <Zap size={22} className="text-gold" />, title: "Next.js: speed that sells", desc: "The site loads in under a second and Google sees the full content straight away. Every extra second of waiting costs you visitors." },
+    { icon: <Shield size={22} className="text-gold" />, title: "Next.js: nothing to hack", desc: "No database and no plugins, so there is nothing to update every week. I make content changes for you as part of Website Care." },
+    { icon: <PenLine size={22} className="text-gold" />, title: "WordPress: you edit the content", desc: "Posts, projects, offers: you add them in a simple dashboard without messaging me. A lightweight theme and a fixed set of proven plugins keep the site fast." },
+    { icon: <ShoppingCart size={22} className="text-gold" />, title: "WooCommerce: a shop you run yourself", desc: "You add products and handle orders yourself. PayU, Przelewy24 or Tpay payments, InPost shipping. I take care of updates and backups." },
 ];
 
 const comparison = [
-    { c: "Loading time", a: "< 1s", b: "3–8s (depends on plugins)" },
-    { c: "PageSpeed score", a: "90–100/100", b: "typically 40–70/100" },
-    { c: "Security", a: "No exposed backend", b: "Weekly plugin updates" },
-    { c: "SEO", a: "Built in, consistent", b: "Yoast plugin, depends on setup" },
-    { c: "Running costs", a: "Your hosting (depends on provider)", b: "Hosting + SSL + domain + premium plugins" },
-    { c: "Outages", a: "Minimal", b: "A plugin update can break the site" },
-    { c: "Editing content", a: "Through code or a CMS", b: "WordPress dashboard, convenient" },
+    { c: "Best for", a: "Business card site, rare changes, speed matters", b: "Blog, projects, frequently updated offer, shop" },
+    { c: "Who edits content", a: "Me, as part of Website Care", b: "You, in the dashboard" },
+    { c: "Loading time", a: "< 1s", b: "Fast with the lightweight theme I use" },
+    { c: "SEO", a: "Built into the code", b: "Rank Math plugin, set up by me" },
+    { c: "Security", a: "No database to attack", b: "Regular updates, done by me" },
+    { c: "Shop", a: "Custom build, individual quote", b: "WooCommerce: products and orders in the dashboard" },
+    { c: "Care plan", a: "Optional", b: "Required: updates are ongoing work" },
 ];
 
 const techStack = [
     { name: "Next.js 16", desc: "React framework: fast rendering, SEO-friendly, ready to scale." },
-    { name: "React 19", desc: "Components, interactivity, performance. The standard in modern web development." },
+    { name: "WordPress + WooCommerce", desc: "When you want to edit content yourself or run a shop. A lightweight theme and a fixed set of proven plugins." },
     { name: "TypeScript", desc: "Type-safe code, so fewer bugs make it to the live site." },
     { name: "Tailwind CSS", desc: "A consistent design system with lightweight styles." },
     { name: "Hosting", desc: "Deployed on your hosting. I help set up the domain, SSL and production environment." },
@@ -100,7 +101,7 @@ const techStack = [
 const process = [
     { n: "01", title: "Brief and research", desc: "We talk about the site's goal, your audience, competitors and keywords. A site without a plan is a site without visitors." },
     { n: "02", title: "Design (UI)", desc: "A Figma mock-up: structure, colours, typography, layout. You approve the look before I start coding." },
-    { n: "03", title: "Development", desc: "Built in Next.js. Responsive layout, image optimisation, forms and animations, all in one." },
+    { n: "03", title: "Development", desc: "Built in Next.js or on WordPress. Responsive layout, image optimisation, forms and animations, all in one." },
     { n: "04", title: "SEO and testing", desc: "Metadata, Open Graph, schema markup, sitemap, PageSpeed tests. A site has to rank, not just look good." },
     { n: "05", title: "Launch and handover", desc: "Deployed to your hosting, domain set up, Google Search Console, a short how-to. You own it and have access to everything." },
 ];
@@ -120,7 +121,7 @@ export default function WebsitesPage() {
                         <span className="text-gold">work for you</span> 24/7
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        I design and build websites with Next.js: fast, responsive and SEO-ready from day one. No WordPress, no plugins, no surprises.
+                        I design and build websites with Next.js or WordPress: fast, responsive and SEO-ready from day one. I pick the technology based on how you want to work with your site.
                     </p>
                     <a href="#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
                         Get a quote, I reply within 24h
@@ -134,7 +135,7 @@ export default function WebsitesPage() {
                         {[
                             { stat: "< 1s", label: "loading time (LCP)" },
                             { stat: "90+", label: "PageSpeed score" },
-                            { stat: "Next.js", label: "no-compromise framework" },
+                            { stat: "Next.js / WP", label: "technology that fits your needs" },
                         ].map((item) => (
                             <div key={item.label}>
                                 <p className="text-2xl md:text-3xl font-bold text-gold">{item.stat}</p>
@@ -149,8 +150,8 @@ export default function WebsitesPage() {
                 <div className="max-w-5xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Technology</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Next.js instead of WordPress?</h2>
-                        <p className="text-white/50 max-w-2xl mx-auto">WordPress is convenient for site owners. Next.js is better for your business: faster, safer and better indexed by Google.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Next.js or WordPress?</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto">I build both. The choice comes down to one question: do you want to edit the content yourself, or would you rather I do it?</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6 mb-10">
                         {reasons.map((item, i) => (
@@ -172,16 +173,16 @@ export default function WebsitesPage() {
                                     <thead>
                                         <tr className="border-b border-white/10">
                                             <th className="text-left p-4 text-white/60 font-medium">Criterion</th>
-                                            <th className="text-center p-4 text-gold font-bold">Next.js (my sites)</th>
-                                            <th className="text-center p-4 text-white/60 font-medium">WordPress</th>
+                                            <th className="text-center p-4 text-gold font-bold">Next.js</th>
+                                            <th className="text-center p-4 text-gold font-bold">WordPress</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {comparison.map((row) => (
                                             <tr key={row.c}>
                                                 <td className="p-4 text-white/60">{row.c}</td>
-                                                <td className="p-4 text-center text-green-400 font-medium text-xs">{row.a}</td>
-                                                <td className="p-4 text-center text-white/60 text-xs">{row.b}</td>
+                                                <td className="p-4 text-center text-white/80 text-xs">{row.a}</td>
+                                                <td className="p-4 text-center text-white/80 text-xs">{row.b}</td>
                                             </tr>
                                         ))}
                                     </tbody>
