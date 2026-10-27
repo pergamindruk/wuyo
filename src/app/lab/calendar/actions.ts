@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { generateWithFallback } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
-import { PRICING, RULES, VOICE, clean } from '@/lib/lab/ai/context'
+import { PRICING, RULES, clean } from '@/lib/lab/ai/context'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 
 export async function getCalendar() {
@@ -21,11 +21,11 @@ export async function getCalendar() {
 
 const AI_PROMPT = (platform: string, format: string, topic: string, goal: string) => `Piszesz post na social media studia WUYO (Mateusz, grafika, druk i strony dla małych firm z Rzeszowa).
 
-${VOICE}
-
 ${RULES}
 
 ${PRICING}
+
+${POST_RULES}
 
 PLATFORMA: ${platform}
 FORMAT: ${format}
@@ -55,7 +55,7 @@ export async function addCalendarEvent(event: {
     let content: string | undefined
     if (event.generateAI) {
         try {
-            content = clean(await generateWithFallback('content', AI_PROMPT(event.platform, event.format, event.topic, event.goal)))
+            content = postText(await generateWithFallback('document', AI_PROMPT(event.platform, event.format, event.topic, event.goal)))
         } catch (e) {
             console.error('Calendar AI Gen error', e)
             content = 'Nie udało się wygenerować wpisu. Błąd sieci lub limitów API.'
@@ -148,10 +148,18 @@ export async function getScheduledPosts() {
 
 // ─── Zaplanuj tydzień: 3 posty (pon, śr, pt) × FB + IG jako szkice ──────────
 
+const POST_RULES = `GŁOS W POSTACH (Mateusz, WUYO, Rzeszów):
+- Luźno i konkretnie, krótkie zdania, pierwsza osoba liczby pojedynczej ("zrobiłem", "sprawdzam", "mam pakiet"), nie "my" ani "u nas". Miło, bez spiny, bez wykrzykników co zdanie.
+- Bez powitań i bez przedstawiania się: NIE zaczynaj od "Dzień dobry", "Cześć", "Mateusz z WUYO". Pierwsze zdanie to od razu konkret.
+- Do czytelników na "Ty" albo "Wy" ("Sprawdź", "Wpiszcie"). Nigdy "Pan/Pani" ani ukośników typu "zadowolony/a".
+- Zakazane: kompleksowy, dedykowany, profesjonalny, rozwiązania, innowacyjny, premium, długie myślniki. Bez anglicyzmów, także w hashtagach (nie "feedback", "design", "tip", "mockup", "marketing", "must-have", "biznes online").
+- NIE wymyślaj realizacji, klientów ani liczb. Realizację opisujesz tylko, jeśli Mateusz ją podał niżej. Bez tego post sprzedażowy opisuje pakiet z cennika.
+- Temat do kalendarza zwykłym zdaniem, wielka litera tylko na początku.`
+
 const WEEK_PLAN = [
     { weekday: 1, goal: 'Edukacja', angle: 'poradnik: jedna rzecz, którą właściciel firmy sprawdzi u siebie w 5 minut (strona, wizytówka Google, logo, ulotka)' },
     { weekday: 3, goal: 'Zaangażowanie', angle: 'za kulisami albo pytanie do czytelników: jak wygląda praca nad projektem, wpadka, wybór papieru, poprawki' },
-    { weekday: 5, goal: 'Sprzedaż', angle: 'realizacja albo pakiet z cennika: co klient dostał i ile to kosztuje (netto + VAT), zaproszenie do wiadomości' },
+    { weekday: 5, goal: 'Sprzedaż', angle: 'realizacja (tylko jeśli podana niżej) albo pakiet z cennika: co dokładnie się dostaje i ile to kosztuje (netto + 23% VAT), zaproszenie do wiadomości' },
 ] as const
 
 type PlannedPost = { topic: string; facebook: string; instagram: string; grafika: string }
@@ -164,26 +172,35 @@ function nextWeekday(target: number): string {
     return warsawIsoDate(diff)
 }
 
+/** Zapas na wypadek, gdyby AI i tak zaczęło od powitania: ucina samo powitanie (do 2 razy, np. „Mateusz z WUYO. Dzień dobry!”). */
+const GREETING = /^\s*(?:mateusz z wuyo|dzień dobry|cześć|hej)[^.!?\n]*[.!?,]?\s*/i
+
+const capitalize = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
+
+function postText(text: string): string {
+    const stripped = text
+        .replace(GREETING, '').replace(GREETING, '')
+        .replace(/[^.!?\n]*rozwiązani[^.!?\n]*[.!?]\s*/giu, '')
+    return clean(capitalize(stripped))
+}
+
+/** Tekst między etykietą a następną etykietą (albo końcem bloku). */
+function section(block: string, label: string): string {
+    const re = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=\\n(?:TEMAT|FACEBOOK|INSTAGRAM|GRAFIKA):|$)`)
+    return (block.match(re)?.[1] ?? '').replace(/\*\*/g, '').trim()
+}
+
+/** Format z separatorami zamiast JSON: ucięta odpowiedź dalej daje kompletne posty sprzed ucięcia. */
 function parsePosts(text: string): PlannedPost[] {
-    const json = text.replace(/```(?:json)?/g, '').trim()
-    const startIdx = json.indexOf('[')
-    const endIdx = json.lastIndexOf(']')
-    if (startIdx < 0 || endIdx < startIdx) return []
-    try {
-        const raw: unknown = JSON.parse(json.slice(startIdx, endIdx + 1))
-        if (!Array.isArray(raw)) return []
-        return raw
-            .filter((p): p is Record<string, unknown> => typeof p === 'object' && p !== null)
-            .map((p) => ({
-                topic: String(p.topic ?? '').trim(),
-                facebook: clean(String(p.facebook ?? '')),
-                instagram: clean(String(p.instagram ?? '')),
-                grafika: String(p.grafika ?? '').trim(),
-            }))
-            .filter((p) => p.topic && (p.facebook || p.instagram))
-    } catch {
-        return []
-    }
+    return text
+        .split(/^#{2,3}\s*POST\s*\d*\s*$/im)
+        .map((block) => ({
+            topic: capitalize(section(block, 'TEMAT').split('\n')[0] ?? ''),
+            facebook: postText(section(block, 'FACEBOOK')),
+            instagram: postText(section(block, 'INSTAGRAM')),
+            grafika: section(block, 'GRAFIKA').split('\n')[0] ?? '',
+        }))
+        .filter((p) => p.topic && p.facebook && p.instagram)
 }
 
 export async function planWeek(hint?: string):
@@ -198,11 +215,11 @@ export async function planWeek(hint?: string):
 
     const prompt = `Zaplanuj 3 posty na social media studia WUYO na najbliższy tydzień.
 
-${VOICE}
-
 ${RULES}
 
 ${PRICING}
+
+${POST_RULES}
 
 ${hint?.trim() ? `CO MATEUSZ CHCE W TYM TYGODNIU: "${hint.trim().slice(0, 500)}"\n` : ''}OSTATNIE TEMATY (nie powtarzaj):
 ${recentTopics}
@@ -213,12 +230,18 @@ ${WEEK_PLAN.map((d, i) => `${i + 1}. ${d.angle}`).join('\n')}
 Każdy post w dwóch wersjach: facebook (do 800 znaków, 1-2 hashtagi) i instagram (do 500 znaków, 3-4 hashtagi, w tym #Rzeszów).
 grafika: 1 zdanie, co ma być na zdjęciu lub grafice (najlepiej prawdziwe zdjęcie z pracowni albo realizacji).
 
-Zwróć TYLKO tablicę JSON, bez komentarzy:
-[{"topic": "krótki temat do kalendarza", "facebook": "...", "instagram": "...", "grafika": "..."}, ...]`
+Zwróć DOKŁADNIE ten układ, 3 razy, bez wstępu i komentarzy:
+## POST 1
+TEMAT: krótki temat do kalendarza
+FACEBOOK:
+treść posta na Facebook
+INSTAGRAM:
+treść posta na Instagram
+GRAFIKA: jedno zdanie`
 
     let posts: PlannedPost[] = []
     try {
-        posts = parsePosts(await generateWithFallback('content', prompt))
+        posts = parsePosts(await generateWithFallback('document', prompt))
     } catch (e) {
         console.error('planWeek AI error:', e)
         return { ok: false, error: 'AI nie odpowiada. Spróbuj za chwilę.' }

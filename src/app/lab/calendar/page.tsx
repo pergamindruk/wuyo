@@ -299,7 +299,7 @@ export default function CalendarLab() {
                     <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl w-full">
                         <div className="flex justify-between items-center mb-6">
                             <button onClick={prevMonth} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"><ChevronLeft size={20} /></button>
-                            <h2 className="text-xl font-bold text-white uppercase tracking-widest">{format(currentMonth, 'MMMM yyyy', { locale: pl })}</h2>
+                            <h2 className="text-xl font-bold text-white uppercase tracking-widest">{format(currentMonth, 'LLLL yyyy', { locale: pl })}</h2>
                             <button onClick={nextMonth} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"><ChevronRight size={20} /></button>
                         </div>
 
