@@ -66,7 +66,9 @@ export default function PrivacyPolicyEnPage() {
                     <AnimatedSection delay={0.3}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Hosting</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>The website is hosted (technically maintained) on the servers of: <strong>Seohost</strong>. Your data is safe there and is never sold behind your back.</li>
+                            <li>The website is hosted (technically maintained) on the servers of <strong>Vercel Inc.</strong> (USA). Vercel processes data only on behalf of the Operator, to the extent needed to run the website.</li>
+                            <li>Vercel Inc. participates in the EU-U.S. Data Privacy Framework, so data is transferred to the USA under the European Commission adequacy decision (Art. 45 GDPR).</li>
+                            <li>We never sell your data.</li>
                         </ol>
                     </AnimatedSection>
 

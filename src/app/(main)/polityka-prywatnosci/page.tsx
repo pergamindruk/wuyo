@@ -60,7 +60,9 @@ export default function PrivacyPolicyPage() {
                     <AnimatedSection delay={0.3}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 3 Hosting</h2>
                         <ol className="list-decimal pl-5 space-y-2">
-                            <li>Serwis jest hostowany (technicznie utrzymywany) na serwerach operatora: <strong>Seohost</strong>. Twoje dane tam są bezpieczne i nikomu ich nie sprzedajemy na zapleczu.</li>
+                            <li>Serwis jest hostowany (technicznie utrzymywany) na serwerach firmy <strong>Vercel Inc.</strong> (USA). Vercel przetwarza dane wyłącznie na zlecenie Operatora, w zakresie potrzebnym do działania strony.</li>
+                            <li>Vercel Inc. uczestniczy w programie EU-U.S. Data Privacy Framework, dlatego przekazanie danych do USA odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (art. 45 RODO).</li>
+                            <li>Twoich danych nikomu nie sprzedajemy.</li>
                         </ol>
                     </AnimatedSection>
 
