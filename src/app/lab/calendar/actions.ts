@@ -195,7 +195,7 @@ function parsePosts(text: string): PlannedPost[] {
     return text
         .split(/^#{2,3}\s*POST\s*\d*\s*$/im)
         .map((block) => ({
-            topic: capitalize(section(block, 'TEMAT').split('\n')[0] ?? ''),
+            topic: clean(capitalize(section(block, 'TEMAT').split('\n')[0] ?? '')),
             facebook: postText(section(block, 'FACEBOOK')),
             instagram: postText(section(block, 'INSTAGRAM')),
             grafika: section(block, 'GRAFIKA').split('\n')[0] ?? '',
