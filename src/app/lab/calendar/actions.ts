@@ -55,7 +55,7 @@ export async function addCalendarEvent(event: {
     let content: string | undefined
     if (event.generateAI) {
         try {
-            content = postText(await generateWithFallback('document', AI_PROMPT(event.platform, event.format, event.topic, event.goal)))
+            content = postText(await generateWithFallback('document', AI_PROMPT(event.platform, event.format, event.topic, event.goal), { noThinking: true }))
         } catch (e) {
             console.error('Calendar AI Gen error', e)
             content = 'Nie udało się wygenerować wpisu. Błąd sieci lub limitów API.'
@@ -158,7 +158,7 @@ const POST_RULES = `GŁOS W POSTACH (Mateusz, WUYO, Rzeszów):
 
 const WEEK_PLAN = [
     { weekday: 1, goal: 'Edukacja', angle: 'poradnik: jedna rzecz, którą właściciel firmy sprawdzi u siebie w 5 minut (strona, wizytówka Google, logo, ulotka)' },
-    { weekday: 3, goal: 'Zaangażowanie', angle: 'za kulisami albo pytanie do czytelników: jak wygląda praca nad projektem, wpadka, wybór papieru, poprawki' },
+    { weekday: 3, goal: 'Zaangażowanie', angle: 'za kulisami: jak wygląda jeden zwykły krok mojej pracy (dobór papieru do wizytówek, poprawki do logo, sprawdzanie strony na telefonie) i pytanie do czytelników. Bez wymyślonych historii i anegdot' },
     { weekday: 5, goal: 'Sprzedaż', angle: 'realizacja (tylko jeśli podana niżej) albo pakiet z cennika: co dokładnie się dostaje i ile to kosztuje (netto + 23% VAT), zaproszenie do wiadomości' },
 ] as const
 
@@ -241,7 +241,7 @@ GRAFIKA: jedno zdanie`
 
     let posts: PlannedPost[] = []
     try {
-        posts = parsePosts(await generateWithFallback('document', prompt))
+        posts = parsePosts(await generateWithFallback('document', prompt, { noThinking: true }))
     } catch (e) {
         console.error('planWeek AI error:', e)
         return { ok: false, error: 'AI nie odpowiada. Spróbuj za chwilę.' }

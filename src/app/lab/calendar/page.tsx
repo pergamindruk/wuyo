@@ -59,8 +59,14 @@ export default function CalendarLab() {
     const handlePlanWeek = async () => {
         setWeekLoading(true)
         setWeekMsg(null)
-        const res = await planWeek(weekHint)
-        setWeekLoading(false)
+        let res: Awaited<ReturnType<typeof planWeek>>
+        try {
+            res = await planWeek(weekHint)
+        } catch {
+            res = { ok: false, error: 'Serwer nie odpowiedział na czas. Spróbuj jeszcze raz za chwilę.' }
+        } finally {
+            setWeekLoading(false)
+        }
         if (!res.ok) {
             setWeekMsg({ ok: false, text: res.error })
             return

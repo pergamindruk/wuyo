@@ -14,19 +14,27 @@ const MODEL_CONFIGS = {
 
 type ModelPreset = keyof typeof MODEL_CONFIGS
 
-export function getModel(preset: ModelPreset = 'content') {
-    return genAI.getGenerativeModel({
-        model: GEMINI_MODEL,
-        generationConfig: MODEL_CONFIGS[preset],
-    })
+/** SDK 0.24 nie zna jeszcze thinkingConfig, ale API Gemini 2.5 go przyjmuje. */
+type GenerationConfigWithThinking = (typeof MODEL_CONFIGS)[ModelPreset] & {
+    thinkingConfig?: { thinkingBudget: number }
 }
 
-/** Generuje tekst; przy chwilowym przeciążeniu Gemini (503/429) ponawia do 2 razy. */
-export async function generateWithFallback(preset: ModelPreset, prompt: string): Promise<string> {
+export function getModel(preset: ModelPreset = 'content', opts?: { noThinking?: boolean }) {
+    const generationConfig: GenerationConfigWithThinking = opts?.noThinking
+        ? { ...MODEL_CONFIGS[preset], thinkingConfig: { thinkingBudget: 0 } }
+        : MODEL_CONFIGS[preset]
+    return genAI.getGenerativeModel({ model: GEMINI_MODEL, generationConfig })
+}
+
+/**
+ * Generuje tekst; przy chwilowym przeciążeniu Gemini (503/429) ponawia do 2 razy.
+ * noThinking: bez „myślenia” modelu, kilka sekund zamiast minuty (do postów i prostych tekstów).
+ */
+export async function generateWithFallback(preset: ModelPreset, prompt: string, opts?: { noThinking?: boolean }): Promise<string> {
     let lastError: unknown
     for (let attempt = 0; attempt < 3; attempt++) {
         try {
-            const result = await getModel(preset).generateContent(prompt)
+            const result = await getModel(preset, opts).generateContent(prompt)
             return result.response.text()
         } catch (e) {
             lastError = e
