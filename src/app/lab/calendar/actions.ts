@@ -1,7 +1,10 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { getModel } from '@/lib/gemini'
+import { generateWithFallback } from '@/lib/gemini'
+import { revalidatePath } from 'next/cache'
+import { PRICING, RULES, VOICE, clean } from '@/lib/lab/ai/context'
+import { warsawIsoDate } from '@/lib/lab/today/format'
 
 export async function getCalendar() {
     const supabase = await createClient()
@@ -16,27 +19,26 @@ export async function getCalendar() {
     return data || []
 }
 
-const AI_PROMPT = (platform: string, format: string, topic: string, goal: string) => `
-Jesteś grafikiem-freelancerem i web developerem (React/Next.js) tworzącym agencję WUYO ("Dobra Grafa").
-Twoje zadanie to wygenerowanie luźnego, autentycznego posta na Twoje social media z 2026 roku.
+const AI_PROMPT = (platform: string, format: string, topic: string, goal: string) => `Piszesz post na social media studia WUYO (Mateusz, grafika, druk i strony dla małych firm z Rzeszowa).
 
-KONTEKST PLATFORMY: ${platform}
+${VOICE}
+
+${RULES}
+
+${PRICING}
+
+PLATFORMA: ${platform}
 FORMAT: ${format}
 TEMAT: "${topic}"
-CEL BIZNESOWY: ${goal}
+CEL: ${goal}
 
-ZASADY PISANIA (BEZWZGLĘDNIE PRZESTRZEGAJ):
-1. PISZ JAK CZŁOWIEK, NIE JAK AI. Unikaj symetrii zdań, idealnego rytmu i pedantycznego słownictwa. Używaj potocznego języka, skrótów myślowych i czasem zacznij zdanie od "A", "I", "Więc".
-2. ZERO KORPO-BEŁKOTU I AI-IZMÓW. Zakazane słowa: "innowacyjny", "kompleksowy", "na dzisiejszym rynku", "w dzisiejszym świecie", "zanurz się", "odkryj", "pamiętaj, że", "katalizator", "synergia", "krok po kroku", "zagłębmy się", "odpicuje", "odpicujemy".
-3. TWOJA PERSONA: Jesteś do bólu szczery ("gramy w otwarte karty"), znasz swoją wartość ("wjeżdża dobra grafa", "zero syfu z neta", "kuloodporne bezpieczeństwo", "dowiozę to"), wkurza Cię bylejakość i amatorskie podejście do designu. Jesteś "graficznym ziomkiem", uderzasz w ból klienta bez owijania w bawełnę.
-4. FORMATOWANIE: Maksymalnie proste. Jeśli to karuzela/rolka, podziel na [Slajd/Scena 1], [Slajd/Scena 2] itd. Każdy slajd to 1-2 krótkie zdania.
-5. EMOJI: Użyj max 1-2 w całym tekście. Nie używaj emoji rakiety.
-6. DŁUGOŚĆ: Krótko. Max 1000 znaków. Im krócej, tym lepiej. Mięso, zero lania wody.
-
-PROMPT STRUKTURALNY DLA POSTA:
-- Start: Zacznij od mocnego hooka, często negatywnego lub kontrowersyjnego stwierdzenia.
-- Środek: Bardzo szybko powiedz o co chodzi w temacie posta. Używaj przykładów z życia (np. "Kolejny klient przyszedł z logiem za 5 dych...").
-- Koniec: Call To Action luźno rzucone na koniec (np. "Chcesz ogarnąć swój wizerunek? Link w bio.", "Jak u Was z tym tematem?"). Dwa hashtagi na krzyż (np. #Wuyo #DobraGrafa).`
+JAK PISAĆ POST:
+- Pierwsze zdanie konkretne, z życia małej firmy. Bez clickbaitu.
+- Środek: jeden przykład albo jedna rada, którą właściciel firmy może od razu sprawdzić u siebie.
+- Koniec: luźne zaproszenie do kontaktu albo pytanie do czytelników. Cena tylko z cennika i tylko gdy cel to Sprzedaż.
+- Karuzela lub rolka: podziel na [Slajd 1], [Slajd 2]... po 1-2 krótkie zdania.
+- Max 1 emoji, 2-3 hashtagi na końcu (#Rzeszów #WUYO + jeden tematyczny). Max 900 znaków.
+- Zwróć tylko gotowy tekst posta, bez komentarzy.`
 
 export async function addCalendarEvent(event: {
     topic: string
@@ -53,11 +55,7 @@ export async function addCalendarEvent(event: {
     let content: string | undefined
     if (event.generateAI) {
         try {
-            const model = getModel('content')
-            const result = await model.generateContent(
-                AI_PROMPT(event.platform, event.format, event.topic, event.goal)
-            )
-            content = result.response.text()
+            content = clean(await generateWithFallback('content', AI_PROMPT(event.platform, event.format, event.topic, event.goal)))
         } catch (e) {
             console.error('Calendar AI Gen error', e)
             content = 'Nie udało się wygenerować wpisu. Błąd sieci lub limitów API.'
@@ -146,4 +144,105 @@ export async function getScheduledPosts() {
         return []
     }
     return data || []
+}
+
+// ─── Zaplanuj tydzień: 3 posty (pon, śr, pt) × FB + IG jako szkice ──────────
+
+const WEEK_PLAN = [
+    { weekday: 1, goal: 'Edukacja', angle: 'poradnik: jedna rzecz, którą właściciel firmy sprawdzi u siebie w 5 minut (strona, wizytówka Google, logo, ulotka)' },
+    { weekday: 3, goal: 'Zaangażowanie', angle: 'za kulisami albo pytanie do czytelników: jak wygląda praca nad projektem, wpadka, wybór papieru, poprawki' },
+    { weekday: 5, goal: 'Sprzedaż', angle: 'realizacja albo pakiet z cennika: co klient dostał i ile to kosztuje (netto + VAT), zaproszenie do wiadomości' },
+] as const
+
+type PlannedPost = { topic: string; facebook: string; instagram: string; grafika: string }
+
+/** Najbliższy dzień tygodnia (1 = pon … 5 = pt) po dzisiejszym, w czasie warszawskim. */
+function nextWeekday(target: number): string {
+    const today = new Date(`${warsawIsoDate()}T12:00:00Z`).getUTCDay()
+    let diff = target - today
+    if (diff <= 0) diff += 7
+    return warsawIsoDate(diff)
+}
+
+function parsePosts(text: string): PlannedPost[] {
+    const json = text.replace(/```(?:json)?/g, '').trim()
+    const startIdx = json.indexOf('[')
+    const endIdx = json.lastIndexOf(']')
+    if (startIdx < 0 || endIdx < startIdx) return []
+    try {
+        const raw: unknown = JSON.parse(json.slice(startIdx, endIdx + 1))
+        if (!Array.isArray(raw)) return []
+        return raw
+            .filter((p): p is Record<string, unknown> => typeof p === 'object' && p !== null)
+            .map((p) => ({
+                topic: String(p.topic ?? '').trim(),
+                facebook: clean(String(p.facebook ?? '')),
+                instagram: clean(String(p.instagram ?? '')),
+                grafika: String(p.grafika ?? '').trim(),
+            }))
+            .filter((p) => p.topic && (p.facebook || p.instagram))
+    } catch {
+        return []
+    }
+}
+
+export async function planWeek(hint?: string):
+    Promise<{ ok: true; created: number; dates: string[] } | { ok: false; error: string }> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { ok: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
+
+    const { data: recent } = await supabase
+        .from('calendar_events').select('topic').order('date', { ascending: false }).limit(15)
+    const recentTopics = (recent ?? []).map((r) => `- ${r.topic as string}`).join('\n') || '- (brak)'
+
+    const prompt = `Zaplanuj 3 posty na social media studia WUYO na najbliższy tydzień.
+
+${VOICE}
+
+${RULES}
+
+${PRICING}
+
+${hint?.trim() ? `CO MATEUSZ CHCE W TYM TYGODNIU: "${hint.trim().slice(0, 500)}"\n` : ''}OSTATNIE TEMATY (nie powtarzaj):
+${recentTopics}
+
+POSTY:
+${WEEK_PLAN.map((d, i) => `${i + 1}. ${d.angle}`).join('\n')}
+
+Każdy post w dwóch wersjach: facebook (do 800 znaków, 1-2 hashtagi) i instagram (do 500 znaków, 3-4 hashtagi, w tym #Rzeszów).
+grafika: 1 zdanie, co ma być na zdjęciu lub grafice (najlepiej prawdziwe zdjęcie z pracowni albo realizacji).
+
+Zwróć TYLKO tablicę JSON, bez komentarzy:
+[{"topic": "krótki temat do kalendarza", "facebook": "...", "instagram": "...", "grafika": "..."}, ...]`
+
+    let posts: PlannedPost[] = []
+    try {
+        posts = parsePosts(await generateWithFallback('content', prompt))
+    } catch (e) {
+        console.error('planWeek AI error:', e)
+        return { ok: false, error: 'AI nie odpowiada. Spróbuj za chwilę.' }
+    }
+    if (posts.length === 0) return { ok: false, error: 'AI zwróciło coś nieczytelnego. Kliknij jeszcze raz.' }
+
+    const dates: string[] = []
+    const rows = posts.slice(0, WEEK_PLAN.length).flatMap((p, i) => {
+        const plan = WEEK_PLAN[i]
+        const date = nextWeekday(plan.weekday)
+        dates.push(date)
+        const photo = p.grafika ? `\n\n---\nGrafika: ${p.grafika}` : ''
+        const base = { topic: p.topic.slice(0, 120), format: 'Post z grafiką', goal: plan.goal, date, status: 'Szkic' }
+        return [
+            ...(p.facebook ? [{ ...base, platform: 'Facebook', content: p.facebook + photo }] : []),
+            ...(p.instagram ? [{ ...base, platform: 'Instagram', content: p.instagram + photo }] : []),
+        ]
+    })
+
+    const { error } = await supabase.from('calendar_events').insert(rows)
+    if (error) {
+        console.error('planWeek insert error:', error)
+        return { ok: false, error: 'Posty gotowe, ale nie zapisały się w kalendarzu.' }
+    }
+    revalidatePath('/lab/calendar')
+    return { ok: true, created: rows.length, dates }
 }

@@ -4,9 +4,29 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { Lead } from '@/lib/types'
 import { logAuditEvent } from '@/lib/audit'
+import { SERVICES } from '@/lib/lab/today/constants'
+import { warsawIsoDate } from '@/lib/lab/today/format'
 
 const VALID_STATUSES = ['Nowy', 'Kontakt', 'Wycena', 'Zamkniety', 'Utracony'] as const
 type ValidStatus = typeof VALID_STATUSES[number]
+
+function isValidStatus(s: string): s is ValidStatus {
+    return (VALID_STATUSES as readonly string[]).includes(s)
+}
+
+function toLead(l: Record<string, unknown>): Lead {
+    return {
+        id: l.id as string,
+        name: (l.name as string) ?? '',
+        email: (l.email as string) ?? '',
+        date: new Date(l.created_at as string).toLocaleString('pl-PL'),
+        rawDate: l.created_at as string,
+        type: (l.type as string) ?? '',
+        details: (l.details as string) ?? '',
+        status: (l.status as ValidStatus) || 'Nowy',
+        jobId: (l.job_id as string | null) ?? null,
+    }
+}
 
 export async function getLeads() {
     const supabase = await createClient()
@@ -20,16 +40,7 @@ export async function getLeads() {
         return []
     }
 
-    return data.map((l: Record<string, unknown>): Lead => ({
-        id: l.id as string,
-        name: l.name as string,
-        email: l.email as string,
-        date: new Date(l.created_at as string).toLocaleString('pl-PL'),
-        rawDate: l.created_at as string,
-        type: (l.type as string) ?? '',
-        details: (l.details as string) ?? '',
-        status: (l.status as ValidStatus) || 'Nowy',
-    }))
+    return data.map(toLead)
 }
 
 const PAGE_SIZE = 20
@@ -64,22 +75,13 @@ export async function getFilteredLeads(
         return { items: [], total: 0, pageSize: PAGE_SIZE }
     }
 
-    const items = (data ?? []).map((l: Record<string, unknown>): Lead => ({
-        id: l.id as string,
-        name: l.name as string,
-        email: l.email as string,
-        date: new Date(l.created_at as string).toLocaleString('pl-PL'),
-        rawDate: l.created_at as string,
-        type: (l.type as string) ?? '',
-        details: (l.details as string) ?? '',
-        status: (l.status as ValidStatus) || 'Nowy',
-    }))
+    const items = (data ?? []).map(toLead)
 
     return { items, total: count ?? 0, pageSize: PAGE_SIZE }
 }
 
 export async function updateLeadStatus(id: string, status: string) {
-    if (!VALID_STATUSES.includes(status as any)) {
+    if (!isValidStatus(status)) {
         throw new Error(`Nieprawidlowy status: ${status}`)
     }
 
@@ -114,4 +116,61 @@ export async function deleteLeadOrBrief(id: string, isBrief: boolean) {
     await logAuditEvent('lead_delete', { id })
     revalidatePath('/lab/crm')
     return true
+}
+
+/** Usługa z cennika, jeśli typ zapytania jasno na nią wskazuje. W innym razie „Inne” z ceną 0 do uzupełnienia w lejku. */
+function guessService(type: string, details: string) {
+    const t = `${type} ${details}`.toLowerCase()
+    const key = /zamow-strone|strona|stron[ęy]/.test(t) ? 'one_page' : 'inne'
+    return SERVICES.find((s) => s.key === key) ?? { key: 'inne', label: 'Inne', priceGrosze: 0 }
+}
+
+/** Zapytanie z CRM → klient + zlecenie na etapie 1 (Brief i wycena). Drugi klik nic nie dubluje. */
+export async function moveLeadToPipeline(id: string): Promise<{ ok: true; jobId: string } | { ok: false; error: string }> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { ok: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
+
+    const { data: lead, error: readErr } = await supabase
+        .from('leads').select('id, name, email, type, details, job_id').eq('id', id).maybeSingle()
+    if (readErr || !lead) return { ok: false, error: 'Nie znaleziono zapytania.' }
+    if (lead.job_id) return { ok: true, jobId: lead.job_id as string }
+
+    const name = ((lead.name as string | null) ?? '').trim() || 'Klient z formularza'
+    const type = (lead.type as string | null) ?? ''
+    const details = (lead.details as string | null) ?? ''
+
+    const { data: client, error: clientErr } = await supabase
+        .from('clients')
+        .insert({ name, email: (lead.email as string | null) || null, source: `CRM: ${type || 'formularz'}`, notes: details || null })
+        .select('id').single()
+    if (clientErr || !client) return { ok: false, error: 'Nie udało się utworzyć klienta.' }
+
+    const service = guessService(type, details)
+    const { data: job, error: jobErr } = await supabase
+        .from('jobs')
+        .insert({
+            client_id: client.id,
+            lead_id: id,
+            title: type ? `${name}: ${type}` : name,
+            service: service.key,
+            price_grosze: service.priceGrosze,
+            stage: 1,
+            outcome: 'w_toku',
+            deposit_grosze: 0,
+            next_step: 'Odpisać i zebrać brief',
+            next_contact_at: warsawIsoDate(),
+            notes: details || null,
+        })
+        .select('id').single()
+    if (jobErr || !job) return { ok: false, error: 'Klient dodany, ale zlecenie się nie zapisało.' }
+
+    const { error: leadErr } = await supabase.from('leads').update({ status: 'Wycena', job_id: job.id }).eq('id', id)
+    if (leadErr) console.error('Lead not linked to job:', leadErr.message)
+
+    await logAuditEvent('lead_to_pipeline', { id, job_id: job.id })
+    revalidatePath('/lab/crm')
+    revalidatePath('/lab/lejek')
+    revalidatePath('/lab')
+    return { ok: true, jobId: job.id as string }
 }

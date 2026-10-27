@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Zap, Shield, Star, Radar, Kanban, Sun } from 'lucide-react'
+import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Star, Radar, Kanban, Sun } from 'lucide-react'
 
 const navGroups = [
     // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
@@ -29,8 +29,7 @@ const navGroups = [
     {
         label: 'Treści i dane',
         items: [
-            { href: '/lab/calendar', label: 'Kalendarz Postów', icon: Calendar },
-            { href: '/lab/social-dashboard', label: 'Social Dashboard', icon: Zap },
+            { href: '/lab/calendar', label: 'Posty (plan i publikacja)', icon: Calendar },
             { href: '/lab/testimonials', label: 'Opinie klientów', icon: Star },
             { href: '/lab/analytics', label: 'Statystyki strony', icon: BarChart3 },
             { href: '/lab/audit-log', label: 'Dziennik zmian', icon: Shield },

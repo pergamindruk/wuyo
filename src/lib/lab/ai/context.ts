@@ -62,3 +62,12 @@ export function splitAnswer(output: string) {
     const [analysis, reply = ''] = output.split(REPLY_MARK)
     return { analysis: analysis.trim(), reply: reply.trim() }
 }
+
+/** Sprzątanie wyniku AI: długie pauzy na przecinki, wycięte zakazane przymiotniki. */
+export function clean(text: string) {
+    return text
+        .replace(/(\d)[—–](\d)/g, '$1-$2')
+        .replace(/\s*[—–]\s*/g, ', ')
+        .replace(/(?<!\p{L})(kompleksow|dedykowan|profesjonaln|innowacyjn)\p{L}*\s/giu, '')
+        .trim()
+}

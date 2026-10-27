@@ -11,6 +11,7 @@ export interface Lead {
     type: string
     details: string
     status: LeadStatus
+    jobId?: string | null  // zlecenie w lejku, jeśli zapytanie już tam trafiło
 }
 
 export interface ProjectUpdate {

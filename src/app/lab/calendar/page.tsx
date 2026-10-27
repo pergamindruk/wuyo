@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getCalendar, addCalendarEvent, updateEventStatus, schedulePost, updateEventImageUrl } from './actions'
+import { getCalendar, addCalendarEvent, updateEventStatus, schedulePost, updateEventImageUrl, planWeek } from './actions'
+import Link from 'next/link'
 import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
 import type { YtMetadata } from '../social-media/actions'
-import { CalendarDays, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check, Clock, Image } from 'lucide-react'
+import { CalendarDays, Sparkles, PenLine, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check, Clock, Image } from 'lucide-react'
 import type { CalendarEvent } from '@/lib/types'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -36,6 +37,11 @@ export default function CalendarLab() {
     const [publishLoading, setPublishLoading] = useState(false)
     const [publishFeedback, setPublishFeedback] = useState<{ success: boolean; message: string } | null>(null)
     const [ytMetadata, setYtMetadata] = useState<YtMetadata | null>(null)
+
+    // zaplanuj tydzień (AI)
+    const [weekHint, setWeekHint] = useState('')
+    const [weekLoading, setWeekLoading] = useState(false)
+    const [weekMsg, setWeekMsg] = useState<{ ok: boolean; text: string } | null>(null)
     const [copiedYt, setCopiedYt] = useState(false)
 
     async function loadData() {
@@ -49,6 +55,25 @@ export default function CalendarLab() {
         loadData()
         setDate(format(new Date(), 'yyyy-MM-dd'))
     }, [])
+
+    const handlePlanWeek = async () => {
+        setWeekLoading(true)
+        setWeekMsg(null)
+        const res = await planWeek(weekHint)
+        setWeekLoading(false)
+        if (!res.ok) {
+            setWeekMsg({ ok: false, text: res.error })
+            return
+        }
+        const days = res.dates.map((d) => format(new Date(`${d}T12:00:00`), 'EEEE d.MM', { locale: pl })).join(', ')
+        setWeekMsg({ ok: true, text: `Dodane ${res.created} szkice: ${days}. Przejrzyj, popraw i zmień status na „W kolejce”.` })
+        setWeekHint('')
+        if (res.dates[0]) {
+            setSelectedDate(new Date(`${res.dates[0]}T12:00:00`))
+            setCurrentMonth(new Date(`${res.dates[0]}T12:00:00`))
+        }
+        loadData()
+    }
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -178,10 +203,41 @@ export default function CalendarLab() {
                     <CalendarDays size={24} />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Kalendarz Publikacji</h1>
-                    <p className="text-zinc-400 text-sm">Planuj treść pod sprzedaż, z widokiem całego miesiąca i magicznym generatorem.</p>
+                    <h1 className="text-2xl font-bold text-white">Posty</h1>
+                    <p className="text-zinc-400 text-sm">Plan, pisanie i publikacja na FB i IG w jednym miejscu.</p>
                 </div>
             </div>
+
+            <section className="bg-zinc-900 border border-yellow-400/20 rounded-2xl p-5 flex flex-col gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 className="text-white font-bold flex items-center gap-2"><Sparkles size={16} className="text-yellow-400" /> Zaplanuj tydzień</h2>
+                        <p className="text-zinc-500 text-xs mt-1">3 posty (pon. poradnik, śr. kulisy, pt. realizacja lub pakiet), każdy na FB i IG. Trafiają jako szkice, nic nie wychodzi samo.</p>
+                    </div>
+                    <Link href="/lab/ai-studio?tab=post" className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-yellow-400 transition-colors">
+                        <PenLine size={13} /> Jeden post na teraz (AI Studio)
+                    </Link>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                        value={weekHint}
+                        onChange={(e) => setWeekHint(e.target.value)}
+                        placeholder="Opcjonalnie: o czym w tym tygodniu? np. skończyłem stronę dla pizzerii, promuję wizytówki"
+                        className="flex-1 bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:border-yellow-400 focus:outline-none p-2.5"
+                    />
+                    <button
+                        type="button"
+                        onClick={handlePlanWeek}
+                        disabled={weekLoading}
+                        className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-sm px-5 py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-wait whitespace-nowrap"
+                    >
+                        {weekLoading ? 'Piszę posty… (ok. 30 s)' : 'Zaplanuj tydzień'}
+                    </button>
+                </div>
+                {weekMsg && (
+                    <p className={`text-sm ${weekMsg.ok ? 'text-emerald-400' : 'text-red-400'}`}>{weekMsg.text}</p>
+                )}
+            </section>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
 
@@ -231,7 +287,7 @@ export default function CalendarLab() {
                         </div>
 
                         <button disabled={saving} className="bg-zinc-800 hover:bg-yellow-400 hover:text-black border border-zinc-700 hover:border-yellow-400 text-white font-bold py-2.5 rounded-lg transition-all flex justify-center items-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-wait">
-                            {saving ? 'Zapisuję w Systemie...' : 'Zapisz w Planie'}
+                            {saving ? 'Zapisuję…' : 'Zapisz w planie'}
                         </button>
                     </form>
                 </div>

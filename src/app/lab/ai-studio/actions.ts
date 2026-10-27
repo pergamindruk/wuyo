@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { generateWithFallback } from '@/lib/gemini'
-import { PRICING, REPLY_MARK, RULES, STUDIO_CONTEXT, VOICE } from '@/lib/lab/ai/context'
+import { PRICING, REPLY_MARK, RULES, STUDIO_CONTEXT, VOICE, clean } from '@/lib/lab/ai/context'
 
 type Result = { success: true; data: string } | { success: false; error: string }
 
@@ -14,14 +14,6 @@ function errorText(e: unknown) {
 }
 
 /** Sprząta typowe ślady AI, których model nie zawsze się trzyma: długie pauzy i zakazane słowa. */
-function clean(text: string) {
-    return text
-        .replace(/(\d)[—–](\d)/g, '$1-$2')
-        .replace(/\s*[—–]\s*/g, ', ')
-        .replace(/(?<!\p{L})(kompleksow|dedykowan|profesjonaln|innowacyjn)\p{L}*\s/giu, '')
-        .trim()
-}
-
 // ─── Odpowiedz klientowi (wycena + gotowy mail) ─────────────────────────────
 
 export type ClientAnswer = { analysis: string; reply: string }
@@ -320,6 +312,6 @@ export async function publishDirectPost(
         }
     }
 
-    revalidatePath('/lab/social-dashboard')
+    revalidatePath('/lab/calendar')
     return results
 }

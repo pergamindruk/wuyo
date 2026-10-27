@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
-import { getFilteredLeads, updateLeadStatus, deleteLeadOrBrief } from './actions'
-import { Inbox, Trash2, Mail, Search, ArrowUpDown, Calculator, Filter } from 'lucide-react'
+import { getFilteredLeads, updateLeadStatus, deleteLeadOrBrief, moveLeadToPipeline } from './actions'
+import { Inbox, Trash2, Mail, Search, ArrowUpDown, Calculator, Filter, Kanban, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import type { Lead } from '@/lib/types'
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; border: string }> = {
     Nowy: { label: 'Nowy', bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
@@ -16,7 +17,7 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; b
 const ALL_STATUSES = ['Nowy', 'Kontakt', 'Wycena', 'Zamkniety', 'Utracony']
 
 export default function CRMDashboard() {
-    const [items, setItems] = useState<any[]>([])
+    const [items, setItems] = useState<Lead[]>([])
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(0)
     const [pageSize, setPageSize] = useState(20)
@@ -25,6 +26,8 @@ export default function CRMDashboard() {
     const [filterStatus, setFilterStatus] = useState('all')
     const [sortAsc, setSortAsc] = useState(false)
     const [expandedId, setExpandedId] = useState<string | null>(null)
+    const [movingId, setMovingId] = useState<string | null>(null)
+    const [moveError, setMoveError] = useState<string | null>(null)
     const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
     const loadData = useCallback(async (s?: string, status?: string, asc?: boolean, p?: number) => {
@@ -77,6 +80,18 @@ export default function CRMDashboard() {
         loadData()
     }
 
+    const handleToPipeline = async (id: string) => {
+        setMovingId(id)
+        setMoveError(null)
+        const res = await moveLeadToPipeline(id)
+        setMovingId(null)
+        if (!res.ok) {
+            setMoveError(res.error)
+            return
+        }
+        loadData()
+    }
+
     const handleDelete = async (id: string, type: string) => {
         if (confirm('Na pewno usunac tego leada?')) {
             await deleteLeadOrBrief(id, type !== 'Chatbot')
@@ -96,13 +111,17 @@ export default function CRMDashboard() {
                         <Inbox size={24} />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-white">Inbox & CRM</h1>
+                        <h1 className="text-2xl font-bold text-white">Zapytania</h1>
                         <p className="text-zinc-400 text-sm">
-                            {total} leadów{activeCount > 0 ? ` · ${activeCount} aktywnych` : ''}
+                            {total} zapytań{activeCount > 0 ? ` · ${activeCount} do obsłużenia` : ''}
                         </p>
                     </div>
                 </div>
             </div>
+
+            {moveError && (
+                <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{moveError}</p>
+            )}
 
             {/* ── Filters ── */}
             <div className="flex flex-wrap items-center gap-3">
@@ -235,6 +254,25 @@ export default function CRMDashboard() {
                                         {/* Akcje */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center justify-end gap-1">
+                                                {item.jobId ? (
+                                                    <Link
+                                                        href="/lab/lejek"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
+                                                    >
+                                                        W lejku <ArrowRight size={12} />
+                                                    </Link>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleToPipeline(item.id)}
+                                                        disabled={movingId === item.id}
+                                                        title="Tworzy klienta i zlecenie na etapie Brief i wycena"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-lg hover:bg-yellow-400/20 transition-colors disabled:opacity-50 whitespace-nowrap"
+                                                    >
+                                                        <Kanban size={12} />
+                                                        {movingId === item.id ? 'Dodaję…' : 'Do lejka'}
+                                                    </button>
+                                                )}
                                                 <Link
                                                     href={`/lab/ai-studio?tab=quote&client=${encodeURIComponent(item.name)}&email=${encodeURIComponent(item.email)}&details=${encodeURIComponent(item.details || '')}&leadId=${item.id}`}
                                                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors opacity-0 group-hover:opacity-100"

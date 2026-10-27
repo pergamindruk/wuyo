@@ -4,6 +4,7 @@ export type AuditAction =
     | "login"
     | "lead_status_change"
     | "lead_delete"
+    | "lead_to_pipeline"
     | "project_create"
     | "project_update"
     | "project_delete"

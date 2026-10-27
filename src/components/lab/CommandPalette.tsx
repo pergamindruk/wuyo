@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import {
     BarChart3, Bot, Briefcase, Building2, Calendar, Clock, CornerDownLeft, FileText,
     Filter, Home, Inbox, Hourglass, LogOut, Phone, Plus, Radar, Search, Shield, Star,
-    User, Zap,
+    User,
 } from 'lucide-react'
 import { searchLab, type SearchResult } from '@/app/lab/search/actions'
 import { telHref } from '@/lib/lab/today/format'
@@ -43,12 +43,11 @@ const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: s
     { id: 'p-funnel', label: 'Lejek', href: '/lab/lejek', icon: Filter, keys: ['g', 'l'] },
     { id: 'p-centrum', label: 'Centrum Dowodzenia', href: '/lab/centrum', icon: Radar, keys: ['g', 'c'] },
     { id: 'p-pliki', label: 'Raporty i pliki', href: '/lab/centrum/pliki', icon: Radar, keys: ['g', 'r'] },
-    { id: 'p-crm', label: 'CRM i leady', href: '/lab/crm', icon: Inbox, keys: ['g', 'k'] },
+    { id: 'p-crm', label: 'Zapytania (CRM)', href: '/lab/crm', icon: Inbox, keys: ['g', 'k'] },
     { id: 'p-projects', label: 'Portal klienta', href: '/lab/projects', icon: Hourglass },
     { id: 'p-finances', label: 'Finanse i dokumenty', href: '/lab/finances', icon: FileText },
     { id: 'p-ai', label: 'AI Studio', href: '/lab/ai-studio', icon: Bot },
-    { id: 'p-calendar', label: 'Kalendarz postów', href: '/lab/calendar', icon: Calendar },
-    { id: 'p-social', label: 'Social Dashboard', href: '/lab/social-dashboard', icon: Zap },
+    { id: 'p-calendar', label: 'Posty i kalendarz', href: '/lab/calendar', icon: Calendar },
     { id: 'p-analytics', label: 'Analityka', href: '/lab/analytics', icon: BarChart3 },
     { id: 'p-testimonials', label: 'Opinie klientów', href: '/lab/testimonials', icon: Star },
     { id: 'p-audit', label: 'Dziennik zdarzeń', href: '/lab/audit-log', icon: Shield },
