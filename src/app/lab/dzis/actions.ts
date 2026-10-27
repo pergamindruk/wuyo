@@ -123,7 +123,7 @@ export async function addManualQueueItem(formData: FormData): Promise<ActionResu
         source: 'reczny',
         reason: 'Dodana ręcznie',
         problems: [],
-        score: 6,
+        score: 70, // skala 0-100 (ocena_leadow.py) - ręcznie dodana firma to zwykle ciepły kontakt
         status: 'do_kontaktu',
         attempts: 0,
         next_at: nowIso,
