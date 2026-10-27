@@ -4,25 +4,32 @@ export const GEMINI_MODEL = 'gemini-2.5-flash'
 
 export const genAI = new GoogleGenerativeAI(process.env.WUYO_GEMINI_KEY ?? '')
 
+// text = ile tokenów ma zostać na sam tekst odpowiedzi.
+// thinking = osobny, ograniczony budżet na „myślenie”. Gemini 2.5 wlicza myślenie
+// do maxOutputTokens, więc bez tego podziału długie myślenie ucinało tekst (ściągawki, posty).
 const MODEL_CONFIGS = {
-    chat:     { maxOutputTokens: 1024  },
-    content:  { maxOutputTokens: 2048  },
-    quote:    { maxOutputTokens: 6000  },
-    document: { maxOutputTokens: 8192  },
-    seo:      { maxOutputTokens: 2048  },
+    chat:     { text: 1024, thinking: 512  },
+    content:  { text: 4096, thinking: 2048 },
+    quote:    { text: 6000, thinking: 2048 },
+    document: { text: 8192, thinking: 2048 },
+    seo:      { text: 2048, thinking: 1024 },
 } as const
 
 type ModelPreset = keyof typeof MODEL_CONFIGS
 
 /** SDK 0.24 nie zna jeszcze thinkingConfig, ale API Gemini 2.5 go przyjmuje. */
-type GenerationConfigWithThinking = (typeof MODEL_CONFIGS)[ModelPreset] & {
-    thinkingConfig?: { thinkingBudget: number }
+type GenerationConfigWithThinking = {
+    maxOutputTokens: number
+    thinkingConfig: { thinkingBudget: number }
 }
 
 export function getModel(preset: ModelPreset = 'content', opts?: { noThinking?: boolean }) {
-    const generationConfig: GenerationConfigWithThinking = opts?.noThinking
-        ? { ...MODEL_CONFIGS[preset], thinkingConfig: { thinkingBudget: 0 } }
-        : MODEL_CONFIGS[preset]
+    const { text, thinking } = MODEL_CONFIGS[preset]
+    const budget = opts?.noThinking ? 0 : thinking
+    const generationConfig: GenerationConfigWithThinking = {
+        maxOutputTokens: text + budget,
+        thinkingConfig: { thinkingBudget: budget },
+    }
     return genAI.getGenerativeModel({ model: GEMINI_MODEL, generationConfig })
 }
 
@@ -32,9 +39,16 @@ export function getModel(preset: ModelPreset = 'content', opts?: { noThinking?: 
  */
 export async function generateWithFallback(preset: ModelPreset, prompt: string, opts?: { noThinking?: boolean }): Promise<string> {
     let lastError: unknown
+    let noThinking = opts?.noThinking ?? false
     for (let attempt = 0; attempt < 3; attempt++) {
         try {
-            const result = await getModel(preset, opts).generateContent(prompt)
+            const result = await getModel(preset, { noThinking }).generateContent(prompt)
+            // Ucięte mimo zapasu: jeszcze raz bez myślenia, cały limit idzie na tekst.
+            if (result.response.candidates?.[0]?.finishReason === 'MAX_TOKENS' && !noThinking) {
+                console.warn(`Gemini uciął odpowiedź (${preset}), ponawiam bez myślenia`)
+                noThinking = true
+                continue
+            }
             return result.response.text()
         } catch (e) {
             lastError = e

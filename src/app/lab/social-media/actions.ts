@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { getModel } from '@/lib/gemini'
+import { generateWithFallback } from '@/lib/gemini'
 
 const GRAPH_API_VERSION = 'v21.0'
 
@@ -246,8 +246,6 @@ export async function generateYouTubeMetadata(
     }
 
     try {
-        const model = getModel('content')
-
         const prompt = `Jesteś ekspertem YouTube SEO. Wygeneruj metadane dla wideo marki WUYO (grafika, strony WWW, branding, studio designu "Dobra Grafa").
 
 Temat: "${topic}"
@@ -267,8 +265,7 @@ Zasady:
 - Tagi: 10-12 tagów, mix polskie + angielskie
 - Hashtagi: 4-5 hashtagów`
 
-        const result = await model.generateContent(prompt)
-        const text = result.response.text()
+        const text = await generateWithFallback('content', prompt)
         const jsonMatch = text.match(/\{[\s\S]*\}/)
         if (!jsonMatch) {
             return { success: false, error: 'AI nie zwróciło poprawnego JSON' }

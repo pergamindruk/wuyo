@@ -1,7 +1,7 @@
 'use server'
 
 import { addCalendarEvent } from '../calendar/actions'
-import { getModel } from '@/lib/gemini'
+import { generateWithFallback } from '@/lib/gemini'
 
 // ─── Graph API helpers ────────────────────────────────
 const GRAPH_API_VERSION = 'v21.0'
@@ -49,9 +49,7 @@ async function waitForIgContainer(userId: string, containerId: string, accessTok
 }
 
 async function askClaude(prompt: string, preset: 'content' | 'document' = 'content'): Promise<string> {
-    const model = getModel(preset)
-    const result = await model.generateContent(prompt)
-    return result.response.text()
+    return generateWithFallback(preset, prompt)
 }
 
 const WUYO_CONTEXT = `Jesteś doświadczonym strategiem social media dla marki WUYO.pl.
