@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 // Server component — h1 renders in HTML without waiting for JS
 // Ż: CS Harley nie ma polskiego glifa — składamy Z + kropka pozycjonowana CSS
 
@@ -25,7 +27,8 @@ function ZWithDot({ color = "white" }: { color?: string }) {
     );
 }
 
-export function HeroText() {
+export function HeroText({ locale = "pl" }: { locale?: Locale }) {
+    if (locale === "en") return <HeroTextEn />;
     return (
         <h1 className="mb-8 tracking-tight uppercase">
             <span
@@ -49,6 +52,23 @@ export function HeroText() {
                 style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}
             >
                 <span className="gold-flow">MASZ TYLKO JEDNO.</span>
+            </span>
+        </h1>
+    );
+}
+
+/** Wersja angielska: bez litery Ż, więc bez składania kropki. Ten sam rytm trzech linii. */
+function HeroTextEn() {
+    return (
+        <h1 className="mb-8 tracking-tight uppercase">
+            <span className="hero-word block font-cs-harley font-bold" style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0 }}>
+                <span className="silver-flow">FIRST</span>
+            </span>
+            <span className="hero-word block font-cs-harley font-bold" style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}>
+                <span className="silver-flow">IMPRESSION.</span>
+            </span>
+            <span className="hero-word block font-cs-harley font-normal mt-2" style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}>
+                <span className="gold-flow">YOU ONLY GET ONE.</span>
             </span>
         </h1>
     );

@@ -13,6 +13,8 @@ import {
     pricingFaqs,
     finalCta,
 } from "@/data/pricing";
+import { aLaCarteEn, finalCtaEn, perksEn, pricingFaqsEn, pricingGroupsEn, sectionHeaderEn } from "@/data/pricing-en";
+import { route, type Locale } from "@/lib/i18n";
 
 const perkIcons = [Eye, PenTool, MapPin, LifeBuoy] as const;
 
@@ -23,6 +25,7 @@ interface PricingSectionProps {
     showFinalCta?: boolean;
     className?: string;
     id?: string;
+    locale?: Locale;
 }
 
 export function PricingSection({
@@ -30,44 +33,59 @@ export function PricingSection({
     showFinalCta = true,
     className = "py-28 px-6 md:px-12",
     id = "cennik-pakiety",
+    locale = "pl",
 }: PricingSectionProps) {
     const [openFaq, setOpenFaq] = useState<number | null>(null);
-    const [jednorazowo, abonament] = pricingGroups;
+    const en = locale === "en";
+    const [jednorazowo, abonament] = en ? pricingGroupsEn : pricingGroups;
+    const header = en ? sectionHeaderEn : sectionHeader;
+    const carte = en ? aLaCarteEn : aLaCarte;
+    const perkList = en ? perksEn : perks;
+    const faqList = en ? pricingFaqsEn : pricingFaqs;
+    const cta = en ? finalCtaEn : finalCta;
 
     return (
         <section id={id} aria-labelledby={`${id}-title`} className={`relative ${className}`}>
             {/* Nagłówek sekcji */}
             <AnimatedSection className="text-center mb-16 max-w-2xl mx-auto relative z-10">
-                <p className="eyebrow mb-4">{sectionHeader.eyebrow}</p>
+                <p className="eyebrow mb-4">{header.eyebrow}</p>
                 <h2 id={`${id}-title`} className="text-3xl md:text-5xl font-bold text-white mb-4">
-                    {sectionHeader.title}
+                    {header.title}
                 </h2>
-                <p className="text-white/60">{sectionHeader.subtitle}</p>
+                <p className="text-white/60">{header.subtitle}</p>
             </AnimatedSection>
 
             {/* Grupa A — jednorazowo */}
             <div className="relative z-10">
-                <PricingGroup group={jednorazowo} />
+                <PricingGroup group={jednorazowo} locale={locale} />
             </div>
 
             {/* Linijka à la carte */}
             <div className="max-w-3xl mx-auto mt-12 text-center space-y-4 relative z-10">
-                <p className="text-white/60 text-sm md:text-base">
-                    Potrzebujesz tylko części? Indywidualna strona od{" "}
-                    <strong className="text-gold font-semibold">{aLaCarte.siteFrom}</strong>, samo logo od{" "}
-                    <strong className="text-gold font-semibold">{aLaCarte.logoFrom}</strong>. Napisz — wycenię
-                    konkretnie pod Ciebie.
-                </p>
+                {en ? (
+                    <p className="text-white/60 text-sm md:text-base">
+                        Only need part of it? A custom website from{" "}
+                        <strong className="text-gold font-semibold">{carte.siteFrom}</strong>, a logo on its own from{" "}
+                        <strong className="text-gold font-semibold">{carte.logoFrom}</strong>. Write to me and I&apos;ll quote exactly for you.
+                    </p>
+                ) : (
+                    <p className="text-white/60 text-sm md:text-base">
+                        Potrzebujesz tylko części? Indywidualna strona od{" "}
+                        <strong className="text-gold font-semibold">{carte.siteFrom}</strong>, samo logo od{" "}
+                        <strong className="text-gold font-semibold">{carte.logoFrom}</strong>. Napisz — wycenię
+                        konkretnie pod Ciebie.
+                    </p>
+                )}
             </div>
 
             {/* Grupa B — abonament */}
             <div className="mt-24 relative z-10">
-                <PricingGroup group={abonament} />
+                <PricingGroup group={abonament} locale={locale} />
             </div>
 
             {/* Pasek wyróżników */}
             <div className="max-w-5xl mx-auto mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-                {perks.map((perk, i) => {
+                {perkList.map((perk, i) => {
                     const Icon = perkIcons[i];
                     return (
                         <AnimatedSection
@@ -90,11 +108,11 @@ export function PricingSection({
                 <div className="max-w-3xl mx-auto mt-24 relative z-10">
                     <AnimatedSection className="text-center mb-10">
                         <p className="eyebrow mb-4">FAQ</p>
-                        <h3 className="text-2xl md:text-4xl font-bold text-white">Częste pytania o cennik</h3>
+                        <h3 className="text-2xl md:text-4xl font-bold text-white">{en ? "Pricing questions" : "Częste pytania o cennik"}</h3>
                     </AnimatedSection>
 
                     <ul role="list" className="space-y-4">
-                        {pricingFaqs.map((faq, i) => {
+                        {faqList.map((faq, i) => {
                             const open = openFaq === i;
                             return (
                                 <li
@@ -158,10 +176,10 @@ export function PricingSection({
             {/* CTA końcowe */}
             {showFinalCta && (
                 <AnimatedSection className="max-w-2xl mx-auto mt-24 text-center flex flex-col items-center gap-5 relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white">{finalCta.title}</h3>
-                    <p className="text-white/60 text-sm md:text-base">{finalCta.text}</p>
-                    <Link href="/#kontakt" className="btn-gold px-10 py-4 rounded-full font-bold inline-flex items-center gap-2">
-                        {finalCta.button}
+                    <h3 className="text-2xl md:text-3xl font-bold text-white">{cta.title}</h3>
+                    <p className="text-white/60 text-sm md:text-base">{cta.text}</p>
+                    <Link href={`${route("home", locale)}#kontakt`} className="btn-gold px-10 py-4 rounded-full font-bold inline-flex items-center gap-2">
+                        {cta.button}
                     </Link>
                 </AnimatedSection>
             )}

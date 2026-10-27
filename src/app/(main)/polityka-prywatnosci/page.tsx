@@ -1,13 +1,12 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata = {
     title: "Polityka prywatności",
     description: "Informacje o przetwarzaniu danych osobowych, plikach cookies i sposobach ochrony Twojej prywatności na stronie Wuyo.",
-    alternates: {
-        canonical: "https://wuyo.pl/polityka-prywatnosci",
-    },
+    alternates: alternatesFor("privacy", "pl"),
 };
 
 export default function PrivacyPolicyPage() {

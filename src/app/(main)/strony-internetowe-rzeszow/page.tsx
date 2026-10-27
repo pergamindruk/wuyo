@@ -9,6 +9,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_REF, BUSINESS_RATING } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Strony internetowe Rzeszów — cennik 2026, od 1 990 zł",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
         description: "Tworzę strony www dla firm z Rzeszowa. Next.js, SEO, szybkie. Od 1 990 zł.",
         images: ["/og-image.webp"],
     },
-    alternates: { canonical: "https://wuyo.pl/strony-internetowe-rzeszow" },
+    alternates: alternatesFor("websitesRzeszow", "pl"),
 };
 
 const localSchema = {

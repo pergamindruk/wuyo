@@ -6,14 +6,14 @@
 
 import { CONSENT_REOPEN_EVENT } from "@/lib/consent";
 
-export function ConsentSettingsLink({ className }: { className?: string }) {
+export function ConsentSettingsLink({ className, label = "Ustawienia ciasteczek" }: { className?: string; label?: string }) {
     return (
         <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(CONSENT_REOPEN_EVENT))}
             className={className}
         >
-            Ustawienia ciasteczek
+            {label}
         </button>
     );
 }

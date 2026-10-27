@@ -4,9 +4,19 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { ReviewsTrack } from "@/components/ReviewsTrack";
 import type { GoogleReviewsData } from "@/lib/google-reviews";
 import { odmienOpinie } from "@/lib/polish-format";
+import type { Locale } from "@/lib/i18n";
+
+const T = {
+    pl: { eyebrow: "Efekty mówią same za siebie", h2: "Co mówią klienci", zobacz: "Zobacz w Google", opinia: "Opinia w Google",
+          razem: "Pracowaliśmy razem?", dwa: "Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.", wystaw: "Wystaw opinię",
+          zrodlo: "Opinie pobierane bezpośrednio z profilu firmy w Google i odświeżane codziennie.", ocena: "Ocena" , na: "na 5" },
+    en: { eyebrow: "Results speak for themselves", h2: "What clients say", zobacz: "See on Google", opinia: "Google review",
+          razem: "Worked with me?", dwa: "Two sentences on Google mean more to a small studio than you think.", wystaw: "Leave a review",
+          zrodlo: "Reviews come straight from my Google business profile. Clients are Polish, so reviews are in Polish.", ocena: "Rated", na: "out of 5" },
+} as const;
 
 /** Rządek gwiazdek. Puste gwiazdki zostają, żeby ocena była czytelna od razu. */
-function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
+function Stars({ rating, size = 14, locale = "pl" }: { rating: number; size?: number; locale?: Locale }) {
     return (
         <span
             // role="img" — bez roli <span> jest „generyczny", a na takim ARIA
@@ -14,7 +24,7 @@ function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
             // czyta całą grupkę gwiazdek jako jedną wartość.
             role="img"
             className="inline-flex items-center gap-0.5"
-            aria-label={`Ocena ${rating} na 5`}
+            aria-label={`${T[locale].ocena} ${rating} ${T[locale].na}`}
         >
             {[1, 2, 3, 4, 5].map((i) => (
                 <Star
@@ -52,8 +62,9 @@ function Avatar({ src, name }: { src?: string; name: string }) {
  * Opinie z profilu firmy w Google.
  * Google wymaga podania źródła i nazwiska autora — stąd oznaczenie i odnośniki.
  */
-export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
+export function GoogleReviews({ data, locale = "pl" }: { data: GoogleReviewsData; locale?: Locale }) {
     const { rating, total, reviews, mapsUrl, writeReviewUrl } = data;
+    const t = T[locale];
 
     return (
         <section className="py-20 relative overflow-hidden">
@@ -61,18 +72,18 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
 
             <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
                 <AnimatedSection className="mb-12">
-                    <p className="eyebrow mb-3">Efekty mówią same za siebie</p>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">Co mówią klienci</h2>
+                    <p className="eyebrow mb-3">{t.eyebrow}</p>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">{t.h2}</h2>
 
                     {/* Podsumowanie oceny */}
                     <div className="inline-flex flex-wrap items-center gap-x-5 gap-y-3 rounded-2xl border border-white/10 bg-navy-light/60 backdrop-blur-sm px-6 py-4">
                         <span className="text-4xl font-bold text-white leading-none">
-                            {rating.toFixed(1).replace(".", ",")}
+                            {locale === "en" ? rating.toFixed(1) : rating.toFixed(1).replace(".", ",")}
                         </span>
                         <span className="flex flex-col gap-1">
-                            <Stars rating={rating} size={16} />
+                            <Stars rating={rating} size={16} locale={locale} />
                             <span className="text-white/50 text-xs">
-                                {total} {odmienOpinie(total)} w Google
+                                {locale === "en" ? `${total} reviews on Google` : `${total} ${odmienOpinie(total)} w Google`}
                             </span>
                         </span>
                         {mapsUrl && (
@@ -82,7 +93,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 text-gold text-sm font-bold hover:gap-2.5 transition-all sm:ml-2"
                             >
-                                Zobacz w Google <ExternalLink size={13} aria-hidden="true" />
+                                {t.zobacz} <ExternalLink size={13} aria-hidden="true" />
                             </a>
                         )}
                     </div>
@@ -98,9 +109,9 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                             key={`${review.author}-${i}`}
                             className="glass-card p-6 flex flex-col gap-4 shrink-0 snap-start w-[19rem] sm:w-[21rem] lg:w-[23rem]"
                         >
-                            <Stars rating={review.rating} />
+                            <Stars rating={review.rating} locale={locale} />
 
-                            <blockquote className="text-white/75 leading-relaxed text-sm flex-1">
+                            <blockquote lang="pl" className="text-white/75 leading-relaxed text-sm flex-1">
                                 &ldquo;{review.text}&rdquo;
                             </blockquote>
 
@@ -110,7 +121,7 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                                     <span className="block text-white font-bold text-sm truncate">
                                         {review.author}
                                     </span>
-                                    <span className="block text-white/60 text-xs">Opinia w Google</span>
+                                    <span className="block text-white/60 text-xs">{t.opinia}</span>
                                 </span>
                             </figcaption>
                         </figure>
@@ -121,9 +132,9 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
             <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
                 <AnimatedSection className="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-gold/25 bg-navy-light/40 backdrop-blur-sm px-8 py-8 shadow-[0_0_40px_rgba(255,235,82,0.06)]">
                     <p className="text-center md:text-left">
-                        <span className="eyebrow block mb-2">Pracowaliśmy razem?</span>
+                        <span className="eyebrow block mb-2">{t.razem}</span>
                         <span className="gold-flow block font-heading text-xl md:text-3xl font-bold leading-snug">
-                            Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.
+                            {t.dwa}
                         </span>
                     </p>
                     {writeReviewUrl && (
@@ -133,13 +144,13 @@ export function GoogleReviews({ data }: { data: GoogleReviewsData }) {
                             rel="noopener noreferrer"
                             className="btn-gold px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap shrink-0"
                         >
-                            Wystaw opinię
+                            {t.wystaw}
                         </a>
                     )}
                 </AnimatedSection>
 
                 <p className="text-white/50 text-xs mt-6">
-                    Opinie pobierane bezpośrednio z profilu firmy w Google i odświeżane codziennie.
+                    {t.zrodlo}
                 </p>
             </div>
         </section>

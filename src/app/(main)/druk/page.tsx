@@ -10,6 +10,7 @@ import { PackagesSection } from "@/components/PackagesSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Wizytówki i ulotki z projektem, zamów online",
@@ -27,9 +28,7 @@ export const metadata: Metadata = {
         description: "Wizytówki z projektem od 299 zł, sam druk od 99 zł. Projekt + druk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
-    alternates: {
-        canonical: "https://wuyo.pl/druk",
-    },
+    alternates: alternatesFor("print", "pl"),
 };
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google

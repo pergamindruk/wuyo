@@ -9,6 +9,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Nadruk na koszulki Rzeszów — DTF od 1 sztuki",
@@ -26,9 +27,7 @@ export const metadata: Metadata = {
         description: "Nadruk DTF od 79 zł/szt, przy 20+ szt. 49 zł/szt. Bez minimum. Projekt + nadruk w jednym miejscu.",
         images: ["/og-image.webp"],
     },
-    alternates: {
-        canonical: "https://wuyo.pl/odziez",
-    },
+    alternates: alternatesFor("apparel", "pl"),
 };
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google

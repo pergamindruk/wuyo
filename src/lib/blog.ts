@@ -1,8 +1,14 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import type { Locale } from "@/lib/i18n";
 
-const POSTS_DIR = path.join(process.cwd(), "src/content/blog");
+// Wpisy polskie w content/blog, angielskie w content/blog-en. Angielski wpis ma w nagłówku
+// translationOf: <slug polskiego>, z tego biorą się pary hreflang i przełącznik języka.
+const POSTS_DIRS: Record<Locale, string> = {
+    pl: path.join(process.cwd(), "src/content/blog"),
+    en: path.join(process.cwd(), "src/content/blog-en"),
+};
 
 export interface PostMeta {
     slug: string;
@@ -25,6 +31,8 @@ export interface PostMeta {
     dateModified?: string;
     image?: string;
     imageAlt?: string;
+    /** Tylko we wpisach angielskich: slug polskiego oryginału. */
+    translationOf?: string;
 }
 
 export interface ImageSize {
@@ -81,7 +89,8 @@ export function getImageSize(publicPath: string): ImageSize | undefined {
     return undefined;
 }
 
-export function getAllPosts(): PostMeta[] {
+export function getAllPosts(locale: Locale = "pl"): PostMeta[] {
+    const POSTS_DIR = POSTS_DIRS[locale];
     if (!fs.existsSync(POSTS_DIR)) return [];
     const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
     return files
@@ -94,8 +103,8 @@ export function getAllPosts(): PostMeta[] {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function getPost(slug: string): Post {
-    const file = path.join(POSTS_DIR, `${slug}.mdx`);
+export function getPost(slug: string, locale: Locale = "pl"): Post {
+    const file = path.join(POSTS_DIRS[locale], `${slug}.mdx`);
     const raw = fs.readFileSync(file, "utf-8");
     const { data, content } = matter(raw);
     const post = { slug, ...data, content } as Post;
@@ -107,15 +116,16 @@ export function getPost(slug: string): Post {
  * Wpisy proponowane pod artykułem: najpierw z tej samej kategorii,
  * potem najnowsze pozostałe. Bieżący wpis zawsze wypada z listy.
  */
-export function getRelatedPosts(slug: string, limit = 3): PostMeta[] {
-    const all = getAllPosts().filter((p) => p.slug !== slug);
-    const current = all.length ? getAllPosts().find((p) => p.slug === slug) : undefined;
+export function getRelatedPosts(slug: string, limit = 3, locale: Locale = "pl"): PostMeta[] {
+    const all = getAllPosts(locale).filter((p) => p.slug !== slug);
+    const current = all.length ? getAllPosts(locale).find((p) => p.slug === slug) : undefined;
     const sameCategory = current ? all.filter((p) => p.category === current.category) : [];
     const rest = all.filter((p) => !sameCategory.includes(p));
     return [...sameCategory, ...rest].slice(0, limit);
 }
 
-export function getAllSlugs(): string[] {
+export function getAllSlugs(locale: Locale = "pl"): string[] {
+    const POSTS_DIR = POSTS_DIRS[locale];
     if (!fs.existsSync(POSTS_DIR)) return [];
     return fs
         .readdirSync(POSTS_DIR)
@@ -162,4 +172,13 @@ export function extractFaq(content: string): FaqItem[] {
     if (current) items.push(current);
 
     return items.filter((item) => item.question && item.answer);
+}
+
+/** Pary wpisów: slug polski -> slug angielski (tylko przetłumaczone). */
+export function getBlogPairs(): Record<string, string> {
+    const pairs: Record<string, string> = {};
+    for (const p of getAllPosts("en")) {
+        if (p.translationOf) pairs[p.translationOf] = p.slug;
+    }
+    return pairs;
 }

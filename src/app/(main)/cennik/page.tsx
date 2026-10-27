@@ -21,6 +21,7 @@ const faqSchema = {
 };
 
 import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Cennik grafiki, druku i stron WWW — Rzeszów",
@@ -37,9 +38,7 @@ export const metadata: Metadata = {
         description: "Jawne widełki: logo od 890 zł, druk wizytówek od 99 zł, strona od 1 990 zł. Wycena konkretna po jednej wiadomości.",
         images: ["/og-image.webp"],
     },
-    alternates: {
-        canonical: "https://wuyo.pl/cennik",
-    },
+    alternates: alternatesFor("pricing", "pl"),
 };
 
 // ─── Helper: karta cenowa ──────────────────────────────────────────────────────

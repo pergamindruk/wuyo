@@ -9,6 +9,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_RATING } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Projektowanie logo Rzeszów — od 890 zł, 3 koncepcje",
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
         description: "Logo od 890 zł — pełen pakiet plików, CMYK, prawa autorskie. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
-    alternates: { canonical: "https://wuyo.pl/logo" },
+    alternates: alternatesFor("logo", "pl"),
     keywords: [
         "projektowanie logo Rzeszów",
         "logo dla firmy Rzeszów",

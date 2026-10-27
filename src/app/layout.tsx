@@ -191,8 +191,10 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    // suppressHydrationWarning: layout /en przestawia lang na "en" skryptem przed hydracją.
+    // Działa tylko na atrybuty samego <html>, błędy niżej dalej są zgłaszane.
     return (
-        <html lang="pl" className="scroll-smooth" style={{ backgroundColor: "#1c1b17" }}>
+        <html lang="pl" className="scroll-smooth" style={{ backgroundColor: "#1c1b17" }} suppressHydrationWarning>
             <head>
                 {/* Nawiązanie połączenia z serwerem zbierającym zdarzenia GA4 zajmowało
                     324 ms w krytycznej ścieżce. Przeglądarka robi to teraz z wyprzedzeniem.
@@ -232,13 +234,8 @@ export default function RootLayout({
                     po zgodzie na marketing. Szczegóły w src/components/MetaPixel.tsx. */}
             </head>
             <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${goldman.variable} ${csHarley.variable} font-sans antialiased bg-zinc-950`}>
-                {/* Skip to content – ruch klawiaturowy (WCAG) */}
-                <a
-                    href="#main-content"
-                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[999] focus:bg-gold focus:text-navy-dark focus:px-4 focus:py-2 focus:rounded-full focus:font-bold focus:text-sm focus:shadow-lg"
-                >
-                    Przejdź do treści
-                </a>
+                {/* Link „Przejdź do treści” (WCAG) jest w layoutach (main) i /en,
+                    każdy w swoim języku i tam, gdzie istnieje #main-content. */}
                 {children}
                 <CookieConsent />
                 {META_PIXEL_ID && <MetaPixel pixelId={META_PIXEL_ID} />}

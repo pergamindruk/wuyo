@@ -1,9 +1,10 @@
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PricingCard } from "./PricingCard";
 import type { PricingGroupData } from "@/data/pricing";
+import type { Locale } from "@/lib/i18n";
 
 /** Nagłówek + podtytuł grupy + siatka kart (2 lub 3, zależnie od grupy). */
-export function PricingGroup({ group }: { group: PricingGroupData }) {
+export function PricingGroup({ group, locale = "pl" }: { group: PricingGroupData; locale?: Locale }) {
     // Abonament ma 2 karty, pakiety jednorazowe 3. Przy sztywnych 3 kolumnach
     // dwie karty zostawiały pustą kolumnę z prawej i całość uciekała w lewo.
     const twoUp = group.cards.length === 2;
@@ -21,7 +22,7 @@ export function PricingGroup({ group }: { group: PricingGroupData }) {
             {/* pt-5 daje miejsce na plakietkę wystającą nad kartę (nie przycina jej overflow) */}
             <ul role="list" className={`grid grid-cols-1 ${layout} gap-6 mx-auto pt-5`}>
                 {group.cards.map((card) => (
-                    <PricingCard key={card.name} card={card} />
+                    <PricingCard key={card.name} card={card} locale={locale} />
                 ))}
             </ul>
         </div>

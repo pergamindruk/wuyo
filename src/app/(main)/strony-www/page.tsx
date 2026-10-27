@@ -8,6 +8,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Strony internetowe od 1 990 zł — Next.js, SEO",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
         description: "Strony firmowe od 1 990 zł — Next.js, szybkie, SEO, responsywne. Rzeszów i cała Polska.",
         images: ["/og-image.webp"],
     },
-    alternates: { canonical: "https://wuyo.pl/strony-www" },
+    alternates: alternatesFor("websites", "pl"),
 };
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google

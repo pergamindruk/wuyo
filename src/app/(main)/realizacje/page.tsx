@@ -5,13 +5,12 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { PortfolioGallery } from "@/components/PortfolioGallery";
 import { projects } from "@/lib/projects";
 import { portfolioCollectionSchema } from "@/lib/portfolio-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Realizacje: logo, strony WWW i druk",
     description: "Portfolio WUYO: strony internetowe, logotypy, identyfikacja wizualna, materiały do druku i nadruki. Dowody zamiast obietnic — zobacz zrealizowane projekty.",
-    alternates: {
-        canonical: "https://wuyo.pl/realizacje",
-    },
+    alternates: alternatesFor("portfolio", "pl"),
     openGraph: {
         title: "Realizacje WUYO – Portfolio projektów graficznych",
         description: "Sprawdź projekty zrealizowane dla prawdziwych firm. Logotypy, strony WWW, druk i grafiki social media.",

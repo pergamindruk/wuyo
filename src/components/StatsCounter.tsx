@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
+import type { Locale } from "@/lib/i18n";
 
 type StatProps = {
     target: number;
@@ -13,14 +14,14 @@ type StatProps = {
 };
 
 /** Formatowanie po polsku: przecinek dziesiętny, spacja jako separator tysięcy. */
-function format(value: number, decimals: number): string {
-    return value.toLocaleString("pl-PL", {
+function format(value: number, decimals: number, locale: Locale = "pl"): string {
+    return value.toLocaleString(locale === "en" ? "en-GB" : "pl-PL", {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
     });
 }
 
-function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatProps) {
+function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0, locale = "pl" }: StatProps & { locale?: Locale }) {
     const reduceMotion = useReducedMotion();
     const [current, setCurrent] = useState(reduceMotion ? target : 0);
     const [phase, setPhase] = useState<"idle" | "counting" | "done">(reduceMotion ? "done" : "idle");
@@ -69,25 +70,30 @@ function AnimatedNumber({ target, suffix = "", decimals = 0, delay = 0 }: StatPr
             // jest ignorowana. Z rolą czytnik podaje wartość końcową i nie
             // recytuje każdej klatki odliczania.
             role="img"
-            aria-label={`${format(target, decimals)}${suffix}`}
+            aria-label={`${format(target, decimals, locale)}${suffix}`}
         >
             {/* Niewidoczna wartość końcowa rezerwuje szerokość. Bez niej licznik
                 rośnie z „0" do „156" i co klatkę przestawia szerokość kolumny,
                 przez co trzęsie się cały hero razem z kafelkami realizacji. */}
             <span aria-hidden="true" className="invisible">
-                {format(target, decimals)}
+                {format(target, decimals, locale)}
                 {suffix}
             </span>
             <span
                 aria-hidden="true"
                 className="absolute inset-0 flex items-center justify-center"
             >
-                {format(current, decimals)}
+                {format(current, decimals, locale)}
                 {suffix}
             </span>
         </span>
     );
 }
+
+const LABELS: Record<Locale, readonly [string, string, string]> = {
+    pl: ["praw do projektu", "na wycenę", "ocena w Google"],
+    en: ["design rights", "to get a quote", "Google rating"],
+};
 
 const STATS: Array<{ value: StatProps; label: string }> = [
     { value: { target: 100, suffix: "%", delay: 350 }, label: "praw do projektu" },
@@ -95,7 +101,7 @@ const STATS: Array<{ value: StatProps; label: string }> = [
     { value: { target: 5, decimals: 1, delay: 750 }, label: "ocena w Google" },
 ];
 
-export function StatsCounter() {
+export function StatsCounter({ locale = "pl" }: { locale?: Locale }) {
     return (
         <div className="flex items-stretch justify-center mt-14 [contain:layout]">
             {STATS.map((stat, i) => (
@@ -108,10 +114,10 @@ export function StatsCounter() {
                             className="text-4xl max-[360px]:text-[1.6rem] sm:text-5xl md:text-6xl font-bold text-gold leading-none mb-3 tabular-nums tracking-tight"
                             style={{ fontFamily: "var(--font-ava-meridian)" }}
                         >
-                            <AnimatedNumber {...stat.value} />
+                            <AnimatedNumber {...stat.value} locale={locale} />
                         </span>
                         <span className="text-white/50 text-[9px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.25em] sm:whitespace-nowrap text-center">
-                            {stat.label}
+                            {LABELS[locale][i]}
                         </span>
                     </div>
                 </div>

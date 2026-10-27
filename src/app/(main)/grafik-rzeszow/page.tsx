@@ -7,6 +7,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Grafik Rzeszów — projektant graficzny, logo od 890 zł",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
         description: "Projektant graficzny z Rzeszowa. Logo, strony, druk dla firm. Wycena w 24h.",
         images: ["/og-image.webp"],
     },
-    alternates: { canonical: "https://wuyo.pl/grafik-rzeszow" },
+    alternates: alternatesFor("designerRzeszow", "pl"),
 };
 
 // Pełny opis firmy w layout.tsx (to samo @id), tu tylko ocena: strona pokazuje opinie.

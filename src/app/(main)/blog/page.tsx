@@ -5,6 +5,7 @@ import { ArrowRight, Clock } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { getAllPosts } from "@/lib/blog";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Blog: porady o grafice i stronach WWW",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/blog",
     },
-    alternates: { canonical: "https://wuyo.pl/blog" },
+    alternates: alternatesFor("blog", "pl"),
 };
 
 export default function BlogPage() {

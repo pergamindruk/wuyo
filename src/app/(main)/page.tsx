@@ -13,6 +13,11 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
+import type { Metadata } from "next";
+import { alternatesFor } from "@/lib/i18n";
+
+// Canonical + hreflang do wersji angielskiej (/en). x-default zostaje na polskiej.
+export const metadata: Metadata = { alternates: alternatesFor("home", "pl") };
 
 // Pełny opis firmy jest w layout.tsx (to samo @id). Tutaj tylko ocena z Google,
 // bo strona główna pokazuje opinie.

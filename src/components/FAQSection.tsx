@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
-import { faqs } from "@/data/faq";
+import { faqs as faqsPl } from "@/data/faq";
+import { faqsEn } from "@/data/pricing-en";
+import type { Locale } from "@/lib/i18n";
 
-export function FAQSection() {
+export function FAQSection({ locale = "pl" }: { locale?: Locale }) {
+    const en = locale === "en";
+    const faqs = en ? faqsEn : faqsPl;
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const toggleFaq = (index: number) => {
@@ -16,9 +20,9 @@ export function FAQSection() {
         <section className="py-28 px-6 md:px-12 relative overflow-hidden" id="faq">
             <div className="max-w-4xl mx-auto relative z-10">
                 <AnimatedSection className="text-center mb-16">
-                    <p className="eyebrow mb-4">Rozwiewam wątpliwości</p>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Zanim oddasz mi swoje pieniądze</h2>
-                    <p className="text-white/60 max-w-xl mx-auto">Szanuję Twój czas, dlatego zebrałem odpowiedzi na kluczowe pytania. Żadnego branżowego żargonu, gramy w otwarte karty.</p>
+                    <p className="eyebrow mb-4">{en ? "Clearing up doubts" : "Rozwiewam wątpliwości"}</p>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">{en ? "Before you hand over your money" : "Zanim oddasz mi swoje pieniądze"}</h2>
+                    <p className="text-white/60 max-w-xl mx-auto">{en ? "I respect your time, so here are answers to the key questions. No industry jargon, cards on the table." : "Szanuję Twój czas, dlatego zebrałem odpowiedzi na kluczowe pytania. Żadnego branżowego żargonu, gramy w otwarte karty."}</p>
                 </AnimatedSection>
 
                 <div className="space-y-4">

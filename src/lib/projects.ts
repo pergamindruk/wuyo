@@ -36,3 +36,56 @@ export const projects: Project[] = [
     { id: 6, title: "T-shirt Czysta Gablota", category: "Odzież/Gadżety", image: "/realizacje/cg-tshirt.webp", desc: "Detailing · projekt koszulki firmowej", year: "2024" },
     { id: 1, title: "Naklejka Admar", category: "Do druku", image: "/realizacje/naklejka_Admar_Mockup.webp", desc: "ADMAR · projekt naklejki", year: "2023" },
 ];
+
+// ── Wersja angielska ─────────────────────────────────────────────────────────
+// Kategorie zostają po polsku jako identyfikatory (filtr zakładek), tłumaczymy
+// tylko to, co widać. Nowy projekt bez wpisu tutaj pokaże się po polsku.
+
+const TAB_LABELS_EN: Record<string, string> = {
+    "Wszystkie": "All",
+    "Logotypy/Branding": "Branding",
+    "Do druku": "Print",
+    "Strony Internetowe": "Websites",
+    "Social media": "Social",
+    "Odzież/Gadżety": "Merch",
+};
+
+const CATEGORY_EN: Record<string, string> = {
+    "Logotypy/Branding": "Logo / Branding",
+    "Do druku": "Print",
+    "Strony Internetowe": "Website",
+    "Social media": "Social media",
+    "Odzież/Gadżety": "Apparel / Merch",
+};
+
+const PROJECTS_EN: Record<number, { title: string; desc: string }> = {
+    2: { title: "Czysta Gablota business card", desc: "Car detailing · consistent visual identity" },
+    14: { title: "Gama Ubezpieczeń: company materials", desc: "Insurance office · flyer, info page, business card" },
+    16: { title: "Kribus Studio: visual identity", desc: "Web studio · logo, brand book, business card and A5 flyer" },
+    17: { title: "Dobrze Rozegrane billboard", desc: "XXL games for weddings · billboard in two concepts" },
+    12: { title: "Wege billboard", desc: "Community centre · poster for the Wege Pogadanki meetings" },
+    7: { title: "Premium business card", desc: "Premium client · business card design" },
+    15: { title: "Memorial business card", desc: "Stonemason · design and print of a double-sided card" },
+    8: { title: "Czysta Gablota website", desc: "Car detailing · a site bringing enquiries from day one" },
+    10: { title: "Stanisław Czudec business card", desc: "Professional services · elegant single-sided card" },
+    13: { title: "Domosfera billboard", desc: "Doors, windows and gates · large billboard design" },
+    3: { title: "Arkom logo", desc: "Tech company · visual identity from scratch" },
+    4: { title: "Arkom brand presentation", desc: "Tech company · brand book and investor deck" },
+    11: { title: "Label design", desc: "Food products · labels ready for offset print" },
+    6: { title: "Czysta Gablota T-shirt", desc: "Car detailing · company T-shirt design" },
+    1: { title: "Admar sticker", desc: "ADMAR · sticker design" },
+};
+
+export function tabLabel(id: string, label: string, locale: "pl" | "en"): string {
+    return locale === "en" ? TAB_LABELS_EN[id] ?? label : label;
+}
+
+export function categoryLabel(category: string, locale: "pl" | "en"): string {
+    return locale === "en" ? CATEGORY_EN[category] ?? category : category;
+}
+
+export function localizeProject(project: Project, locale: "pl" | "en"): Project {
+    if (locale === "pl") return project;
+    const en = PROJECTS_EN[project.id];
+    return en ? { ...project, title: en.title, desc: en.desc } : project;
+}

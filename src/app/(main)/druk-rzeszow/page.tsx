@@ -7,6 +7,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Druk wizytówek Rzeszów — odbiór na miejscu, od 299 zł",
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
         description: "Projekt + druk wizytówek i ulotek w Rzeszowie. Małe nakłady. Z projektem od 299 zł, sam druk od 99 zł.",
         images: ["/og-image.webp"],
     },
-    alternates: { canonical: "https://wuyo.pl/druk-rzeszow" },
+    alternates: alternatesFor("printRzeszow", "pl"),
 };
 
 const localSchema = {

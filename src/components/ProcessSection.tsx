@@ -3,8 +3,24 @@
 import { Odslona } from "@/components/Odslona";
 import { MessageSquare, Calculator, Zap, Search, PackageCheck, Rocket } from "lucide-react";
 import { MagicCard } from "@/components/ui/magic-card";
-export function ProcessSection() {
-    const steps = [
+import type { Locale } from "@/lib/i18n";
+
+const EN = {
+    steps: [
+        ["A quick chat", "We start with a relaxed conversation. I get to know you, your business and what you have in mind."],
+        ["Quote", "Short and to the point: a clear price with no hidden costs and a specific delivery date."],
+        ["Work starts", "I research and design so your project is ready on time."],
+        ["Your review", "I show you the first results. You say what you think, I make changes until it is spot on."],
+        ["Handover", "You get everything neatly sorted in folders. Files you can use straight away."],
+        ["Launch", "I help you get it all live online and in print. I stay with you until the end."],
+    ],
+    eyebrow: "Peace of mind",
+    h2: "A process that saves your time",
+    lead: "A clear path without paperwork, from the first conversation to a finished brand.",
+} as const;
+
+export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
+    const stepsPl = [
         {
             title: "Pogawędka",
             icon: <MessageSquare size={24} />,
@@ -36,6 +52,9 @@ export function ProcessSection() {
             desc: "Pomagam to wszystko odpalić w sieci i druku. Jestem z Tobą do samego końca."
         }
     ];
+    const steps = locale === "en"
+        ? stepsPl.map((s, i) => ({ ...s, title: EN.steps[i][0], desc: EN.steps[i][1] }))
+        : stepsPl;
 
     return (
         <section id="proces" className="py-28 bg-navy-dark/50 border-y border-white/5 relative overflow-hidden">
@@ -44,12 +63,12 @@ export function ProcessSection() {
 
             <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
                 <div className="text-center mb-20">
-                    <p className="eyebrow mb-4">Gwarancja spokoju</p>
+                    <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Gwarancja spokoju"}</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                        Proces, który oszczędza Twój czas
+                        {locale === "en" ? EN.h2 : "Proces, który oszczędza Twój czas"}
                     </h2>
                     <p className="text-white/60 max-w-2xl mx-auto">
-                        Przejrzysta ścieżka bez zbędnych formalności — od pierwszej rozmowy do w pełni gotowego wizerunku Twojej marki.
+                        {locale === "en" ? EN.lead : "Przejrzysta ścieżka bez zbędnych formalności — od pierwszej rozmowy do w pełni gotowego wizerunku Twojej marki."}
                     </p>
                 </div>
             </div>

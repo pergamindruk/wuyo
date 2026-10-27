@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { getAllSlugs, getPost, getRelatedPosts, extractFaq } from "@/lib/blog";
+import { getAllSlugs, getPost, getRelatedPosts, extractFaq, getBlogPairs } from "@/lib/blog";
+import { alternatesForPaths } from "@/lib/i18n";
 import { mdxComponents } from "@/components/blog/MDXComponents";
 import type { Metadata } from "next";
 import remarkGfm from "remark-gfm";
@@ -44,7 +45,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 description,
                 images: [ogImage],
             },
-            alternates: { canonical: `https://wuyo.pl/blog/${slug}` },
+            // hreflang do angielskiego tłumaczenia, jeśli istnieje (content/blog-en, translationOf).
+            alternates: alternatesForPaths(
+                { pl: `/blog/${slug}`, en: getBlogPairs()[slug] ? `/en/blog/${getBlogPairs()[slug]}` : undefined },
+                "pl",
+            ),
         };
     } catch {
         return {};

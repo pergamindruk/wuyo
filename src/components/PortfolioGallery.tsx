@@ -5,7 +5,17 @@ import { useState, useRef, useEffect } from "react";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { Odslona } from "@/components/Odslona";
 import { X, ExternalLink, Maximize2, ChevronLeft, ChevronRight } from "lucide-react";
-import { TABS, projects, type Project } from "@/lib/projects";
+import { TABS, projects as projectsPl, categoryLabel, localizeProject, tabLabel, type Project } from "@/lib/projects";
+import type { Locale } from "@/lib/i18n";
+
+const T = {
+    pl: { eyebrow: "Dowody, nie obietnice", h2a: "Projekty, które", h2b: "już zarabiają", projektow: "projektów", wiecej: "Pokaż więcej projektów",
+          powieksz: "Powiększ zdjęcie", pelna: "Pełna rozdzielczość", online: "Zobacz stronę online", podglad: "Podgląd", podgladZdjecia: "Podgląd zdjęcia",
+          zamknij: "Zamknij podgląd", poprz: "Poprzednie zdjęcie", nast: "Następne zdjęcie", zdjecie: "zdjęcie", z: "z", strzalki: "← → przewijają · ", esc: "ESC zamyka" },
+    en: { eyebrow: "Proof, not promises", h2a: "Projects that", h2b: "already make money", projektow: "projects", wiecej: "Show more projects",
+          powieksz: "Enlarge image", pelna: "Full resolution", online: "View the live site", podglad: "Preview", podgladZdjecia: "Image preview",
+          zamknij: "Close preview", poprz: "Previous image", nast: "Next image", zdjecie: "image", z: "of", strzalki: "← → to browse · ", esc: "ESC to close" },
+} as const;
 
 export function PortfolioGallery({
     initialVisible = 9,
@@ -14,11 +24,15 @@ export function PortfolioGallery({
     // mogą jechać jako pilne — zabierały łącze arkuszowi stylów, który blokuje
     // pierwsze malowanie. Pilne są tylko tam, gdzie galeria JEST treścią strony.
     naPierwszymEkranie = false,
+    locale = "pl",
 }: {
     initialVisible?: number;
     hideHeader?: boolean;
     naPierwszymEkranie?: boolean;
+    locale?: Locale;
 }) {
+    const t = T[locale];
+    const projects = projectsPl.map((p) => localizeProject(p, locale));
     const [activeTab, setActiveTab] = useState("Wszystkie");
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -108,7 +122,7 @@ export function PortfolioGallery({
                     className="absolute right-0 top-10 leading-none select-none pr-4 hidden lg:block font-black tracking-tighter text-white/[0.025]"
                     style={{ fontSize: "clamp(6rem,16vw,14rem)", fontFamily: "var(--font-ava-meridian)" }}
                 >
-                    PRACE
+                    {locale === "en" ? "WORK" : "PRACE"}
                 </div>
             </div>
 
@@ -117,9 +131,9 @@ export function PortfolioGallery({
                 {/* Section header – editorial, left-aligned */}
                 <div className={`flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-6 ${hideHeader ? "hidden" : ""}`}>
                     <div>
-                        <p className="eyebrow mb-3">Dowody, nie obietnice</p>
+                        <p className="eyebrow mb-3">{t.eyebrow}</p>
                         <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
-                            Projekty, które<br className="hidden md:block" /> już zarabiają
+                            {t.h2a}<br className="hidden md:block" /> {t.h2b}
                         </h2>
                     </div>
 
@@ -132,7 +146,7 @@ export function PortfolioGallery({
                         >
                             {String(filteredProjects.length).padStart(2, "0")}
                         </span>
-                        <span className="text-white/50 text-xs uppercase tracking-widest">projektów</span>
+                        <span className="text-white/50 text-xs uppercase tracking-widest">{t.projektow}</span>
                     </div>
                 </div>
 
@@ -150,7 +164,7 @@ export function PortfolioGallery({
                                         : "text-white/60 hover:text-white/70"
                                 }`}
                             >
-                                {tab.label}
+                                {tabLabel(tab.id, tab.label, locale)}
                             </button>
                         ))}
                         {/* Sliding gold indicator */}
@@ -200,7 +214,7 @@ export function PortfolioGallery({
                                 {/* Category chip */}
                                 <div className="absolute top-4 right-4 z-20 opacity-0 -translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-250">
                                     <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-white/80 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
-                                        {project.category}
+                                        {categoryLabel(project.category, locale)}
                                     </span>
                                 </div>
 
@@ -230,7 +244,7 @@ export function PortfolioGallery({
                             onClick={() => setVisibleCount(v => v + 6)}
                             className="btn-outline text-sm px-8 py-3"
                         >
-                            Pokaż więcej projektów
+                            {t.wiecej}
                         </button>
                     </div>
                 )}
@@ -274,14 +288,14 @@ export function PortfolioGallery({
                                 <button
                                     onClick={() => setFullscreenSrc(drawerActiveImg || selectedProject.image)}
                                     className="absolute inset-0 z-[5] cursor-zoom-in"
-                                    aria-label="Powiększ zdjęcie"
+                                    aria-label={t.powieksz}
                                 />
                                 {/* Fullscreen button */}
                                 <button
                                     onClick={(e) => { e.stopPropagation(); setFullscreenSrc(drawerActiveImg || selectedProject.image); }}
                                     className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-lg bg-navy-dark/70 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 md:text-white/50 hover:text-white hover:bg-navy-dark/90 transition-all md:opacity-0 md:group-hover/img:opacity-100 focus-visible:opacity-100"
-                                    title="Pełna rozdzielczość"
-                                    aria-label="Pełna rozdzielczość"
+                                    title={t.pelna}
+                                    aria-label={t.pelna}
                                 >
                                     <Maximize2 size={13} />
                                 </button>
@@ -321,7 +335,7 @@ export function PortfolioGallery({
                                     </span>
                                     <div className="pt-1.5">
                                         <p className="text-gold text-xs uppercase tracking-[0.18em] font-bold mb-0.5">
-                                            {selectedProject.category}
+                                            {categoryLabel(selectedProject.category, locale)}
                                         </p>
                                         {selectedProject.year && (
                                             <p className="text-white/50 text-xs tracking-wide">{selectedProject.year}</p>
@@ -352,7 +366,7 @@ export function PortfolioGallery({
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2.5 bg-gold text-navy-dark font-bold px-6 py-3 rounded-full text-sm hover:bg-gold/90 transition-all group hover:shadow-[0_0_20px_rgba(255,235,82,0.35)]"
                                     >
-                                        Zobacz stronę online
+                                        {t.online}
                                         <ExternalLink
                                             size={14}
                                             className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -378,14 +392,14 @@ export function PortfolioGallery({
                     }}
                     role="dialog"
                     aria-modal="true"
-                    aria-label={selectedProject ? `Podgląd: ${selectedProject.title}` : "Podgląd zdjęcia"}
+                    aria-label={selectedProject ? `${t.podglad}: ${selectedProject.title}` : t.podgladZdjecia}
                     style={{ touchAction: "pan-y pinch-zoom" }}
                     className="kurtyna-podgladu fixed inset-0 z-[70] bg-black/97 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
                 >
                         <button
                             onClick={(e) => { e.stopPropagation(); setFullscreenSrc(null); }}
                             className="fixed top-5 right-5 z-[75] w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
-                            aria-label="Zamknij podgląd"
+                            aria-label={t.zamknij}
                         >
                             <X size={16} />
                         </button>
@@ -395,14 +409,14 @@ export function PortfolioGallery({
                                 <button
                                     onClick={(e) => { e.stopPropagation(); przejdzDo(-1); }}
                                     className="fixed left-2 sm:left-5 top-1/2 -translate-y-1/2 z-[75] w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
-                                    aria-label="Poprzednie zdjęcie"
+                                    aria-label={t.poprz}
                                 >
                                     <ChevronLeft size={20} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); przejdzDo(1); }}
                                     className="fixed right-2 sm:right-5 top-1/2 -translate-y-1/2 z-[75] w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all"
-                                    aria-label="Następne zdjęcie"
+                                    aria-label={t.nast}
                                 >
                                     <ChevronRight size={20} />
                                 </button>
@@ -417,7 +431,7 @@ export function PortfolioGallery({
                             <Image
                                 key={fullscreenSrc}
                                 src={fullscreenSrc}
-                                alt={selectedProject ? `${selectedProject.title} – zdjęcie ${indeksPodgladu + 1} z ${galeria.length}` : "Pełna rozdzielczość"}
+                                alt={selectedProject ? `${selectedProject.title}, ${t.zdjecie} ${indeksPodgladu + 1} ${t.z} ${galeria.length}` : t.pelna}
                                 width={1920}
                                 height={1440}
                                 className="max-w-[92vw] max-h-[80vh] sm:max-h-[90vh] object-contain rounded-lg shadow-2xl"
@@ -426,7 +440,7 @@ export function PortfolioGallery({
 
                         <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-[0.2em] uppercase select-none text-center whitespace-nowrap">
                             {galeria.length > 1 && indeksPodgladu >= 0 ? `${indeksPodgladu + 1} / ${galeria.length} · ` : ""}
-                            <span className="hidden sm:inline">← → przewijają · </span>ESC zamyka
+                            <span className="hidden sm:inline">{t.strzalki}</span>{t.esc}
                         </p>
                 </div>
             )}

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone } from "lucide-react";
 import { trackPhoneClick, trackWhatsAppClick } from "@/lib/tracking";
+import { usePathname } from "next/navigation";
+import { localeFromPath } from "@/lib/i18n";
 
 const TELEFON = "+48725182053";
 const WHATSAPP = "https://wa.me/48725182053";
@@ -22,6 +24,7 @@ const WHATSAPP = "https://wa.me/48725182053";
  * pod paskiem.
  */
 export function MobileContactBar() {
+    const locale = localeFromPath(usePathname());
     const [widoczny, setWidoczny] = useState(false);
     const pasekRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +104,7 @@ export function MobileContactBar() {
                     className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ffeb52] text-[#1c1b17] font-bold text-sm active:bg-[#ffe000] transition-colors"
                 >
                     <Phone size={17} aria-hidden="true" />
-                    Zadzwoń
+                    {locale === "en" ? "Call" : "Zadzwoń"}
                 </a>
             </div>
         </div>

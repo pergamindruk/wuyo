@@ -4,11 +4,12 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Printer, Scissors, Thermometer, Zap } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { BUSINESS_REF, BUSINESS_SAME_AS } from "@/lib/business-schema";
+import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Mateusz Machoś — grafik i web developer",
     description: "Cześć, jestem Mateusz. Projektant graficzny i web developer z Rzeszowa. Działam sam, co znaczy, że rozmawiasz bezpośrednio ze mną — bez agencyjnego ping-ponga.",
-    alternates: { canonical: "https://wuyo.pl/o-mnie" },
+    alternates: alternatesFor("about", "pl"),
     keywords: [
         "grafik Rzeszów",
         "projektant graficzny Rzeszów",

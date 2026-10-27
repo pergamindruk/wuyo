@@ -6,21 +6,83 @@ import { Menu, X, House, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useMountTransition } from "@/lib/useMountTransition";
+import { counterpartPath, localeFromPath, route, type Locale } from "@/lib/i18n";
 
 const SCROLL_DELAY_SAME_PAGE = 300; // czas na aktualizację DOM przed scrollem
 const SCROLL_DELAY_CROSS_PAGE = 600; // czas na załadowanie nowej strony przed scrollem
 
 // Cztery usługi pod jedną pozycją w menu. Wcześniej w pasku były Druk i Odzież,
 // a Logo i Strony WWW — najdroższe usługi — nie miały linku w ogóle.
-const USLUGI = [
-    { href: "/logo", label: "Logo" },
-    { href: "/strony-www", label: "Strony WWW" },
-    { href: "/druk", label: "Druk & papeteria" },
-    { href: "/odziez", label: "Odzież & nadruki" },
-] as const;
+const USLUGI = {
+    pl: [
+        { href: route("logo", "pl"), label: "Logo" },
+        { href: route("websites", "pl"), label: "Strony WWW" },
+        { href: route("print", "pl"), label: "Druk & papeteria" },
+        { href: route("apparel", "pl"), label: "Odzież & nadruki" },
+    ],
+    en: [
+        { href: route("logo", "en"), label: "Logo design" },
+        { href: route("websites", "en"), label: "Websites" },
+        { href: route("print", "en"), label: "Print & stationery" },
+        { href: route("apparel", "en"), label: "Apparel printing" },
+    ],
+} as const;
+
+const TEKSTY = {
+    pl: {
+        oferta: "Oferta", realizacje: "Realizacje", blog: "Blog", oMnie: "O mnie", kontakt: "Kontakt",
+        napisz: "Napisz do mnie", glowna: "Strona główna", logoLabel: "WUYO Dobra Grafa, strona główna",
+        nawigacja: "Nawigacja główna", menuMobilne: "Menu mobilne", otworz: "Otwórz menu", zamknij: "Zamknij menu",
+        jezyk: "English version",
+    },
+    en: {
+        oferta: "Services", realizacje: "Portfolio", blog: "Blog", oMnie: "About", kontakt: "Contact",
+        napisz: "Get in touch", glowna: "Home", logoLabel: "WUYO Dobra Grafa, home page",
+        nawigacja: "Main navigation", menuMobilne: "Mobile menu", otworz: "Open menu", zamknij: "Close menu",
+        jezyk: "Wersja polska",
+    },
+} as const;
+
+/**
+ * Przełącznik PL / EN. Strony stałe mają pary w lib/i18n.ts. Wpis bloga ma inny adres
+ * w każdym języku, więc odpowiednik czytamy z <link rel="alternate" hreflang> w <head>
+ * w chwili kliknięcia (po nawigacji metadane są już nowe). Brak tłumaczenia = strona
+ * główna drugiego języka.
+ */
+function LanguageSwitch({ locale, onNavigate, className = "" }: { locale: Locale; onNavigate?: () => void; className?: string }) {
+    const pathname = usePathname() ?? "/";
+    const router = useRouter();
+    const target: Locale = locale === "pl" ? "en" : "pl";
+    const pair = counterpartPath(pathname, target);
+
+    const naKlikniecie = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        onNavigate?.();
+        if (pair) return; // zwykły Link wystarczy
+        const hreflang = target === "pl" ? "pl-PL" : "en";
+        const alt = document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${hreflang}"]`);
+        if (alt?.href) {
+            e.preventDefault();
+            router.push(new URL(alt.href).pathname);
+        }
+    };
+
+    return (
+        <Link
+            href={pair ?? route("home", target)}
+            hrefLang={target}
+            onClick={naKlikniecie}
+            aria-label={TEKSTY[locale].jezyk}
+            className={`inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
+        >
+            <span className={locale === "pl" ? "text-gold" : ""}>PL</span>
+            <span aria-hidden="true" className="text-white/25">/</span>
+            <span className={locale === "en" ? "text-gold" : ""}>EN</span>
+        </Link>
+    );
+}
 
 /** Rozwijana „Oferta" w pasku na desktopie. Na telefonie usługi idą płaską listą. */
-function OfertaMenu() {
+function OfertaMenu({ locale }: { locale: Locale }) {
     const [otwarte, setOtwarte] = useState(false);
     const { wDrzewie: listaWDrzewie, aktywny: listaAktywna } = useMountTransition(otwarte, 180);
     const obszarRef = useRef<HTMLDivElement>(null);
@@ -51,7 +113,8 @@ function OfertaMenu() {
         };
     }, [otwarte]);
 
-    const naUsludze = USLUGI.some((u) => pathname === u.href);
+    const uslugi = USLUGI[locale];
+    const naUsludze = uslugi.some((u) => pathname === u.href);
 
     return (
         <div
@@ -67,7 +130,7 @@ function OfertaMenu() {
                 onClick={() => setOtwarte((v) => !v)}
                 className={`relative group flex items-center gap-1 cursor-pointer transition-colors hover:text-white whitespace-nowrap ${naUsludze ? "text-white" : ""}`}
             >
-                Oferta
+                {TEKSTY[locale].oferta}
                 <ChevronDown
                     size={14}
                     aria-hidden="true"
@@ -88,7 +151,7 @@ function OfertaMenu() {
                     className="menu-rozwijane absolute left-1/2 top-full pt-4"
                 >
                     <ul className="min-w-[13rem] rounded-2xl border border-white/10 bg-navy-dark p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
-                        {USLUGI.map((u) => (
+                        {uslugi.map((u) => (
                             <li key={u.href}>
                                 <Link
                                     href={u.href}
@@ -112,6 +175,15 @@ export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
+    const locale = localeFromPath(pathname);
+    const t = TEKSTY[locale];
+    const home = route("home", locale);
+
+    // Przejście PL ↔ EN bez przeładowania nie odpala ponownie skryptu z layoutu /en,
+    // więc lang na <html> ustawiamy też tutaj (Navbar jest na każdej stronie publicznej).
+    useEffect(() => {
+        document.documentElement.lang = locale;
+    }, [locale]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -135,13 +207,13 @@ export function Navbar() {
             }
         };
 
-        if (pathname === "/") {
+        if (pathname === home) {
             // Jesteśmy już na stronie głównej – zaktualizuj hash i scrolluj
-            window.history.pushState(null, "", `/#${sectionId}`);
+            window.history.pushState(null, "", `${home}#${sectionId}`);
             setTimeout(scrollToSection, SCROLL_DELAY_SAME_PAGE);
         } else {
             // Inny URL – zaktualizuj URL i nawiguj
-            router.push(`/#${sectionId}`, { scroll: false });
+            router.push(`${home}#${sectionId}`, { scroll: false });
             setTimeout(scrollToSection, SCROLL_DELAY_CROSS_PAGE);
         }
     };
@@ -149,11 +221,11 @@ export function Navbar() {
     const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         setIsMobileMenuOpen(false);
-        if (pathname === "/") {
-            window.history.pushState(null, "", "/");
+        if (pathname === home) {
+            window.history.pushState(null, "", home);
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
-            router.push("/", { scroll: false });
+            router.push(home, { scroll: false });
             setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), SCROLL_DELAY_SAME_PAGE);
         }
     };
@@ -200,9 +272,9 @@ export function Navbar() {
                         logo z opacity:0, a to jest element LCP strony — nic się nie pokazywało,
                         dopóki nie ruszył JavaScript. Ten sam zabieg co przy hero. */}
                     <a
-                        href="/"
+                        href={home}
                         onClick={handleHomeClick}
-                        aria-label="Wuyo – Dobra Grafa, strona główna"
+                        aria-label={t.logoLabel}
                         className={`logo-in absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
                             ? "top-3 md:top-4 h-14 w-14 md:h-14 md:w-14"
                             : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-44 lg:h-40 lg:w-[22rem]"
@@ -211,7 +283,7 @@ export function Navbar() {
                         {scrolled ? (
                             <Image
                                 src="/favicon-wuyo.png"
-                                alt="WUYO – Dobra Grafa logo"
+                                alt="WUYO Dobra Grafa logo"
                                 fill
                                 sizes="56px"
                                 className="object-contain"
@@ -219,7 +291,7 @@ export function Navbar() {
                         ) : (
                             <Image
                                 src="/logo_wuya2.webp"
-                                alt="WUYO – Dobra Grafa logo"
+                                alt="WUYO Dobra Grafa logo"
                                 fill
                                 sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 384px"
                                 className="object-contain object-left"
@@ -231,42 +303,43 @@ export function Navbar() {
 
                 {/* Środek - Nawigacja (tylko desktop) */}
                 <div className="hidden md:flex flex-1 items-center justify-center">
-                    <nav aria-label="Nawigacja główna" className="flex items-center gap-4 lg:gap-8 text-sm font-medium text-white/70">
+                    <nav aria-label={t.nawigacja} className="flex items-center gap-4 lg:gap-8 text-sm font-medium text-white/70">
                         <a
-                            href="/"
+                            href={home}
                             onClick={handleHomeClick}
-                            aria-label="Strona główna"
+                            aria-label={t.glowna}
                             className="text-white/50 hover:text-gold transition-colors duration-200"
                         >
                             <House size={18} aria-hidden="true" />
                         </a>
-                        <OfertaMenu />
-                        <Link href="/realizacje" className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Realizacje
+                        <OfertaMenu locale={locale} />
+                        <Link href={route("portfolio", locale)} className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            {t.realizacje}
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <Link href="/blog" className="relative group transition-colors hover:text-white whitespace-nowrap">
-                            Blog
+                        <Link href={route("blog", locale)} className="relative group transition-colors hover:text-white whitespace-nowrap">
+                            {t.blog}
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
                         </Link>
                     </nav>
                 </div>
 
                 {/* Prawa strona - Przycisk / Mobile Menu */}
-                <div className="flex-1 md:flex-none lg:flex-1 flex justify-end items-center gap-4">
+                <div className="flex-1 md:flex-none lg:flex-1 flex justify-end items-center gap-3 md:gap-4">
+                    <LanguageSwitch locale={locale} />
                     <a
-                        href="/#kontakt"
+                        href={`${home}#kontakt`}
                         onClick={(e) => handleAnchorClick(e, "kontakt")}
                         className="hidden md:inline-flex btn-gold px-5 lg:px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_0_15px_rgba(255,235,82,0.15)] hover:shadow-[0_0_25px_rgba(255,235,82,0.3)]"
                     >
-                        Napisz do mnie
+                        {t.napisz}
                     </a>
 
                     <button
                         ref={hamburgerRef}
                         className="md:hidden text-white p-2 hover:text-gold transition-colors"
                         onClick={toggleMenu}
-                        aria-label={isMobileMenuOpen ? "Zamknij menu" : "Otwórz menu"}
+                        aria-label={isMobileMenuOpen ? t.zamknij : t.otworz}
                         aria-expanded={isMobileMenuOpen}
                         aria-controls="mobile-menu"
                     >
@@ -281,19 +354,19 @@ export function Navbar() {
                     id="mobile-menu"
                     role="dialog"
                     aria-modal="true"
-                    aria-label="Menu mobilne"
+                    aria-label={t.menuMobilne}
                     data-widoczny={menuAktywne ? "tak" : undefined}
                     className="menu-mobilne fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
                 >
-                    <nav aria-label="Menu mobilne" className="flex flex-col gap-6 text-xl font-medium text-white/90">
-                        <a href="/" onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
+                    <nav aria-label={t.menuMobilne} className="flex flex-col gap-6 text-xl font-medium text-white/90">
+                        <a href={home} onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
                             <House size={20} aria-hidden="true" />
-                            Strona główna
+                            {t.glowna}
                         </a>
                         {/* Na telefonie usługi idą płaską listą pod nagłówkiem —
                             rozwijane menu w szufladzie to jedno kliknięcie za dużo. */}
-                        <p className="text-xs font-bold uppercase tracking-widest text-white/50 -mb-2">Oferta</p>
-                        {USLUGI.map((u) => (
+                        <p className="text-xs font-bold uppercase tracking-widest text-white/50 -mb-2">{t.oferta}</p>
+                        {USLUGI[locale].map((u) => (
                             <Link
                                 key={u.href}
                                 href={u.href}
@@ -303,19 +376,20 @@ export function Navbar() {
                                 {u.label}
                             </Link>
                         ))}
-                        <Link href="/realizacje" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Realizacje</Link>
-                        <Link href="/blog" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Blog</Link>
-                        <Link href="/o-mnie" onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">O mnie</Link>
-                        <a href="/#kontakt" onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">Kontakt</a>
+                        <Link href={route("portfolio", locale)} onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">{t.realizacje}</Link>
+                        <Link href={route("blog", locale)} onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">{t.blog}</Link>
+                        <Link href={route("about", locale)} onClick={closeMenu} className="hover:text-gold transition-colors border-b border-white/5 pb-4">{t.oMnie}</Link>
+                        <a href={`${home}#kontakt`} onClick={(e) => handleAnchorClick(e, "kontakt")} className="hover:text-gold transition-colors border-b border-white/5 pb-4">{t.kontakt}</a>
                     </nav>
-                    <div className="mt-10 mx-auto">
+                    <div className="mt-10 mx-auto flex items-center gap-4">
                         <a
-                            href="/#kontakt"
+                            href={`${home}#kontakt`}
                             onClick={(e) => handleAnchorClick(e, "kontakt")}
                             className="btn-gold px-8 py-3 text-sm rounded-full"
                         >
-                            Napisz do mnie
+                            {t.napisz}
                         </a>
+                        <LanguageSwitch locale={locale} onNavigate={closeMenu} />
                     </div>
                 </div>
             )}

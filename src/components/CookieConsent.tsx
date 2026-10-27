@@ -15,10 +15,37 @@ import {
     saveConsent,
     type ConsentChoice,
 } from "@/lib/consent";
+import { usePathname } from "next/navigation";
+import { localeFromPath, route } from "@/lib/i18n";
 
 type Widok = "ukryty" | "baner" | "ustawienia";
 
+const T = {
+    pl: {
+        naglowek: "Ciasteczka", ustawienia: "Ustawienia ciasteczek",
+        opis: "Analityka i marketing tylko za Twoją zgodą. Niezbędne działają zawsze, zgodę wycofasz w stopce.",
+        akceptuje: "Akceptuję", niezbedne: "Tylko niezbędne", wybor: "Ustawienia",
+        wybierz: "Wybierz, na które ciasteczka się zgadzasz.",
+        kNiezbedne: "Niezbędne", kNiezbedneOpis: "Bez nich strona nie działa. Nie wymagają zgody.",
+        kAnalityka: "Analityka", kAnalitykaOpis: "Google Analytics: ile osób wchodzi, skąd i co klika. Bez tego nie wiem, co poprawiać.",
+        kMarketing: "Marketing", kMarketingOpis: "Piksel Meta: pokazuje, czy reklama na Facebooku przyniosła zapytanie.",
+        zapisz: "Zapisz wybór", prywatnosc: "Polityka prywatności",
+    },
+    en: {
+        naglowek: "Cookies", ustawienia: "Cookie settings",
+        opis: "Analytics and marketing only with your consent. Essential cookies always run; you can withdraw consent in the footer.",
+        akceptuje: "Accept", niezbedne: "Essential only", wybor: "Settings",
+        wybierz: "Choose which cookies you agree to.",
+        kNiezbedne: "Essential", kNiezbedneOpis: "The site does not work without them. No consent needed.",
+        kAnalityka: "Analytics", kAnalitykaOpis: "Google Analytics: how many people visit, from where and what they click. Without it I don't know what to improve.",
+        kMarketing: "Marketing", kMarketingOpis: "Meta Pixel: shows whether a Facebook ad brought an enquiry.",
+        zapisz: "Save my choice", prywatnosc: "Privacy policy",
+    },
+} as const;
+
 export function CookieConsent() {
+    const locale = localeFromPath(usePathname());
+    const t = T[locale];
     const [widok, setWidok] = useState<Widok>("ukryty");
     const [analityka, setAnalityka] = useState(false);
     const [marketing, setMarketing] = useState(false);
@@ -88,15 +115,14 @@ export function CookieConsent() {
                                 <Cookie size={15} aria-hidden />
                             </span>
                             <h2 id="zgody-naglowek" className="text-sm font-bold text-white">
-                                {widok === "baner" ? "Ciasteczka" : "Ustawienia ciasteczek"}
+                                {widok === "baner" ? t.naglowek : t.ustawienia}
                             </h2>
                         </div>
 
                         {widok === "baner" ? (
                             <>
                                 <p id="zgody-opis" className="mb-3 text-xs leading-relaxed text-white/60">
-                                    Analityka i marketing tylko za Twoją zgodą. Niezbędne działają zawsze,
-                                    zgodę wycofasz w stopce.
+                                    {t.opis}
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     <button
@@ -104,46 +130,46 @@ export function CookieConsent() {
                                         onClick={() => zdecyduj({ analytics: true, marketing: true })}
                                         className="flex-1 cursor-pointer whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-bold text-navy-dark transition-colors hover:bg-gold-light"
                                     >
-                                        Akceptuję
+                                        {t.akceptuje}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => zdecyduj({ analytics: false, marketing: false })}
                                         className="flex-1 cursor-pointer whitespace-nowrap rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
                                     >
-                                        Tylko niezbędne
+                                        {t.niezbedne}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setWidok("ustawienia")}
                                         className="cursor-pointer whitespace-nowrap rounded-full px-2 py-2 text-xs font-semibold text-white/50 transition-colors hover:text-white"
                                     >
-                                        Ustawienia
+                                        {t.wybor}
                                     </button>
                                 </div>
                             </>
                         ) : (
                             <>
                                 <p id="zgody-opis" className="sr-only">
-                                    Wybierz, na które ciasteczka się zgadzasz.
+                                    {t.wybierz}
                                 </p>
                                 <ul className="mb-5 space-y-3">
                                     <Kategoria
                                         ikona={<ShieldCheck size={16} aria-hidden />}
-                                        nazwa="Niezbędne"
-                                        opis="Bez nich strona nie działa. Nie wymagają zgody."
+                                        nazwa={t.kNiezbedne}
+                                        opis={t.kNiezbedneOpis}
                                     />
                                     <Kategoria
                                         ikona={<ChartNoAxesColumn size={16} aria-hidden />}
-                                        nazwa="Analityka"
-                                        opis="Google Analytics: ile osób wchodzi, skąd i co klika. Bez tego nie wiem, co poprawiać."
+                                        nazwa={t.kAnalityka}
+                                        opis={t.kAnalitykaOpis}
                                         wlaczone={analityka}
                                         onZmiana={setAnalityka}
                                     />
                                     <Kategoria
                                         ikona={<Megaphone size={16} aria-hidden />}
-                                        nazwa="Marketing"
-                                        opis="Piksel Meta: pokazuje, czy reklama na Facebooku przyniosła zapytanie."
+                                        nazwa={t.kMarketing}
+                                        opis={t.kMarketingOpis}
                                         wlaczone={marketing}
                                         onZmiana={setMarketing}
                                     />
@@ -153,16 +179,16 @@ export function CookieConsent() {
                                     onClick={() => zdecyduj({ analytics: analityka, marketing })}
                                     className="w-full cursor-pointer rounded-full bg-gold px-6 py-3 text-sm font-bold text-navy-dark transition-colors hover:bg-gold-light"
                                 >
-                                    Zapisz wybór
+                                    {t.zapisz}
                                 </button>
                             </>
                         )}
 
                         <Link
-                            href="/polityka-prywatnosci"
+                            href={route("privacy", locale)}
                             className="mt-2 block text-center text-[11px] text-white/50 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
                         >
-                            Polityka prywatności
+                            {t.prywatnosc}
                         </Link>
                 </div>
         </div>

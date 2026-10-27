@@ -5,7 +5,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Check, Send, Star, Monitor, MessageSquare, Briefcase } from "lucide-react";
 import { packages } from "@/components/PackagesSection";
 import { findPricingCard } from "@/data/pricing";
+import { pricingGroupsEn } from "@/data/pricing-en";
 import { trackFormSubmit, trackWhatsAppClick } from "@/lib/tracking";
+import { usePathname } from "next/navigation";
+import { localeFromPath, route } from "@/lib/i18n";
 
 /* ─ Linki kontaktowe ─ */
 const WA_LINK = "https://wa.me/48725182053";
@@ -30,18 +33,73 @@ interface BriefData {
     budget?: string;
 }
 
-const audienceOptions = [
-    "Kobiety 25–45",
-    "Mężczyźni 25–45",
-    "Firmy (B2B)",
-    "Lokalne (gastronomia, usługi)",
-    "Klienci premium",
-    "Młodzi / Gen Z",
-];
+const T = {
+    pl: {
+        audience: ["Kobiety 25–45", "Mężczyźni 25–45", "Firmy (B2B)", "Lokalne (gastronomia, usługi)", "Klienci premium", "Młodzi / Gen Z"],
+        errName: "Podaj swoje imię", errEmail: "Podaj adres e-mail", errEmailBad: "Nieprawidłowy adres e-mail", errMsg: "Zostaw krótką wiadomość",
+        errNetwork: "Coś się posypało podczas wysyłania. Spróbuj napisać bezpośrednio na maila 😅",
+        sentTitle: "Wiadomość poszła w świat! 🎉", sentA: "Odezwę się na", sentB: "zazwyczaj w ciągu kilku godzin.",
+        eyebrow: "Wyślij brief", h2: "Zacznijmy tworzyć wizerunek, który sprzedaje",
+        lead: "Zaznacz opcje w poniższym briefie i zróbmy ten pierwszy krok. Dopracowana marka czeka na Ciebie na wciągnięcie ręki!",
+        szybko: "Wolisz na szybko?", typBriefu: "Typ briefu",
+        tabs: [["Wiadomość", "Szybki kontakt"], ["Logo / Branding", "Identyfikacja marki"], ["Strona WWW", "Sklep, landing, wizytówka"]],
+        quickLabel: "O co chodzi? 🎤", quickSub: "Opisz co potrzebujesz, zapytaj o cenę, lub napisz kiedy możemy pogadać przez telefon.",
+        quickPh: "Hej Wuyo! Potrzebuję logo, mam otwarcie sklepu za 3 tygodnie... albo: zadzwoń do mnie na xxx-xxx-xxx",
+        brandInfo: "Wypełnij tyle ile wiesz — nie masz wszystkich odpowiedzi? Żaden problem, zostawiaj pola puste i dogadamy na żywo.",
+        nameL: "Nazwa marki 👶", nameS: "Jak ma się nazywać firma?", namePh: "np. Złoty Piec, Studio Marta...",
+        indL: "Branża i Oferta 🔧", indS: "Czym się zajmujesz?", indPh: "np. Fryzjer, sklep online, agencja...",
+        audL: "Grupa docelowa 👥", audS: "Kto będzie Twoim klientem? (możesz zaznaczyć kilka)",
+        inspL: "Inspiracje 👀", inspS: "Wklej linki do marek lub stron, które Ci się podobają", inspPh: "np. https://przykladowamarka.pl — lubię ich czystość i ciemne kolory...",
+        webInfo: "Wypełnij tyle ile wiesz — im więcej szczegółów, tym dokładniejsza wycena. Reszty dopytam przy pierwszym kontakcie.",
+        typeL: "Typ strony 🏗️", typeS: "Co konkretnie chcesz zbudować?", typeChoose: "-- Wybierz rodzaj --",
+        types: ["Wizytówka / One-pager", "Landing Page (pod produkt/ofertę)", "Strona wielostronicowa", "Sklep internetowy E-commerce"],
+        brL: "Branding 🎨", brS: "Masz już logo i kolory?", brChoose: "-- Wybierz --",
+        brs: ["Tak, mam pełny branding (logo + wytyczne)", "Mam tylko logo, bez wytycznych", "Nie, budujemy wszystko od zera"],
+        winspL: "Inspiracje 🔗", winspS: "Podrzuć linki do stron, które wyglądają tak jak tego chcesz",
+        winspPh: "np. https://apple.com (czysto i nowocześnie) lub https://sklep.pl (chcę podobny układ kart)...",
+        daneH: "Twoje dane kontaktowe 📬", daneS: "Gdzie wysłać odpowiedź i wycenę?",
+        imie: "Imię *", imiePh: "Jak mam się do Ciebie zwracać?", emailPh: "Na jaki adres mam odpisać?",
+        cos: "Coś jeszcze? Deadline? (opcjonalne)", cosPh: "Szczegóły, termin realizacji, specjalne życzenia...",
+        rodo: "Administratorem danych jest Wuyo. Wysyłając wiadomość zgadzasz się, że je przechowam tylko po to, by odpisać. 😉",
+        wysylam: "Wysyłam...", wyslij: "Wyślij, załatwione!",
+    },
+    en: {
+        audience: ["Women 25–45", "Men 25–45", "Businesses (B2B)", "Local (food, services)", "Premium clients", "Young / Gen Z"],
+        errName: "Please enter your name", errEmail: "Please enter your email", errEmailBad: "That email address doesn't look right", errMsg: "Leave a short message",
+        errNetwork: "Something went wrong while sending. Please email me directly at kontakt@wuyo.pl 😅",
+        sentTitle: "Message sent! 🎉", sentA: "I'll reply to", sentB: "usually within a few hours.",
+        eyebrow: "Send a brief", h2: "Let's build a brand that sells",
+        lead: "Pick the options below and let's take the first step. Feel free to write in English.",
+        szybko: "Prefer something quicker?", typBriefu: "Brief type",
+        tabs: [["Message", "Quick contact"], ["Logo / Branding", "Brand identity"], ["Website", "Shop, landing page, one-pager"]],
+        quickLabel: "What do you need? 🎤", quickSub: "Describe what you need, ask about the price, or tell me when we can talk on the phone.",
+        quickPh: "Hi WUYO! I need a logo, my shop opens in 3 weeks... or: call me on xxx-xxx-xxx",
+        brandInfo: "Fill in what you know. Don't have all the answers? No problem, leave fields empty and we'll sort it out together.",
+        nameL: "Brand name 👶", nameS: "What is the business called?", namePh: "e.g. Golden Oven, Studio Marta...",
+        indL: "Industry and offer 🔧", indS: "What do you do?", indPh: "e.g. hairdresser, online shop, agency...",
+        audL: "Target audience 👥", audS: "Who are your customers? (pick as many as you like)",
+        inspL: "Inspiration 👀", inspS: "Paste links to brands or websites you like", inspPh: "e.g. https://examplebrand.com — I like how clean and dark it is...",
+        webInfo: "Fill in what you know. The more detail, the more accurate the quote. I'll ask about the rest when we talk.",
+        typeL: "Type of website 🏗️", typeS: "What exactly do you want to build?", typeChoose: "-- Choose type --",
+        types: ["One-page site", "Landing page (for a product/offer)", "Multi-page website", "Online shop (e-commerce)"],
+        brL: "Branding 🎨", brS: "Do you already have a logo and colours?", brChoose: "-- Choose --",
+        brs: ["Yes, full branding (logo + guidelines)", "Only a logo, no guidelines", "No, we build everything from scratch"],
+        winspL: "Inspiration 🔗", winspS: "Share links to websites that look the way you want yours to",
+        winspPh: "e.g. https://apple.com (clean and modern) or https://shop.com (I want similar product cards)...",
+        daneH: "Your contact details 📬", daneS: "Where should I send my reply and quote?",
+        imie: "Name *", imiePh: "What should I call you?", emailPh: "Where should I reply?",
+        cos: "Anything else? Deadline? (optional)", cosPh: "Details, deadline, special requests...",
+        rodo: "WUYO is the data controller. By sending this message you agree that I keep your details only to reply to you. 😉",
+        wysylam: "Sending...", wyslij: "Send it!",
+    },
+} as const;
 
 
 
 export function ContactBrief() {
+    const locale = localeFromPath(usePathname());
+    const t = T[locale];
+    const audienceOptions = t.audience;
     const [path, setPath] = useState<Path>("quick");
     const [data, setData] = useState<BriefData>({ path: "quick", audience: [] });
     const [honeypot, setHoneypot] = useState("");
@@ -57,14 +115,16 @@ export function ContactBrief() {
         const pakiet = searchParams.get("pakiet");
         if (pakiet) {
             const webPkg = packages.find((p) => p.name === pakiet);
-            const bizPkg = findPricingCard(pakiet);
+            const bizPkg = locale === "en"
+                ? pricingGroupsEn.flatMap((g) => g.cards).find((c) => c.name === pakiet)
+                : findPricingCard(pakiet);
 
             let priceStr = "";
             let featuresList = "";
 
             if (bizPkg) {
                 priceStr = ` (${bizPkg.price} ${bizPkg.priceSuffix})`;
-                featuresList = "\n\nCo zawiera ten pakiet:\n" + bizPkg.features.map((f) => `• ${f}`).join("\n");
+                featuresList = (locale === "en" ? "\n\nWhat the package includes:\n" : "\n\nCo zawiera ten pakiet:\n") + bizPkg.features.map((f) => `• ${f}`).join("\n");
             } else if (webPkg) {
                 priceStr = ` (${webPkg.price})`;
             }
@@ -73,13 +133,15 @@ export function ContactBrief() {
             setData((prev) => ({
                 ...prev,
                 path: "quick",
-                quickMessage: `Cześć! Interesuje mnie pakiet „${pakiet}”${priceStr}.${featuresList}\n\nChciałbym dowiedzieć się więcej i omówić szczegóły.`,
+                quickMessage: locale === "en"
+                    ? `Hi! I'm interested in the "${pakiet}" package${priceStr}.${featuresList}\n\nI'd like to know more and discuss the details.`
+                    : `Cześć! Interesuje mnie pakiet „${pakiet}”${priceStr}.${featuresList}\n\nChciałbym dowiedzieć się więcej i omówić szczegóły.`,
             }));
             setTimeout(() => {
                 const el = document.getElementById("kontakt");
                 if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
             }, 100);
-            router.replace("/#kontakt", { scroll: false });
+            router.replace(`${route("home", locale)}#kontakt`, { scroll: false });
         }
     }, [searchParams]);
 
@@ -111,10 +173,10 @@ export function ContactBrief() {
         if (honeypot) return;
 
         const errs: typeof fieldErrors = {}
-        if (!data.name?.trim()) errs.name = "Podaj swoje imię"
-        if (!data.email?.trim()) errs.email = "Podaj adres e-mail"
-        else if (!EMAIL_RE.test(data.email)) errs.email = "Nieprawidłowy adres e-mail"
-        if (path === "quick" && !data.quickMessage?.trim()) errs.message = "Zostaw krótką wiadomość"
+        if (!data.name?.trim()) errs.name = t.errName
+        if (!data.email?.trim()) errs.email = t.errEmail
+        else if (!EMAIL_RE.test(data.email)) errs.email = t.errEmailBad
+        if (path === "quick" && !data.quickMessage?.trim()) errs.message = t.errMsg
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs)
@@ -127,7 +189,7 @@ export function ContactBrief() {
             const res = await fetch("/api/brief", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...data, hp: honeypot }),
+                body: JSON.stringify({ ...data, note: locale === "en" ? `[EN, odpisz po angielsku] ${data.note ?? ""}`.trim() : data.note, hp: honeypot }),
             });
             if (!res.ok) {
                 // Przy 400 serwer mówi konkretnie, co poprawić (np. zły adres) —
@@ -145,7 +207,7 @@ export function ContactBrief() {
             const message = err instanceof Error ? err.message : "network";
             setError(
                 message === "network"
-                    ? "Coś się posypało podczas wysyłania. Spróbuj napisać bezpośrednio na maila 😅"
+                    ? t.errNetwork
                     : message
             );
         } finally {
@@ -160,9 +222,9 @@ export function ContactBrief() {
                     <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(255,215,0,0.3)]" style={{ background: "#FFD700" }}>
                         <Check size={36} color="#000" strokeWidth={3} />
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-4">Wiadomość poszła w świat! 🎉</h3>
+                    <h3 className="text-3xl font-bold text-white mb-4">{t.sentTitle}</h3>
                     <p className="text-white/60 text-lg max-w-md mx-auto leading-relaxed">
-                        Odezwę się na <span className="text-gold font-semibold text-xl block mt-2">{data.email}</span> zazwyczaj w ciągu kilku godzin.
+                        {t.sentA} <span className="text-gold font-semibold text-xl block mt-2">{data.email}</span> {t.sentB}
                     </p>
                 </div>
             </section>
@@ -175,17 +237,17 @@ export function ContactBrief() {
             <div className="max-w-4xl mx-auto relative z-10">
 
                 <div className="text-center mb-12">
-                    <p className="eyebrow mb-4">Wyślij brief</p>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Zacznijmy tworzyć wizerunek, który sprzedaje</h2>
+                    <p className="eyebrow mb-4">{t.eyebrow}</p>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">{t.h2}</h2>
                     <p className="text-white/60 max-w-xl mx-auto">
-                        Zaznacz opcje w poniższym briefie i zróbmy ten pierwszy krok. Dopracowana marka czeka na Ciebie na wciągnięcie ręki!
+                        {t.lead}
                     </p>
                 </div>
 
                 {/* Szybki kontakt przez komunikatory */}
                 <div className="flex flex-col items-center gap-3 mb-10">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <span className="text-white/60 text-sm">Wolisz na szybko?</span>
+                        <span className="text-white/60 text-sm">{t.szybko}</span>
                         <a
                             href={WA_LINK}
                             target="_blank"
@@ -206,21 +268,21 @@ export function ContactBrief() {
                             Messenger
                         </a>
                     </div>
-                    <p className="text-white/50 text-xs text-center">
+                    {locale === "pl" && <p className="text-white/50 text-xs text-center">
                         💬 Możesz też skorzystać z{" "}
                         <span className="text-gold/80 font-semibold">chatbota AI</span>{" "}
                         w prawym dolnym rogu strony &mdash; odpowie od ręki!
-                    </p>
+                    </p>}
                 </div>
 
                 <div className="bg-navy-dark/60 rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl backdrop-blur-xl">
 
                     {/* ZAKŁADKI */}
-                    <div role="tablist" aria-label="Typ briefu" className="relative grid grid-cols-3 border-b border-white/10 bg-navy/30">
+                    <div role="tablist" aria-label={t.typBriefu} className="relative grid grid-cols-3 border-b border-white/10 bg-navy/30">
                         {([
-                            { id: "quick" as Path, icon: <MessageSquare size={18} />, label: "Wiadomość", sub: "Szybki kontakt" },
-                            { id: "branding" as Path, icon: <Star size={18} />, label: "Logo / Branding", sub: "Identyfikacja marki" },
-                            { id: "web" as Path, icon: <Monitor size={18} />, label: "Strona WWW", sub: "Sklep, landing, wizytówka" },
+                            { id: "quick" as Path, icon: <MessageSquare size={18} />, label: t.tabs[0][0], sub: t.tabs[0][1] },
+                            { id: "branding" as Path, icon: <Star size={18} />, label: t.tabs[1][0], sub: t.tabs[1][1] },
+                            { id: "web" as Path, icon: <Monitor size={18} />, label: t.tabs[2][0], sub: t.tabs[2][1] },
                         ] as const).map((tab) => (
                             <button
                                 key={tab.id}
@@ -258,11 +320,11 @@ export function ContactBrief() {
                             className="panel-briefu mb-10 pb-10 border-b border-white/10 space-y-8"
                         >
                                 {path === "quick" && (
-                                    <BriefField label="O co chodzi? 🎤" sub="Opisz co potrzebujesz, zapytaj o cenę, lub napisz kiedy możemy pogadać przez telefon.">
+                                    <BriefField label={t.quickLabel} sub={t.quickSub}>
                                         <textarea
                                             rows={5}
                                             className={`brief-input resize-none w-full ${fieldErrors.message ? "border-red-500/60" : ""}`}
-                                            placeholder="Hej Wuyo! Potrzebuję logo, mam otwarcie sklepu za 3 tygodnie... albo: zadzwoń do mnie na xxx-xxx-xxx"
+                                            placeholder={t.quickPh}
                                             value={data.quickMessage ?? ""}
                                             onChange={(e) => { setData((d) => ({ ...d, quickMessage: e.target.value })); setFieldErrors(p => ({ ...p, message: undefined })) }}
                                         />
@@ -274,17 +336,17 @@ export function ContactBrief() {
                                     <>
                                         <div className="flex items-start gap-3 bg-gold/10 p-4 rounded-xl border border-gold/20 text-sm text-gold/90">
                                             <Briefcase size={18} className="mt-0.5 shrink-0" />
-                                            <span>Wypełnij tyle ile wiesz — nie masz wszystkich odpowiedzi? Żaden problem, zostawiaj pola puste i dogadamy na żywo.</span>
+                                            <span>{t.brandInfo}</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <BriefField label="Nazwa marki 👶" sub="Jak ma się nazywać firma?">
-                                                <input className="brief-input w-full" placeholder="np. Złoty Piec, Studio Marta..." value={data.companyName ?? ""} onChange={(e) => setData((d) => ({ ...d, companyName: e.target.value }))} />
+                                            <BriefField label={t.nameL} sub={t.nameS}>
+                                                <input className="brief-input w-full" placeholder={t.namePh} value={data.companyName ?? ""} onChange={(e) => setData((d) => ({ ...d, companyName: e.target.value }))} />
                                             </BriefField>
-                                            <BriefField label="Branża i Oferta 🔧" sub="Czym się zajmujesz?">
-                                                <input className="brief-input w-full" placeholder="np. Fryzjer, sklep online, agencja..." value={data.industry ?? ""} onChange={(e) => setData((d) => ({ ...d, industry: e.target.value }))} />
+                                            <BriefField label={t.indL} sub={t.indS}>
+                                                <input className="brief-input w-full" placeholder={t.indPh} value={data.industry ?? ""} onChange={(e) => setData((d) => ({ ...d, industry: e.target.value }))} />
                                             </BriefField>
                                         </div>
-                                        <BriefField label="Grupa docelowa 👥" sub="Kto będzie Twoim klientem? (możesz zaznaczyć kilka)">
+                                        <BriefField label={t.audL} sub={t.audS}>
                                             <div className="flex flex-wrap gap-2">
                                                 {audienceOptions.map((a) => (
                                                     <button key={a} onClick={() => toggleAudience(a)}
@@ -294,8 +356,8 @@ export function ContactBrief() {
                                                 ))}
                                             </div>
                                         </BriefField>
-                                        <BriefField label="Inspiracje 👀" sub="Wklej linki do marek lub stron, które Ci się podobają">
-                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder="np. https://przykladowamarka.pl — lubię ich czystość i ciemne kolory..." value={data.inspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, inspiration: e.target.value }))} />
+                                        <BriefField label={t.inspL} sub={t.inspS}>
+                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder={t.inspPh} value={data.inspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, inspiration: e.target.value }))} />
                                         </BriefField>
                                     </>
                                 )}
@@ -304,29 +366,29 @@ export function ContactBrief() {
                                     <>
                                         <div className="flex items-start gap-3 bg-gold/10 p-4 rounded-xl border border-gold/20 text-sm text-gold/90">
                                             <Monitor size={18} className="mt-0.5 shrink-0" />
-                                            <span>Wypełnij tyle ile wiesz — im więcej szczegółów, tym dokładniejsza wycena. Reszty dopytam przy pierwszym kontakcie.</span>
+                                            <span>{t.webInfo}</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <BriefField label="Typ strony 🏗️" sub="Co konkretnie chcesz zbudować?">
+                                            <BriefField label={t.typeL} sub={t.typeS}>
                                                 <select className="brief-input w-full bg-navy" value={data.siteType ?? ""} onChange={(e) => setData((d) => ({ ...d, siteType: e.target.value }))}>
-                                                    <option value="" disabled>-- Wybierz rodzaj --</option>
-                                                    <option value="wizytowka">Wizytówka / One-pager</option>
-                                                    <option value="landing">Landing Page (pod produkt/ofertę)</option>
-                                                    <option value="wielostronicowa">Strona wielostronicowa</option>
-                                                    <option value="sklep">Sklep internetowy E-commerce</option>
+                                                    <option value="" disabled>{t.typeChoose}</option>
+                                                    <option value="wizytowka">{t.types[0]}</option>
+                                                    <option value="landing">{t.types[1]}</option>
+                                                    <option value="wielostronicowa">{t.types[2]}</option>
+                                                    <option value="sklep">{t.types[3]}</option>
                                                 </select>
                                             </BriefField>
-                                            <BriefField label="Branding 🎨" sub="Masz już logo i kolory?">
+                                            <BriefField label={t.brL} sub={t.brS}>
                                                 <select className="brief-input w-full bg-navy" value={data.hasBranding ?? ""} onChange={(e) => setData((d) => ({ ...d, hasBranding: e.target.value }))}>
-                                                    <option value="" disabled>-- Wybierz --</option>
-                                                    <option value="tak_pelny">Tak, mam pełny branding (logo + wytyczne)</option>
-                                                    <option value="tak_czesc">Mam tylko logo, bez wytycznych</option>
-                                                    <option value="nie">Nie, budujemy wszystko od zera</option>
+                                                    <option value="" disabled>{t.brChoose}</option>
+                                                    <option value="tak_pelny">{t.brs[0]}</option>
+                                                    <option value="tak_czesc">{t.brs[1]}</option>
+                                                    <option value="nie">{t.brs[2]}</option>
                                                 </select>
                                             </BriefField>
                                         </div>
-                                        <BriefField label="Inspiracje 🔗" sub="Podrzuć linki do stron, które wyglądają tak jak tego chcesz">
-                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder="np. https://apple.com (czysto i nowocześnie) lub https://sklep.pl (chcę podobny układ kart)..." value={data.webInspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, webInspiration: e.target.value }))} />
+                                        <BriefField label={t.winspL} sub={t.winspS}>
+                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder={t.winspPh} value={data.webInspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, webInspiration: e.target.value }))} />
                                         </BriefField>
                                     </>
                                 )}
@@ -335,8 +397,8 @@ export function ContactBrief() {
                         {/* DANE KONTAKTOWE — zawsze widoczne */}
                         <div className="space-y-6">
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-1">Twoje dane kontaktowe 📬</h3>
-                                <p className="text-white/60 text-sm">Gdzie wysłać odpowiedź i wycenę?</p>
+                                <h3 className="text-xl font-bold text-white mb-1">{t.daneH}</h3>
+                                <p className="text-white/60 text-sm">{t.daneS}</p>
                             </div>
 
                             {/* bot trap */}
@@ -344,11 +406,11 @@ export function ContactBrief() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
-                                    <label htmlFor="contact-name" className="brief-label">Imię *</label>
+                                    <label htmlFor="contact-name" className="brief-label">{t.imie}</label>
                                     <input
                                         id="contact-name"
                                         className={`brief-input w-full ${fieldErrors.name ? "border-red-500/60 focus:border-red-500" : ""}`}
-                                        placeholder="Jak mam się do Ciebie zwracać?"
+                                        placeholder={t.imiePh}
                                         value={data.name || ""}
                                         onChange={(e) => { setData(prev => ({ ...prev, name: e.target.value })); setFieldErrors(p => ({ ...p, name: undefined })) }}
                                         autoComplete="name"
@@ -363,7 +425,7 @@ export function ContactBrief() {
                                         id="contact-email"
                                         type="email"
                                         className={`brief-input w-full ${fieldErrors.email ? "border-red-500/60 focus:border-red-500" : ""}`}
-                                        placeholder="Na jaki adres mam odpisać?"
+                                        placeholder={t.emailPh}
                                         value={data.email || ""}
                                         onChange={(e) => { setData(prev => ({ ...prev, email: e.target.value })); setFieldErrors(p => ({ ...p, email: undefined })) }}
                                         autoComplete="email"
@@ -377,8 +439,8 @@ export function ContactBrief() {
 
 
                             <div>
-                                <label className="brief-label">Coś jeszcze? Deadline? (opcjonalne)</label>
-                                <textarea rows={2} className="brief-input w-full resize-none" placeholder="Szczegóły, termin realizacji, specjalne życzenia..." value={data.note ?? ""} onChange={(e) => setData((d) => ({ ...d, note: e.target.value }))} />
+                                <label className="brief-label">{t.cos}</label>
+                                <textarea rows={2} className="brief-input w-full resize-none" placeholder={t.cosPh} value={data.note ?? ""} onChange={(e) => setData((d) => ({ ...d, note: e.target.value }))} />
                             </div>
 
                             {/* Przycisk + błąd */}
@@ -387,7 +449,7 @@ export function ContactBrief() {
                                     {error ? (
                                         <p className="text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">⚠️ {error}</p>
                                     ) : (
-                                        <p className="text-white/50 text-xs">Administratorem danych jest Wuyo. Wysyłając wiadomość zgadzasz się, że je przechowam tylko po to, by odpisać. 😉</p>
+                                        <p className="text-white/50 text-xs">{t.rodo}</p>
                                     )}
                                 </div>
                                 <button
@@ -395,7 +457,7 @@ export function ContactBrief() {
                                     disabled={sending}
                                     className="btn-gold px-10 py-4 flex items-center justify-center gap-3 font-bold text-base rounded-full disabled:opacity-50 min-w-[220px] shadow-[0_0_20px_rgba(255,215,0,0.2)] hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] w-full md:w-auto"
                                 >
-                                    {sending ? "Wysyłam..." : <><Send size={18} /> Wyślij, załatwione!</>}
+                                    {sending ? t.wysylam : <><Send size={18} /> {t.wyslij}</>}
                                 </button>
                             </div>
                         </div>

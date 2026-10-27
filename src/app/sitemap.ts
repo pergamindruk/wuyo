@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { ROUTES } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://wuyo.pl";
@@ -18,6 +19,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // przy każdym buildzie uczy Google, że tej wartości nie warto ufać (także przy blogu).
     // Lista bloga zmienia się razem z najnowszym wpisem, więc dostaje jego datę.
     const newestPost = blogEntries[0]?.lastModified;
+
+    // Wersja angielska: niższy priorytet, bo główny rynek i x-default to polska strona.
+    const enPosts = getAllPosts("en");
+    const englishEntries: MetadataRoute.Sitemap = [
+        ...Object.values(ROUTES).map((r) => ({
+            url: `${baseUrl}${r.en}`,
+            ...(r.en === "/en/blog" && enPosts[0] ? { lastModified: new Date(enPosts[0].dateModified ?? enPosts[0].date) } : {}),
+            changeFrequency: "monthly" as const,
+            priority: r.en === "/en" ? 0.6 : 0.5,
+        })),
+        ...enPosts.map((p) => ({
+            url: `${baseUrl}/en/blog/${p.slug}`,
+            lastModified: new Date(p.dateModified ?? p.date),
+            changeFrequency: "monthly" as const,
+            priority: 0.4,
+        })),
+    ];
 
     return [
         ...blogEntries,
@@ -90,5 +108,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "yearly",
             priority: 0.3,
         },
+        ...englishEntries,
     ];
 }

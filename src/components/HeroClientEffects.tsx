@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
+import type { Locale } from "@/lib/i18n";
 
 // Orby ładowane tylko po hydracji, żeby nie blokować TBT
 const LazyAmbientOrbs = dynamic(() => Promise.resolve(AmbientOrbsInner), { ssr: false });
@@ -21,8 +22,8 @@ export function HeroClientEffects() {
     );
 }
 
-export function HeroStats() {
-    return <StatsCounter />;
+export function HeroStats({ locale = "pl" }: { locale?: Locale }) {
+    return <StatsCounter locale={locale} />;
 }
 
 // Wewnętrzny komponent — czyste CSS, zero JS na głównym wątku
@@ -89,10 +90,10 @@ export function HeroBackgroundText() {
     );
 }
 
-export function ScrollIndicator() {
+export function ScrollIndicator({ locale = "pl" }: { locale?: Locale }) {
     return (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/50 pointer-events-none select-none scroll-indicator-bounce">
-            <span className="text-[10px] uppercase tracking-[0.2em]">Odkryj</span>
+            <span className="text-[10px] uppercase tracking-[0.2em]">{locale === "en" ? "Explore" : "Odkryj"}</span>
             <ChevronDown size={20} />
         </div>
     );

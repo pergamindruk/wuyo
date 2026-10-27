@@ -3,6 +3,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { getGoogleReviews } from "@/lib/google-reviews";
 import { GoogleReviews } from "@/components/GoogleReviews";
 import { staticGoogleReviews } from "@/data/google-reviews-static";
+import type { Locale } from "@/lib/i18n";
 
 type Testimonial = {
     id?: string;
@@ -62,17 +63,17 @@ async function getTestimonials(): Promise<Testimonial[]> {
     }
 }
 
-export async function TestimonialsSection() {
+export async function TestimonialsSection({ locale = "pl" }: { locale?: Locale } = {}) {
     // Opinie z Google są źródłem podstawowym — prawdziwe i same się aktualizują.
     // Gdy brakuje kluczy albo Google nie odpowie, wracamy do listy własnej,
     // żeby sekcja nigdy nie zniknęła ze strony.
     const google = await getGoogleReviews();
-    if (google) return <GoogleReviews data={google} />;
+    if (google) return <GoogleReviews data={google} locale={locale} />;
 
     // Bez kluczy API pokazujemy te same prawdziwe opinie, tylko przepisane
     // ręcznie z profilu w Google. Wygląd i odnośniki identyczne.
     if (staticGoogleReviews.reviews.length > 0) {
-        return <GoogleReviews data={staticGoogleReviews} />;
+        return <GoogleReviews data={staticGoogleReviews} locale={locale} />;
     }
 
     const testimonials = await getTestimonials();

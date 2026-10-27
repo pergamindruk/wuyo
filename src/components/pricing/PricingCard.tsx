@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import type { PricingCardData } from "@/data/pricing";
+import { route, type Locale } from "@/lib/i18n";
 
 /**
  * Reużywalna karta cennika. Karta wyróżniona: żółta obwódka + poświata +
  * plakietka nad kartą. Na mobile karta wyróżniona ląduje pierwsza (order-first).
  */
-export function PricingCard({ card }: { card: PricingCardData }) {
+export function PricingCard({ card, locale = "pl" }: { card: PricingCardData; locale?: Locale }) {
     const { eyebrow, name, tagline, price, priceSuffix, listPrice, saving, features, delivery, cta, highlighted, badge } =
         card;
 
     // Prefill formularza kontaktowego nazwą pakietu.
-    const ctaHref = `/?pakiet=${encodeURIComponent(name)}#kontakt`;
+    const ctaHref = `${route("home", locale)}?pakiet=${encodeURIComponent(name)}#kontakt`;
 
     return (
         <li
@@ -40,8 +41,8 @@ export function PricingCard({ card }: { card: PricingCardData }) {
                 <p className="text-white/50 text-xs mt-2 h-4">
                     {listPrice && (
                         <>
-                            osobno <span className="line-through tabular-nums">{listPrice}</span>
-                            {saving && <span className="text-gold/70 ml-1.5">— oszczędzasz {saving}</span>}
+                            {locale === "en" ? "separately" : "osobno"} <span className="line-through tabular-nums">{listPrice}</span>
+                            {saving && <span className="text-gold/70 ml-1.5">— {locale === "en" ? "you save" : "oszczędzasz"} {saving}</span>}
                         </>
                     )}
                 </p>
