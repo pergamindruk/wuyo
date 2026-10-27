@@ -5,6 +5,8 @@ do portfolio/
 *.pdf
 *.log
 *.txt
+# route z opisem firmy dla asystentów AI (folder nazywa się jak plik)
+!/src/app/llms.txt/
 *.ai
 *.js
 !next.config.mjs
