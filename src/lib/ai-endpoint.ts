@@ -16,6 +16,9 @@ type ServiceAccount = { client_email: string; private_key: string; project_id: s
 
 export type GeminiTarget = {
     provider: 'vertex' | 'ai-studio'
+    /** Główny model tekstowy i zapasowy (gdy główny przeciążony) - różne w Vertex i AI Studio. */
+    textModel: string
+    fallbackModel: string
     url: (model: string) => string
     headers: Record<string, string>
 }
@@ -74,6 +77,9 @@ export async function geminiTarget(): Promise<GeminiTarget | null> {
         const token = await accessToken(sa)
         return {
             provider: 'vertex',
+            // gemini-2.5-flash jest w Vertex wycofany (404, 28.10.2026).
+            textModel: process.env.GCP_VERTEX_MODEL || 'gemini-3.5-flash',
+            fallbackModel: 'gemini-3.5-flash-lite',
             url: (model) =>
                 `https://${host}/v1/projects/${sa.project_id}/locations/${location}/publishers/google/models/${model}:generateContent`,
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -83,6 +89,8 @@ export async function geminiTarget(): Promise<GeminiTarget | null> {
     if (!key) return null
     return {
         provider: 'ai-studio',
+        textModel: 'gemini-2.5-flash',
+        fallbackModel: 'gemini-3.5-flash-lite',
         // Klucz w nagłówku, nie w adresie: adres ląduje w logach i komunikatach błędów.
         url: (model) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },

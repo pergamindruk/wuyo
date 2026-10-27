@@ -1,7 +1,5 @@
 import { geminiTarget } from '@/lib/ai-endpoint'
 
-export const GEMINI_MODEL = 'gemini-2.5-flash'
-
 // text = ile tokenów ma zostać na sam tekst odpowiedzi.
 // thinking = osobny, ograniczony budżet na „myślenie”. Gemini 2.5 wlicza myślenie
 // do maxOutputTokens, więc bez tego podziału długie myślenie ucinało tekst (ściągawki, posty).
@@ -33,7 +31,7 @@ async function callOnce(preset: ModelPreset, prompt: string, noThinking: boolean
     if (!target) throw new GeminiError(500, 'Brak konfiguracji AI (GCP_SA_KEY_B64 albo WUYO_GEMINI_KEY)')
     const { text, thinking } = MODEL_CONFIGS[preset]
     const budget = noThinking ? 0 : thinking
-    const res = await fetch(target.url(GEMINI_MODEL), {
+    const res = await fetch(target.url(target.textModel), {
         method: 'POST',
         headers: target.headers,
         body: JSON.stringify({

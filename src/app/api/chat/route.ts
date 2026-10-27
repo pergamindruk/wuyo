@@ -5,9 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import { geminiTarget, type GeminiTarget } from "@/lib/ai-endpoint";
 
 export const dynamic = "force-dynamic";
-// Główny model + zapasowy, gdy główny jest przeciążony (Gemini zwraca wtedy 503).
-const MODEL = "gemini-2.5-flash";
-const FALLBACK_MODEL = "gemini-3.5-flash-lite";
 
 // Statusy, przy których warto spróbować jeszcze raz: limit, przeciążenie, chwilowy błąd.
 const RETRYABLE = new Set([429, 500, 503, 504]);
@@ -20,7 +17,8 @@ const redact = (s: string) => s.replace(/AIza[\w-]{20,}|AQ\.[\w.-]{20,}/g, "***"
 async function callGemini(target: GeminiTarget, contents: object[]): Promise<Response> {
     const deadline = Date.now() + TOTAL_BUDGET_MS;
     // Dwie próby na głównym modelu, potem jedna na zapasowym.
-    const plan = [MODEL, MODEL, FALLBACK_MODEL];
+    // Główny model + zapasowy, gdy główny jest przeciążony (Gemini zwraca wtedy 503).
+    const plan = [target.textModel, target.textModel, target.fallbackModel];
     let last: Response | null = null;
 
     for (let i = 0; i < plan.length; i++) {
