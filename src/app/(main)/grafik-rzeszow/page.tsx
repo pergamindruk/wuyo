@@ -148,7 +148,7 @@ export default function GrafikRzeszowPage() {
                     <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                         {[
                             { stat: "Rzeszów", label: "i cała Polska zdalnie" },
-                            { stat: "150+", label: "zrealizowanych projektów" },
+                            { stat: "XII 2026", label: "start realizacji zamówień" },
                             { stat: "24h", label: "i masz wycenę w skrzynce" },
                             { stat: "1 osoba", label: "piszesz do mnie, nie do działu" },
                         ].map((item, i) => (

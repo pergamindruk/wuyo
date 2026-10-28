@@ -257,7 +257,7 @@ export default function OmniePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[
                             { label: "Lokalizacja", value: "Rzeszów, Podkarpacie" },
-                            { label: "Kontakt", value: "Bezpośrednio ze mną, bez pośredników" },
+                            { label: "Realizacja zamówień", value: "Od grudnia 2026" },
                             { label: "Specjalizacja", value: "Logo, strony WWW, druk" },
                             { label: "Technologia webowa", value: "Next.js, React, TypeScript" },
                             { label: "Obsługuję", value: "Małe i średnie firmy, lokalne biznesy" },
