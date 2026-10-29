@@ -1,9 +1,7 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
 import { createClient } from '@/lib/supabase/server'
-import { generateWithFallback } from '@/lib/gemini'
+import { KIND_LABEL, SELLER, parseReceipt, serializeReceipt, type ReceiptData, type ReceiptKind } from '@/lib/lab/receipt'
 import { revalidatePath } from 'next/cache'
 import { logAuditEvent } from '@/lib/audit'
 
@@ -120,75 +118,64 @@ export async function updatePaymentStatus(id: string, status: string) {
     return true
 }
 
-export async function generateDocument(documentType: string, clientInfo: string, amount: string, description: string, saleDate: string, issueDate: string) {
-    try {
-        const kbPath = path.join(process.cwd(), 'src', 'app', 'lab', 'knowledge', 'nierejestrowana-2026.md')
-        const knowledge = await fs.readFile(kbPath, 'utf-8').catch(() => '')
+export type DocumentInput = {
+    kind: ReceiptKind
+    buyer: string
+    description: string
+    unit: string
+    qty: number
+    totalZl: number
+    advanceZl: number
+    saleDate: string
+    issueDate: string
+    payment: string
+    dueDays: number
+    notes: string
+}
 
-        const prompt = `Jesteś zautomatyzowanym systemem księgowym (rok 2026). Twoim jedynym zadaniem jest wygenerowanie perfekcyjnego, sformalizowanego i gotowego do druku dokumentu: ${documentType}.
+/** Rachunek / protokół ze stałego szablonu (bez AI). Numer: kolejny w miesiącu wystawienia, np. 02/11/2026. */
+export async function createDocument(input: DocumentInput): Promise<{ success: true; data: ReceiptData } | { success: false; error: string }> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
 
-        KONTEKST PRAWNY (DZIAŁALNOŚĆ NIEREJESTROWANA):
-        ${knowledge}
+    const total = Math.round(input.totalZl * 100)
+    const advance = Math.round(Math.max(0, input.advanceZl) * 100)
+    if (!input.buyer.trim() || !input.description.trim()) return { success: false, error: 'Uzupełnij nabywcę i opis usługi.' }
+    if (input.kind !== 'protokol' && total <= 0) return { success: false, error: 'Kwota musi być większa od zera.' }
 
-        DANE DO DOKUMENTU:
-        - Nabywca/Klient: ${clientInfo}
-        - Sprzedawca (Wystawca, osoba fizyczna prowadząca działalność nierejestrowaną):
-            Mateusz Machoś
-            ul. Siemieńskiego 17A/38
-            35-203 Rzeszów
-        - Kwota do zapłaty (końcowa, po ewentualnych korektach): ${amount} PLN
-        - Opis przedmiotu transakcji (może zawierać informacje o korekcie ilości, zaliczce, itp.): ${description}
-        - Data wystawienia: ${issueDate}
-        - Data sprzedaży / wykonania usługi: ${saleDate}
-        - Miejsce wystawienia: Rzeszów
+    const [y, m] = input.issueDate.split('-')
+    const { data: existing } = await supabase.from('finances').select('markdown_content')
+    const sameMonth = (existing ?? []).map((r) => parseReceipt(r.markdown_content as string | null))
+        .filter((d): d is ReceiptData => !!d && d.kind !== 'protokol' && d.issueDate.startsWith(`${y}-${m}`)).length
+    const number = input.kind === 'protokol'
+        ? `P/${input.issueDate.replace(/-/g, '')}`
+        : `${String(sameMonth + 1).padStart(2, '0')}/${m}/${y}`
 
-        WYTYCZNE DLA GENERATORA (MUSISZ ICH DOKŁADNIE PRZESTRZEGAĆ):
-
-        1. Zwróć TYLKO I WYŁĄCZNIE czysty kod Markdown reprezentujący dokument. ZERO WSTĘPÓW ani podsumowań. Nie owijaj wyniku w blok kodu (\`\`\`).
-
-        2. NAZEWNICTWO: Dokument to zawsze RACHUNEK (nie Faktura). Sprzedawca to osoba fizyczna bez działalności gospodarczej. NIE używaj nazwy "WUYO" ani żadnej nazwy handlowej w sekcji Sprzedawcy – tylko imię, nazwisko i adres.
-
-        3. KRYTYCZNE – TABELA MARKDOWN: Tabela MUSI być w pełni wypełniona. Każda komórka musi mieć wartość. Użyj dokładnie tego formatu:
-
-        | Lp. | Nazwa usługi / produktu | Jednostka miary | Ilość | Kwota (PLN) |
-        |-----|------------------------|-----------------|-------|-------------|
-        | 1   | [opis usługi]          | [jednostka]     | [ilość] | [kwota]  |
-
-        Jeśli opis zawiera informację o zaliczce lub korekcie ilości, dodaj osobne wiersze:
-        - wiersz z główną usługą i jej pełną wartością (jednostka adekwatna do usługi, np. "szt.", "godz.", "komplet")
-        - wiersz "Zaliczka (wpłacona)" – jednostka miary: "usługa", ilość: 1, wartość ujemna (np. -600,00)
-        - ostatni wiersz podsumowujący: | – | **Razem do zapłaty** | – | – | **${amount}** |
-
-        4. UKŁAD DOKUMENTU (kolejność obowiązkowa):
-           - Nagłówek po prawej: **Miejscowość:** Rzeszów &nbsp;&nbsp; **Data wystawienia:** ${issueDate} &nbsp;&nbsp; **Data sprzedaży:** ${saleDate}
-           - Duży nagłówek: # Rachunek nr [numer]/[miesiąc cyfrowo 01-12]/[rok] (np. 01/04/2026)
-           - **Sprzedawca:** Mateusz Machoś, ul. Siemieńskiego 17A/38, 35-203 Rzeszów
-           - **Nabywca:** dane z pola Nabywca
-           - Tabela (patrz punkt 3)
-           - **Kwota do zapłaty: ${amount} PLN** (pogrubione)
-           - Dwa dopiski prawne (oba obowiązkowe):
-             a) _Sprzedawca prowadzi działalność nierejestrowaną w rozumieniu art. 5 ust. 1 ustawy Prawo przedsiębiorców. Przychód zostanie wykazany przez Sprzedawcę w zeznaniu rocznym PIT-36 jako przychód z innych źródeł._
-             b) _Sprzedawca zwolniony z podatku od towarów i usług na podstawie art. 113 ust. 1 i 9 ustawy o VAT._
-           - Jeśli była zaliczka lub korekta ilości – sekcja **Uwagi** z wyjaśnieniem (bez języka potocznego)
-           - Miejsca na podpisy: "Podpis Sprzedawcy: ........................" i "Podpis Nabywcy: ........................"
-
-        5. Dokument to formalny dowód księgowy. Brak języka potocznego. Brak cudzysłowów wokół całego wyniku.`
-
-        const markdown = await generateWithFallback('document', prompt)
-
-        // Dodaj wpis do ewidencji automatycznie w tle
-        await addEwidencja({
-            documentType,
-            date: saleDate,
-            clientInfo,
-            description,
-            amount: parseFloat(amount),
-            markdownContent: markdown,
-        })
-
-        return { success: true, markdown }
-    } catch (error: any) {
-        console.error('Gemini API Error:', error)
-        return { success: false, error: 'Nie udało się wygenerować dokumentu. Błąd: ' + (error.message || '') }
+    const data: ReceiptData = {
+        kind: input.kind,
+        number,
+        place: 'Rzeszów',
+        issueDate: input.issueDate,
+        saleDate: input.saleDate,
+        seller: SELLER,
+        // Nabywca z pola tekstowego: każda linia albo fragment po przecinku to osobny wiersz na dokumencie.
+        buyer: input.buyer.split(/\n|,\s*/).map((l) => l.trim()).filter(Boolean),
+        items: [{ name: input.description.trim(), unit: input.unit || 'usł.', qty: input.qty || 1, amountGrosze: total + advance }],
+        advanceGrosze: advance,
+        totalGrosze: total,
+        payment: input.payment,
+        dueDays: input.dueDays,
+        notes: input.notes.trim(),
     }
+
+    await addEwidencja({
+        documentType: KIND_LABEL[input.kind],
+        date: input.saleDate,
+        clientInfo: input.buyer.trim(),
+        description: input.description.trim(),
+        amount: input.kind === 'protokol' ? 0 : total / 100,
+        markdownContent: serializeReceipt(data),
+    })
+    return { success: true, data }
 }

@@ -1,123 +1,103 @@
 'use client'
 
+// "use client": formularz, podgląd dokumentu, PDF i przełączanie statusu płatności działają w przeglądarce.
 import { useEffect, useState } from 'react'
-import { FileText, Save, Bot, Printer, Info, Wallet, TrendingUp, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X, Pencil } from 'lucide-react'
-import { generateDocument, getEwidencja, deleteEwidencja, updatePaymentStatus, updateMarkdownContent } from './actions'
+import { FileText, Save, Printer, Info, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X, Pencil } from 'lucide-react'
+import { createDocument, getEwidencja, deleteEwidencja, updatePaymentStatus, updateMarkdownContent } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { ReceiptDocument } from '@/components/lab/ReceiptDocument'
+import { KIND_LABEL, SELLER, parseReceipt, type ReceiptData, type ReceiptKind } from '@/lib/lab/receipt'
+
+/** Limit działalności nierejestrowanej od 1.01.2026: 225% płacy minimalnej (4806 zł) na KWARTAŁ (art. 5 ust. 1 Prawa przedsiębiorców). */
+const QUARTER_LIMIT = 10813.5
+
+async function savePdf(elementId: string, filename: string) {
+    const html2pdf = (await import('html2pdf.js')).default
+    const element = document.getElementById(elementId)
+    if (!element) return
+    html2pdf().set({
+        margin: 12,
+        filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, windowWidth: 794, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    }).from(element).save()
+}
+
+const today = () => new Date().toISOString().split('T')[0]
+const field = 'w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
+const label = 'text-[11px] font-semibold uppercase tracking-wider text-zinc-400'
 
 export default function FinancesLab() {
-    const defaultDocType = 'Rachunek (Działalność Nierejestrowana – art. 5 ust. 1 Prawo przedsiębiorców)'
-    const [docType, setDocType] = useState(defaultDocType)
-    const [clientInfo, setClientInfo] = useState('')
-    const [amount, setAmount] = useState('1500')
-    const [description, setDescription] = useState('Wykonanie projektu strony internetowej One-Page')
-    const [saleDate, setSaleDate] = useState(new Date().toISOString().split('T')[0])
-    const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0])
+    const [kind, setKind] = useState<ReceiptKind>('dn')
+    const [buyer, setBuyer] = useState('')
+    const [description, setDescription] = useState('')
+    const [unit, setUnit] = useState('usł.')
+    const [qty, setQty] = useState('1')
+    const [amount, setAmount] = useState('')
+    const [advance, setAdvance] = useState('')
+    const [payment, setPayment] = useState('przelew')
+    const [dueDays, setDueDays] = useState('7')
+    const [notes, setNotes] = useState('')
+    const [saleDate, setSaleDate] = useState(today())
+    const [issueDate, setIssueDate] = useState(today())
 
     const [loading, setLoading] = useState(false)
-    const [markdown, setMarkdown] = useState('')
+    const [doc, setDoc] = useState<ReceiptData | null>(null)
     const [error, setError] = useState('')
     const [ewidencja, setEwidencja] = useState<any[]>([])
 
-    const loadEwidencja = async () => {
-        const data = await getEwidencja()
-        setEwidencja(data)
-    }
-
-    useEffect(() => {
-        loadEwidencja()
-    }, [])
+    const loadEwidencja = async () => setEwidencja(await getEwidencja())
+    useEffect(() => { loadEwidencja() }, [])
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError('')
-        setMarkdown('')
-
-        const result = await generateDocument(docType, clientInfo, amount, description, saleDate, issueDate)
-        if (result.success && result.markdown) {
-            setMarkdown(result.markdown)
+        const r = await createDocument({
+            kind, buyer, description, unit, qty: Number(qty) || 1,
+            totalZl: Number(amount.replace(',', '.')) || 0, advanceZl: Number(advance.replace(',', '.')) || 0,
+            saleDate, issueDate, payment, dueDays: Number(dueDays) || 0, notes,
+        })
+        if (r.success) {
+            setDoc(r.data)
             loadEwidencja()
-        } else {
-            setError(result.error || 'Wystąpił nieznany błąd podczas generowania dokumentu.')
-        }
+        } else setError(r.error)
         setLoading(false)
     }
 
-    // --- LIMIT MIESIĘCZNY I LOGIKA KALENDARZA 2026 ---
-    const selectedDateObj = new Date(saleDate)
-    const currentMonth = selectedDateObj.getMonth() // 0-11
-    const currentYear = selectedDateObj.getFullYear()
-
-    // Limity dla pierwszej i drugiej połowy roku
-    const LIMIT_H1 = 3604.50 // Styczeń - Czerwiec (75% z 4806)
-    const LIMIT_H2 = 3604.50 // Lipiec - Grudzień (do ew. aktualizacji, gdy ustawa zmieni minimalną)
-    const currentLimit = currentMonth < 6 ? LIMIT_H1 : LIMIT_H2
-
-    // Sumowanie wpisów wyłącznie z aktualnie wybranego miesiąca i roku (na podstawie daty sprzedaży)
-    const currentMonthEwidencja = ewidencja
+    // ── Limit kwartalny (liczy się przychód należny wg daty wykonania usługi) ──
+    const ref = new Date(saleDate)
+    const year = ref.getFullYear()
+    const quarter = Math.floor(ref.getMonth() / 3)
+    const inQuarter = ewidencja
         .filter((e: any) => {
-            if (!e.date) return false;
+            if (!e.date) return false
             const d = new Date(e.date)
-            return d.getFullYear() === currentYear && d.getMonth() === currentMonth
+            return d.getFullYear() === year && Math.floor(d.getMonth() / 3) === quarter
         })
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // sort by oldest
-
-    let runningTotal = 0;
-    const ewidencjaWithRunningTotal = currentMonthEwidencja.map((e, index) => {
-        runningTotal += e.amount;
-        return { ...e, lp: index + 1, runningTotal }
-    })
-
-    const progressPercent = Math.min(100, (runningTotal / currentLimit) * 100)
-    
-    // Miesiące po polsku do wyświetlenia
-    const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"]
-    const monthLabel = `${monthNames[currentMonth]} ${currentYear}`
-
-    const handlePrint = () => {
-        window.print()
-    }
-
-    const handleDownloadPDF = async () => {
-        // @ts-ignore
-        const html2pdf = (await import('html2pdf.js')).default;
-        const element = document.getElementById('printable-document');
-
-        if (element) {
-            const opt = {
-                margin: 15,
-                filename: `Dokument_${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: { scale: 2, windowWidth: 794, useCORS: true },
-                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-    }
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    let running = 0
+    const rows = inQuarter.map((e, i) => { running += e.amount; return { ...e, lp: i + 1, runningTotal: running } })
+    const pct = Math.min(100, (running / QUARTER_LIMIT) * 100)
+    const quarterLabel = `${['I', 'II', 'III', 'IV'][quarter]} kwartał ${year}`
 
     const handleDeleteEwidencja = async (id: string) => {
-        if (confirm('Na pewno usunac ten dowod sprzedazy z systemu?')) {
+        if (confirm('Na pewno usunąć ten dokument z ewidencji?')) {
             await deleteEwidencja(id)
             loadEwidencja()
         }
     }
-
     const handlePaymentToggle = async (id: string, currentStatus: string) => {
-        const newStatus = currentStatus === 'Zaplacona' ? 'Wystawiona' : 'Zaplacona'
-        await updatePaymentStatus(id, newStatus)
+        await updatePaymentStatus(id, currentStatus === 'Zaplacona' ? 'Wystawiona' : 'Zaplacona')
         loadEwidencja()
     }
-
-    // Auto-mark overdue (14 days)
     const getDisplayStatus = (item: any) => {
         if (item.paymentStatus === 'Zaplacona') return 'Zaplacona'
-        const daysSince = Math.floor((Date.now() - new Date(item.date).getTime()) / (1000 * 60 * 60 * 24))
-        if (daysSince > 14 && item.paymentStatus !== 'Zaplacona') return 'Przeterminowana'
-        return item.paymentStatus || 'Wystawiona'
+        const daysSince = Math.floor((Date.now() - new Date(item.date).getTime()) / 86_400_000)
+        return daysSince > 14 ? 'Przeterminowana' : item.paymentStatus || 'Wystawiona'
     }
-
     const paymentStatusConfig: Record<string, { bg: string; text: string; border: string }> = {
         Wystawiona: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20' },
         Zaplacona: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
@@ -125,99 +105,67 @@ export default function FinancesLab() {
     }
 
     return (
-        <div className="flex flex-col gap-8 print:gap-0 print:block">
-            <div className="flex items-center gap-3 print:hidden">
-                <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-zinc-950">
-                    <FileText size={24} />
-                </div>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 print:block">
+            <header className="flex flex-wrap items-end justify-between gap-3 print:hidden">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Generator Rachunków i Umów</h1>
-                    <p className="text-zinc-400 text-sm">Dokumenty dla Działalności Nierejestrowanej – rachunki, nie faktury (limity 2026)</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Finanse i dokumenty</p>
+                    <h1 className="mt-1 text-3xl font-bold text-white">Rachunki</h1>
+                    <p className="mt-1 text-sm text-zinc-500">Działalność nierejestrowana · sprzedawca: {SELLER.join(', ')}</p>
                 </div>
-            </div>
+            </header>
 
-            {/* Powiadomienie o załączeniu wtyczki wiedzy */}
-            <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl flex items-start gap-4 print:hidden">
-                <Info className="text-blue-400 shrink-0 mt-0.5" />
-                <div>
-                    <p className="text-sm text-blue-400 font-bold mb-1">System prawny: Aktywny z Wuyo Knowledge Base</p>
-                    <p className="text-xs text-blue-300/80 leading-relaxed">Agent AI połączony z wygenerowanymi źródłami (Biznes.gov.pl, Działalność nierejestrowana: Przewodnik po rewolucji 2026 z krzywicka.pl). System uwzględnia kwartalny limit DN na rok 2026: <strong>10 813,50 zł</strong> (225% płacy minimalnej) i generuje formularze pozbawione danych m.in. PESEL jako podstawę Twojego zwolnienia podmiotowego po zmianach w podatkach.</p>
-                </div>
-            </div>
-
-            {/* Monitorowanie Przychodów (Ewidencja miesięczna) */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row gap-8 items-start justify-between print:hidden">
-                <div className="flex-1 w-full">
-                    <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2"><Wallet className="text-yellow-400" /> Przychód w tym miesiącu ({monthLabel})</h2>
-                    <div className="flex justify-between text-sm text-zinc-400 mb-2">
-                        <span>Wykorzystano limitu działalności</span>
-                        <span className="font-bold text-white">{runningTotal.toFixed(2)} PLN / {currentLimit.toFixed(2)} PLN</span>
+            {/* Limit kwartalny + ewidencja */}
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-5 print:hidden">
+                <section className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-6 xl:col-span-2">
+                    <p className="text-xs text-zinc-400">Limit działalności nierejestrowanej · {quarterLabel}</p>
+                    <p className="mt-3 text-4xl font-bold text-white">{running.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł</p>
+                    <p className="text-sm text-zinc-500">z {QUARTER_LIMIT.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł na kwartał</p>
+                    <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className={`h-full rounded-full ${pct >= 100 ? 'bg-red-500' : pct >= 80 ? 'bg-orange-400' : 'bg-yellow-400'}`} style={{ width: `${pct}%` }} />
                     </div>
-                    <div className="w-full bg-zinc-950 rounded-full h-4 border border-zinc-800 overflow-hidden relative">
-                        <div className={`h-full transition-all duration-1000 ${progressPercent >= 100 ? 'bg-red-600' : progressPercent >= 80 ? 'bg-orange-500' : 'bg-green-500'}`} style={{ width: `${progressPercent}%` }}></div>
-                    </div>
-                    {progressPercent >= 80 && progressPercent < 100 && (
-                        <p className="text-orange-400 text-xs mt-3 font-bold flex items-center gap-1"><Info size={14} /> Uważaj! Zbliżasz się do limitu działalności nierejestrowanej.</p>
+                    {pct >= 80 && pct < 100 && <p className="mt-3 flex items-center gap-1 text-xs font-semibold text-orange-400"><Info size={14} /> Zbliżasz się do limitu w tym kwartale.</p>}
+                    {pct >= 100 && (
+                        <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+                            <AlertTriangle size={14} className="mr-1 inline" /> Limit przekroczony. Masz 7 dni od przekroczenia na rejestrację działalności w CEIDG.
+                        </p>
                     )}
-                    {progressPercent >= 100 && (
-                        <div className="mt-4 p-4 border border-red-500/30 bg-red-500/10 rounded-xl">
-                            <p className="text-red-500 text-sm font-bold flex items-center gap-2 uppercase tracking-wide"><AlertTriangle size={18} /> UWAGA! Przekroczyłeś limit.</p>
-                            <p className="text-red-400/90 text-xs mt-1">Zgodnie z prawem prowadzisz już działalność gospodarczą. Masz 7 dni na złożenie wniosku CEIDG-1 w celu jej sformalizowania.</p>
-                        </div>
-                    )}
-                    
-                    {/* Podsumowanie PIT-36 */}
-                    <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-400">
-                        <span className="block font-bold text-zinc-300 mb-1">Do zeznania rocznego (PIT-36 / Przychody z innych źródeł):</span>
-                        Suma uzyskana w miesiącu {monthLabel}: <span className="font-mono bg-zinc-950 px-2 py-0.5 rounded text-white">{runningTotal.toFixed(2)} zł</span>
-                    </div>
-                </div>
-
-                {/* Tabela Ewidencji w formacie US */}
-                <div className="xl:w-[50%] w-full bg-zinc-950 p-4 border border-zinc-800 rounded-xl overflow-x-auto">
-                    <p className="text-xs uppercase font-bold text-zinc-500 mb-3 flex items-center gap-2">
-                        <TrendingUp size={14} /> Uproszczona Ewidencja Sprzedaży ({monthLabel})
+                    <p className="mt-4 text-[11px] leading-relaxed text-zinc-500">
+                        225% płacy minimalnej (4806 zł) na kwartał, od 1.01.2026. Liczy się kwota należna według daty wykonania usługi, także niezapłacona.
+                        Przychód wykazujesz w PIT-36 jako przychód z innych źródeł.
                     </p>
-                    {ewidencjaWithRunningTotal.length === 0 ? (
-                        <p className="text-xs text-zinc-600 italic">Brak dokumentów datowanych na ten miesiąc.</p>
+                </section>
+
+                <section className="overflow-x-auto rounded-3xl border border-white/[0.07] bg-white/[0.02] p-5 xl:col-span-3">
+                    <p className="mb-3 text-xs font-semibold text-zinc-400">Ewidencja sprzedaży · {quarterLabel}</p>
+                    {rows.length === 0 ? (
+                        <p className="text-xs italic text-zinc-600">Brak dokumentów w tym kwartale.</p>
                     ) : (
                         <table className="w-full text-left text-xs text-zinc-300">
-                            <thead className="text-zinc-500 border-b border-zinc-800">
+                            <thead className="border-b border-white/10 text-zinc-500">
                                 <tr>
-                                    <th className="font-normal py-2 font-mono">Lp.</th>
-                                    <th className="font-normal py-2">Data</th>
-                                    <th className="font-normal py-2">Dowod</th>
-                                    <th className="font-normal py-2">Kwota</th>
-                                    <th className="font-normal py-2">Status</th>
-                                    <th className="font-normal py-2 w-20">Narastajaco</th>
-                                    <th className="font-normal py-2 w-8 text-center"><Trash2 size={12} className="inline opacity-50" /></th>
+                                    <th className="py-2 font-normal">Lp.</th><th className="py-2 font-normal">Data</th><th className="py-2 font-normal">Nabywca</th>
+                                    <th className="py-2 font-normal">Kwota</th><th className="py-2 font-normal">Status</th><th className="py-2 font-normal">Narastająco</th><th />
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-zinc-800/50">
-                                {[...ewidencjaWithRunningTotal].reverse().map((e: any) => {
-                                    const displayStatus = getDisplayStatus(e)
-                                    const pCfg = paymentStatusConfig[displayStatus] || paymentStatusConfig.Wystawiona
+                            <tbody className="divide-y divide-white/5">
+                                {[...rows].reverse().map((e: any) => {
+                                    const st = getDisplayStatus(e)
+                                    const c = paymentStatusConfig[st] || paymentStatusConfig.Wystawiona
                                     return (
-                                        <tr key={e.id} className="hover:bg-zinc-900/50 transition-colors group">
-                                            <td className="py-2.5 font-mono text-zinc-500">{e.lp}.</td>
+                                        <tr key={e.id} className="group">
+                                            <td className="py-2.5 text-zinc-500">{e.lp}.</td>
                                             <td className="py-2.5">{e.date}</td>
-                                            <td className="py-2.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
-                                            <td className="py-2.5 font-bold text-green-400">+{e.amount} zl</td>
+                                            <td className="max-w-[140px] truncate py-2.5 pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
+                                            <td className="py-2.5 font-semibold text-white">{e.amount.toFixed(2)} zł</td>
                                             <td className="py-2.5">
-                                                <button
-                                                    onClick={() => handlePaymentToggle(e.id, displayStatus)}
-                                                    className={`${pCfg.bg} ${pCfg.text} ${pCfg.border} border px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
-                                                    title={displayStatus === 'Zaplacona' ? 'Kliknij aby cofnac' : 'Kliknij aby oznaczyc jako zaplacone'}
-                                                >
-                                                    {displayStatus === 'Zaplacona' ? <Check size={10} /> : displayStatus === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
-                                                    {displayStatus}
+                                                <button onClick={() => handlePaymentToggle(e.id, st)} className={`${c.bg} ${c.text} ${c.border} inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold`}>
+                                                    {st === 'Zaplacona' ? <Check size={10} /> : st === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
+                                                    {st === 'Zaplacona' ? 'Zapłacony' : st === 'Przeterminowana' ? 'Po terminie' : 'Wystawiony'}
                                                 </button>
                                             </td>
-                                            <td className="py-2.5 text-zinc-400">{e.runningTotal.toFixed(2)} zl</td>
+                                            <td className="py-2.5 text-zinc-400">{e.runningTotal.toFixed(2)} zł</td>
                                             <td className="py-2.5 text-right">
-                                                <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100" title="Usun z ewidencji">
-                                                    <Trash2 size={14} />
-                                                </button>
+                                                <button onClick={() => handleDeleteEwidencja(e.id)} className="text-zinc-600 opacity-0 hover:text-red-500 group-hover:opacity-100" title="Usuń"><Trash2 size={14} /></button>
                                             </td>
                                         </tr>
                                     )
@@ -225,123 +173,79 @@ export default function FinancesLab() {
                             </tbody>
                         </table>
                     )}
-                </div>
+                </section>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start print:block">
-
-                {/* Lewa: Formularz */}
-                <div className="lg:col-span-1 bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl sticky top-4 print:hidden">
-                    <h2 className="text-lg font-bold text-white mb-4">Ustawienie Wytycznych</h2>
-                    <form onSubmit={handleGenerate} className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Rodzaj Dokumentu</label>
-                            <select value={docType} onChange={e => setDocType(e.target.value)} className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5">
-                                <option value="Rachunek (Działalność Nierejestrowana – art. 5 ust. 1 Prawo przedsiębiorców)">Rachunek (Działalność Nierejestrowana)</option>
-                                <option value="Rachunek do Umowy o Dzieło z przeniesieniem praw autorskich">Rachunek do Umowy o Dzieło</option>
-                                <option value="Protokół Odbiorczy z przekazaniem wykonanej usługi">Protokół Odbiorczy (zakończenie projektu)</option>
-                            </select>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-2">
-                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold" title="To determinuje przypisanie do miesiąca ewidencji">Data sprzedaży / dostawy</label>
-                                <input required value={saleDate} onChange={e => setSaleDate(e.target.value)} type="date" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Data wystawienia</label>
-                                <input required value={issueDate} onChange={e => setIssueDate(e.target.value)} type="date" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Dane Klienta (Nabywcy)</label>
-                            <textarea required value={clientInfo} onChange={e => setClientInfo(e.target.value)} rows={3} placeholder="Marek Kowalski, Ul. Zwykła 2, NIP: 1234..." className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5 resize-none" />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Przedmiot Transakcji (Opis)</label>
-                            <input required value={description} onChange={e => setDescription(e.target.value)} type="text" placeholder="Przygotowanie Key-Visualu Marki" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Kwota (brutto=netto w DN) w zł</label>
-                            <input required value={amount} onChange={e => setAmount(e.target.value)} type="number" min="0" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                        </div>
-
-                        <button disabled={loading} className="bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-3 rounded-lg transition-all flex justify-center items-center gap-2 mt-4 shadow-[0_0_15px_rgba(255,235,82,0.3)] disabled:opacity-50 disabled:cursor-wait">
-                            {loading ? (
-                                <>Generowanie (2026 AI)...</>
-                            ) : (
-                                <><Bot size={18} /> Stwórz Gotowy Dokument</>
-                            )}
-                        </button>
-                    </form>
-                </div>
-
-                {/* Prawa: Przeglądarka Wygenerowanego Dokumentu */}
-                <div className="lg:col-span-2 print:w-full">
-                    <div className="bg-zinc-100 print:bg-white text-black p-8 md:p-12 rounded-2xl shadow-xl min-h-[70vh] relative border border-zinc-300 print:border-none print:shadow-none print:m-0 print:p-0 print:min-h-0">
-
-                        {/* Narzędzia (Tylko ekran) */}
-                        {markdown && (
-                            <div className="absolute top-4 right-4 flex gap-2 print:hidden z-10">
-                                <button onClick={handleDownloadPDF} title="Pobierz PDF na dysk" className="w-10 h-10 bg-yellow-400 border border-yellow-500 rounded-full flex items-center justify-center text-zinc-900 hover:bg-yellow-500 transition-colors shadow-sm">
-                                    <Download size={18} />
-                                </button>
-                                <button onClick={handlePrint} title="Drukuj do PDF (Systemowe drukuj)" className="w-10 h-10 bg-white border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black hover:border-black transition-colors shadow-sm">
-                                    <Printer size={18} />
-                                </button>
-                            </div>
-                        )}
-
-                        {!markdown && !loading && !error && (
-                            <div className="h-full w-full flex flex-col items-center justify-center text-zinc-400 gap-4 mt-20 print:hidden">
-                                <FileText size={64} className="opacity-20 text-black" />
-                                <p className="text-center md:container font-medium text-lg text-zinc-600">
-                                    Kliknij po lewej, a wygeneruję autorski, legalny dokument zabezpieczony przed pomyłkami podatkowymi z 2026.
-                                </p>
-                            </div>
-                        )}
-
-                        {loading && (
-                            <div className="h-full w-full flex flex-col items-center justify-center text-yellow-500 gap-4 mt-32 print:hidden">
-                                <span className="w-10 h-10 rounded-full border-4 border-yellow-500/30 border-t-yellow-500 animate-spin text-black"></span>
-                                <span className="font-bold text-black uppercase tracking-widest text-sm animate-pulse">Łączenie z Bazą Prawa i Analiza Kosztów...</span>
-                            </div>
-                        )}
-
-                        {error && (
-                            <div className="p-4 bg-red-100 border border-red-300 rounded-xl text-red-600 text-sm mt-8 print:hidden">
-                                {error}
-                            </div>
-                        )}
-
-                        {markdown && !loading && (
-                            <div id="printable-document" className="bg-white text-black p-2 print:p-0 relative">
-                                <div className="border-b border-zinc-300 pb-4 mb-8">
-                                    <h1 className="text-3xl font-black tracking-tighter text-black uppercase">
-                                        DOBRAGRAFA <span className="text-zinc-400">WUYO</span>
-                                    </h1>
-                                    <p className="text-sm text-zinc-500 font-medium">Oficjalny Dokument / Potwierdzenie Transakcji</p>
-                                </div>
-                                <div className="prose prose-sm md:prose-base prose-zinc max-w-none prose-headings:font-bold prose-headings:text-black text-black print:text-black pt-4">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {markdown}
-                                    </ReactMarkdown>
-                                </div>
-                                <div className="mt-16 pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex justify-between items-center opacity-80">
-                                    <span>Wygenerowano autonomicznie przez System WUYO Lab</span>
-                                    <span>Nierejestrowana 2026</span>
-                                </div>
-                            </div>
-                        )}
-
+            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-5 print:block">
+                <form onSubmit={handleGenerate} className="flex flex-col gap-4 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-6 lg:col-span-2 print:hidden">
+                    <h2 className="text-lg font-bold text-white">Nowy dokument</h2>
+                    <div className="flex gap-1 rounded-full border border-white/10 bg-black/30 p-1">
+                        {(['dn', 'dzielo', 'protokol'] as const).map((k) => (
+                            <button key={k} type="button" onClick={() => setKind(k)}
+                                className={`flex-1 rounded-full px-3 py-1.5 text-xs font-semibold ${kind === k ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
+                                {k === 'dn' ? 'Rachunek' : k === 'dzielo' ? 'Umowa o dzieło' : 'Protokół odbioru'}
+                            </button>
+                        ))}
                     </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <label className="flex flex-col gap-1.5"><span className={label}>{kind === 'protokol' ? 'Data odbioru' : 'Data wykonania'}</span>
+                            <input required type="date" value={saleDate} onChange={(e) => setSaleDate(e.target.value)} className={field} /></label>
+                        <label className="flex flex-col gap-1.5"><span className={label}>Data wystawienia</span>
+                            <input required type="date" value={issueDate} onChange={(e) => setIssueDate(e.target.value)} className={field} /></label>
+                    </div>
+                    <label className="flex flex-col gap-1.5"><span className={label}>Nabywca (każda linia osobno)</span>
+                        <textarea required rows={3} value={buyer} onChange={(e) => setBuyer(e.target.value)} placeholder={'Nazwa firmy albo imię i nazwisko\nul. Przykładowa 1, 35-001 Rzeszów\nNIP 000-000-00-00'} className={`${field} resize-none`} /></label>
+                    <label className="flex flex-col gap-1.5"><span className={label}>Nazwa usługi</span>
+                        <input required value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Projekt i druk 500 wizytówek" className={field} /></label>
+                    <div className="grid grid-cols-3 gap-3">
+                        <label className="flex flex-col gap-1.5"><span className={label}>J.m.</span>
+                            <select value={unit} onChange={(e) => setUnit(e.target.value)} className={field}><option>usł.</option><option>szt.</option><option>kpl.</option><option>godz.</option></select></label>
+                        <label className="flex flex-col gap-1.5"><span className={label}>Ilość</span>
+                            <input type="number" min="1" value={qty} onChange={(e) => setQty(e.target.value)} className={field} /></label>
+                        {kind !== 'protokol' && <label className="flex flex-col gap-1.5"><span className={label}>Do zapłaty zł</span>
+                            <input required inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="1500" className={field} /></label>}
+                    </div>
+                    {kind !== 'protokol' && (
+                        <div className="grid grid-cols-3 gap-3">
+                            <label className="flex flex-col gap-1.5"><span className={label}>Zaliczka zł</span>
+                                <input inputMode="decimal" value={advance} onChange={(e) => setAdvance(e.target.value)} placeholder="0" className={field} /></label>
+                            <label className="flex flex-col gap-1.5"><span className={label}>Zapłata</span>
+                                <select value={payment} onChange={(e) => setPayment(e.target.value)} className={field}><option>przelew</option><option>gotówka</option><option>zapłacono</option></select></label>
+                            <label className="flex flex-col gap-1.5"><span className={label}>Termin dni</span>
+                                <input type="number" min="0" value={dueDays} onChange={(e) => setDueDays(e.target.value)} className={field} disabled={payment !== 'przelew'} /></label>
+                        </div>
+                    )}
+                    <label className="flex flex-col gap-1.5"><span className={label}>Uwagi (opcjonalnie)</span>
+                        <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className={`${field} resize-none`} /></label>
+                    <button disabled={loading} className="mt-1 rounded-full bg-yellow-400 py-3 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                        {loading ? 'Zapisuję…' : `Wystaw: ${KIND_LABEL[kind].toLowerCase()}`}
+                    </button>
+                    {error && <p className="text-sm text-red-400">{error}</p>}
+                    <p className="text-[11px] text-zinc-500">Dokument powstaje ze stałego wzoru, bez AI: to, co wpiszesz, trafia na dokument. Numer nadaje się sam (kolejny w miesiącu).</p>
+                </form>
+
+                <div className="lg:col-span-3 print:w-full">
+                    {doc ? (
+                        <div className="overflow-hidden rounded-3xl border border-white/10 bg-white shadow-2xl print:rounded-none print:border-0 print:shadow-none">
+                            <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-3 print:hidden">
+                                <span className="text-xs font-semibold text-zinc-600">{KIND_LABEL[doc.kind]} nr {doc.number} · zapisany w ewidencji</span>
+                                <div className="flex gap-2">
+                                    <button onClick={() => savePdf('printable-document', `${KIND_LABEL[doc.kind].replace(/\s+/g, '_')}_${doc.number.replace(/\//g, '-')}.pdf`)}
+                                        className="flex items-center gap-1 rounded-full bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"><Download size={13} /> PDF</button>
+                                    <button onClick={() => window.print()} className="flex items-center gap-1 rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-700 hover:border-zinc-500"><Printer size={13} /> Drukuj</button>
+                                </div>
+                            </div>
+                            <ReceiptDocument data={doc} id="printable-document" />
+                        </div>
+                    ) : (
+                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-white/10 text-center text-zinc-500 print:hidden">
+                            <FileText size={48} className="opacity-30" />
+                            <p className="max-w-sm text-sm">Wypełnij formularz. Tu pojawi się gotowy dokument A4 do pobrania jako PDF albo wydruku.</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Historia wszystkich transakcji */}
             <TransactionHistory
                 ewidencja={ewidencja}
                 getDisplayStatus={getDisplayStatus}
@@ -349,7 +253,6 @@ export default function FinancesLab() {
                 handlePaymentToggle={handlePaymentToggle}
                 handleDeleteEwidencja={handleDeleteEwidencja}
             />
-
         </div>
     )
 }
@@ -371,20 +274,8 @@ function DocumentModal({ item, onClose, onSaved }: { item: any; onClose: () => v
 
     const handlePrint = () => window.print()
 
-    const handleDownloadPDF = async () => {
-        // @ts-ignore
-        const html2pdf = (await import('html2pdf.js')).default
-        const element = document.getElementById('modal-printable-document')
-        if (element) {
-            html2pdf().set({
-                margin: 15,
-                filename: `Rachunek_${item.date}.pdf`,
-                image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: { scale: 2, windowWidth: 794, useCORS: true },
-                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-            }).from(element).save()
-        }
-    }
+    const receipt = parseReceipt(item.markdownContent)
+    const handleDownloadPDF = () => savePdf('modal-printable-document', receipt ? `${KIND_LABEL[receipt.kind].replace(/\s+/g, '_')}_${receipt.number.replace(/\//g, '-')}.pdf` : `Rachunek_${item.date}.pdf`)
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:p-0">
@@ -405,9 +296,9 @@ function DocumentModal({ item, onClose, onSaved }: { item: any; onClose: () => v
                                 <button onClick={handlePrint} title="Drukuj" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
                                     <Printer size={14} />
                                 </button>
-                                <button onClick={() => setEditMode(true)} title="Edytuj dokument" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
+                                {!receipt && <button onClick={() => setEditMode(true)} title="Edytuj dokument" className="w-8 h-8 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-zinc-600 hover:text-black transition-colors">
                                     <Pencil size={14} />
-                                </button>
+                                </button>}
                             </>
                         )}
                         {editMode && (
@@ -440,23 +331,15 @@ function DocumentModal({ item, onClose, onSaved }: { item: any; onClose: () => v
                 )}
 
                 {/* Podgląd */}
-                {!editMode && (
+                {!editMode && (receipt ? (
+                    <ReceiptDocument data={receipt} id="modal-printable-document" />
+                ) : (
                     <div id="modal-printable-document" className="p-8 print:p-0">
-                        <div className="border-b border-zinc-300 pb-4 mb-8">
-                            <h1 className="text-3xl font-black tracking-tighter text-black uppercase">
-                                DOBRAGRAFA <span className="text-zinc-400">WUYO</span>
-                            </h1>
-                            <p className="text-sm text-zinc-500 font-medium">Oficjalny Dokument / Potwierdzenie Transakcji</p>
-                        </div>
                         <div className="prose prose-sm md:prose-base prose-zinc max-w-none prose-headings:font-bold prose-headings:text-black text-black">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
                         </div>
-                        <div className="mt-16 pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex justify-between items-center opacity-80">
-                            <span>Wygenerowano autonomicznie przez System WUYO Lab</span>
-                            <span>Nierejestrowana 2026</span>
-                        </div>
                     </div>
-                )}
+                ))}
             </div>
         </div>
     )

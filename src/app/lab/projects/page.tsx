@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { getProjects, createProject, updateProjectStatus, deleteProject } from './actions'
 import { Plus, Link as LinkIcon, Play, Trash2, Copy, ChevronDown, ChevronUp, MessageSquare, Check } from 'lucide-react'
-import Link from 'next/link'
 
 type UpdateEntry = { date: string; status: string; progress: number; note?: string }
 
@@ -179,9 +178,9 @@ export default function ProjectsLab() {
                                         <button onClick={() => handleCopyUrl(p.id)} className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors">
                                             {copiedId === p.id ? <><Check size={14} className="text-green-400" /> Skopiowano</> : <><Copy size={14} /> Kopiuj URL</>}
                                         </button>
-                                        <Link href={`/c/${p.id}`} target="_blank" className="flex items-center gap-1.5 text-xs text-yellow-400 hover:text-yellow-300 font-medium bg-yellow-400/10 px-3 py-1.5 rounded-lg border border-yellow-400/20">
-                                            <LinkIcon size={14} /> Podglad
-                                        </Link>
+                                        <a href={`/c/${p.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-yellow-400 hover:text-yellow-300 font-medium bg-yellow-400/10 px-3 py-1.5 rounded-lg border border-yellow-400/20">
+                                            <LinkIcon size={14} /> Podgląd
+                                        </a>
                                     </div>
                                 </div>
 

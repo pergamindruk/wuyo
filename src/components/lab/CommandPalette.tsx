@@ -7,7 +7,7 @@ import type { ComponentType, KeyboardEvent as ReactKeyboardEvent, ReactNode } fr
 import { useRouter } from 'next/navigation'
 import {
     BarChart3, Bot, Briefcase, Building2, Calendar, Clock, CornerDownLeft, FileText,
-    Filter, Home, Inbox, Hourglass, LogOut, Phone, Plus, Radar, Search, Shield, Star,
+    Filter, Home, Inbox, Hourglass, LogOut, Phone, Plus, Radar, Search, Shield,
     User,
 } from 'lucide-react'
 import { searchLab, type SearchResult } from '@/app/lab/search/actions'
@@ -50,7 +50,6 @@ const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: s
     { id: 'p-ai', label: 'AI Studio', href: '/lab/ai-studio', icon: Bot },
     { id: 'p-calendar', label: 'Posty i kalendarz', href: '/lab/calendar', icon: Calendar },
     { id: 'p-analytics', label: 'Analityka', href: '/lab/analytics', icon: BarChart3 },
-    { id: 'p-testimonials', label: 'Opinie klientów', href: '/lab/testimonials', icon: Star },
     { id: 'p-audit', label: 'Dziennik zdarzeń', href: '/lab/audit-log', icon: Shield },
 ]
 
