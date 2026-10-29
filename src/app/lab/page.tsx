@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getAlerts } from './actions'
 import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
-import { TZ, warsawMidnightMs } from '@/lib/lab/today/format'
+import { TZ, warsawIsoDate, warsawMidnightMs, warsawParts } from '@/lib/lab/today/format'
+import { KpiRow, KPI_ICONS } from '@/components/lab/today/KpiRow'
 import {
     getActivities, getJobs, getMonthGoal, getQueue, getRenewalsDue, getSubscriptions, getSystems, pickOneThing,
 } from '@/lib/lab/today/queries'
@@ -40,19 +41,32 @@ export default async function TodayPage() {
         getAlerts(),
     ])
 
+    // Liczby do górnego pasa: maile Harveya do decyzji, posty w tym tygodniu.
+    const { hour } = warsawParts(now)
+    const weekday = (new Date(`${warsawIsoDate()}T12:00:00Z`).getUTCDay() + 6) % 7 // 0 = poniedziałek
+    const [mailsRes, postsRes] = await Promise.all([
+        supabase.from('harvey_outbox').select('id', { count: 'exact', head: true }).eq('status', 'pending_review').is('decyzja', null),
+        supabase.from('calendar_events').select('status').gte('date', warsawIsoDate(-weekday)).lte('date', warsawIsoDate(6 - weekday)),
+    ])
+    const mailsWaiting = mailsRes.count ?? 0
+    const weekPosts = postsRes.data ?? []
+    const drafts = weekPosts.filter((p) => p.status === 'Szkic').length
+    const activeJobs = jobs.filter((j) => j.outcome === 'w_toku').length
+    const greeting = hour < 5 ? 'Dobranoc' : hour < 12 ? 'Dzień dobry' : hour < 18 ? 'Cześć' : 'Dobry wieczór'
+
     const todayActivities = weekActivities.filter((a) => new Date(a.created_at).getTime() >= midnight)
     const thing = pickOneThing({ systems, jobs, queue })
 
     return (
-        <div className="flex max-w-6xl flex-col gap-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-5">
             <DashboardAlerts alerts={alerts} />
 
-            <header className="flex flex-wrap items-start justify-between gap-3">
+            <header className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-3xl font-bold leading-tight text-white">Dziś</h1>
-                    <p className="mt-1 text-sm text-zinc-500">
+                    <p className="text-sm text-zinc-500">
                         {now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ })}
                     </p>
+                    <h1 className="mt-1 text-3xl font-bold leading-tight text-white sm:text-4xl">{greeting}, Mateusz</h1>
                 </div>
                 <SystemsStrip systems={systems} />
             </header>
@@ -73,10 +87,19 @@ export default async function TodayPage() {
                 </div>
             )}
 
-            <GoalBar goal={goal} />
-            <OneThingCard thing={thing} />
+            <KpiRow items={[
+                { label: 'Maile do decyzji', value: mailsWaiting, hint: 'Harvey czeka na Ciebie', href: '/lab/maile', icon: KPI_ICONS.Mail, hot: mailsWaiting > 0 },
+                { label: 'Telefony na dziś', value: queue.length, hint: 'kolejka niżej', href: '#kolejka', icon: KPI_ICONS.Phone, hot: queue.length > 0 },
+                { label: 'Posty w tym tygodniu', value: weekPosts.length, hint: drafts ? `${drafts} szkiców do przejrzenia` : 'wszystko przejrzane', href: '/lab/calendar', icon: KPI_ICONS.CalendarDays, hot: drafts > 0 },
+                { label: 'Zlecenia w toku', value: activeJobs, hint: 'lejek', href: '/lab/lejek', icon: KPI_ICONS.Kanban },
+            ]} />
+
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+                <div className="lg:col-span-3"><GoalBar goal={goal} /></div>
+                <div className="lg:col-span-2"><OneThingCard thing={thing} /></div>
+            </div>
             {systems.dyrygent && <ConductorCard raport={systems.dyrygent} />}
-            <CallQueue initialItems={queue} />
+            <div id="kolejka" className="scroll-mt-6"><CallQueue initialItems={queue} /></div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <FollowUpsCard jobs={jobs} renewals={renewals} subscriptions={subscriptions} />

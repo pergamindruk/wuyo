@@ -48,7 +48,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
     return (
         <>
             {/* Mobile Header */}
-            <div className="md:hidden flex items-center justify-between bg-zinc-950 border-b border-zinc-800/60 px-4 py-3 sticky top-0 z-50 print:hidden">
+            <div className="md:hidden flex items-center justify-between bg-zinc-950/90 backdrop-blur border-b border-zinc-800/60 px-4 py-3 sticky top-0 z-50 print:hidden">
                 <div className="flex items-center gap-2.5">
                     <div className="w-6 h-6 rounded bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold text-xs">W</div>
                     <span className="font-heading font-bold text-base tracking-tight text-white">WUYO Lab</span>
@@ -71,8 +71,8 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
 
             {/* Sidebar */}
             <aside className={`
-                fixed inset-y-0 left-0 z-[70] w-60 bg-zinc-950 border-r border-zinc-800/60 px-4 py-6 flex flex-col gap-7 transition-transform duration-200 ease-in-out
-                md:relative md:translate-x-0 md:z-auto
+                fixed inset-y-0 left-0 z-[70] w-60 bg-zinc-950 border-r border-zinc-800/60 px-4 py-6 flex flex-col gap-7 transition-transform duration-200 ease-in-out overflow-y-auto
+                md:relative md:translate-x-0 md:z-auto md:h-[calc(100vh-2rem)] md:rounded-3xl md:border md:border-white/[0.06] md:bg-white/[0.025] md:backdrop-blur-xl md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 print:hidden
             `}>
@@ -98,7 +98,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                 <nav className="flex flex-col gap-6 flex-grow">
                     {navGroups.map((group) => (
                         <div key={group.label}>
-                            <p className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-700 px-2 mb-1.5">{group.label}</p>
+                            <p className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-600 px-3 mb-1.5">{group.label}</p>
                             <div className="flex flex-col gap-0.5">
                                 {group.items.map((item) => {
                                     const Icon = item.icon
@@ -110,13 +110,13 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                                             href={item.href}
                                             onClick={closeMenu}
                                             className={`
-                                                flex items-center gap-2.5 px-2 py-2 text-[13px] font-medium rounded-md transition-all
+                                                flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium rounded-xl transition-all
                                                 ${isActive
-                                                    ? 'text-yellow-400 bg-yellow-400/5'
-                                                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900'}
+                                                    ? 'text-zinc-950 bg-yellow-400 shadow-[0_0_24px_-6px_rgba(255,235,82,0.6)]'
+                                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'}
                                             `}
                                         >
-                                            <Icon size={15} className={isActive ? 'text-yellow-400' : 'text-zinc-600'} />
+                                            <Icon size={15} className={isActive ? 'text-zinc-950' : 'text-zinc-500'} />
                                             {item.label}
                                         </Link>
                                     )

@@ -15,7 +15,7 @@ export function GoalBar({ goal }: { goal: MonthGoal }) {
     const packs = pack && pack.priceGrosze > 0 && missing > 0 ? Math.ceil(missing / pack.priceGrosze) : 0
 
     return (
-        <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 sm:p-6">
+        <section className="h-full rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 sm:p-6">
             <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
                 <div>
                     <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">Cel miesiąca</p>

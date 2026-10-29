@@ -19,11 +19,11 @@ export default async function LabLayout({
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans flex flex-col md:flex-row">
+        <div className="lab-ui min-h-screen text-zinc-50 font-sans flex flex-col md:flex-row md:gap-4 md:p-4">
             <Sidebar userEmail={user.email} />
 
             {/* Main Content Area */}
-            <main className="flex-1 p-6 lg:p-10 overflow-y-auto md:h-screen print:p-0 print:m-0 print:overflow-visible">
+            <main className="flex-1 p-4 sm:p-6 lg:px-10 lg:py-8 overflow-y-auto md:h-[calc(100vh-2rem)] print:p-0 print:m-0 print:overflow-visible">
                 {children}
             </main>
             <CommandPalette />

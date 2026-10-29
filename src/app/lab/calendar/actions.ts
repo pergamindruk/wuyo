@@ -268,3 +268,17 @@ GRAFIKA: jedno zdanie`
     revalidatePath('/lab/calendar')
     return { ok: true, created: rows.length, dates }
 }
+
+/** Usuwa post (wszystkie jego wersje: FB i IG). */
+export async function deleteEvents(ids: string[]) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || ids.length === 0) return false
+    const { error } = await supabase.from('calendar_events').delete().in('id', ids)
+    if (error) {
+        console.error('deleteEvents error:', error)
+        return false
+    }
+    revalidatePath('/lab/calendar')
+    return true
+}

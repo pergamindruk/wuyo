@@ -1,571 +1,422 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { getCalendar, addCalendarEvent, updateEventStatus, schedulePost, updateEventImageUrl, planWeek } from './actions'
+// "use client": tydzień, panel posta, edycja tekstu i publikacja działają bez przeładowania strony.
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { publishToInstagram, publishToFacebook, generateYouTubeMetadata } from '../social-media/actions'
-import type { YtMetadata } from '../social-media/actions'
-import { CalendarDays, Sparkles, PenLine, Lightbulb, Target, MoreHorizontal, Bot, ChevronLeft, ChevronRight, Share2, Camera, Globe, Play, Copy, Linkedin, Check, Clock, Image } from 'lucide-react'
-import type { CalendarEvent } from '@/lib/types'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
+import { addDays, addWeeks, format, isSameDay, startOfWeek } from 'date-fns'
 import { pl } from 'date-fns/locale'
+import {
+    Camera, Check, ChevronLeft, ChevronRight, Clock, Copy, ExternalLink, Globe, Images, Plus, Sparkles, Trash2, X,
+} from 'lucide-react'
+import type { CalendarEvent } from '@/lib/types'
+import { addCalendarEvent, deleteEvents, getCalendar, planWeek, schedulePost, updateEventContent, updateEventImageUrl, updateEventStatus } from './actions'
+import { publishToFacebook, publishToInstagram } from '../social-media/actions'
 
-/** Do publikacji idzie tylko tekst posta. Po linii „---” są notatki dla Mateusza (grafika, scenariusz, uzasadnienie). */
-const postCaption = (content?: string) => (content ?? '').split(/\n---\n/)[0].trim()
+/** Treść posta = tekst do publikacji, a po linii „---” notatki dla Mateusza (slajdy, scenariusz, uzasadnienie). */
+function splitContent(content?: string): { caption: string; notes: string } {
+    const text = content ?? ''
+    const i = text.search(/\n---\n/)
+    if (i < 0) return { caption: text.trim(), notes: '' }
+    return { caption: text.slice(0, i).trim(), notes: text.slice(i).replace(/^\n---\n/, '').trim() }
+}
+
+const IMG_URL = /https?:\/\/[^\s)<>"]+\.(?:jpe?g|png|webp)/gi
+
+type Post = {
+    key: string
+    date: string
+    topic: string
+    format: string
+    goal: string
+    fb?: CalendarEvent
+    ig?: CalendarEvent
+    other: CalendarEvent[]
+    images: string[]
+    notes: string
+}
+
+function groupPosts(events: CalendarEvent[]): Post[] {
+    const map = new Map<string, Post>()
+    for (const ev of events) {
+        const key = `${ev.date}|${ev.topic}`
+        const post = map.get(key) ?? { key, date: ev.date, topic: ev.topic, format: ev.format, goal: ev.goal, other: [], images: [], notes: '' }
+        const p = (ev.platform || '').toLowerCase()
+        if (p === 'facebook') post.fb = ev
+        else if (p === 'instagram') post.ig = ev
+        else post.other.push(ev)
+        const { notes } = splitContent(ev.content)
+        if (notes && !post.notes) post.notes = notes
+        const urls = [ev.image_url, ...(notes.match(IMG_URL) ?? [])].filter((u): u is string => !!u)
+        for (const u of urls) if (!post.images.includes(u)) post.images.push(u)
+        map.set(key, post)
+    }
+    return [...map.values()]
+}
+
+const rows = (p: Post) => [p.fb, p.ig, ...p.other].filter((e): e is CalendarEvent => !!e)
+
+const STATUS_STYLE: Record<string, string> = {
+    Szkic: 'bg-zinc-500',
+    Zaplanowane: 'bg-yellow-400',
+    Opublikowane: 'bg-emerald-400',
+}
+const STATUS_LABEL: Record<string, string> = { Szkic: 'Szkic', Zaplanowane: 'W kolejce', Opublikowane: 'Opublikowany' }
+
+function postStatus(p: Post): string {
+    const s = rows(p).map((r) => r.status)
+    if (s.every((x) => x === 'Opublikowane')) return 'Opublikowane'
+    if (s.some((x) => x === 'Zaplanowane' || x === 'Opublikowane')) return 'Zaplanowane'
+    return 'Szkic'
+}
+
+const card = 'rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.045] to-white/[0.015] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]'
 
 export default function CalendarLab() {
     const [events, setEvents] = useState<CalendarEvent[]>([])
     const [loading, setLoading] = useState(true)
+    const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date(), { weekStartsOn: 1 }))
+    const [openKey, setOpenKey] = useState<string | null>(null)
+    const [panel, setPanel] = useState<'none' | 'plan' | 'add'>('none')
 
-    // formularz dodawania
-    const [topic, setTopic] = useState('')
-    const [platform, setPlatform] = useState('Instagram, Facebook')
-    const [formatPost, setFormatPost] = useState('Post')
-    const [goal, setGoal] = useState('Edukacja')
-    const [date, setDate] = useState('')
-    const [generateAI, setGenerateAI] = useState(false)
-    const [saving, setSaving] = useState(false)
-
-    // state kalendarza
-    const [currentMonth, setCurrentMonth] = useState(new Date())
-    const [selectedDate, setSelectedDate] = useState(new Date())
-
-    // state publikacji
-    const [publishingPostId, setPublishingPostId] = useState<string | null>(null)
-    const [publishImageUrl, setPublishImageUrl] = useState('')
-    const [editingImageEventId, setEditingImageEventId] = useState<string | null>(null)
-    const [editingImageUrl, setEditingImageUrl] = useState('')
-    const [publishLoading, setPublishLoading] = useState(false)
-    const [publishFeedback, setPublishFeedback] = useState<{ success: boolean; message: string } | null>(null)
-    const [ytMetadata, setYtMetadata] = useState<YtMetadata | null>(null)
-
-    // zaplanuj tydzień (AI)
-    const [weekHint, setWeekHint] = useState('')
-    const [weekLoading, setWeekLoading] = useState(false)
-    const [weekMsg, setWeekMsg] = useState<{ ok: boolean; text: string } | null>(null)
-    const [copiedYt, setCopiedYt] = useState(false)
-
-    async function loadData() {
-        setLoading(true)
-        const data = await getCalendar()
-        setEvents((data as CalendarEvent[]).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()))
+    async function load() {
+        const data = (await getCalendar()) as CalendarEvent[]
+        setEvents(data)
         setLoading(false)
     }
+    useEffect(() => { load() }, [])
 
+    // Na start pokaż tydzień z najbliższym szkicem, jeśli w bieżącym nic nie ma.
     useEffect(() => {
-        loadData()
-        setDate(format(new Date(), 'yyyy-MM-dd'))
-    }, [])
+        if (loading) return
+        const end = format(addDays(weekStart, 6), 'yyyy-MM-dd')
+        const start = format(weekStart, 'yyyy-MM-dd')
+        if (events.some((e) => e.date >= start && e.date <= end)) return
+        const next = events.map((e) => e.date).filter((d) => d > end).sort()[0]
+        if (next) setWeekStart(startOfWeek(new Date(`${next}T12:00:00`), { weekStartsOn: 1 }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
 
-    const handlePlanWeek = async () => {
-        setWeekLoading(true)
-        setWeekMsg(null)
-        let res: Awaited<ReturnType<typeof planWeek>>
-        try {
-            res = await planWeek(weekHint)
-        } catch {
-            res = { ok: false, error: 'Serwer nie odpowiedział na czas. Spróbuj jeszcze raz za chwilę.' }
-        } finally {
-            setWeekLoading(false)
-        }
-        if (!res.ok) {
-            setWeekMsg({ ok: false, text: res.error })
-            return
-        }
-        const days = res.dates.map((d) => format(new Date(`${d}T12:00:00`), 'EEEE d.MM', { locale: pl })).join(', ')
-        setWeekMsg({ ok: true, text: `Dodane ${res.created} szkice: ${days}. Przejrzyj, popraw i zmień status na „W kolejce”.` })
-        setWeekHint('')
-        if (res.dates[0]) {
-            setSelectedDate(new Date(`${res.dates[0]}T12:00:00`))
-            setCurrentMonth(new Date(`${res.dates[0]}T12:00:00`))
-        }
-        loadData()
-    }
-
-    const handleCreate = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setSaving(true)
-        await addCalendarEvent({ topic, platform, format: formatPost, goal, date, status: 'Szkic', generateAI })
-        setTopic('')
-        setGenerateAI(false)
-        setSaving(false)
-        loadData()
-    }
-
-    const handleUpdate = async (id: string, newStatus: string, eventDate?: string) => {
-        if (newStatus === 'Zaplanowane' && eventDate) {
-            // Ustaw scheduled_at na datę eventu o 08:00 UTC (10:00 CEST / 09:00 CET)
-            const scheduledAt = `${eventDate}T08:00:00.000Z`
-            await schedulePost(id, scheduledAt)
-        } else {
-            await updateEventStatus(id, newStatus)
-        }
-        loadData()
-    }
-
-    const handleSaveImageUrl = async (id: string, url: string) => {
-        await updateEventImageUrl(id, url)
-        loadData()
-    }
-
-    const openPublish = (ev: CalendarEvent) => {
-        setPublishingPostId(ev.id)
-        setPublishImageUrl(ev.image_url || '')
-        setPublishFeedback(null)
-        setYtMetadata(null)
-        setCopiedYt(false)
-    }
-
-    const closePublish = () => {
-        setPublishingPostId(null)
-        setPublishFeedback(null)
-        setYtMetadata(null)
-    }
-
-    const handlePublishIG = async (postId: string, caption: string) => {
-        if (!publishImageUrl.trim()) {
-            setPublishFeedback({ success: false, message: 'Podaj publiczny URL grafiki — Instagram wymaga obrazu.' })
-            return
-        }
-        setPublishLoading(true)
-        const res = await publishToInstagram(postId, publishImageUrl.trim(), caption)
-        setPublishLoading(false)
-        if (res.success) {
-            setPublishFeedback({ success: true, message: `Opublikowano na Instagram! ID: ${res.postId}` })
-            loadData()
-        } else {
-            setPublishFeedback({ success: false, message: res.error })
-        }
-    }
-
-    const handlePublishFB = async (postId: string, message: string) => {
-        setPublishLoading(true)
-        const res = await publishToFacebook(postId, message, publishImageUrl.trim() || undefined)
-        setPublishLoading(false)
-        if (res.success) {
-            setPublishFeedback({ success: true, message: `Opublikowano na Facebook! ID: ${res.postId}` })
-            loadData()
-        } else {
-            setPublishFeedback({ success: false, message: res.error })
-        }
-    }
-
-    const handleYtMetadata = async (topic: string, content: string) => {
-        setPublishLoading(true)
-        const res = await generateYouTubeMetadata(topic, content)
-        setPublishLoading(false)
-        if (res.success) {
-            setYtMetadata(res.data)
-            setPublishFeedback({ success: true, message: 'Metadane YouTube wygenerowane — skopiuj do YouTube Studio.' })
-        } else {
-            setPublishFeedback({ success: false, message: res.error })
-        }
-    }
-
-    const copyYtMetadata = (meta: YtMetadata) => {
-        const text = `Tytuł:\n${meta.title}\n\nOpis:\n${meta.description}\n\nTagi:\n${meta.tags.join(', ')}\n\nHashtagi:\n${meta.hashtags.join(' ')}`
-        navigator.clipboard.writeText(text)
-        setCopiedYt(true)
-        setTimeout(() => setCopiedYt(false), 2000)
-    }
-
-    const goalColors: any = {
-        'Edukacja': 'text-blue-400 bg-blue-400/10 border-blue-400/20',
-        'Zaangażowanie': 'text-purple-400 bg-purple-400/10 border-purple-400/20',
-        'Sprzedaż': 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20'
-    }
-
-    const goalIcons: any = {
-        'Edukacja': <Lightbulb size={14} />,
-        'Zaangażowanie': <MoreHorizontal size={14} />,
-        'Sprzedaż': <Target size={14} />
-    }
-
-    // Funkcje kalendarza
-    const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1))
-    const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1))
-    const onDateClick = (dayStr: Date) => {
-        setSelectedDate(dayStr)
-        setDate(format(dayStr, 'yyyy-MM-dd'))
-    }
-
-    const monthStart = startOfMonth(currentMonth)
-    const monthEnd = endOfMonth(monthStart)
-    const startDate = startOfWeek(monthStart, { weekStartsOn: 1 })
-    const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 })
-
-    const calendarDays = []
-    let currentDay = startDate
-    while (currentDay <= endDate) {
-        calendarDays.push(currentDay)
-        currentDay = addDays(currentDay, 1)
-    }
-
-    const selectedDateEvents = events.filter(e => e.date === format(selectedDate, 'yyyy-MM-dd'))
+    const posts = useMemo(() => groupPosts(events), [events])
+    const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
+    const weekPosts = posts.filter((p) => p.date >= format(days[0], 'yyyy-MM-dd') && p.date <= format(days[6], 'yyyy-MM-dd'))
+    const open = posts.find((p) => p.key === openKey) ?? null
+    const count = (s: string) => weekPosts.filter((p) => postStatus(p) === s).length
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-zinc-950">
-                    <CalendarDays size={24} />
-                </div>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+            <header className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Posty</h1>
-                    <p className="text-zinc-400 text-sm">Plan, pisanie i publikacja na FB i IG w jednym miejscu.</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Posty</p>
+                    <h1 className="mt-1 text-3xl font-bold text-white">
+                        {format(days[0], 'd', { locale: pl })}–{format(days[6], 'd MMMM', { locale: pl })}
+                    </h1>
+                    <p className="mt-1 text-sm text-zinc-500">
+                        {weekPosts.length ? `${weekPosts.length} postów · ${count('Szkic')} szkice · ${count('Zaplanowane')} w kolejce · ${count('Opublikowane')} opublikowane` : 'Pusty tydzień'}
+                    </p>
                 </div>
-            </div>
-
-            <section className="bg-zinc-900 border border-yellow-400/20 rounded-2xl p-5 flex flex-col gap-3">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <h2 className="text-white font-bold flex items-center gap-2"><Sparkles size={16} className="text-yellow-400" /> Zaplanuj tydzień</h2>
-                        <p className="text-zinc-500 text-xs mt-1">3 posty (pon. poradnik, śr. kulisy, pt. realizacja lub pakiet), każdy na FB i IG. Trafiają jako szkice, nic nie wychodzi samo.</p>
+                <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center rounded-full border border-white/10 bg-white/[0.03] p-1">
+                        <button onClick={() => setWeekStart(addWeeks(weekStart, -1))} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Poprzedni tydzień"><ChevronLeft size={16} /></button>
+                        <button onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))} className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:bg-white/10">Ten tydzień</button>
+                        <button onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Następny tydzień"><ChevronRight size={16} /></button>
                     </div>
-                    <Link href="/lab/ai-studio?tab=post" className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-yellow-400 transition-colors">
-                        <PenLine size={13} /> Jeden post na teraz (AI Studio)
-                    </Link>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                    <input
-                        value={weekHint}
-                        onChange={(e) => setWeekHint(e.target.value)}
-                        placeholder="Opcjonalnie: o czym w tym tygodniu? np. skończyłem stronę dla pizzerii, promuję wizytówki"
-                        className="flex-1 bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:border-yellow-400 focus:outline-none p-2.5"
-                    />
-                    <button
-                        type="button"
-                        onClick={handlePlanWeek}
-                        disabled={weekLoading}
-                        className="bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-sm px-5 py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-wait whitespace-nowrap"
-                    >
-                        {weekLoading ? 'Piszę posty… (ok. 30 s)' : 'Zaplanuj tydzień'}
+                    <button onClick={() => setPanel(panel === 'add' ? 'none' : 'add')} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-semibold text-zinc-200 hover:border-white/20">
+                        <Plus size={14} /> Dodaj post
+                    </button>
+                    <button onClick={() => setPanel(panel === 'plan' ? 'none' : 'plan')} className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 shadow-[0_0_30px_-8px_rgba(255,235,82,0.7)] hover:bg-yellow-300">
+                        <Sparkles size={14} /> Zaplanuj tydzień
                     </button>
                 </div>
-                {weekMsg && (
-                    <p className={`text-sm ${weekMsg.ok ? 'text-emerald-400' : 'text-red-400'}`}>{weekMsg.text}</p>
-                )}
-            </section>
+            </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            {panel === 'plan' && <PlanWeekPanel onDone={(first) => { setPanel('none'); if (first) setWeekStart(startOfWeek(new Date(`${first}T12:00:00`), { weekStartsOn: 1 })); load() }} />}
+            {panel === 'add' && <AddPostPanel defaultDate={format(days[0], 'yyyy-MM-dd')} onDone={() => { setPanel('none'); load() }} />}
 
-                {/* Kolumna Dodawania (Lewa) */}
-                <div className="lg:col-span-1 bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl sticky top-4">
-                    <h2 className="text-lg font-bold text-white mb-4">Dodaj na wybrany dzień</h2>
-                    <form onSubmit={handleCreate} className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Data Publikacji</label>
-                            <input required type="date" value={date} onChange={e => {
-                                setDate(e.target.value);
-                                if (e.target.value) {
-                                    setSelectedDate(new Date(e.target.value));
-                                }
-                            }} className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Temat wpisu</label>
-                            <textarea required value={topic} onChange={e => setTopic(e.target.value)} rows={2} placeholder="O czym chces napisać?" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5 resize-none" />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-2">
-                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Platformy</label>
-                                <input value={platform} onChange={e => setPlatform(e.target.value)} placeholder="IG, Facebook..." className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
+                {days.map((day) => {
+                    const ds = format(day, 'yyyy-MM-dd')
+                    const dayPosts = weekPosts.filter((p) => p.date === ds)
+                    const today = isSameDay(day, new Date())
+                    return (
+                        <div key={ds} className={`${card} flex min-h-[9rem] flex-col gap-2 p-2.5 ${today ? 'ring-1 ring-yellow-400/40' : ''} ${dayPosts.length ? '' : 'opacity-60'}`}>
+                            <div className="flex items-baseline justify-between px-1">
+                                <span className={`text-[11px] font-bold uppercase tracking-wider ${today ? 'text-yellow-400' : 'text-zinc-500'}`}>{format(day, 'EEE', { locale: pl })}</span>
+                                <span className={`text-lg font-bold ${today ? 'text-yellow-400' : 'text-zinc-300'}`}>{format(day, 'd')}</span>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Format</label>
-                                <input value={formatPost} onChange={e => setFormatPost(e.target.value)} placeholder="Rolka, Karuzela..." className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
-                            </div>
+                            {dayPosts.map((p) => <PostTile key={p.key} post={p} onOpen={() => setOpenKey(p.key)} />)}
                         </div>
+                    )
+                })}
+            </div>
 
-                        <div className="flex flex-col gap-2">
-                            <label className="text-xs text-zinc-400 uppercase tracking-wider font-bold">Cel Publikacji</label>
-                            <select value={goal} onChange={e => setGoal(e.target.value)} className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5">
-                                <option value="Edukacja">Edukacja (Tłumaczenie pojęć, procesy)</option>
-                                <option value="Zaangażowanie">Zaangażowanie (Relacje, błędy, rozrywka)</option>
-                                <option value="Sprzedaż">Sprzedaż (Case Study, Oferty, Pakiety)</option>
-                            </select>
-                        </div>
+            {loading && <p className="text-sm text-zinc-500">Wczytuję…</p>}
 
-                        <div className="flex items-center gap-2 mt-2 bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg">
-                            <input type="checkbox" id="ai-gen" checked={generateAI} onChange={e => setGenerateAI(e.target.checked)} className="w-4 h-4 accent-yellow-400 cursor-pointer" />
-                            <label htmlFor="ai-gen" className="text-sm text-yellow-500 font-bold flex items-center gap-2 cursor-pointer select-none">
-                                <Bot size={16} /> Generuj od razu treść (AI)
-                            </label>
-                        </div>
+            <p className="text-xs text-zinc-600">
+                Szkic nie wychodzi nigdzie. „W kolejce” = publikacja automatyczna w dniu posta ok. 10:00.{' '}
+                <Link href="/lab/ai-studio?tab=post" className="text-zinc-400 hover:text-yellow-400">Jeden post na szybko: AI Studio</Link>
+            </p>
 
-                        <button disabled={saving} className="bg-zinc-800 hover:bg-yellow-400 hover:text-black border border-zinc-700 hover:border-yellow-400 text-white font-bold py-2.5 rounded-lg transition-all flex justify-center items-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-wait">
-                            {saving ? 'Zapisuję…' : 'Zapisz w planie'}
-                        </button>
-                    </form>
+            {open && <PostDrawer post={open} onClose={() => setOpenKey(null)} onChanged={load} />}
+        </div>
+    )
+}
+
+function PostTile({ post, onOpen }: { post: Post; onOpen: () => void }) {
+    const st = postStatus(post)
+    return (
+        <button onClick={onOpen} className="group flex flex-col gap-2 rounded-2xl border border-white/[0.06] bg-black/30 p-2 text-left transition hover:border-yellow-400/40 hover:bg-black/50">
+            {post.images[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase albo dowolnego adresu
+                <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl object-cover" />
+            ) : (
+                <div className="flex aspect-[4/5] w-full items-center justify-center rounded-xl bg-white/[0.03] text-[10px] text-zinc-600">bez grafiki</div>
+            )}
+            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[st]}`} />
+                {post.format}
+                {post.images.length > 1 && <span className="ml-auto flex items-center gap-0.5"><Images size={10} />{post.images.length}</span>}
+            </div>
+            <p className="line-clamp-3 text-xs font-medium leading-snug text-zinc-200 group-hover:text-white">{post.topic}</p>
+        </button>
+    )
+}
+
+function PlanWeekPanel({ onDone }: { onDone: (firstDate?: string) => void }) {
+    const [hint, setHint] = useState('')
+    const [busy, setBusy] = useState(false)
+    const [err, setErr] = useState<string | null>(null)
+    const run = async () => {
+        setBusy(true)
+        setErr(null)
+        try {
+            const r = await planWeek(hint)
+            if (r.ok) onDone(r.dates[0])
+            else setErr(r.error)
+        } catch {
+            setErr('Serwer nie odpowiedział na czas. Spróbuj za chwilę.')
+        } finally {
+            setBusy(false)
+        }
+    }
+    return (
+        <section className={`${card} flex flex-col gap-3 p-5`}>
+            <p className="text-sm text-zinc-300">3 posty na najbliższy tydzień (porada, kulisy, wiedza), każdy na FB i IG. Bez cen i ofert. Trafiają jako szkice.</p>
+            <p className="text-xs text-zinc-500">Pełny tydzień z grafikami robi też automat w czwartki o 18:00.</p>
+            <div className="flex flex-col gap-2 sm:flex-row">
+                <input value={hint} onChange={(e) => setHint(e.target.value)} placeholder="Opcjonalnie: o czym w tym tygodniu?"
+                    className="flex-1 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none" />
+                <button onClick={run} disabled={busy} className="rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                    {busy ? 'Piszę… (ok. 30 s)' : 'Zaplanuj'}
+                </button>
+            </div>
+            {err && <p className="text-sm text-red-400">{err}</p>}
+        </section>
+    )
+}
+
+function AddPostPanel({ defaultDate, onDone }: { defaultDate: string; onDone: () => void }) {
+    const [date, setDate] = useState(defaultDate)
+    const [topic, setTopic] = useState('')
+    const [fmt, setFmt] = useState('Post z grafiką')
+    const [ai, setAi] = useState(true)
+    const [busy, setBusy] = useState(false)
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setBusy(true)
+        for (const platform of ['Facebook', 'Instagram']) {
+            await addCalendarEvent({ topic, platform, format: fmt, goal: 'Edukacja', date, status: 'Szkic', generateAI: ai })
+        }
+        setBusy(false)
+        onDone()
+    }
+    const field = 'rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-white focus:border-yellow-400/60 focus:outline-none'
+    return (
+        <form onSubmit={submit} className={`${card} grid grid-cols-1 gap-3 p-5 md:grid-cols-[auto_1fr_auto_auto_auto] md:items-center`}>
+            <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className={field} />
+            <input required value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Temat posta, np. jak dobrać papier do wizytówek" className={field} />
+            <select value={fmt} onChange={(e) => setFmt(e.target.value)} className={field}>
+                <option>Post z grafiką</option><option>Karuzela</option><option>Rolka</option>
+            </select>
+            <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-300">
+                <input type="checkbox" checked={ai} onChange={(e) => setAi(e.target.checked)} className="h-4 w-4 accent-yellow-400" /> AI napisze tekst
+            </label>
+            <button disabled={busy} className="rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                {busy ? 'Zapisuję…' : 'Dodaj (FB + IG)'}
+            </button>
+        </form>
+    )
+}
+
+function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => void; onChanged: () => void }) {
+    const versions = rows(post)
+    const [tab, setTab] = useState(versions[0]?.id ?? '')
+    const ev = versions.find((v) => v.id === tab) ?? versions[0]
+    const [text, setText] = useState(splitContent(ev?.content).caption)
+    const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+    const [busy, setBusy] = useState(false)
+    const [imgUrl, setImgUrl] = useState(ev?.image_url || post.images[0] || '')
+
+    useEffect(() => {
+        setText(splitContent(ev?.content).caption)
+        setImgUrl(ev?.image_url || post.images[0] || '')
+        setMsg(null)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tab])
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [onClose])
+
+    if (!ev) return null
+    const original = splitContent(ev.content)
+    const dirty = text.trim() !== original.caption
+    const isIg = ev.platform.toLowerCase() === 'instagram'
+    const isFb = ev.platform.toLowerCase() === 'facebook'
+
+    const act = async (fn: () => Promise<{ ok: boolean; text: string } | void>) => {
+        setBusy(true)
+        setMsg(null)
+        try {
+            const r = await fn()
+            if (r) setMsg(r)
+            onChanged()
+        } finally {
+            setBusy(false)
+        }
+    }
+
+    const save = () => act(async () => {
+        await updateEventContent(ev.id, original.notes ? `${text.trim()}\n\n---\n${original.notes}` : text.trim())
+        return { ok: true, text: 'Zapisane.' }
+    })
+    const setStatus = (s: string) => act(async () => {
+        if (s === 'Zaplanowane') await schedulePost(ev.id, `${ev.date}T08:00:00.000Z`)
+        else await updateEventStatus(ev.id, s)
+    })
+    const publish = () => act(async () => {
+        if (dirty) await updateEventContent(ev.id, original.notes ? `${text.trim()}\n\n---\n${original.notes}` : text.trim())
+        if (isIg) {
+            if (!imgUrl) return { ok: false, text: 'Instagram potrzebuje grafiki.' }
+            const r = await publishToInstagram(ev.id, imgUrl, text.trim())
+            return r.success ? { ok: true, text: 'Opublikowane na Instagramie.' } : { ok: false, text: r.error }
+        }
+        const r = await publishToFacebook(ev.id, text.trim(), imgUrl || undefined)
+        return r.success ? { ok: true, text: 'Opublikowane na Facebooku.' } : { ok: false, text: r.error }
+    })
+    const remove = () => act(async () => {
+        if (!window.confirm('Usunąć ten post (FB i IG)?')) return
+        await deleteEvents(versions.map((v) => v.id))
+        onClose()
+    })
+    const pickImage = (u: string) => act(async () => {
+        setImgUrl(u)
+        await updateEventImageUrl(ev.id, u)
+    })
+
+    return (
+        <div className="fixed inset-0 z-[80] flex justify-end bg-black/60 backdrop-blur-sm" onClick={onClose}>
+            <aside onClick={(e) => e.stopPropagation()}
+                className="flex h-full w-full max-w-xl flex-col gap-5 overflow-y-auto border-l border-white/10 bg-[#0d0d0f] p-5 shadow-2xl sm:p-6">
+                <div className="flex items-start justify-between gap-3">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-yellow-400/80">
+                            {format(new Date(`${post.date}T12:00:00`), 'EEEE d MMMM', { locale: pl })} · {post.format}
+                        </p>
+                        <h2 className="mt-1 text-xl font-bold leading-snug text-white">{post.topic}</h2>
+                    </div>
+                    <div className="flex shrink-0 gap-1">
+                        <button onClick={remove} disabled={busy} className="rounded-full p-2 text-zinc-500 hover:bg-red-500/10 hover:text-red-400" aria-label="Usuń post"><Trash2 size={16} /></button>
+                        <button onClick={onClose} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Zamknij"><X size={18} /></button>
+                    </div>
                 </div>
 
-                {/* Tablica Kalendarza (Prawa) */}
-                <div className="lg:col-span-3 flex flex-col gap-6">
-
-                    {/* WIDOK MIESIĄCA - SIATKA */}
-                    <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl w-full">
-                        <div className="flex justify-between items-center mb-6">
-                            <button onClick={prevMonth} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"><ChevronLeft size={20} /></button>
-                            <h2 className="text-xl font-bold text-white uppercase tracking-widest">{format(currentMonth, 'LLLL yyyy', { locale: pl })}</h2>
-                            <button onClick={nextMonth} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"><ChevronRight size={20} /></button>
+                {post.images.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex gap-2 overflow-x-auto pb-1">
+                            {post.images.map((u, i) => (
+                                <div key={u} className="relative shrink-0">
+                                    <a href={u} target="_blank" rel="noreferrer">
+                                        {/* eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase */}
+                                        <img src={u} alt={`Grafika ${i + 1}`} className={`h-40 w-32 rounded-xl object-cover ${u === imgUrl ? 'ring-2 ring-yellow-400' : 'opacity-80 hover:opacity-100'}`} />
+                                    </a>
+                                    {post.images.length > 1 && <span className="absolute left-1.5 top-1.5 rounded-full bg-black/70 px-1.5 text-[10px] font-bold text-white">{i + 1}</span>}
+                                    {u !== imgUrl && (
+                                        <button onClick={() => pickImage(u)} className="absolute bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/80 px-2 py-0.5 text-[10px] text-zinc-200 hover:text-yellow-400">użyj tej</button>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-
-                        <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                            <div>Pon</div><div>Wto</div><div>Śro</div><div>Czw</div><div>Pią</div><div>Sob</div><div>Nie</div>
-                        </div>
-
-                        <div className="grid grid-cols-7 gap-2">
-                            {calendarDays.map((day, idx) => {
-                                const formattedDate = format(day, 'yyyy-MM-dd')
-                                const dayEvents = events.filter(e => e.date === formattedDate)
-                                const isSelected = isSameDay(day, selectedDate)
-                                const isCurrentMonth = isSameMonth(day, currentMonth)
-
-                                return (
-                                    <div
-                                        key={idx}
-                                        onClick={() => onDateClick(day)}
-                                        className={`min-h-[80px] p-2 rounded-xl border cursor-pointer transition-all flex flex-col items-start justify-start ${!isCurrentMonth ? 'opacity-30' : ''} ${isSelected ? 'border-yellow-400 bg-yellow-400/5 shadow-[0_0_15px_rgba(255,235,82,0.15)] ring-1 ring-yellow-400' : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-600'}`}
-                                    >
-                                        <span className={`text-sm font-bold mb-1 ${isSelected ? 'text-yellow-400' : 'text-zinc-400'}`}>{format(day, 'd')}</span>
-                                        <div className="flex flex-col gap-1 w-full overflow-hidden">
-                                            {dayEvents.map(e => (
-                                                <div key={e.id} className="w-full flex items-center justify-between" title={e.topic}>
-                                                    <div className={`w-full h-1.5 md:h-2 opacity-80 rounded-full shrink-0 ${e.goal === 'Edukacja' ? 'bg-blue-400' :
-                                                        e.goal === 'Zaangażowanie' ? 'bg-purple-400' :
-                                                            'bg-yellow-400'
-                                                        }`} />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-
-                        {/* LEGENDA */}
-                        <div className="flex items-center gap-6 mt-6 pt-6 border-t border-zinc-800/80 text-xs font-medium text-zinc-500">
-                            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-400"></div> Edukacja</span>
-                            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-purple-400"></div> Zaangażowanie</span>
-                            <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-yellow-400"></div> Sprzedaż</span>
-                        </div>
-                    </div>
-
-
-                    {/* LISTA POSTÓW Z WYBRANEGO DNIA */}
-                    <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl w-full min-h-[300px]">
-                        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                            Publikacje zaplanowane na: <span className="text-yellow-400">{format(selectedDate, 'dd MMMM yyyy', { locale: pl })}</span>
-                        </h3>
-
-                        {loading ? <p className="text-zinc-500">Wczytywanie...</p> : selectedDateEvents.length === 0 ? <p className="text-zinc-500 italic">Brak planu na ten dzień. Wykorzystaj panel po lewej stronie.</p> : (
-                            <div className="space-y-6">
-                                {selectedDateEvents.map((ev, idx) => (
-                                    <div key={ev.id} className={`flex flex-col gap-4 p-5 rounded-xl border ${ev.status === 'Opublikowane' ? 'bg-zinc-950/50 border-zinc-800/30 opacity-60' : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700 transition-colors'}`}>
-
-                                        <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                                            <div className="flex flex-col gap-2 w-full">
-                                                <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">
-                                                    <span>{ev.platform}</span>
-                                                    <span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-                                                    <span>{ev.format}</span>
-                                                    <span className={`px-2 py-0.5 rounded border border-zinc-800 flex items-center gap-1 inline-flex ${goalColors[ev.goal] || 'text-zinc-400'}`}>
-                                                        {goalIcons[ev.goal]} {ev.goal}
-                                                    </span>
-                                                </div>
-
-                                                <h3 className={`text-xl font-medium tracking-wide leading-relaxed font-sans ${ev.status === 'Opublikowane' ? 'text-zinc-500 line-through decoration-zinc-800' : 'text-zinc-200'}`}>
-                                                    {ev.topic}
-                                                </h3>
-                                            </div>
-
-                                            <div className="flex flex-col items-end gap-2 shrink-0">
-                                                <div className="flex items-center gap-2 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
-                                                    <button onClick={() => handleUpdate(ev.id, 'Szkic')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Szkic' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white'}`}>Szkic</button>
-                                                    <button onClick={() => handleUpdate(ev.id, 'Zaplanowane', ev.date)} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Zaplanowane' ? 'bg-yellow-400 text-black' : 'text-zinc-500 hover:text-white'}`}>W kolejce</button>
-                                                    <button onClick={() => handleUpdate(ev.id, 'Opublikowane')} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${ev.status === 'Opublikowane' ? 'bg-green-500/20 text-green-400' : 'text-zinc-500 hover:text-white'}`}>Opubliko.</button>
-                                                </div>
-                                                {ev.status === 'Zaplanowane' && ev.scheduled_at && (
-                                                    <span className="flex items-center gap-1 text-[10px] text-yellow-400/80">
-                                                        <Clock size={10} />
-                                                        {new Date(ev.scheduled_at).toLocaleString('pl-PL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {ev.content && (
-                                            <div className="mt-2 bg-zinc-900 border border-yellow-500/20 p-5 rounded-lg">
-                                                <p className="text-xs uppercase font-bold text-yellow-500 mb-4 flex items-center gap-1"><Bot size={14} /> Wygenerowana Treść (AI - Tone of WUYO)</p>
-                                                <div className="prose prose-sm prose-invert prose-yellow max-w-none text-zinc-300 font-sans leading-relaxed">
-                                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                        {ev.content}
-                                                    </ReactMarkdown>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* ── URL Grafiki (wymagany dla IG + cron) ── */}
-                                        {ev.status !== 'Opublikowane' && (
-                                            <div className="flex items-center gap-2">
-                                                {ev.image_url ? (
-                                                    <div className="flex items-center gap-2 flex-1">
-                                                        <a href={ev.image_url} target="_blank" rel="noreferrer" className="shrink-0">
-                                                            {/* eslint-disable-next-line @next/next/no-img-element -- podgląd z dowolnego adresu wklejonego ręcznie */}
-                                                            <img src={ev.image_url} alt="" className="w-16 h-20 object-cover rounded-md border border-zinc-800" />
-                                                        </a>
-                                                        <span className="text-xs text-zinc-500 truncate flex-1">{ev.image_url}</span>
-                                                        <button
-                                                            onClick={() => { setEditingImageEventId(ev.id); setEditingImageUrl(ev.image_url || '') }}
-                                                            className="text-xs text-zinc-600 hover:text-yellow-400 transition-colors shrink-0"
-                                                        >Zmień</button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => { setEditingImageEventId(ev.id); setEditingImageUrl('') }}
-                                                        className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-yellow-400 transition-colors"
-                                                    >
-                                                        <Image size={12} /> Dodaj URL grafiki (IG + cron)
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                        {editingImageEventId === ev.id && (
-                                            <div className="flex gap-2 items-center">
-                                                <input
-                                                    type="url"
-                                                    value={editingImageUrl}
-                                                    onChange={e => setEditingImageUrl(e.target.value)}
-                                                    placeholder="https://wuyo.pl/images/post.jpg"
-                                                    className="flex-1 bg-zinc-950 border border-zinc-700 text-white text-xs rounded-lg px-3 py-1.5 focus:border-yellow-400/50"
-                                                />
-                                                <button
-                                                    onClick={async () => { await handleSaveImageUrl(ev.id, editingImageUrl); setEditingImageEventId(null) }}
-                                                    className="px-3 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 text-xs font-bold rounded-lg transition-colors"
-                                                >
-                                                    Zapisz
-                                                </button>
-                                                <button onClick={() => setEditingImageEventId(null)} className="text-zinc-600 hover:text-white text-xs transition-colors">Anuluj</button>
-                                            </div>
-                                        )}
-
-                                        {/* ── Sekcja Publikacji ── */}
-                                        {ev.status !== 'Opublikowane' && (
-                                            <div className="border-t border-zinc-800/60 pt-4 mt-2">
-                                                {/* LinkedIn — brak auto-publish */}
-                                                {(ev.platform || '').toLowerCase().includes('linkedin') && (
-                                                    <div className="flex items-start gap-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg mb-3">
-                                                        <Linkedin size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                                                        <div className="text-xs text-zinc-400">
-                                                            <p className="font-bold text-blue-400 mb-1">LinkedIn — kopiuj i wklej recznie</p>
-                                                            <p>LinkedIn API wymaga zatwierdzenia firmy. Skopiuj tresc i opublikuj przez linkedin.com.</p>
-                                                            {ev.content && (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        navigator.clipboard.writeText(ev.content ?? '')
-                                                                        setPublishFeedback({ success: true, message: 'Tresc skopiowana do schowka!' })
-                                                                        setPublishingPostId(ev.id)
-                                                                    }}
-                                                                    className="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
-                                                                >
-                                                                    <Copy size={12} /> Kopiuj tresc
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {publishingPostId === ev.id ? (
-                                                    <div className="flex flex-col gap-3">
-                                                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Opublikuj na platformach</p>
-
-                                                        <input
-                                                            type="url"
-                                                            placeholder="URL grafiki (wymagane dla Instagram, opcjonalne dla FB)"
-                                                            value={publishImageUrl}
-                                                            onChange={e => setPublishImageUrl(e.target.value)}
-                                                            className="bg-zinc-950 border border-zinc-700 text-white text-xs rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2"
-                                                        />
-
-                                                        <div className="flex flex-wrap gap-2">
-                                                            <button
-                                                                onClick={() => handlePublishIG(ev.id, postCaption(ev.content) || ev.topic)}
-                                                                disabled={publishLoading}
-                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-opacity"
-                                                            >
-                                                                <Camera size={13} /> Instagram
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handlePublishFB(ev.id, postCaption(ev.content) || ev.topic)}
-                                                                disabled={publishLoading}
-                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
-                                                            >
-                                                                <Globe size={13} /> Facebook
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleYtMetadata(ev.topic, ev.content || ev.topic)}
-                                                                disabled={publishLoading}
-                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
-                                                            >
-                                                                <Play size={13} /> Metadane YT
-                                                            </button>
-                                                            <button
-                                                                onClick={closePublish}
-                                                                className="text-xs text-zinc-500 hover:text-white px-2 transition-colors"
-                                                            >
-                                                                Anuluj
-                                                            </button>
-                                                        </div>
-
-                                                        {publishLoading && (
-                                                            <p className="text-xs text-zinc-500 italic">Publikowanie...</p>
-                                                        )}
-
-                                                        {publishFeedback && (
-                                                            <p className={`text-xs font-medium ${publishFeedback.success ? 'text-green-400' : 'text-red-400'}`}>
-                                                                {publishFeedback.success ? '✓ ' : '✗ '}{publishFeedback.message}
-                                                            </p>
-                                                        )}
-
-                                                        {ytMetadata && (
-                                                            <div className="bg-zinc-950 border border-red-600/25 rounded-lg p-3 text-xs text-zinc-300 space-y-1.5">
-                                                                <div className="flex items-center justify-between mb-2">
-                                                                    <p className="text-red-400 font-bold flex items-center gap-1"><Play size={12}/> Metadane YouTube</p>
-                                                                    <button
-                                                                        onClick={() => copyYtMetadata(ytMetadata)}
-                                                                        className="flex items-center gap-1 text-zinc-500 hover:text-yellow-400 transition-colors"
-                                                                    >
-                                                                        <Copy size={12}/> {copiedYt ? 'Skopiowano!' : 'Kopiuj'}
-                                                                    </button>
-                                                                </div>
-                                                                <div><span className="text-zinc-500">Tytuł: </span>{ytMetadata.title}</div>
-                                                                <div><span className="text-zinc-500">Opis: </span>{ytMetadata.description}</div>
-                                                                <div><span className="text-zinc-500">Tagi: </span>{ytMetadata.tags?.join(', ')}</div>
-                                                                <div><span className="text-zinc-500">Hashtagi: </span>{ytMetadata.hashtags?.join(' ')}</div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => openPublish(ev)}
-                                                        className="flex items-center gap-2 text-xs text-zinc-500 hover:text-yellow-400 transition-colors py-1"
-                                                    >
-                                                        <Share2 size={13} /> Opublikuj na social media
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
+                        {post.images.length > 1 && (
+                            <p className="text-[11px] text-zinc-500">Karuzela: publikacja z panelu wrzuca tylko zaznaczoną grafikę. Całą karuzelę dodaj w aplikacji (otwórz slajdy i zapisz po kolei).</p>
                         )}
                     </div>
+                )}
 
+                <div className="flex flex-col gap-3">
+                    <div className="flex gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1 self-start">
+                        {versions.map((v) => (
+                            <button key={v.id} onClick={() => setTab(v.id)}
+                                className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold ${v.id === ev.id ? 'bg-white text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
+                                {v.platform.toLowerCase() === 'instagram' ? <Camera size={13} /> : <Globe size={13} />}
+                                {v.platform}
+                                <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[v.status] ?? 'bg-zinc-500'}`} />
+                            </button>
+                        ))}
+                    </div>
+
+                    <textarea value={text} onChange={(e) => setText(e.target.value)} rows={10}
+                        className="w-full resize-y rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-relaxed text-zinc-100 focus:border-yellow-400/50 focus:outline-none" />
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                        <span className="text-zinc-500">{text.length} znaków</span>
+                        <button onClick={() => { navigator.clipboard?.writeText(text); setMsg({ ok: true, text: 'Skopiowane.' }) }}
+                            className="ml-auto flex items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 text-zinc-300 hover:border-white/25"><Copy size={12} /> Kopiuj</button>
+                        {dirty && <button onClick={save} disabled={busy} className="flex items-center gap-1 rounded-full bg-white px-3 py-1.5 font-semibold text-zinc-950 disabled:opacity-50"><Check size={12} /> Zapisz zmiany</button>}
+                    </div>
                 </div>
 
-            </div>
+                <div className={`${card} flex flex-col gap-3 p-4`}>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-xs text-zinc-400">Status {ev.platform}:</span>
+                        {(['Szkic', 'Zaplanowane', 'Opublikowane'] as const).map((s) => (
+                            <button key={s} onClick={() => setStatus(s)} disabled={busy || ev.status === s}
+                                className={`rounded-full px-3 py-1 text-xs font-semibold ${ev.status === s ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}>
+                                <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${STATUS_STYLE[s]}`} />{STATUS_LABEL[s]}
+                            </button>
+                        ))}
+                    </div>
+                    {ev.status === 'Zaplanowane' && ev.scheduled_at && (
+                        <p className="flex items-center gap-1 text-xs text-yellow-400/80"><Clock size={12} />
+                            Wyjdzie {new Date(ev.scheduled_at).toLocaleString('pl-PL', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Warsaw' })}
+                        </p>
+                    )}
+                    {ev.status !== 'Opublikowane' && (isIg || isFb) && (
+                        <button onClick={publish} disabled={busy}
+                            className="self-start rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                            {busy ? 'Chwila…' : `Opublikuj teraz na ${ev.platform}`}
+                        </button>
+                    )}
+                    {msg && <p className={`text-xs ${msg.ok ? 'text-emerald-400' : 'text-red-400'}`}>{msg.text}</p>}
+                </div>
+
+                {post.notes && (
+                    <details className={`${card} p-4`} open={post.format.toLowerCase().includes('rolka')}>
+                        <summary className="cursor-pointer text-xs font-semibold text-zinc-300">Notatki: scenariusz, slajdy, dlaczego ten post</summary>
+                        <div className="prose prose-sm prose-invert mt-3 max-w-none break-words text-zinc-300 prose-a:text-yellow-400 prose-p:my-1.5">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.notes}</ReactMarkdown>
+                        </div>
+                    </details>
+                )}
+
+                {imgUrl && (
+                    <a href={imgUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-300">
+                        <ExternalLink size={11} /> Otwórz grafikę w pełnym rozmiarze
+                    </a>
+                )}
+            </aside>
         </div>
     )
 }
