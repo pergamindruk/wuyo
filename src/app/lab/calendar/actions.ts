@@ -153,13 +153,14 @@ const POST_RULES = `GŁOS W POSTACH (Mateusz, WUYO, Rzeszów):
 - Bez powitań i bez przedstawiania się: NIE zaczynaj od "Dzień dobry", "Cześć", "Mateusz z WUYO". Pierwsze zdanie to od razu konkret.
 - Do czytelników na "Ty" albo "Wy" ("Sprawdź", "Wpiszcie"). Nigdy "Pan/Pani" ani ukośników typu "zadowolony/a".
 - Zakazane: kompleksowy, dedykowany, profesjonalny, rozwiązania, innowacyjny, premium, długie myślniki. Bez anglicyzmów, także w hashtagach (nie "feedback", "design", "tip", "mockup", "marketing", "must-have", "biznes online").
-- NIE wymyślaj realizacji, klientów ani liczb. Realizację opisujesz tylko, jeśli Mateusz ją podał niżej. Bez tego post sprzedażowy opisuje pakiet z cennika.
+- NIE wymyślaj realizacji, klientów ani liczb. Realizację opisujesz tylko, jeśli Mateusz ją podał niżej.
+- To content, nie reklama: bez cen, pakietów i zaproszeń po wycenę. Post daje wiedzę albo pokazuje kulisy pracy.
 - Temat do kalendarza zwykłym zdaniem, wielka litera tylko na początku.`
 
 const WEEK_PLAN = [
     { weekday: 1, goal: 'Edukacja', angle: 'poradnik: jedna rzecz, którą właściciel firmy sprawdzi u siebie w 5 minut (strona, wizytówka Google, logo, ulotka)' },
     { weekday: 3, goal: 'Zaangażowanie', angle: 'za kulisami: jak wygląda jeden zwykły krok mojej pracy (dobór papieru do wizytówek, poprawki do logo, sprawdzanie strony na telefonie) i pytanie do czytelników. Bez wymyślonych historii i anegdot' },
-    { weekday: 5, goal: 'Sprzedaż', angle: 'realizacja (tylko jeśli podana niżej) albo pakiet z cennika: co dokładnie się dostaje i ile to kosztuje (netto + 23% VAT), zaproszenie do wiadomości' },
+    { weekday: 5, goal: 'Edukacja', angle: 'wiedza z druku albo projektowania, którą właściciel firmy wykorzysta sam (np. spady, kolory do druku, czytelność wizytówki, zdjęcia na stronę). Bez cen, pakietów i oferty, na końcu pytanie do czytelników. Realizację opisz tylko, jeśli jest podana niżej' },
 ] as const
 
 type PlannedPost = { topic: string; facebook: string; instagram: string; grafika: string }
@@ -216,8 +217,6 @@ export async function planWeek(hint?: string):
     const prompt = `Zaplanuj 3 posty na social media studia WUYO na najbliższy tydzień.
 
 ${RULES}
-
-${PRICING}
 
 ${POST_RULES}
 
