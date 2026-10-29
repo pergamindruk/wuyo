@@ -72,7 +72,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
             {/* Sidebar */}
             <aside className={`
                 fixed inset-y-0 left-0 z-[70] w-60 bg-zinc-950 border-r border-zinc-800/60 px-4 py-6 flex flex-col gap-7 transition-transform duration-200 ease-in-out overflow-y-auto
-                md:relative md:translate-x-0 md:z-auto md:h-[calc(100vh-2rem)] md:rounded-3xl md:border md:border-white/[0.06] md:bg-white/[0.025] md:backdrop-blur-xl md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
+                md:relative md:translate-x-0 md:z-auto md:h-[calc(100vh-2rem)] md:rounded-3xl md:border md:border-white/[0.06] md:bg-white/[0.025] md:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 print:hidden
             `}>

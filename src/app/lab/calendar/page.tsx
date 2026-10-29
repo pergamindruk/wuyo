@@ -71,6 +71,13 @@ function postStatus(p: Post): string {
     return 'Szkic'
 }
 
+/** 1 post, 2-4 posty, 5+ postów */
+function plural(n: number, one: string, few: string, many: string) {
+    if (n === 1) return one
+    const d = n % 10, h = n % 100
+    return d >= 2 && d <= 4 && (h < 12 || h > 14) ? few : many
+}
+
 const card = 'rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.045] to-white/[0.015] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]'
 
 export default function CalendarLab() {
@@ -110,10 +117,12 @@ export default function CalendarLab() {
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Posty</p>
                     <h1 className="mt-1 text-3xl font-bold text-white">
-                        {format(days[0], 'd', { locale: pl })}–{format(days[6], 'd MMMM', { locale: pl })}
+                        {days[0].getMonth() === days[6].getMonth()
+                            ? `${format(days[0], 'd')}–${format(days[6], 'd MMMM', { locale: pl })}`
+                            : `${format(days[0], 'd MMM', { locale: pl })} – ${format(days[6], 'd MMM', { locale: pl })}`}
                     </h1>
                     <p className="mt-1 text-sm text-zinc-500">
-                        {weekPosts.length ? `${weekPosts.length} postów · ${count('Szkic')} szkice · ${count('Zaplanowane')} w kolejce · ${count('Opublikowane')} opublikowane` : 'Pusty tydzień'}
+                        {weekPosts.length ? `${weekPosts.length} ${plural(weekPosts.length, 'post', 'posty', 'postów')} · szkice ${count('Szkic')} · w kolejce ${count('Zaplanowane')} · opublikowane ${count('Opublikowane')}` : 'Pusty tydzień'}
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -170,9 +179,7 @@ function PostTile({ post, onOpen }: { post: Post; onOpen: () => void }) {
             {post.images[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase albo dowolnego adresu
                 <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl object-cover" />
-            ) : (
-                <div className="flex aspect-[4/5] w-full items-center justify-center rounded-xl bg-white/[0.03] text-[10px] text-zinc-600">bez grafiki</div>
-            )}
+            ) : null}
             <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[st]}`} />
                 {post.format}
@@ -318,7 +325,7 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
     })
 
     return (
-        <div className="fixed inset-0 z-[80] flex justify-end bg-black/60 backdrop-blur-sm" onClick={onClose}>
+        <div className="fixed inset-0 z-[80] flex justify-end bg-black/70" onClick={onClose}>
             <aside onClick={(e) => e.stopPropagation()}
                 className="flex h-full w-full max-w-xl flex-col gap-5 overflow-y-auto border-l border-white/10 bg-[#0d0d0f] p-5 shadow-2xl sm:p-6">
                 <div className="flex items-start justify-between gap-3">
