@@ -64,6 +64,7 @@ ${drafts.slice(0, 3000)}
 
 ZADANIE: scenariusz kontaktu dla Mateusza. Markdown, krótko, zdania do powiedzenia na głos albo do wklejenia.
 Zacznij od razu od "## Telefon", bez wstępu. Nie pisz "Pan/Pani" z ukośnikiem. Nie wymyślaj faktów o firmie spoza danych wyżej.
+Nie obiecuj terminów, nielimitowanych poprawek ani umowy w pierwszej odpowiedzi. Studio przyjmuje zlecenia od grudnia: jeśli mowa o terminie, zaproponuj rezerwację na grudzień.
 ## Telefon
 - Otwarcie (20 s): kim jesteś, jedno zdanie o tym, co zauważyłeś u nich, pytanie o minutę rozmowy.
 - 2 pytania o ich klientów.
