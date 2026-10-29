@@ -46,11 +46,17 @@ export default async function TodayPage() {
     const weekday = (new Date(`${warsawIsoDate()}T12:00:00Z`).getUTCDay() + 6) % 7 // 0 = poniedziałek
     const [mailsRes, postsRes] = await Promise.all([
         supabase.from('harvey_outbox').select('id', { count: 'exact', head: true }).eq('status', 'pending_review').is('decyzja', null),
-        supabase.from('calendar_events').select('status').gte('date', warsawIsoDate(-weekday)).lte('date', warsawIsoDate(6 - weekday)),
+        supabase.from('calendar_events').select('status, date, topic').gte('date', warsawIsoDate(-weekday)).lte('date', warsawIsoDate(6 - weekday)),
     ])
     const mailsWaiting = mailsRes.count ?? 0
-    const weekPosts = postsRes.data ?? []
-    const drafts = weekPosts.filter((p) => p.status === 'Szkic').length
+    // FB i IG tego samego posta to dwa wiersze: liczymy posty (data + temat).
+    const postKeys = new Map<string, boolean>()
+    for (const p of postsRes.data ?? []) {
+        const k = `${p.date}|${p.topic}`
+        postKeys.set(k, (postKeys.get(k) ?? false) || p.status === 'Szkic')
+    }
+    const weekPosts = [...postKeys.keys()]
+    const drafts = [...postKeys.values()].filter(Boolean).length
     const activeJobs = jobs.filter((j) => j.outcome === 'w_toku').length
     const greeting = hour < 5 ? 'Dobranoc' : hour < 12 ? 'Dzień dobry' : hour < 18 ? 'Cześć' : 'Dobry wieczór'
 

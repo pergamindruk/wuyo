@@ -178,7 +178,7 @@ function PostTile({ post, onOpen }: { post: Post; onOpen: () => void }) {
         <button onClick={onOpen} className="group flex flex-col gap-2 rounded-2xl border border-white/[0.06] bg-black/30 p-2 text-left transition hover:border-yellow-400/40 hover:bg-black/50">
             {post.images[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase albo dowolnego adresu
-                <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl object-cover" />
+                <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl border border-white/10 object-cover" />
             ) : null}
             <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[st]}`} />
@@ -348,7 +348,7 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
                                 <div key={u} className="relative shrink-0">
                                     <a href={u} target="_blank" rel="noreferrer">
                                         {/* eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase */}
-                                        <img src={u} alt={`Grafika ${i + 1}`} className={`h-40 w-32 rounded-xl object-cover ${u === imgUrl ? 'ring-2 ring-yellow-400' : 'opacity-80 hover:opacity-100'}`} />
+                                        <img src={u} alt={`Grafika ${i + 1}`} className={`h-40 w-32 rounded-xl border border-white/15 object-cover ${u === imgUrl ? 'ring-2 ring-yellow-400' : 'opacity-80 hover:opacity-100'}`} />
                                     </a>
                                     {post.images.length > 1 && <span className="absolute left-1.5 top-1.5 rounded-full bg-black/70 px-1.5 text-[10px] font-bold text-white">{i + 1}</span>}
                                     {u !== imgUrl && (

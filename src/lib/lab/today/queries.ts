@@ -151,7 +151,7 @@ export function pickOneThing(input: {
         return { kind: 'zaliczka', title: `Zaliczka: ${deposit.client_name}`, detail: `${deposit.title}. Wyślij prośbę o 50% (${formatPLN(Math.round(deposit.price_grosze / 2))}).`, href: '/lab/lejek', cta: 'Otwórz zlecenie' }
     }
     if (systems.outboxPending > 0) {
-        return { kind: 'outbox', title: `${systems.outboxPending} maili czeka na zatwierdzenie`, detail: 'Harvey je napisał. Przejrzyj i zatwierdź w Outboxie (A / R).', href: 'http://127.0.0.1:5555', cta: 'Otwórz Outbox' }
+        return { kind: 'outbox', title: `${systems.outboxPending} maili czeka na zatwierdzenie`, detail: 'Harvey je napisał. Przejrzyj, zatwierdź albo odrzuć. Przy każdej firmie masz gotowy scenariusz telefonu.', href: '/lab/maile', cta: 'Otwórz maile' }
     }
     const overdue = open.find((j) => j.next_contact_at && j.next_contact_at <= today)
     if (overdue) {
