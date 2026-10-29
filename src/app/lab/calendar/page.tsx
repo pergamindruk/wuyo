@@ -12,6 +12,9 @@ import remarkGfm from 'remark-gfm'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 
+/** Do publikacji idzie tylko tekst posta. Po linii „---” są notatki dla Mateusza (grafika, scenariusz, uzasadnienie). */
+const postCaption = (content?: string) => (content ?? '').split(/\n---\n/)[0].trim()
+
 export default function CalendarLab() {
     const [events, setEvents] = useState<CalendarEvent[]>([])
     const [loading, setLoading] = useState(true)
@@ -409,7 +412,10 @@ export default function CalendarLab() {
                                             <div className="flex items-center gap-2">
                                                 {ev.image_url ? (
                                                     <div className="flex items-center gap-2 flex-1">
-                                                        <Image size={12} className="text-zinc-500 shrink-0" />
+                                                        <a href={ev.image_url} target="_blank" rel="noreferrer" className="shrink-0">
+                                                            {/* eslint-disable-next-line @next/next/no-img-element -- podgląd z dowolnego adresu wklejonego ręcznie */}
+                                                            <img src={ev.image_url} alt="" className="w-16 h-20 object-cover rounded-md border border-zinc-800" />
+                                                        </a>
                                                         <span className="text-xs text-zinc-500 truncate flex-1">{ev.image_url}</span>
                                                         <button
                                                             onClick={() => { setEditingImageEventId(ev.id); setEditingImageUrl(ev.image_url || '') }}
@@ -485,14 +491,14 @@ export default function CalendarLab() {
 
                                                         <div className="flex flex-wrap gap-2">
                                                             <button
-                                                                onClick={() => handlePublishIG(ev.id, ev.content || ev.topic)}
+                                                                onClick={() => handlePublishIG(ev.id, postCaption(ev.content) || ev.topic)}
                                                                 disabled={publishLoading}
                                                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-opacity"
                                                             >
                                                                 <Camera size={13} /> Instagram
                                                             </button>
                                                             <button
-                                                                onClick={() => handlePublishFB(ev.id, ev.content || ev.topic)}
+                                                                onClick={() => handlePublishFB(ev.id, postCaption(ev.content) || ev.topic)}
                                                                 disabled={publishLoading}
                                                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
                                                             >

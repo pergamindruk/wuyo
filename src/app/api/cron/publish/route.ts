@@ -47,7 +47,8 @@ export async function GET(request: Request) {
 
     for (const event of events) {
         const platform = (event.platform || '').toLowerCase()
-        const content = event.content || event.topic || ''
+        // Po linii „---” są notatki dla Mateusza (grafika, scenariusz), nie część posta.
+        const content = (event.content || '').split(/\n---\n/)[0].trim() || event.topic || ''
         const imageUrl = event.image_url
 
         let publishResult: { success: boolean; postId?: string; error?: string } = { success: false, error: 'Unknown platform' }
