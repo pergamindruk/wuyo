@@ -257,6 +257,29 @@ export default function OdziezPage() {
             {/* Opinie */}
             <TestimonialsSection />
 
+            {/* Szybka wycena przez WhatsApp: ludzie czytają tę stronę ponad minutę, a nie piszą */}
+            <section className="py-12 px-6 md:px-12">
+                <div className="max-w-3xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card border border-gold/30 p-8 text-center">
+                            <h2 className="text-2xl md:text-3xl font-bold text-white">Chcesz wycenić koszulki dla swojej firmy?</h2>
+                            <p className="text-white/60 mt-3 max-w-xl mx-auto">
+                                Napisz na WhatsApp, ile sztuk potrzebujesz i co ma być na nadruku. Dopasuję technikę nadruku i podam cenę.
+                            </p>
+                            <a
+                                href={`https://wa.me/48725182053?text=${encodeURIComponent("Dzień dobry, chcę wycenić koszulki z nadrukiem dla firmy. Ilość: ")}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-gold inline-flex items-center gap-2 mt-6 px-7 py-3 rounded-full font-bold"
+                            >
+                                Napisz na WhatsApp <ArrowRight size={18} />
+                            </a>
+                            <p className="text-white/40 text-xs mt-3">Albo zadzwoń: <a href="tel:+48725182053" className="hover:text-gold">725 182 053</a></p>
+                        </div>
+                    </AnimatedSection>
+                </div>
+            </section>
+
             {/* Kontakt */}
             <PageFaq items={faqs} title="Pytania o nadruki i personalizację" />
 

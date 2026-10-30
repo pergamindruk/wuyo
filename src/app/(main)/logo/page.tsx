@@ -13,7 +13,7 @@ import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Projektowanie logo Rzeszów — od 890 zł, 3 koncepcje",
-    description: "Projektowanie logo w Rzeszowie od zera, bez szablonów. 3 koncepcje, pliki i prawa autorskie w cenie. Logo od 890 zł, identyfikacja 1 490 zł.",
+    description: "Projektuję proste i czytelne logo dla firm z Rzeszowa i okolic. Tworzenie logo od zera, 3 koncepcje, pliki i prawa autorskie w cenie. Od 890 zł netto. Zobacz cennik i napisz do mnie.",
     openGraph: {
         title: "Logo dla Firmy od 890 zł | WUYO – Rzeszów i Polska",
         description: "Logo z procesem, plikami wektorowymi i prawami autorskimi. Od 890 zł. Termin 7–10 dni roboczych. Wycena w 24h.",

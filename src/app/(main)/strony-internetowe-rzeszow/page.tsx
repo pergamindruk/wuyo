@@ -70,6 +70,10 @@ const localSchema = {
 // wymaga, żeby dane strukturalne miały pokrycie w treści strony.
 const faqs: FaqEntry[] = [
     {
+        q: "Gdzie zrobić tanią stronę internetową w Rzeszowie?",
+        a: "Najtańsza sensowna opcja to strona jednostronicowa od 1 990 zł netto: jedna strona z ofertą, galerią, opiniami, mapą i formularzem, działająca na telefonie, z podstawowym SEO lokalnym. Domena i hosting na pierwszy rok są w cenie. Taniej da się zrobić stronę z szablonu, ale zwykle bez SEO i z dopłatami za każdą zmianę. Na co uważać przy tanich ofertach, opisałem we wpisie o tanich stronach internetowych.",
+    },
+    {
         q: "Ile kosztuje strona internetowa w Rzeszowie?",
         a: "Strona jednostronicowa (one-page) od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep internetowy od 6 900 zł. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
     },
@@ -184,7 +188,7 @@ export default function StronyInternetowerRzeszowPage() {
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Cennik</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Cennik stron internetowych w Rzeszowie (2026)</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Strony internetowe Rzeszów: cennik 2026</h2>
                         <p className="text-white/50 max-w-xl mx-auto mt-4">Wycena = cena końcowa. Bez stawki godzinowej, bez niespodzianek po fakturze.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -242,7 +246,7 @@ export default function StronyInternetowerRzeszowPage() {
 
                     <AnimatedSection className="mt-6">
                         <div className="glass-card p-6 border-l-2 border-gold">
-                            <h3 className="font-bold text-white mb-2">Tania strona internetowa w Rzeszowie — kiedy ma sens</h3>
+                            <h3 className="font-bold text-white mb-2">Tanie strony internetowe w Rzeszowie: kiedy wystarczy one-page za 1 990 zł</h3>
                             <p className="text-white/60 text-sm leading-relaxed">
                                 Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie — nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
                                 <Link href="/blog/strona-one-page-czy-multi-page" className="text-gold hover:underline">one page czy multi page</Link>.
