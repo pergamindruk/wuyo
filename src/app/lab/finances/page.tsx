@@ -25,7 +25,8 @@ async function savePdf(elementId: string, filename: string) {
     }).from(element).save()
 }
 
-const today = () => new Date().toISOString().split('T')[0]
+// Dzisiejsza data w Polsce (toISOString daje UTC, po północy byłby wczorajszy dzień).
+const today = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Warsaw' })
 const field = 'w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
 const label = 'text-[11px] font-semibold uppercase tracking-wider text-zinc-400'
 

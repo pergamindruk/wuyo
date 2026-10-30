@@ -38,7 +38,7 @@ export async function getOwnStats(days = 30): Promise<OwnStats | null> {
         if (r.referrer) {
             let host = r.referrer as string
             try { host = new URL(host).hostname.replace(/^www\./, '') } catch { /* zostaje surowy tekst */ }
-            if (host && host !== 'wuyo.pl') refs.set(host, (refs.get(host) ?? 0) + 1)
+            if (host && host !== 'wuyo.pl' && host !== 'localhost') refs.set(host, (refs.get(host) ?? 0) + 1)
         }
     }
     const top = (m: Map<string, number>, n: number) => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n)

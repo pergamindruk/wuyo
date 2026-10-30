@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic'
 
 // Strefa klienta to prywatny link: nie indeksujemy jej.
-export const metadata: Metadata = { title: 'Twój projekt | WUYO', robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: 'Twój projekt', robots: { index: false, follow: false } }
 
 type UpdateEntry = { date: string; status: string; progress: number; note?: string }
 
