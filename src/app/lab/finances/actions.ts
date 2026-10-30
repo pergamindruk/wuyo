@@ -179,3 +179,29 @@ export async function createDocument(input: DocumentInput): Promise<{ success: t
     })
     return { success: true, data }
 }
+
+// ─── Dokumenty dla klienta: zlecenia z danymi do uzupełnienia wzorów ─────────
+
+export type DocJob = { id: string; title: string; priceGrosze: number; client: string; email: string; address: string; nip: string; createdAt: string }
+
+export async function getDocJobs(): Promise<DocJob[]> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+    const { data } = await supabase.from('jobs')
+        .select('id, title, price_grosze, created_at, clients(name, company, email, address, nip)')
+        .order('updated_at', { ascending: false }).limit(50)
+    return (data ?? []).map((j) => {
+        const c = (Array.isArray(j.clients) ? j.clients[0] : j.clients) as { name?: string; company?: string; email?: string; address?: string; nip?: string } | null
+        return {
+            id: j.id as string,
+            title: (j.title as string) ?? '',
+            priceGrosze: (j.price_grosze as number) ?? 0,
+            client: [c?.company, c?.name].filter(Boolean).join(', '),
+            email: c?.email ?? '',
+            address: c?.address ?? '',
+            nip: c?.nip ?? '',
+            createdAt: (j.created_at as string) ?? '',
+        }
+    })
+}

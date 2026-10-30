@@ -7,6 +7,7 @@ import { createDocument, getEwidencja, deleteEwidencja, updatePaymentStatus, upd
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ReceiptDocument } from '@/components/lab/ReceiptDocument'
+import { ClientDocuments } from './ClientDocuments'
 import { KIND_LABEL, SELLER, parseReceipt, type ReceiptData, type ReceiptKind } from '@/lib/lab/receipt'
 
 /** Limit działalności nierejestrowanej od 1.01.2026: 225% płacy minimalnej (4806 zł) na KWARTAŁ (art. 5 ust. 1 Prawa przedsiębiorców). */
@@ -31,6 +32,9 @@ const field = 'w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 
 const label = 'text-[11px] font-semibold uppercase tracking-wider text-zinc-400'
 
 export default function FinancesLab() {
+    const [view, setView] = useState<'rachunki' | 'dokumenty'>('rachunki')
+    // Link /lab/finances#dokumenty otwiera od razu zakładkę z umowami.
+    useEffect(() => { if (window.location.hash === '#dokumenty') setView('dokumenty') }, [])
     const [kind, setKind] = useState<ReceiptKind>('dn')
     const [buyer, setBuyer] = useState('')
     const [description, setDescription] = useState('')
@@ -110,10 +114,22 @@ export default function FinancesLab() {
             <header className="flex flex-wrap items-end justify-between gap-3 print:hidden">
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Finanse i dokumenty</p>
-                    <h1 className="mt-1 text-3xl font-bold text-white">Rachunki</h1>
-                    <p className="mt-1 text-sm text-zinc-500">Działalność nierejestrowana · sprzedawca: {SELLER.join(', ')}</p>
+                    <h1 className="mt-1 text-3xl font-bold text-white">{view === 'rachunki' ? 'Rachunki' : 'Dokumenty dla klienta'}</h1>
+                    <p className="mt-1 text-sm text-zinc-500">
+                        {view === 'rachunki' ? `Działalność nierejestrowana · sprzedawca: ${SELLER.join(', ')}` : 'Umowa, protokół odbioru, odstąpienie, RODO, powierzenie, regulamin. Dane klienta wpisują się ze zlecenia.'}
+                    </p>
+                </div>
+                <div className="flex rounded-full border border-white/10 bg-white/[0.03] p-1">
+                    {(['rachunki', 'dokumenty'] as const).map((v) => (
+                        <button key={v} onClick={() => { setView(v); history.replaceState(null, '', v === 'dokumenty' ? '#dokumenty' : '#') }}
+                            className={`rounded-full px-4 py-1.5 text-xs font-semibold ${view === v ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
+                            {v === 'rachunki' ? 'Rachunki' : 'Umowy i dokumenty'}
+                        </button>
+                    ))}
                 </div>
             </header>
+
+            {view === 'dokumenty' ? <ClientDocuments /> : <>
 
             {/* Limit kwartalny + ewidencja */}
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-5 print:hidden">
@@ -254,6 +270,7 @@ export default function FinancesLab() {
                 handlePaymentToggle={handlePaymentToggle}
                 handleDeleteEwidencja={handleDeleteEwidencja}
             />
+            </>}
         </div>
     )
 }

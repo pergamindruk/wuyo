@@ -48,6 +48,7 @@ const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: s
     { id: 'p-crm', label: 'Zapytania (CRM)', href: '/lab/crm', icon: Inbox, keys: ['g', 'k'] },
     { id: 'p-projects', label: 'Portal klienta', href: '/lab/projects', icon: Hourglass },
     { id: 'p-finances', label: 'Finanse i dokumenty', href: '/lab/finances', icon: FileText },
+    { id: 'p-legal-docs', label: 'Umowy i dokumenty dla klienta', href: '/lab/finances#dokumenty', icon: FileText },
     { id: 'p-ai', label: 'AI Studio', href: '/lab/ai-studio', icon: Bot },
     { id: 'p-calendar', label: 'Posty i kalendarz', href: '/lab/calendar', icon: Calendar },
     { id: 'p-analytics', label: 'Analityka', href: '/lab/analytics', icon: BarChart3 },
