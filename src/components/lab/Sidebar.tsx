@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail } from 'lucide-react'
+import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature } from 'lucide-react'
 
 const navGroups = [
     // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
@@ -15,6 +15,7 @@ const navGroups = [
             { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
             { href: '/lab/crm', label: 'Zapytania (CRM)', icon: Inbox },
             { href: '/lab/lejek', label: 'Lejek', icon: Kanban },
+            { href: '/lab/oferty', label: 'Brief i oferta', icon: FileSignature },
             { href: '/lab/maile', label: 'Maile Harveya', icon: Mail },
         ],
     },

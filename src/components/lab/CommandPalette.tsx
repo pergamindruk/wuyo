@@ -41,6 +41,7 @@ const RECENT_MAX = 5
 const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: string[] }[] = [
     { id: 'p-today', label: 'Dziś', href: '/lab', icon: Home, keys: ['g', 'd'] },
     { id: 'p-funnel', label: 'Lejek', href: '/lab/lejek', icon: Filter, keys: ['g', 'l'] },
+    { id: 'p-offers', label: 'Brief i oferta', href: '/lab/oferty', icon: FileText },
     { id: 'p-centrum', label: 'Centrum Dowodzenia', href: '/lab/centrum', icon: Radar, keys: ['g', 'c'] },
     { id: 'p-pliki', label: 'Raporty i pliki', href: '/lab/centrum/pliki', icon: Radar, keys: ['g', 'r'] },
     { id: 'p-maile', label: 'Maile do zatwierdzenia', href: '/lab/maile', icon: Inbox, keys: ['g', 'm'] },
