@@ -43,9 +43,9 @@ BRIEF OD KLIENTA: ${input.brief.slice(0, 3000) || 'brak'}
 
 Zwróć TYLKO JSON: {"title": "...", "intro": "...", "scope": ["...", "..."], "cta": "..."}
 - title: krótki tytuł oferty, np. "Logo i wizytówki dla Piekarni Kowalski".
-- intro: 2-3 zdania. Pokaż, że rozumiesz ich sytuację (z notatek i briefu). Na "Ty" albo bezosobowo, bez "Pan/Pani" z ukośnikiem. Bez wazeliny.
+- intro: 2-3 zdania. BEZ powitania ("Dzień dobry", "panie Janie") - zacznij od ich sytuacji (z notatek i briefu). Na "Ty" albo bezosobowo, bez "Pan/Pani". Bez wazeliny.
 - scope: 4-7 punktów, konkretnie co klient dostaje (z opisu pakietu w cenniku + to, co wynika z briefu). Każdy punkt jedno zdanie.
-- cta: 2 zdania: jak zaakceptować (przycisk pod ofertą albo odpowiedź na maila) i co dzieje się dalej (umowa, zaliczka 50%, start). Nie obiecuj terminu.
+- cta: 2 zdania: zaakceptuj przyciskiem „Akceptuję ofertę” pod ofertą (albo odpisz na maila), potem dostajesz umowę i dane do zaliczki 50%. Nie obiecuj terminu.
 Nie wymyślaj faktów o firmie.`
     try {
         const raw = await generateWithFallback('content', prompt)

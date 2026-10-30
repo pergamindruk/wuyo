@@ -70,7 +70,7 @@ async function getGa4(days: number): Promise<Ga4Summary> {
             metrics: [{ name: 'totalUsers' }, { name: 'newUsers' }, { name: 'sessions' }, { name: 'engagementRate' }, { name: 'userEngagementDuration' }, { name: 'keyEvents' }],
         }),
         ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'date' }], metrics: [{ name: 'totalUsers' }], orderBys: [{ dimension: { dimensionName: 'date' } }] }),
-        ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'pagePath' }], metrics: [{ name: 'screenPageViews' }, { name: 'userEngagementDuration' }, { name: 'totalUsers' }], limit: 10, orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }] }),
+        ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'pagePath' }], metrics: [{ name: 'screenPageViews' }, { name: 'userEngagementDuration' }, { name: 'totalUsers' }], limit: 25, orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }] }),
         ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'sessionSourceMedium' }], metrics: [{ name: 'sessions' }], limit: 8, orderBys: [{ metric: { metricName: 'sessions' }, desc: true }] }),
         ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'deviceCategory' }], metrics: [{ name: 'totalUsers' }] }),
         ga4Report(token, property, { dateRanges: [range], dimensions: [{ name: 'city' }], metrics: [{ name: 'totalUsers' }], limit: 6, orderBys: [{ metric: { metricName: 'totalUsers' }, desc: true }] }),
@@ -90,7 +90,9 @@ async function getGa4(days: number): Promise<Ga4Summary> {
         prevUsers: num(old, 0),
         prevSessions: num(old, 2),
         daily: daily.map((r) => ({ date: dim(r), users: num(r, 0) })),
-        pages: pages.map((r) => ({ path: dim(r), views: num(r, 0), avgSec: num(r, 2) ? num(r, 1) / num(r, 2) : 0 })),
+        // Bez /lab: to wejścia Mateusza do panelu, nie klienci.
+        pages: pages.filter((r) => !dim(r).startsWith('/lab')).slice(0, 10)
+            .map((r) => ({ path: dim(r), views: num(r, 0), avgSec: num(r, 2) ? num(r, 1) / num(r, 2) : 0 })),
         sources: sources.map((r) => ({ source: dim(r), sessions: num(r, 0) })),
         devices: devices.map((r) => ({ device: dim(r), users: num(r, 0) })),
         cities: cities.map((r) => ({ city: dim(r), users: num(r, 0) })).filter((c) => c.city && c.city !== '(not set)'),
@@ -120,7 +122,7 @@ async function getGsc(days: number): Promise<GscSummary> {
     const start = new Date(Date.now() - (days + 2) * 86_400_000).toISOString().slice(0, 10)
     const [total, queries, pages] = await Promise.all([
         gscQuery(token, site, { startDate: start, endDate: end }),
-        gscQuery(token, site, { startDate: start, endDate: end, dimensions: ['query'], rowLimit: 25 }),
+        gscQuery(token, site, { startDate: start, endDate: end, dimensions: ['query'], rowLimit: 250 }),
         gscQuery(token, site, { startDate: start, endDate: end, dimensions: ['page'], rowLimit: 10 }),
     ])
     const t = total[0]
@@ -129,7 +131,7 @@ async function getGsc(days: number): Promise<GscSummary> {
         impressions: t?.impressions ?? 0,
         ctr: t?.ctr ?? 0,
         position: t?.position ?? 0,
-        queries: queries.map((r) => ({ query: r.keys?.[0] ?? '', clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position })),
+        queries: [...queries].sort((a, b) => b.impressions - a.impressions).slice(0, 40).map((r) => ({ query: r.keys?.[0] ?? '', clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position })),
         pages: pages.map((r) => ({ page: (r.keys?.[0] ?? '').replace(/^https?:\/\/(www\.)?wuyo\.pl/, '') || '/', clicks: r.clicks, impressions: r.impressions, position: r.position })),
     }
 }
