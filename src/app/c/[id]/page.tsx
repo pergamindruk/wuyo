@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { Check, Mail, MessageCircle, Phone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { listClientFiles } from '@/lib/lab/client-files'
+import { UploadBox } from './UploadBox'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +37,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
     const { data: project } = await supabase.from('projects').select('id, name, client, status, progress, updates').eq('id', id).maybeSingle()
     if (!project) return notFound()
 
+    const files = await listClientFiles(project.id as string)
     const updates: UpdateEntry[] = Array.isArray(project.updates) ? (project.updates as UpdateEntry[]) : []
     const currentIdx = Math.max(0, PHASES.findIndex((p) => p.status === project.status))
     const phase = PHASES[currentIdx]
@@ -122,6 +125,13 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
                         </ul>
                     </section>
                 )}
+
+                {/* Pliki od klienta */}
+                <section className="rounded-[2rem] border border-white/[0.07] bg-white/[0.025] p-6 sm:p-8">
+                    <h2 className="text-sm font-semibold text-white">Twoje pliki dla mnie</h2>
+                    <p className="mb-4 mt-1 text-sm text-zinc-400">Wrzuć tu logo, zdjęcia, teksty albo inspiracje. Pliki widzę tylko ja, nie ma do nich publicznego linku.</p>
+                    <UploadBox projectId={project.id as string} existing={files.map((f) => ({ name: f.name, size: f.size }))} />
+                </section>
 
                 {/* Kontakt */}
                 <section className="rounded-[2rem] border border-white/[0.07] bg-white/[0.025] p-6 sm:p-8">

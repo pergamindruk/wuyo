@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { Project } from '@/lib/types'
 import { logAuditEvent } from '@/lib/audit'
+import { createDownloadUrl, listClientFiles, removeClientFile } from '@/lib/lab/client-files'
 
 export async function getProjects() {
     const supabase = await createClient()
@@ -96,4 +97,29 @@ export async function deleteProject(id: string) {
     await logAuditEvent('project_delete', { id })
     revalidatePath('/lab/projects')
     return true
+}
+
+// ─── Pliki od klientów (prywatny bucket, linki do pobrania ważne 1 h) ─────────
+
+export type ProjectFile = { path: string; name: string; size: number; createdAt: string; url: string | null }
+
+export async function getProjectFiles(projectIds: string[]): Promise<Record<string, ProjectFile[]>> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return {}
+    const out: Record<string, ProjectFile[]> = {}
+    for (const id of projectIds.slice(0, 50)) {
+        const files = await listClientFiles(id)
+        out[id] = await Promise.all(files.map(async (f) => ({ ...f, url: await createDownloadUrl(f.path) })))
+    }
+    return out
+}
+
+export async function deleteProjectFile(path: string) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+    const ok = await removeClientFile(path)
+    if (ok) await logAuditEvent('project_file_delete', { path })
+    return ok
 }

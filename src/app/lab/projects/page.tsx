@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getProjects, createProject, updateProjectStatus, deleteProject } from './actions'
-import { Plus, Link as LinkIcon, Play, Trash2, Copy, ChevronDown, ChevronUp, MessageSquare, Check } from 'lucide-react'
+import { getProjects, createProject, updateProjectStatus, deleteProject, getProjectFiles, deleteProjectFile, type ProjectFile } from './actions'
+import { Plus, Link as LinkIcon, Play, Trash2, Copy, ChevronDown, ChevronUp, MessageSquare, Check, Download, Paperclip } from 'lucide-react'
 
 type UpdateEntry = { date: string; status: string; progress: number; note?: string }
 
@@ -15,12 +15,14 @@ export default function ProjectsLab() {
     const [showNote, setShowNote] = useState<Record<string, boolean>>({})
     const [expandedTimeline, setExpandedTimeline] = useState<Record<string, boolean>>({})
     const [copiedId, setCopiedId] = useState<string | null>(null)
+    const [files, setFiles] = useState<Record<string, ProjectFile[]>>({})
 
     async function loadData() {
         setLoading(true)
         const data = await getProjects()
         setProjects(data)
         setLoading(false)
+        setFiles(await getProjectFiles(data.map((p: { id: string }) => p.id)))
     }
 
     useEffect(() => { loadData() }, [])
@@ -183,6 +185,24 @@ export default function ProjectsLab() {
                                         </a>
                                     </div>
                                 </div>
+
+                                {/* Pliki od klienta (prywatny bucket, link ważny 1 h) */}
+                                {(files[p.id]?.length ?? 0) > 0 && (
+                                    <div className="border-t border-zinc-800/30 pt-3">
+                                        <p className="mb-2 flex items-center gap-2 text-xs text-zinc-400"><Paperclip size={13} /> Pliki od klienta ({files[p.id].length})</p>
+                                        <ul className="flex flex-col gap-1">
+                                            {files[p.id].map((f) => (
+                                                <li key={f.path} className="group flex items-center gap-3 rounded-lg px-2 py-1.5 text-xs hover:bg-white/[0.04]">
+                                                    <span className="min-w-0 flex-1 truncate text-zinc-200">{f.name}</span>
+                                                    <span className="text-zinc-500">{f.size < 1048576 ? `${Math.max(1, Math.round(f.size / 1024))} KB` : `${(f.size / 1048576).toFixed(1)} MB`}</span>
+                                                    {f.url && <a href={f.url} className="text-yellow-400 hover:text-yellow-300" title="Pobierz"><Download size={14} /></a>}
+                                                    <button onClick={async () => { if (confirm(`Usunąć plik ${f.name}?`)) { await deleteProjectFile(f.path); setFiles(await getProjectFiles([p.id]).then((x) => ({ ...files, ...x }))) } }}
+                                                        className="text-zinc-600 opacity-0 hover:text-red-400 group-hover:opacity-100" title="Usuń"><Trash2 size={13} /></button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
 
                                 {/* Timeline */}
                                 {updates.length > 0 && (
