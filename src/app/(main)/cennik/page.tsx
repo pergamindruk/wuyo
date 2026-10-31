@@ -21,9 +21,10 @@ const faqSchema = {
 };
 
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Cennik grafiki, druku i stron WWW — Rzeszów",
     description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 1 990 zł. Projekt i druk w jednym miejscu.",
     openGraph: {
@@ -40,6 +41,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("pricing", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/cennik", metadata);
+}
 
 // ─── Helper: karta cenowa ──────────────────────────────────────────────────────
 

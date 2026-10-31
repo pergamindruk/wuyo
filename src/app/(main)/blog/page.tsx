@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
@@ -7,7 +8,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { getAllPosts } from "@/lib/blog";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Blog: porady o grafice i stronach WWW",
     description: "Praktyczne porady o projektowaniu logo, tworzeniu stron internetowych i identyfikacji wizualnej. Bez lania wody — konkretna wiedza od projektanta z Rzeszowa.",
     openGraph: {
@@ -18,6 +19,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("blog", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/blog", metadata);
+}
 
 export default function BlogPage() {
     const allPosts = getAllPosts();

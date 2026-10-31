@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -7,7 +8,7 @@ import { projects } from "@/lib/projects";
 import { portfolioCollectionSchema } from "@/lib/portfolio-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Realizacje: logo, strony WWW i druk",
     description: "Portfolio WUYO: strony internetowe, logotypy, identyfikacja wizualna, materiały do druku i nadruki. Dowody zamiast obietnic — zobacz zrealizowane projekty.",
     alternates: alternatesFor("portfolio", "pl"),
@@ -18,6 +19,11 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl/realizacje",
     },
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/realizacje", metadata);
+}
 
 const portfolioSchema = portfolioCollectionSchema(projects);
 

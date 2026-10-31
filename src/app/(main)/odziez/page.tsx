@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
@@ -11,7 +12,7 @@ import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Nadruk na koszulki Rzeszów — DTF od 1 sztuki",
     description: "Nadruk DTF na koszulki i bluzy w Rzeszowie. Bez minimum: 1 koszulka 79 zł, przy 20+ szt. 49 zł/szt. Nadruk na Twojej odzieży od 45 zł. 1–4 dni robocze →",
     openGraph: {
@@ -29,6 +30,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("apparel", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/odziez", metadata);
+}
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
 // wymaga, żeby dane strukturalne miały pokrycie w treści strony.

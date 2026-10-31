@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { PriceCalculator } from "./PriceCalculator";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Kalkulator: ile kosztuje projekt graficzny",
     description: "Sprawdź orientacyjną wycenę projektu w 60 sekund. Logo, strona WWW, druk, social media — wybierz usługę i zobacz, czego się spodziewać.",
     alternates: alternatesFor("calculator", "pl"),
@@ -13,6 +14,11 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl/kalkulator",
     },
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/kalkulator", metadata);
+}
 
 export default function KalkulatorPage() {
     return (

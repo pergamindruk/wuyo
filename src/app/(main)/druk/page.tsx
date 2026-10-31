@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
@@ -12,7 +13,7 @@ import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Wizytówki i ulotki z projektem, zamów online",
     description: "Projekt i druk wizytówek, ulotek i voucherów z wysyłką w całej Polsce. Wizytówki 50 szt. z projektem od 299 zł, sam druk od 99 zł.",
     openGraph: {
@@ -30,6 +31,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("print", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/druk", metadata);
+}
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
 // wymaga, żeby dane strukturalne miały pokrycie w treści strony.

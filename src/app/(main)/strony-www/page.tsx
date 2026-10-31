@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
@@ -10,7 +11,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { Suspense } from "react";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Strony internetowe od 1 990 zł — Next.js i WordPress, SEO",
     description: "Strony na Next.js albo WordPressie — szybkie, z SEO od pierwszego dnia. Sklepy WooCommerce. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
     openGraph: {
@@ -28,6 +29,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("websites", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/strony-www", metadata);
+}
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
 // wymaga, żeby dane strukturalne miały pokrycie w treści strony.

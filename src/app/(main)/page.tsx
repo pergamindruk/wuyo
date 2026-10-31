@@ -14,10 +14,16 @@ import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { alternatesFor } from "@/lib/i18n";
 
 // Canonical + hreflang do wersji angielskiej (/en). x-default zostaje na polskiej.
-export const metadata: Metadata = { alternates: alternatesFor("home", "pl") };
+const metadata: Metadata = { alternates: alternatesFor("home", "pl") };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/", metadata);
+}
 
 // Pełny opis firmy jest w layout.tsx (to samo @id). Tutaj tylko ocena z Google,
 // bo strona główna pokazuje opinie.

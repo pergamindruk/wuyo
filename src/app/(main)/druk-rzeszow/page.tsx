@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Link from "next/link";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -9,7 +10,7 @@ import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Druk wizytówek Rzeszów — odbiór na miejscu, od 299 zł",
     description: "Druk wizytówek, ulotek i naklejek w Rzeszowie. Drukuję u siebie, odbierasz osobiście w 1–3 dni robocze. 50 szt. z projektem od 299 zł, sam druk od 99 zł →",
     keywords: [
@@ -37,6 +38,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("printRzeszow", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/druk-rzeszow", metadata);
+}
 
 const localSchema = {
     "@context": "https://schema.org",

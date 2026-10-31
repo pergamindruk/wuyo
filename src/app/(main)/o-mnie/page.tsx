@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Printer, Scissors, Thermometer, Zap } from "lucide-react";
@@ -6,7 +7,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { BUSINESS_REF, BUSINESS_SAME_AS } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Mateusz Machoś — grafik i web developer",
     description: "Cześć, jestem Mateusz. Projektant graficzny i web developer z Rzeszowa. Działam sam, co znaczy, że rozmawiasz bezpośrednio ze mną — bez agencyjnego ping-ponga.",
     alternates: alternatesFor("about", "pl"),
@@ -26,6 +27,11 @@ export const metadata: Metadata = {
         url: "https://wuyo.pl/o-mnie",
     },
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/o-mnie", metadata);
+}
 
 const personSchema = {
     "@context": "https://schema.org",

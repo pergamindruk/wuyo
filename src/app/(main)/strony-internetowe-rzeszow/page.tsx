@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Zap, Shield, PenLine } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -11,7 +12,7 @@ import { Suspense } from "react";
 import { BUSINESS_REF, BUSINESS_RATING } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Strony internetowe Rzeszów — cennik 2026, od 1 990 zł",
     description: "Strony internetowe w Rzeszowie: one-page od 1 990 zł, do 5 podstron 2 990 zł, sklep od 6 900 zł. Domena i hosting na rok w cenie. Wycena w 24h.",
     keywords: [
@@ -43,6 +44,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("websitesRzeszow", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/strony-internetowe-rzeszow", metadata);
+}
 
 const localSchema = {
     "@context": "https://schema.org",

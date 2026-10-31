@@ -1,3 +1,4 @@
+import { seoMeta } from "@/lib/seo-overrides";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -28,7 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const post = getPost(slug);
         const ogImage = post.image ?? "/og-image.webp";
         const description = post.seoDescription ?? post.excerpt;
-        return {
+        // Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+        return seoMeta(`/blog/${slug}`, {
             // Markę dokleja szablon z layoutu — tutaj byłaby drugi raz.
             title: post.seoTitle ?? post.title,
             description,
@@ -50,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 { pl: `/blog/${slug}`, en: getBlogPairs()[slug] ? `/en/blog/${getBlogPairs()[slug]}` : undefined },
                 "pl",
             ),
-        };
+        });
     } catch {
         return {};
     }

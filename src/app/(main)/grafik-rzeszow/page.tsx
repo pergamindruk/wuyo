@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin, Phone, Mail, Star } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -10,7 +11,7 @@ import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-sche
 import { alternatesFor } from "@/lib/i18n";
 import { faqPageSchema } from "@/lib/faq-schema";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Grafik Rzeszów — projektant graficzny, logo od 890 zł",
     description: "Projektant graficzny z Rzeszowa — logo, strony internetowe i druk dla firm. Stała cena przed startem, bezpośredni kontakt. Wycena w 24h, bezpłatnie →",
     keywords: [
@@ -40,6 +41,11 @@ export const metadata: Metadata = {
     },
     alternates: alternatesFor("designerRzeszow", "pl"),
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/grafik-rzeszow", metadata);
+}
 
 // Pełny opis firmy w layout.tsx (to samo @id), tu tylko ocena: strona pokazuje opinie.
 const localSchema = {

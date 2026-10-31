@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoMeta } from "@/lib/seo-overrides";
 import { PageFaq, type FaqEntry } from "@/components/PageFaq";
 import { faqPageSchema } from "@/lib/faq-schema";
 import Link from "next/link";
@@ -11,7 +12,7 @@ import { Suspense } from "react";
 import { BUSINESS_RATING } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
     title: "Projektowanie logo Rzeszów — od 890 zł, 3 koncepcje",
     description: "Projektuję proste i czytelne logo dla firm z Rzeszowa i okolic. Tworzenie logo od zera, 3 koncepcje, pliki i prawa autorskie w cenie. Od 890 zł netto. Zobacz cennik i napisz do mnie.",
     openGraph: {
@@ -39,6 +40,11 @@ export const metadata: Metadata = {
         "grafik logo Rzeszów",
     ],
 };
+
+// Tytuł i opis może podmienić SEO-radca (/lab/seo) bez wdrożenia.
+export async function generateMetadata(): Promise<Metadata> {
+    return seoMeta("/logo", metadata);
+}
 
 // Jedna tablica zasila widoczną sekcję FAQ i schemat FAQPage — Google
 // wymaga, żeby dane strukturalne miały pokrycie w treści strony.
