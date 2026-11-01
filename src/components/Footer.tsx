@@ -83,7 +83,8 @@ export function Footer({ locale = "pl" }: { locale?: Locale }) {
                                 </li>
                                 <li>
                                     <Link href="mailto:kontakt@wuyo.pl" className="flex items-center gap-2 text-gold hover:text-white transition-colors group">
-                                        <Mail size={18} className="shrink-0 group-hover:text-white transition-colors" /> kontakt@wuyo.pl
+                                        {/* Koperta jest płaska — w 18 px wygląda na mniejszą od dymków obok, stąd 21 px i ujemny margines, żeby tekst został w linii */}
+                                        <Mail size={21} className="shrink-0 -mx-[1.5px] group-hover:text-white transition-colors" /> kontakt@wuyo.pl
                                     </Link>
                                 </li>
                             </ul>
