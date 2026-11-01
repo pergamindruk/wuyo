@@ -100,10 +100,14 @@ export default async function MailsPage() {
         const key = r.firma || r.do_email
         byFirm.set(key, [...(byFirm.get(key) ?? []), r])
     }
-    const firms = [...byFirm.entries()].map(([firm, mails]) => {
+    const allFirms = [...byFirm.entries()].map(([firm, mails]) => {
         const open = mails.filter((m) => m.status === 'pending_review')
         return { firm, mails: open.length ? open : mails, email: mails[0].do_email, waiting: open.filter((m) => !m.decyzja).length, hasOpen: open.length > 0 }
     }).sort((a, b) => Number(b.hasOpen) - Number(a.hasOpen) || b.waiting - a.waiting)
+    // Firmy, w których wszystko odrzucone/anulowane, nie zaśmiecają listy — lądują zwinięte na dole.
+    const isDone = (f: (typeof allFirms)[number]) => !f.hasOpen && f.mails.every((m) => m.status === 'rejected' || m.status === 'cancelled')
+    const firms = allFirms.filter((f) => !isDone(f))
+    const rejected = allFirms.filter(isDone)
 
     const waiting = firms.reduce((n, f) => n + f.waiting, 0)
 
@@ -145,6 +149,17 @@ export default async function MailsPage() {
                     </section>
                 )
             })}
+
+            {rejected.length > 0 && (
+                <details className="rounded-xl border border-zinc-800 bg-zinc-950">
+                    <summary className="cursor-pointer list-none px-3 py-2.5 text-sm text-zinc-500 hover:text-zinc-300">
+                        Odrzucone ({rejected.length}): {rejected.map((f) => f.firm).join(', ')}
+                    </summary>
+                    <div className="border-t border-zinc-800">
+                        {rejected.flatMap((f) => f.mails.sort((a, b) => a.krok - b.krok).map((m) => <MailRow key={m.id} m={{ ...m, temat: `${f.firm} · ${m.temat}` }} />))}
+                    </div>
+                </details>
+            )}
         </div>
     )
 }

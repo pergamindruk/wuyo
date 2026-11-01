@@ -69,6 +69,30 @@ const faqs: FaqEntry[] = [
         q: "Co jeśli drukarnia zwróci plik z uwagami?",
         a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
     },
+    {
+        q: "Nie wiem, jakie logo chcę. Czy to problem?",
+        a: "Nie. Większość moich klientów zaczyna od „chcę, żeby wyglądało porządnie”. Od tego jest brief: pytam o firmę, klientów i konkurencję, a kierunek pokazuję na moodboardzie, zanim powstanie pierwszy szkic.",
+    },
+    {
+        q: "Jak przechodzą na mnie prawa autorskie do logo?",
+        a: "Na piśmie. Polskie prawo wymaga pisemnej umowy przeniesienia autorskich praw majątkowych, więc dostajesz ją razem z plikami. Są w niej wypisane pola eksploatacji: druk, internet, szyld, odzież, reklama. Bez takiej umowy logo prawnie nie jest w pełni Twoje, nawet jeśli za nie zapłaciłeś.",
+    },
+];
+
+const prepare = [
+    "Nazwa firmy dokładnie tak, jak ma być w logo (z „sp. z o.o.” czy bez)",
+    "Czym się zajmujesz i kto jest Twoim klientem — dwa, trzy zdania wystarczą",
+    "2–3 logo, które Ci się podobają, i 2–3, które nie — mogą być z dowolnej branży",
+    "Gdzie logo będzie najczęściej: szyld, auto, odzież, strona, opakowania",
+    "Kolory, których na pewno nie chcesz (albo które muszą zostać)",
+    "Twoje stare logo, jeśli jest — nawet słabe, coś mi powie",
+];
+
+const briefQuestions = [
+    "Co Twoja firma robi lepiej niż konkurencja z okolicy?",
+    "Kim jest klient, który zostawia u Ciebie najwięcej pieniędzy?",
+    "Jakie trzy słowa mają przyjść do głowy, gdy ktoś zobaczy logo?",
+    "Czy planujesz nowe usługi albo wejście na inne miasta?",
 ];
 
 const faqSchema = faqPageSchema(faqs);
@@ -181,7 +205,7 @@ const process = [
     {
         n: "01",
         title: "Brief",
-        desc: "Rozmowa o Twojej firmie — kto jest klientem, jaka jest konkurencja, co ma komunikować logo. Bez tego etapu nie zaczynam rysować.",
+        desc: "Rozmowa o Twojej firmie — kto jest klientem, jaka jest konkurencja, co ma komunikować logo. Sprawdzam też, jak wyglądają znaki firm z Twojej branży w okolicy, żeby Twoje się od nich odróżniało. Bez tego etapu nie zaczynam rysować.",
     },
     {
         n: "02",
@@ -375,6 +399,51 @@ export default function LogoPage() {
                             </p>
                         </div>
                     </AnimatedSection>
+                </div>
+            </section>
+
+            {/* Jak się przygotować */}
+            <section className="py-20 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection className="text-center mb-12">
+                        <p className="eyebrow mb-4">Przed zamówieniem</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Jak przygotować się do zamówienia logo</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto mt-4">
+                            Nie musisz znać się na grafice. Wystarczy 15 minut i kilka rzeczy z tej listy — reszty dopytam w rozmowie.
+                        </p>
+                    </AnimatedSection>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <AnimatedSection>
+                            <div className="glass-card p-6 h-full">
+                                <h3 className="font-bold text-white mb-4">Co warto mieć przy sobie</h3>
+                                <ul className="space-y-3">
+                                    {prepare.map((item, i) => (
+                                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm leading-relaxed">
+                                            <CheckCircle2 size={15} className="text-gold shrink-0 mt-0.5" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </AnimatedSection>
+                        <AnimatedSection delay={0.1}>
+                            <div className="glass-card p-6 h-full">
+                                <h3 className="font-bold text-white mb-4">O co zapytam w briefie</h3>
+                                <ul className="space-y-3">
+                                    {briefQuestions.map((item, i) => (
+                                        <li key={i} className="flex items-start gap-2 text-white/65 text-sm leading-relaxed">
+                                            <ArrowRight size={15} className="text-gold shrink-0 mt-0.5" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <p className="text-white/45 text-xs mt-5 leading-relaxed">
+                                    Nie ma złych odpowiedzi. Więcej o tym, jak napisać brief, przeczytasz w{" "}
+                                    <Link href="/blog/jak-napisac-brief-dla-projektanta" className="text-gold hover:underline">poradniku o briefie</Link>.
+                                </p>
+                            </div>
+                        </AnimatedSection>
+                    </div>
                 </div>
             </section>
 
