@@ -73,17 +73,17 @@ export function Footer({ locale = "pl" }: { locale?: Locale }) {
                             <ul className="space-y-3 text-sm">
                                 <li>
                                     <TrackedLink href="https://wa.me/48725182053" trackAs="whatsapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
-                                        <MessageCircle size={18} className="group-hover:text-green-500 transition-colors" /> WhatsApp
+                                        <MessageCircle size={18} className="shrink-0 group-hover:text-green-500 transition-colors" /> WhatsApp
                                     </TrackedLink>
                                 </li>
                                 <li>
                                     <Link href="https://m.me/wuyo.dobra.grafa" target="_blank" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group mb-2">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px] group-hover:text-blue-500 transition-colors"><path d="M12 0C5.373 0 0 4.974 0 11.111c0 3.498 1.744 6.614 4.469 8.652V24l4.088-2.242c1.092.3 2.246.464 3.443.464C18.627 22.222 24 17.247 24 11.111 24 4.974 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8l3.131 3.259L19.752 8l-6.561 6.963z" /></svg> Messenger
+                                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px] shrink-0 group-hover:text-blue-500 transition-colors"><path d="M12 0C5.373 0 0 4.974 0 11.111c0 3.498 1.744 6.614 4.469 8.652V24l4.088-2.242c1.092.3 2.246.464 3.443.464C18.627 22.222 24 17.247 24 11.111 24 4.974 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8l3.131 3.259L19.752 8l-6.561 6.963z" /></svg> Messenger
                                     </Link>
                                 </li>
                                 <li>
                                     <Link href="mailto:kontakt@wuyo.pl" className="flex items-center gap-2 text-gold hover:text-white transition-colors group">
-                                        <Mail size={18} className="group-hover:text-white transition-colors" /> kontakt@wuyo.pl
+                                        <Mail size={18} className="shrink-0 group-hover:text-white transition-colors" /> kontakt@wuyo.pl
                                     </Link>
                                 </li>
                             </ul>
