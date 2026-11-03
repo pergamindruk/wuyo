@@ -10,7 +10,7 @@ import Image from "next/image";
 import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
 import { BlogTeaser } from "@/components/BlogTeaser";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
+import { HeroClientEffects, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
 import { HeroWebThreads } from "@/components/HeroWebThreads";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
@@ -124,10 +124,6 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        {/* Social proof — animated counters */}
-                        <div className="flex justify-start">
-                            <HeroStats />
-                        </div>
                     </AnimatedSection>
 
                     {/* RIGHT — ruchome kafelki z realizacjami (desktop only) */}

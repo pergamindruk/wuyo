@@ -11,7 +11,7 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { HeroText } from "@/components/HeroText";
 import { BlogTeaser } from "@/components/BlogTeaser";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
+import { HeroClientEffects, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
 import { HeroWebThreads } from "@/components/HeroWebThreads";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
@@ -126,9 +126,6 @@ export default function HomeEn() {
                             <Link href="#portfolio" className="relative px-10 py-4 rounded-full inline-flex items-center justify-center overflow-hidden transition-all group backdrop-blur-sm border border-gold/40 shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] hover:border-gold hover:bg-gold/10">
                                 <span className="font-bold text-lg text-white group-hover:text-gold transition-colors relative z-10">Portfolio</span>
                             </Link>
-                        </div>
-                        <div className="flex justify-start">
-                            <HeroStats locale="en" />
                         </div>
                     </AnimatedSection>
 
