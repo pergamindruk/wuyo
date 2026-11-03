@@ -12,9 +12,10 @@ async function urlsFromSitemap() {
 const args = process.argv.slice(2);
 const urlList = args.length ? args.map((p) => `https://${HOST}${p}`) : await urlsFromSitemap();
 
-const res = await fetch("https://api.indexnow.org/indexnow", {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify({ host: HOST, key: KEY, keyLocation: `https://${HOST}/${KEY}.txt`, urlList }),
-});
-console.log(`IndexNow: ${res.status} ${res.statusText}, zgłoszono ${urlList.length} adresów`);
+// Wyszukiwarki z IndexNow przekazują sobie zgłoszenia. Gdy jedna odrzuca, próbujemy następnej.
+const body = JSON.stringify({ host: HOST, key: KEY, keyLocation: `https://${HOST}/${KEY}.txt`, urlList });
+for (const endpoint of ["https://api.indexnow.org/indexnow", "https://yandex.com/indexnow"]) {
+    const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" }, body });
+    console.log(`IndexNow ${endpoint}: ${res.status} ${res.statusText}, ${urlList.length} adresów`);
+    if (res.ok) break;
+}
