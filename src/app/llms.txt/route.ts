@@ -1,3 +1,5 @@
+import { getAllPosts } from "@/lib/blog";
+
 // Krótki opis firmy dla asystentów AI (ChatGPT, Perplexity, Claude). Jako route, bo *.txt
 // jest w .gitignore. Ceny tylko te, które już są na stronach usług.
 const LLMS_TXT = `# WUYO Dobra Grafa
@@ -29,8 +31,20 @@ Kontakt: kontakt@wuyo.pl, +48 725 182 053. Adres: ul. Siemieńskiego 17A/38, 35-
 
 export const dynamic = "force-static";
 
+// Lista wpisów z plików .mdx, pogrupowana po kategorii. Nowy wpis trafia tu sam przy wdrożeniu.
+function blogSection(): string {
+    const byCategory = new Map<string, string[]>();
+    for (const post of getAllPosts("pl")) {
+        const category = post.category || "Inne";
+        const line = `- [${post.title}](https://wuyo.pl/blog/${post.slug}): ${post.excerpt}`;
+        byCategory.set(category, [...(byCategory.get(category) ?? []), line]);
+    }
+    const groups = [...byCategory].map(([category, lines]) => `### ${category}\n\n${lines.join("\n")}`);
+    return `\n## Wpisy na blogu\n\n${groups.join("\n\n")}\n`;
+}
+
 export function GET() {
-    return new Response(LLMS_TXT, {
+    return new Response(LLMS_TXT + blogSection(), {
         headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
 }

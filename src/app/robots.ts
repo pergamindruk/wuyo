@@ -1,43 +1,29 @@
 import { MetadataRoute } from "next";
 
+const DISALLOW = ["/lab/", "/api/", "/auth/", "/c/"];
+
+// Boty wyszukiwarek i asystentów AI wpisane wprost (ChatGPT szuka przez Binga).
+const AI_AND_SEARCH_BOTS = [
+    "GPTBot",
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "PerplexityBot",
+    "Perplexity-User",
+    "ClaudeBot",
+    "Claude-SearchBot",
+    "Claude-User",
+    "Claude-Web",
+    "anthropic-ai",
+    "Google-Extended",
+    "Bingbot",
+    "CCBot",
+];
+
 export default function robots(): MetadataRoute.Robots {
     return {
         rules: [
-            {
-                userAgent: "*",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "GPTBot",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "PerplexityBot",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "Claude-Web",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "Google-Extended",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "CCBot",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
-            {
-                userAgent: "anthropic-ai",
-                allow: "/",
-                disallow: ["/lab/", "/api/", "/auth/", "/c/"],
-            },
+            { userAgent: "*", allow: "/", disallow: DISALLOW },
+            ...AI_AND_SEARCH_BOTS.map((userAgent) => ({ userAgent, allow: "/", disallow: DISALLOW })),
         ],
         sitemap: "https://wuyo.pl/sitemap.xml",
     };
