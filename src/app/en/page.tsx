@@ -13,6 +13,7 @@ import { BlogTeaser } from "@/components/BlogTeaser";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, HeroStats, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
+import { HeroWebThreads } from "@/components/HeroWebThreads";
 import { BUSINESS_ID, BUSINESS_NAME, BUSINESS_RATING } from "@/lib/business-schema";
 import { alternatesFor, route } from "@/lib/i18n";
 
@@ -109,6 +110,7 @@ export default function HomeEn() {
                 />
                 <HeroClientEffects />
                 <HeroAmbientOrbs />
+                <HeroWebThreads />
 
                 <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
                     <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
