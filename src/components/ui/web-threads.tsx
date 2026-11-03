@@ -59,6 +59,7 @@ uniform vec4 uIntro;
 uniform float uFocus[${MAX_THREADS}];
 uniform vec2 uFocusState;
 uniform vec4 uSurges[${MAX_SURGES}];
+uniform vec3 uMask;
 out vec4 outColor;
 
 const float PI = 3.14159265;
@@ -215,6 +216,10 @@ void main() {
     float f = clamp(edge / max(uFade * 0.5, 0.001), 0.0, 1.0);
     fade = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
   }
+  if (uMask.x > -0.5) {
+    float coord = uMask.x < 0.5 ? p.x : 1.0 - p.y;
+    fade *= smoothstep(uMask.y, uMask.z, coord);
+  }
   float core = smoothstep(0.5, 2.2, energy);
   color = mix(color, uCore * energy, core * 0.5);
   color *= uBrightness * fade;
@@ -248,7 +253,7 @@ const UNIFORMS = [
     "uResolution", "uPhase", "uClock", "uCount", "uFrequency", "uSpread", "uTaper", "uPosition",
     "uPinch", "uNodes", "uAngle", "uGlow", "uFalloff", "uThickness", "uBrightness", "uOpacity",
     "uMirror", "uShimmer", "uDepth", "uPulses", "uFade", "uGrain", "uColors", "uColorCount",
-    "uCore", "uBackground", "uOpaque", "uLight", "uIntro", "uFocus", "uFocusState", "uSurges",
+    "uCore", "uBackground", "uOpaque", "uLight", "uIntro", "uFocus", "uFocusState", "uSurges", "uMask",
 ] as const;
 type UniformName = (typeof UNIFORMS)[number];
 
@@ -283,6 +288,17 @@ interface Settings {
     pulseOnClick: boolean;
     paused: boolean;
     dpr: number;
+    mask: ThreadsMask | null;
+}
+
+/** Wygaszanie w shaderze (zamiast CSS mask — ta migocze na WebGL). Ułamki ekranu 0–1. */
+export interface ThreadsMask {
+    /** x: od lewej do prawej, y: od góry do dołu */
+    axis: "x" | "y";
+    /** do tego miejsca nitki niewidoczne */
+    from: number;
+    /** od tego miejsca w pełni widoczne */
+    to: number;
 }
 
 interface Surge {
@@ -322,6 +338,7 @@ export interface WebThreadsProps {
     pulseOnClick?: boolean;
     paused?: boolean;
     dpr?: number;
+    mask?: ThreadsMask | null;
     className?: string;
     style?: CSSProperties;
 }
@@ -418,6 +435,7 @@ export default function WebThreads({
     pulseOnClick = true,
     paused = false,
     dpr = 2,
+    mask = null,
     className = "",
     style,
 }: WebThreadsProps) {
@@ -465,6 +483,7 @@ export default function WebThreads({
         pulseOnClick,
         paused,
         dpr: Math.max(0.5, dpr),
+        mask,
     };
     const settingsRef = useRef<Settings>(settings);
     // Ustawienia czytane w pętli animacji — bez restartu kontekstu WebGL.
@@ -636,6 +655,8 @@ export default function WebThreads({
                 surgeData.set([surge.x, state.clock - surge.at, surge.direction, 1], index * 4);
             });
             gl.uniform4fv(u.uSurges, surgeData);
+            if (s.mask) gl.uniform3f(u.uMask, s.mask.axis === "x" ? 0 : 1, s.mask.from, s.mask.to);
+            else gl.uniform3f(u.uMask, -1, 0, 1);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);

@@ -13,14 +13,3 @@
   height: 100%;
 }
 
-/* Hero: nitki znikają pod tekstem (lewa strona), widoczne przy kafelkach */
-.hero-threads-mask {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 55%, #000 85%);
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 55%, #000 85%);
-}
-@media (min-width: 1024px) {
-  .hero-threads-mask {
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 38%, #000 62%);
-    mask-image: linear-gradient(to right, transparent 0%, transparent 38%, #000 62%);
-  }
-}
