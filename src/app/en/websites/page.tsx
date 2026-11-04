@@ -14,7 +14,7 @@ import { alternatesFor } from "@/lib/i18n";
 
 export const metadata: Metadata = {
     title: "Websites from 1,990 PLN: Next.js and WordPress, SEO",
-    description: "Business websites built with Next.js or WordPress: fast, with SEO from day one. WooCommerce shops too. One-page from 1,990 PLN, multi-page from 2,990 PLN. Quote within 24h.",
+    description: "Business websites built with Next.js or WordPress: fast, with SEO from day one. WooCommerce shops too. One-page from 1,990 PLN, multi-page 2,990 PLN. Quote within 24h.",
     alternates: alternatesFor("websites", "en"),
     openGraph: {
         title: "Websites from 1,990 PLN | Next.js, WordPress, SEO | WUYO",
@@ -56,7 +56,7 @@ const packages = [
     },
     {
         name: "Multi-page business website",
-        price: "from 2,990 PLN",
+        price: "2,990 PLN",
         desc: "A full website with subpages, a blog and SEO for many search phrases. For businesses that want to grow through Google.",
         includes: ["Everything in one-page +", "SEO-friendly URL structure", "Service pages with their own SEO", "Blog ready to publish", "Schema markup (JSON-LD)", "Sitemap + robots.txt", "Google Search Console setup"],
         time: "7–14 working days",

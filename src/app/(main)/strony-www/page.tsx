@@ -13,7 +13,7 @@ import { alternatesFor } from "@/lib/i18n";
 
 const metadata: Metadata = {
     title: "Strony internetowe od 1 990 zł — Next.js i WordPress, SEO",
-    description: "Strony na Next.js albo WordPressie — szybkie, z SEO od pierwszego dnia. Sklepy WooCommerce. One-page od 1 990 zł, multi-page od 2 990 zł. Wycena w 24h →",
+    description: "Strony na Next.js albo WordPressie — szybkie, z SEO od pierwszego dnia. Sklepy WooCommerce. One-page od 1 990 zł, multi-page 2 990 zł. Wycena w 24h →",
     openGraph: {
         title: "Strony Internetowe od 1 990 zł | Next.js, WordPress, SEO | WUYO",
         description: "Strony na Next.js albo WordPressie — szybkie, z SEO od startu. Od 1 990 zł. Rzeszów i cała Polska.",
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje strona internetowa?",
-        a: "Strona One-Page od 1 990 zł, strona firmowa Multi-Page od 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+        a: "Strona One-Page od 1 990 zł, strona firmowa Multi-Page 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
@@ -118,7 +118,7 @@ const packages = [
     },
     {
         name: "Strona Firmowa Multi-Page",
-        price: "od 2 990 zł",
+        price: "2 990 zł",
         desc: "Pełny serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie.",
         includes: [
             "Wszystko z one-page +",
