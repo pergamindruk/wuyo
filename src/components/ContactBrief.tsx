@@ -156,6 +156,26 @@ export function ContactBrief() {
         }
     }, [searchParams]);
 
+    // Wejście z innej strony na /#kontakt (np. przycisk we wpisie bloga): formularz renderuje się
+    // dopiero w przeglądarce, więc przeglądarka nie znajduje kotwicy. Przewijamy sami,
+    // drugi raz po chwili, bo obrazki wyżej mogą jeszcze zmienić wysokość strony.
+    useEffect(() => {
+        if (window.location.hash !== "#kontakt" || searchParams.get("pakiet")) return;
+        const przewin = () => document.getElementById("kontakt")?.scrollIntoView({ block: "start" });
+        przewin();
+        const t1 = setTimeout(przewin, 400);
+        const t2 = setTimeout(przewin, 1200);
+        const stop = () => { clearTimeout(t1); clearTimeout(t2); };
+        window.addEventListener("wheel", stop, { once: true, passive: true });
+        window.addEventListener("touchstart", stop, { once: true, passive: true });
+        return () => {
+            stop();
+            window.removeEventListener("wheel", stop);
+            window.removeEventListener("touchstart", stop);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const switchPath = (p: Path) => {
         setPath(p);
         setData((prev) => ({ ...prev, path: p }));
