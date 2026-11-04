@@ -57,7 +57,7 @@ const priceTable = [
 
 const packages = [
     { name: "One-page", price: "from 1,990 PLN", time: "7–14 working days", desc: "One page, one goal. Ideal for freelancers, coaches and new businesses that want to get online fast.", items: ["UI/UX design", "Next.js + React", "Contact form", "On-page SEO", "Domain and hosting for the 1st year included"], highlight: false },
-    { name: "Multi-page", price: "from 2,990 PLN", time: "7–14 working days", desc: "A website with subpages, a blog and SEO for many phrases. For businesses that want to grow through Google.", items: ["Everything in one-page +", "Service pages with SEO", "Blog ready to publish", "Schema markup JSON-LD", "Google Search Console setup"], highlight: true },
+    { name: "Multi-page", price: "2,990 PLN", time: "7–14 working days", desc: "A website with subpages, a blog and SEO for many phrases. For businesses that want to grow through Google.", items: ["Everything in one-page +", "Service pages with SEO", "Blog ready to publish", "Schema markup JSON-LD", "Google Search Console setup"], highlight: true },
 ];
 
 const benefits = [

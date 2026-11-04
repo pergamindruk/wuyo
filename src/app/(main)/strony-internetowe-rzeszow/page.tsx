@@ -50,6 +50,9 @@ export async function generateMetadata(): Promise<Metadata> {
     return seoMeta("/strony-internetowe-rzeszow", metadata);
 }
 
+// Miejscowości wokół Rzeszowa: sekcja lokalna + areaServed w schemie.
+const NEARBY_TOWNS = ["Tyczyn", "Boguchwała", "Łańcut", "Głogów Małopolski", "Strzyżów", "Ropczyce", "Kolbuszowa", "Leżajsk"];
+
 const localSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -58,6 +61,7 @@ const localSchema = {
     "provider": { ...BUSINESS_REF, "aggregateRating": BUSINESS_RATING },
     "areaServed": [
         { "@type": "City", "name": "Rzeszów" },
+        ...NEARBY_TOWNS.map((name) => ({ "@type": "City", name })),
         { "@type": "AdministrativeArea", "name": "Podkarpacie" },
         { "@type": "Country", "name": "Polska" },
     ],
@@ -84,8 +88,16 @@ const faqs: FaqEntry[] = [
         a: "Strona jednostronicowa (one-page) od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep internetowy od 6 900 zł. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
     },
     {
-        q: "Ile kosztuje utrzymanie strony po pierwszym roku?",
-        a: "Opieka Strony to 199 zł miesięcznie: serwer, domena, kopie zapasowe, zabezpieczenia i 1 godzina drobnych zmian w miesiącu. Rezygnujesz w każdej chwili z miesięcznym wyprzedzeniem.",
+        q: "Ile kosztuje domena i serwer po pierwszym roku?",
+        a: "Pierwszy rok jest w cenie strony. Od drugiego roku domena i serwer wchodzą w opiekę: 199 zł netto miesięcznie przy stronie na Next.js, 249 zł przy WordPressie, 549 zł przy sklepie. W opiece są też kopie zapasowe, zabezpieczenia i 1 godzina drobnych zmian w miesiącu. Rezygnujesz w każdej chwili z miesięcznym wyprzedzeniem (sklep najwcześniej po 3 miesiącach). Wtedy płatności za domenę i serwer przejmujesz sam.",
+    },
+    {
+        q: "Czy po uruchomieniu strony mogę liczyć na pomoc?",
+        a: "Tak. Zanim oddam stronę, poprawiamy ją do Twojej akceptacji, bez dopłat. Po odbiorze dostajesz dane do domeny, serwera i panelu. Jeśli chcesz, żebym dalej się nią zajmował, bierzesz Opiekę Strony: pilnuję serwera, domeny, kopii zapasowych i zabezpieczeń, a w ramach godziny w miesiącu wprowadzam drobne zmiany, np. nowy cennik albo godziny otwarcia.",
+    },
+    {
+        q: "Czy strona i domena będą moje?",
+        a: "Tak. Po opłaceniu całości dostajesz pełne prawa majątkowe do projektu i pliki źródłowe. Dane do domeny, serwera i panelu przekazuję przy odbiorze. Jeśli kiedyś zrezygnujesz z opieki, strona zostaje u Ciebie, tylko opłaty za domenę i serwer płacisz już sam.",
     },
     {
         q: "Czy da się zrobić tanią stronę internetową w Rzeszowie?",
@@ -120,6 +132,26 @@ const priceTable = [
     { name: "Opieka Strony — serwer, domena, kopie, 1 h zmian", price: "199 zł / mc" },
 ];
 
+// Porównanie wariantów. Ceny jak w CENNIK.md 4.1 i 4.3 (zmiana tam = zmiana tu).
+const compareCols = ["Strona jednostronicowa", "Strona firmowa", "Sklep internetowy"];
+const compareRows: { label: string; values: [string, string, string] }[] = [
+    { label: "Cena netto", values: ["od 1 990 zł", "2 990 zł", "od 6 900 zł"] },
+    { label: "Wielkość", values: ["jedna strona: oferta, galeria, opinie, mapa, formularz", "do 5 podstron, osobna podstrona dla każdej usługi", "do 30 produktów"] },
+    { label: "Na czym", values: ["Next.js", "Next.js albo WordPress", "WordPress + WooCommerce"] },
+    { label: "Sam zmieniasz treść", values: ["nie, zmiany robię ja", "tak, jeśli wybierzesz WordPress", "tak, w panelu sklepu"] },
+    { label: "Działa na telefonie", values: ["tak", "tak", "tak"] },
+    { label: "Domena i serwer na 1. rok", values: ["w cenie", "w cenie", "w cenie"] },
+    { label: "Opieka od 2. roku", values: ["199 zł / mc", "199 zł / mc (Next.js) albo 249 zł / mc (WordPress)", "549 zł / mc, min. 3 miesiące"] },
+    { label: "Czas realizacji", values: ["7–14 dni roboczych", "7–14 dni roboczych", "ustalamy przy wycenie"] },
+];
+
+const steps = [
+    { title: "Piszesz albo dzwonisz", desc: "Mówisz, czym się zajmujesz i czego oczekujesz od strony. Kilka pytań, bez formularzy na pół godziny." },
+    { title: "Wycena w 24 godziny", desc: "Dostajesz stałą cenę i zakres. Zaliczka 50% na start, reszta po akceptacji." },
+    { title: "Projekt i poprawki", desc: "Pokazuję projekt, poprawiamy do Twojej akceptacji bez dopłat. Strona powstaje w 7–14 dni roboczych od kompletu materiałów." },
+    { title: "Uruchomienie i Google", desc: "Podpinam domenę, zgłaszam stronę do Google przez Search Console i oddaję Ci dane dostępu." },
+];
+
 const packages = [
     {
         name: "One-Page",
@@ -131,7 +163,7 @@ const packages = [
     },
     {
         name: "Multi-Page",
-        price: "od 2 990 zł",
+        price: "2 990 zł",
         time: "7–14 dni roboczych",
         desc: "Serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie w Google.",
         items: ["Wszystko z One-Page +", "Podstrony usług z SEO", "Blog gotowy do publikacji", "Schema markup JSON-LD", "Google Search Console setup"],
@@ -250,6 +282,51 @@ export default function StronyInternetowerRzeszowPage() {
                         </div>
                     </AnimatedSection>
 
+                    <AnimatedSection className="mt-10">
+                        <div className="glass-card p-6 md:p-8">
+                            <h3 className="text-xl font-bold text-white mb-3">Od czego zależy cena strony internetowej w Rzeszowie?</h3>
+                            <p className="text-white/60 text-sm leading-relaxed mb-6">
+                                Cena zależy od trzech rzeczy: ile podstron potrzebujesz, czy chcesz sam zmieniać treść i czy sprzedajesz przez internet. Poniżej masz, co dokładnie dostajesz w każdym wariancie.
+                            </p>
+                            <div className="overflow-x-auto -mx-2 px-2">
+                                <table className="w-full text-xs md:text-sm min-w-[560px]">
+                                    <thead>
+                                        <tr className="text-left text-white/50 border-b border-white/10">
+                                            <th scope="col" className="py-2 pr-3 font-medium"><span className="sr-only">Cecha</span></th>
+                                            {compareCols.map((col) => (
+                                                <th key={col} scope="col" className="py-2 pr-3 font-medium text-white/80">{col}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {compareRows.map((row) => (
+                                            <tr key={row.label} className="border-b border-white/5 last:border-0 align-top">
+                                                <th scope="row" className="py-2.5 pr-3 text-left font-medium text-white/50">{row.label}</th>
+                                                {row.values.map((v, i) => (
+                                                    <td key={i} className="py-2.5 pr-3 text-white/70">{v}</td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p className="text-white/50 text-xs mt-4">Do każdej kwoty dochodzi 23% VAT. Mówię to od razu, żeby faktura Cię nie zaskoczyła.</p>
+                            <p className="text-white/60 text-sm leading-relaxed mt-4">
+                                Przykład: elektryk, który zbiera zlecenia z polecenia, zwykle potrzebuje tylko strony jednostronicowej z numerem telefonu i zdjęciami prac. Firma remontowa z pięcioma usługami lepiej wypadnie w Google z osobną podstroną dla każdej z nich. Sklep ma sens dopiero wtedy, gdy klient ma kupić bez dzwonienia do Ciebie.
+                            </p>
+                        </div>
+                    </AnimatedSection>
+
+                    <AnimatedSection className="mt-6">
+                        <div className="glass-card p-6">
+                            <h3 className="font-bold text-white mb-2">Dlaczego tania strona z szablonu wychodzi drożej</h3>
+                            <p className="text-white/60 text-sm leading-relaxed">
+                                Strona z kreatora za kilkaset złotych kusi. Koszty wychodzą później. Szablon ma w sobie kod do funkcji, których nie używasz, więc strona ładuje się wolno na telefonie. Klient z wyników Google nie czeka, tylko wraca i klika konkurencję. Do tego każda zmiana poza szablonem to osobne zlecenie albo przenosiny na nową stronę. Za rok płacisz drugi raz. Co sprawdzić przed zaliczką, opisałem w tekście{" "}
+                                <Link href="/blog/tania-strona-internetowa-na-co-uwazac" className="text-gold hover:underline">tania strona internetowa — na co uważać</Link>.
+                            </p>
+                        </div>
+                    </AnimatedSection>
+
                     <AnimatedSection className="mt-6">
                         <div className="glass-card p-6 border-l-2 border-gold">
                             <h3 className="font-bold text-white mb-2">Tanie strony internetowe w Rzeszowie: kiedy wystarczy one-page za 1 990 zł</h3>
@@ -285,6 +362,61 @@ export default function StronyInternetowerRzeszowPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* KROK PO KROKU */}
+            <section className="py-20 px-6 md:px-12">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection className="text-center mb-12">
+                        <p className="eyebrow mb-4">Jak to wygląda</p>
+                        <h2 className="text-3xl font-bold text-white">Krok po kroku do własnej strony</h2>
+                    </AnimatedSection>
+                    <div className="grid md:grid-cols-4 gap-4">
+                        {steps.map((step, i) => (
+                            <AnimatedSection key={step.title} delay={i * 0.08}>
+                                <div className="glass-card p-6 h-full">
+                                    <p className="text-gold text-2xl font-bold mb-2">{i + 1}</p>
+                                    <h3 className="font-bold text-white mb-2 text-sm">{step.title}</h3>
+                                    <p className="text-white/55 text-xs leading-relaxed">{step.desc}</p>
+                                </div>
+                            </AnimatedSection>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* RZESZÓW I OKOLICE */}
+            <section className="py-20 px-6 md:px-12 bg-white/[0.02]">
+                <div className="max-w-4xl mx-auto">
+                    <AnimatedSection>
+                        <div className="glass-card p-6 md:p-8">
+                            <p className="eyebrow mb-4">Rzeszów i okolice</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Strony dla firm z Rzeszowa i okolic</h2>
+                            <p className="text-white/60 text-sm leading-relaxed mb-4">
+                                Pracuję z Rzeszowa, więc znam lokalny rynek. Klient z Drabinianki czy Słociny zwykle wpisuje w Google „hydraulik Rzeszów”, a nie nazwę dzielnicy. Dlatego każdą stronę ustawiam pod miasto i usługę, a przy firmach spoza Rzeszowa także pod ich miejscowość.
+                            </p>
+                            <p className="text-white/60 text-sm leading-relaxed mb-5">
+                                Robię strony dla firm z całego powiatu i okolic:
+                            </p>
+                            <ul className="flex flex-wrap gap-2 mb-6">
+                                {["Rzeszów", ...NEARBY_TOWNS].map((town) => (
+                                    <li key={town} className="text-xs text-white/70 border border-white/10 rounded-full px-3 py-1">{town}</li>
+                                ))}
+                            </ul>
+                            <p className="text-white/60 text-sm leading-relaxed mb-6">
+                                Masz firmę w Rzeszowie albo obok? Zadzwoń albo napisz. Powiesz mi, czym się zajmujesz, a ja w 24 godziny podam cenę i zakres.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <a href="tel:+48725182053" className="btn-gold px-6 py-3 rounded-full font-bold text-center text-sm">
+                                    Zadzwoń: 725 182 053
+                                </a>
+                                <a href="https://wa.me/48725182053" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
+                                    Napisz na WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </AnimatedSection>
                 </div>
             </section>
 
