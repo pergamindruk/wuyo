@@ -10,7 +10,14 @@ async function urlsFromSitemap() {
 }
 
 const args = process.argv.slice(2);
-const urlList = args.length ? args.map((p) => `https://${HOST}${p}`) : await urlsFromSitemap();
+// Git Bash zamienia "/blog/x" na "C:/Program Files/Git/blog/x" — cofamy to.
+// Przyjmuje też pełny adres albo ścieżkę bez ukośnika na początku.
+function toUrl(arg) {
+    if (arg.startsWith("http")) return arg;
+    const path = arg.replace(/^[A-Za-z]:[\\/].*?[\\/]Git(?=[\\/])/, "").replace(/\\/g, "/");
+    return `https://${HOST}${path.startsWith("/") ? path : `/${path}`}`;
+}
+const urlList = args.length ? args.map(toUrl) : await urlsFromSitemap();
 
 // Wyszukiwarki z IndexNow przekazują sobie zgłoszenia. Gdy jedna odrzuca, próbujemy następnej.
 const body = JSON.stringify({ host: HOST, key: KEY, keyLocation: `https://${HOST}/${KEY}.txt`, urlList });
