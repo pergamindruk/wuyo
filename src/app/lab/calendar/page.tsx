@@ -65,12 +65,15 @@ const STATUS_STYLE: Record<string, string> = {
     Szkic: 'bg-zinc-500',
     Zaplanowane: 'bg-yellow-400',
     Opublikowane: 'bg-emerald-400',
+    Canva: 'bg-[#00c4cc]',
 }
-const STATUS_LABEL: Record<string, string> = { Szkic: 'Szkic', Zaplanowane: 'W kolejce', Opublikowane: 'Opublikowany' }
+/** „Canva” = post przeniesiony do planera Canvy. Cron panelu go nie publikuje (bierze tylko „Zaplanowane”). */
+const STATUS_LABEL: Record<string, string> = { Szkic: 'Szkic', Zaplanowane: 'W kolejce', Canva: 'W Canvie', Opublikowane: 'Opublikowany' }
 
 function postStatus(p: Post): string {
     const s = rows(p).map((r) => r.status)
     if (s.every((x) => x === 'Opublikowane')) return 'Opublikowane'
+    if (s.some((x) => x === 'Canva')) return 'Canva'
     if (s.some((x) => x === 'Zaplanowane' || x === 'Opublikowane')) return 'Zaplanowane'
     return 'Szkic'
 }
@@ -82,8 +85,8 @@ function plural(n: number, one: string, few: string, many: string) {
     return d >= 2 && d <= 4 && (h < 12 || h > 14) ? few : many
 }
 
-/** Nowy projekt w Canvie w formacie posta 4:5 (1080×1350). */
-const CANVA_NEW = 'https://www.canva.com/design?create&width=1080&height=1350&units=px'
+/** Planer treści Canvy (Canva Pro): tam post dostaje grafikę, tekst i termin publikacji. */
+const CANVA_PLANNER = 'https://www.canva.com/planner'
 
 /** Pobiera grafikę jako plik (atrybut download nie działa dla obcych domen, więc przez blob). */
 async function downloadImage(url: string, name: string) {
@@ -154,7 +157,7 @@ export default function CalendarLab() {
                             : `${format(days[0], 'd MMM', { locale: pl })} – ${format(days[6], 'd MMM', { locale: pl })}`}
                     </h1>
                     <p className="mt-1 text-sm text-zinc-500">
-                        {weekPosts.length ? `${weekPosts.length} ${plural(weekPosts.length, 'post', 'posty', 'postów')} · szkice ${count('Szkic')} · w kolejce ${count('Zaplanowane')} · opublikowane ${count('Opublikowane')}` : 'Pusty tydzień'}
+                        {weekPosts.length ? `${weekPosts.length} ${plural(weekPosts.length, 'post', 'posty', 'postów')} · szkice ${count('Szkic')} · w kolejce ${count('Zaplanowane')}${count('Canva') ? ` · w Canvie ${count('Canva')}` : ''} · opublikowane ${count('Opublikowane')}` : 'Pusty tydzień'}
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -378,15 +381,26 @@ function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
         if (r.topic !== post.topic) onTopicChange(r.topic)
         return { ok: true, text: 'Nowa propozycja od Gemini gotowa (FB i IG).' }
     })
-    const openCanva = () => act(async () => {
-        window.open(CANVA_NEW, '_blank', 'noopener')
-        if (!imgUrl) return { ok: true, text: 'Otwarta Canva. Ten post nie ma jeszcze grafiki.' }
-        try {
-            await downloadImage(imgUrl, `wuyo-post-${post.date}.jpg`)
-        } catch {
-            return { ok: false, text: 'Nie udało się pobrać grafiki. Otwórz ją w pełnym rozmiarze i zapisz ręcznie.' }
+    /** Do planera Canvy: tekst do schowka, grafiki na dysk (karuzela po kolei), planer w nowej karcie, status „W Canvie”. */
+    const toCanva = () => act(async () => {
+        const copied = navigator.clipboard?.writeText(text.trim()).then(() => true, () => false) ?? Promise.resolve(false)
+        window.open(CANVA_PLANNER, '_blank', 'noopener')
+        const imgs = post.images.length ? post.images : imgUrl ? [imgUrl] : []
+        let failed = 0
+        for (const [i, u] of imgs.entries()) {
+            try {
+                await downloadImage(u, `wuyo-${post.date}-${imgs.length > 1 ? `slajd-${i + 1}` : 'post'}.jpg`)
+            } catch {
+                failed++
+            }
         }
-        return { ok: true, text: `Grafika pobrana. W Canvie: Przesłane → wgraj plik → popraw → Udostępnij → Pobierz (JPG albo PNG) → tu „Wgraj poprawioną”.` }
+        await Promise.all(versions.filter((v) => v.status !== 'Opublikowane').map((v) => updateEventStatus(v.id, 'Canva')))
+        const parts = [
+            (await copied) ? `Tekst ${ev.platform} w schowku.` : 'Tekstu nie udało się skopiować, użyj „Kopiuj”.',
+            imgs.length ? `Pobrane grafiki: ${imgs.length - failed}/${imgs.length}.` : 'Post nie ma grafiki.',
+            'W planerze: Dodaj → Post → wgraj grafikę → wklej tekst → wybierz termin. Status w panelu: „W Canvie” (panel sam tego nie opublikuje).',
+        ]
+        return { ok: failed === 0, text: parts.join(' ') }
     })
     const uploadEdited = (file: File) => act(async () => {
         if (!file.type.startsWith('image/')) return { ok: false, text: 'To nie jest obraz.' }
@@ -444,9 +458,9 @@ function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
                 {!published && (
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-wrap gap-2">
-                            <button onClick={openCanva} disabled={busy}
-                                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-[#00c4cc]/60 hover:text-white disabled:opacity-50">
-                                <Palette size={13} className="text-[#00c4cc]" /> Edytuj w Canvie
+                            <button onClick={toCanva} disabled={busy}
+                                className="flex items-center gap-1.5 rounded-full border border-[#00c4cc]/40 bg-[#00c4cc]/[0.08] px-3 py-1.5 text-xs font-semibold text-zinc-100 hover:border-[#00c4cc] hover:text-white disabled:opacity-50">
+                                <Palette size={13} className="text-[#00c4cc]" /> Do planera Canva
                             </button>
                             <button onClick={() => fileRef.current?.click()} disabled={busy}
                                 className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-white/25 disabled:opacity-50">
@@ -503,7 +517,7 @@ function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
                 <div className={`${card} flex flex-col gap-3 p-4`}>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs text-zinc-400">Status {ev.platform}:</span>
-                        {(['Szkic', 'Zaplanowane', 'Opublikowane'] as const).map((s) => (
+                        {(['Szkic', 'Zaplanowane', 'Canva', 'Opublikowane'] as const).map((s) => (
                             <button key={s} onClick={() => setStatus(s)} disabled={busy || ev.status === s}
                                 className={`rounded-full px-3 py-1 text-xs font-semibold ${ev.status === s ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}>
                                 <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${STATUS_STYLE[s]}`} />{STATUS_LABEL[s]}
