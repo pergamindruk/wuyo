@@ -52,6 +52,8 @@ wyniki = [
     ("Inter",   zbuduj("Inter.ttf", "../public/fonts/inter-subset.woff2", "opsz=14 wght=100:900")),
     ("Syne",    zbuduj("Syne.ttf", "../public/fonts/syne-subset.woff2", "wght=600:800")),
     ("Goldman", zbuduj("Goldman-Bold.ttf", "../public/fonts/goldman-subset.woff2")),
+    ("Play",    zbuduj("Play-Regular.ttf", "../public/fonts/play-regular-subset.woff2")),
+    ("Play B",  zbuduj("Play-Bold.ttf", "../public/fonts/play-bold-subset.woff2")),
 ]
 for n, b in wyniki:
     print(f"{n:<10}{b/1024:>8.1f} KB")

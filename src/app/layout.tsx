@@ -30,6 +30,17 @@ const inter = localFont({
     display: "swap",
     adjustFontFallback: "Arial",
 });
+// Play — font opisów i zwykłego tekstu na stronie (od 8.11.2026, wybór Mateusza).
+// Panel /lab zostaje przy Inter (zmienna --font-copy w globals.css).
+const play = localFont({
+    src: [
+        { path: "../../public/fonts/play-regular-subset.woff2", weight: "400", style: "normal" },
+        { path: "../../public/fonts/play-bold-subset.woff2", weight: "700", style: "normal" },
+    ],
+    variable: "--font-play",
+    display: "swap",
+    adjustFontFallback: "Arial",
+});
 // preload: false — Syne to nagłówki sekcji. W hero nie rysuje ani jednej litery
 // (cały napis to CS Harley), a pierwszy nagłówek Syne jest pod pierwszym ekranem.
 // Preload dawał mu priorytet arkusza stylów, który blokuje pierwsze malowanie,
@@ -233,7 +244,7 @@ export default function RootLayout({
                 {/* Piksel Meta nie startuje z <head> — wczytuje go <MetaPixel /> dopiero
                     po zgodzie na marketing. Szczegóły w src/components/MetaPixel.tsx. */}
             </head>
-            <body suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${goldman.variable} ${csHarley.variable} font-sans antialiased bg-zinc-950`}>
+            <body suppressHydrationWarning className={`${inter.variable} ${play.variable} ${syne.variable} ${goldman.variable} ${csHarley.variable} font-sans antialiased bg-zinc-950`}>
                 {/* Link „Przejdź do treści” (WCAG) jest w layoutach (main) i /en,
                     każdy w swoim języku i tam, gdzie istnieje #main-content. */}
                 {children}

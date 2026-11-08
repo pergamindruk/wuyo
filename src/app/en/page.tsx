@@ -97,7 +97,7 @@ const services: OfferService[] = [
     },
     {
         icon: "automation",
-        name: "Automation",
+        name: "AI automation",
         title: "Let a computer do the boring work",
         short: "Copying orders from email into a spreadsheet? Sending reminders to clients by hand? Things like that can be set up to run on their own. Tell me what you do every day and I'll check what could run automatically.",
         tags: ["client reminders", "form orders straight into a spreadsheet", "notifications on your phone"],

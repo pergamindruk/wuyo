@@ -9,5 +9,8 @@ Licencja OFL wprost zezwala na modyfikację i redystrybucję.
 
 Skrypt, który je wygenerował, opisuje `narzedzia/fonty-subset.py`.
 
+## Play
+OFL 1.1, plik licencji: `OFL-play.txt`. Font opisów od 8.11.2026 (Regular i Bold), przycięty tym samym zakresem znaków.
+
 ## CS Harley
 Font komercyjny, licencja kupiona przez studio. Nie podlega OFL.

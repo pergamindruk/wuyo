@@ -65,7 +65,9 @@ const config: Config = {
 			},
 			fontFamily: {
 				sans: [
-					'var(--font-inter)'
+					'var(--font-copy)',
+					'var(--font-inter)',
+					'sans-serif'
 				],
 				heading: [
 					'var(--font-syne)'

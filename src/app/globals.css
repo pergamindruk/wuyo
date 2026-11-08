@@ -1175,3 +1175,28 @@ body {
   .offer-node .ic-d, .offer-rail::after { transition: none; }
   .offer-node g, .offer-panel-in { animation: none !important; }
 }
+
+/* ── Tekst opisów (od 8.11.2026): font Play, kolor #FEFFC9 ──
+   Nagłówki zostają w Syne, panel /lab w Inter i swoich kolorach. */
+body {
+  --font-copy: var(--font-play);
+  --copy: #feffc9;
+  --copy-muted: rgb(254 255 201 / 0.62);
+  /* Play ma niższe małe litery niż Inter (x-height 0,48 wobec 0,55) — wyrównujemy,
+     żeby opisy nie wyglądały drobniej. */
+  font-size-adjust: 0.52;
+}
+/* Nagłówki, napis w hero i ozdobne liczby mają własne kroje — bez wyrównania. */
+:is(h1, h2, h3, h4, h5, h6, .font-heading, .font-cs-harley, .numer-ozdobny, [style*="--font-ava-meridian"], [class*="font-ava-meridian"]) {
+  font-size-adjust: none;
+}
+.lab-ui { --font-copy: var(--font-inter); font-size-adjust: none; }
+
+/* :where() nie dodaje wagi selektora — kolor po najechaniu (hover:text-gold) nadal wygrywa. */
+:is(.text-white\/60, .text-white\/65, .text-white\/70, .text-white\/75, .text-white\/80):where(:not(.lab-ui *)) {
+  color: var(--copy);
+}
+:is(.text-white\/40, .text-white\/50, .text-white\/55):where(:not(.lab-ui *)) {
+  color: var(--copy-muted);
+}
+
