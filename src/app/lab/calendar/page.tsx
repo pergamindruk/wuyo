@@ -1,17 +1,21 @@
 'use client'
 
 // "use client": tydzień, panel posta, edycja tekstu i publikacja działają bez przeładowania strony.
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import {
-    Camera, Check, ChevronLeft, ChevronRight, Clock, Copy, ExternalLink, Globe, Images, Plus, Sparkles, Trash2, X,
+    Camera, Check, ChevronLeft, ChevronRight, Clock, Copy, ExternalLink, Globe, Images, Palette, Plus, RefreshCw, Sparkles, Trash2, Upload, X,
 } from 'lucide-react'
 import type { CalendarEvent } from '@/lib/types'
-import { addCalendarEvent, deleteEvents, getCalendar, planWeek, schedulePost, updateEventContent, updateEventImageUrl, updateEventStatus } from './actions'
+import { createClient } from '@/lib/supabase/client'
+import {
+    addCalendarEvent, createSocialUploadUrl, deleteEvents, getCalendar, planWeek, regeneratePost, schedulePost, setPostImage,
+    updateEventContent, updateEventImageUrl, updateEventStatus,
+} from './actions'
 import { publishToFacebook, publishToInstagram } from '../social-media/actions'
 
 /** Treść posta = tekst do publikacji, a po linii „---” notatki dla Mateusza (slajdy, scenariusz, uzasadnienie). */
@@ -76,6 +80,34 @@ function plural(n: number, one: string, few: string, many: string) {
     if (n === 1) return one
     const d = n % 10, h = n % 100
     return d >= 2 && d <= 4 && (h < 12 || h > 14) ? few : many
+}
+
+/** Nowy projekt w Canvie w formacie posta 4:5 (1080×1350). */
+const CANVA_NEW = 'https://www.canva.com/design?create&width=1080&height=1350&units=px'
+
+/** Pobiera grafikę jako plik (atrybut download nie działa dla obcych domen, więc przez blob). */
+async function downloadImage(url: string, name: string) {
+    const blob = await (await fetch(url)).blob()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = name
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000)
+}
+
+/** Dowolny obraz (PNG z Canvy itd.) → JPG max 1440 px. Instagram przyjmuje tylko JPG. */
+async function toJpeg(file: File): Promise<Blob> {
+    const bmp = await createImageBitmap(file)
+    const scale = Math.min(1, 1440 / Math.max(bmp.width, bmp.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bmp.width * scale)
+    canvas.height = Math.round(bmp.height * scale)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('canvas')
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height)
+    return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('jpg'))), 'image/jpeg', 0.9))
 }
 
 const card = 'rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.045] to-white/[0.015] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]'
@@ -167,7 +199,7 @@ export default function CalendarLab() {
                 <Link href="/lab/ai-studio?tab=post" className="text-zinc-400 hover:text-yellow-400">Jeden post na szybko: AI Studio</Link>
             </p>
 
-            {open && <PostDrawer post={open} onClose={() => setOpenKey(null)} onChanged={load} />}
+            {open && <PostDrawer post={open} onClose={() => setOpenKey(null)} onChanged={load} onTopicChange={(t) => setOpenKey(`${open.date}|${t}`)} />}
         </div>
     )
 }
@@ -256,7 +288,9 @@ function AddPostPanel({ defaultDate, onDone }: { defaultDate: string; onDone: ()
     )
 }
 
-function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => void; onChanged: () => void }) {
+function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
+    post: Post; onClose: () => void; onChanged: () => void; onTopicChange: (topic: string) => void
+}) {
     const versions = rows(post)
     const [tab, setTab] = useState(versions[0]?.id ?? '')
     const ev = versions.find((v) => v.id === tab) ?? versions[0]
@@ -264,6 +298,10 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
     const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
     const [busy, setBusy] = useState(false)
     const [imgUrl, setImgUrl] = useState(ev?.image_url || post.images[0] || '')
+    const [regenOpen, setRegenOpen] = useState(false)
+    const [hint, setHint] = useState('')
+    const [newTopic, setNewTopic] = useState(false)
+    const fileRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         setText(splitContent(ev?.content).caption)
@@ -271,6 +309,14 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
         setMsg(null)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tab])
+
+    // Nowa propozycja albo nowa grafika przyszła z bazy: pokaż ją w polu.
+    useEffect(() => {
+        setText(splitContent(ev?.content).caption)
+    }, [ev?.content])
+    useEffect(() => {
+        if (ev?.image_url) setImgUrl(ev.image_url)
+    }, [ev?.image_url])
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -323,6 +369,38 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
         setImgUrl(u)
         await updateEventImageUrl(ev.id, u)
     })
+    const regenerate = () => act(async () => {
+        if (dirty && !window.confirm('Masz niezapisane zmiany w tekście. Nadpisać je nową propozycją?')) return
+        const r = await regeneratePost(versions.map((v) => v.id), hint, newTopic)
+        if (!r.ok) return { ok: false, text: r.error }
+        setRegenOpen(false)
+        setHint('')
+        if (r.topic !== post.topic) onTopicChange(r.topic)
+        return { ok: true, text: 'Nowa propozycja od Gemini gotowa (FB i IG).' }
+    })
+    const openCanva = () => act(async () => {
+        window.open(CANVA_NEW, '_blank', 'noopener')
+        if (!imgUrl) return { ok: true, text: 'Otwarta Canva. Ten post nie ma jeszcze grafiki.' }
+        try {
+            await downloadImage(imgUrl, `wuyo-post-${post.date}.jpg`)
+        } catch {
+            return { ok: false, text: 'Nie udało się pobrać grafiki. Otwórz ją w pełnym rozmiarze i zapisz ręcznie.' }
+        }
+        return { ok: true, text: `Grafika pobrana. W Canvie: Przesłane → wgraj plik → popraw → Udostępnij → Pobierz (JPG albo PNG) → tu „Wgraj poprawioną”.` }
+    })
+    const uploadEdited = (file: File) => act(async () => {
+        if (!file.type.startsWith('image/')) return { ok: false, text: 'To nie jest obraz.' }
+        const jpg = await toJpeg(file).catch(() => null)
+        if (!jpg) return { ok: false, text: 'Nie udało się odczytać pliku. Pobierz z Canvy jako JPG albo PNG.' }
+        const link = await createSocialUploadUrl(ev.id)
+        if (!link.ok) return { ok: false, text: link.error }
+        const { error } = await createClient().storage.from('social').uploadToSignedUrl(link.path, link.token, jpg, { contentType: 'image/jpeg' })
+        if (error) return { ok: false, text: 'Wysyłka nie wyszła. Spróbuj jeszcze raz.' }
+        if (!(await setPostImage(versions.map((v) => v.id), link.publicUrl))) return { ok: false, text: 'Plik wysłany, ale nie podpiął się pod post.' }
+        setImgUrl(link.publicUrl)
+        return { ok: true, text: 'Poprawiona grafika podpięta pod FB i IG.' }
+    })
+    const published = versions.every((v) => v.status === 'Opublikowane')
 
     return (
         <div className="fixed inset-0 z-[80] flex justify-end bg-black/70" onClick={onClose}>
@@ -359,6 +437,43 @@ function PostDrawer({ post, onClose, onChanged }: { post: Post; onClose: () => v
                         </div>
                         {post.images.length > 1 && (
                             <p className="text-[11px] text-zinc-500">Karuzela: publikacja z panelu wrzuca tylko zaznaczoną grafikę. Całą karuzelę dodaj w aplikacji (otwórz slajdy i zapisz po kolei).</p>
+                        )}
+                    </div>
+                )}
+
+                {!published && (
+                    <div className="flex flex-col gap-3">
+                        <div className="flex flex-wrap gap-2">
+                            <button onClick={openCanva} disabled={busy}
+                                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-[#00c4cc]/60 hover:text-white disabled:opacity-50">
+                                <Palette size={13} className="text-[#00c4cc]" /> Edytuj w Canvie
+                            </button>
+                            <button onClick={() => fileRef.current?.click()} disabled={busy}
+                                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-white/25 disabled:opacity-50">
+                                <Upload size={13} /> Wgraj poprawioną
+                            </button>
+                            <button onClick={() => setRegenOpen(!regenOpen)} disabled={busy}
+                                className="flex items-center gap-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/[0.06] px-3 py-1.5 text-xs font-semibold text-yellow-300 hover:border-yellow-400/60 disabled:opacity-50">
+                                <RefreshCw size={13} /> Nowa propozycja (Gemini)
+                            </button>
+                            <input ref={fileRef} type="file" accept="image/*" className="hidden"
+                                onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) uploadEdited(f) }} />
+                        </div>
+                        {regenOpen && (
+                            <div className={`${card} flex flex-col gap-2 p-4`}>
+                                <input value={hint} onChange={(e) => setHint(e.target.value)} placeholder="Opcjonalnie: co zmienić? np. krócej, bardziej z życia, inny przykład"
+                                    className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none" />
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-300">
+                                        <input type="checkbox" checked={newTopic} onChange={(e) => setNewTopic(e.target.checked)} className="h-4 w-4 accent-yellow-400" /> Może zmienić temat
+                                    </label>
+                                    <button onClick={regenerate} disabled={busy}
+                                        className="ml-auto rounded-full bg-yellow-400 px-4 py-1.5 text-xs font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                                        {busy ? 'Piszę… (ok. 20 s)' : 'Wygeneruj FB + IG'}
+                                    </button>
+                                </div>
+                                <p className="text-[11px] text-zinc-500">Nadpisuje tekst obu wersji (opublikowanych nie rusza). Notatki i grafiki zostają.</p>
+                            </div>
                         )}
                     </div>
                 )}

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { generateWithFallback } from '@/lib/gemini'
 import { revalidatePath } from 'next/cache'
 import { PRICING, RULES, clean } from '@/lib/lab/ai/context'
@@ -267,6 +268,108 @@ GRAFIKA: jedno zdanie`
     }
     revalidatePath('/lab/calendar')
     return { ok: true, created: rows.length, dates }
+}
+
+// ─── Nowa propozycja od Gemini dla jednego posta (FB + IG) ──────────────────
+
+/**
+ * Pisze od nowa tekst posta na FB i IG. Notatki po „---” (slajdy, scenariusz) zostają.
+ * Opublikowanych wersji nie rusza. newTopic = AI może zmienić też temat.
+ */
+export async function regeneratePost(ids: string[], hint?: string, newTopic?: boolean):
+    Promise<{ ok: true; topic: string } | { ok: false; error: string }> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { ok: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
+    if (ids.length === 0) return { ok: false, error: 'Brak posta.' }
+
+    const { data: rows } = await supabase.from('calendar_events').select('*').in('id', ids)
+    const editable = (rows ?? []).filter((r) => r.status !== 'Opublikowane')
+    if (editable.length === 0) return { ok: false, error: 'Ten post jest już opublikowany.' }
+
+    const first = editable[0]
+    const oldCaption = String(first.content ?? '').split(/\n---\n/)[0].trim().slice(0, 1200)
+    const prompt = `Napisz od nowa post na social media studia WUYO (Mateusz, grafika, druk i strony dla małych firm z Rzeszowa).
+
+${RULES}
+
+${POST_RULES}
+
+TEMAT: "${first.topic}"
+FORMAT: ${first.format}
+CEL: ${first.goal}
+${newTopic ? 'Możesz zaproponować inny, lepszy temat w tym samym duchu (porada, kulisy albo wiedza). Nie powtarzaj starego.\n' : 'Temat zostaje ten sam.\n'}${hint?.trim() ? `CO MATEUSZ CHCE ZMIENIĆ: "${hint.trim().slice(0, 500)}"\n` : ''}
+POPRZEDNIA WERSJA (napisz wyraźnie inaczej: inne pierwsze zdanie, inny przykład):
+${oldCaption || '(brak)'}
+
+Dwie wersje: facebook (do 800 znaków, 1-2 hashtagi) i instagram (do 500 znaków, 3-4 hashtagi, w tym #Rzeszów).
+Karuzela lub rolka: podziel na [Slajd 1], [Slajd 2]... po 1-2 krótkie zdania.
+
+Zwróć DOKŁADNIE ten układ, bez wstępu i komentarzy:
+## POST
+TEMAT: krótki temat do kalendarza
+FACEBOOK:
+treść posta na Facebook
+INSTAGRAM:
+treść posta na Instagram
+GRAFIKA: -`
+
+    let post: PlannedPost | undefined
+    try {
+        post = parsePosts(await generateWithFallback('document', prompt, { noThinking: true }))[0]
+    } catch (e) {
+        console.error('regeneratePost AI error:', e)
+        return { ok: false, error: 'Gemini nie odpowiada. Spróbuj za chwilę.' }
+    }
+    if (!post) return { ok: false, error: 'Gemini zwróciło coś nieczytelnego. Kliknij jeszcze raz.' }
+
+    const topic = newTopic && post.topic ? post.topic.slice(0, 120) : String(first.topic)
+    for (const r of editable) {
+        const notes = String(r.content ?? '').split(/\n---\n/).slice(1).join('\n---\n').trim()
+        const caption = String(r.platform).toLowerCase() === 'instagram' ? post.instagram : post.facebook
+        const content = notes ? `${caption}\n\n---\n${notes}` : caption
+        const { error } = await supabase.from('calendar_events').update({ content, topic }).eq('id', r.id)
+        if (error) {
+            console.error('regeneratePost update error:', error)
+            return { ok: false, error: 'Tekst gotowy, ale nie zapisał się.' }
+        }
+    }
+    revalidatePath('/lab/calendar')
+    return { ok: true, topic }
+}
+
+// ─── Grafika poprawiona w Canvie: wysyłka do publicznego bucketu „social” ───
+
+const SOCIAL_BUCKET = 'social'
+
+/** Jednorazowy link do wysyłki pliku z przeglądarki (omija limit 1 MB server actions). */
+export async function createSocialUploadUrl(eventId: string):
+    Promise<{ ok: true; path: string; token: string; publicUrl: string } | { ok: false; error: string }> {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { ok: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
+    if (!/^[\w-]{1,64}$/.test(eventId)) return { ok: false, error: 'Zły identyfikator posta.' }
+
+    const admin = createAdminClient()
+    const path = `canva/${eventId}-${Date.now()}.jpg`
+    const { data, error } = await admin.storage.from(SOCIAL_BUCKET).createSignedUploadUrl(path)
+    if (error || !data) return { ok: false, error: 'Nie udało się przygotować wysyłki.' }
+    const publicUrl = admin.storage.from(SOCIAL_BUCKET).getPublicUrl(path).data.publicUrl
+    return { ok: true, path, token: data.token, publicUrl }
+}
+
+/** Podpina grafikę pod wszystkie wersje posta (FB i IG). */
+export async function setPostImage(ids: string[], imageUrl: string) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user || ids.length === 0 || !/^https:\/\//.test(imageUrl)) return false
+    const { error } = await supabase.from('calendar_events').update({ image_url: imageUrl }).in('id', ids)
+    if (error) {
+        console.error('setPostImage error:', error)
+        return false
+    }
+    revalidatePath('/lab/calendar')
+    return true
 }
 
 /** Usuwa post (wszystkie jego wersje: FB i IG). */
