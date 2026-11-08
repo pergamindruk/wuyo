@@ -7,7 +7,8 @@ import { ContactBrief } from "@/components/ContactBrief";
 import { HeroText } from "@/components/HeroText";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { OfferTabs, type OfferService } from "@/components/offer/OfferTabs";
 import { BlogTeaser } from "@/components/BlogTeaser";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
@@ -37,48 +38,60 @@ const localBusinessSchema = {
 };
 
 export default function Home() {
-    const services = [
+    const services: OfferService[] = [
         {
-            icon: <Palette size={28} />,
-            title: "Logotyp, który ludzie zapamiętają",
-            desc: "Fundament Twojego biznesu. Robię loga, które nie wyglądają jak wygenerowane przez AI czy stworzone w Canva. Konkretny wektor, który ludzie zapamiętają, a Ty możesz użyć wszędzie.",
+            icon: "logo",
+            name: "Logo",
+            title: "Logo, które nie wygląda jak z Canvy",
+            short: "Klient widzi Twoje logo na aucie, szyldzie i fakturze, zanim w ogóle zadzwoni. Robię znak od zera, czytelny także w małym rozmiarze. Dostajesz 3 propozycje do wyboru i wszystkie pliki na własność.",
+            tags: ["3 propozycje", "pliki do druku i internetu", "prawa autorskie w cenie"],
             href: "/logo",
-            wide: true,
+            cta: "Zobacz ofertę logo",
         },
         {
-            icon: <Layout size={28} />,
-            title: "Strona, która sprzedaje za Ciebie",
-            desc: "Wykodowana od zera na React/Next.js. Od szybkich stron One-Page po większe serwisy. Co to znaczy dla Ciebie? Kuloodporne bezpieczeństwo, techniczne SEO i prędkość, która zachwyca Google.",
+            icon: "www",
+            name: "Strona internetowa",
+            title: "Klient sprawdza Cię w telefonie. Co tam widzi?",
+            short: "Zanim ktoś zadzwoni, wpisuje Twoją firmę w Google. Jeśli strona się nie otwiera albo wygląda jak z 2010 roku, dzwoni do konkurencji. Robię stronę, która szybko działa na telefonie, ma numer pod ręką i pokazuje Twoje realizacje.",
+            tags: ["szybka na telefonie", "domena i serwer na pierwszy rok w cenie", "ustawiona pod Google"],
             href: "/strony-www",
-            wide: true,
+            cta: "Zobacz ofertę stron",
         },
         {
-            icon: <FileText size={28} />,
-            title: "Druk, który robi wrażenie",
-            desc: "Wizytówki, ulotki, plakaty, vouchery, katalogi, zaproszenia i bannery — projektuję i drukuję u siebie, do formatu A3+. Zamawiasz sam projekt albo komplet z wydrukiem. Krótkie serie bez czekania na drukarnię.",
+            icon: "print",
+            name: "Druk",
+            title: "Projekt i druk w jednym miejscu",
+            short: "Wizytówki, ulotki, plakaty, vouchery. Projektuję i drukuję u siebie, więc nie musisz krążyć między grafikiem a drukarnią. Masz gotowy projekt? Wydrukuję sam plik.",
+            tags: ["druk do A3+", "małe nakłady", "wysyłka w całej Polsce"],
             href: "/druk",
-            wide: false,
+            cta: "Zobacz ofertę druku",
         },
         {
-            icon: <Shirt size={28} />,
-            title: "Odzież, która nosi Twoją markę",
-            desc: "Koszulki i bluzy z nadrukiem DTF, personalizacja imienna, haft na czapkach i odzieży roboczej. Bez minimum ilościowego — nawet jedna sztuka.",
+            icon: "apparel",
+            name: "Odzież z nadrukiem",
+            title: "Koszulki z Twoim logo, nawet jedna sztuka",
+            short: "Dla ekipy, na targi albo na prezent. Nie musisz zamawiać 50 sztuk, żeby cokolwiek dostać. Koszulki i bluzy z nadrukiem DTF, czapki i odzież robocza z haftem.",
+            tags: ["bez minimum ilościowego", "nadruk DTF", "haft"],
             href: "/odziez",
-            wide: false,
+            cta: "Zobacz ofertę odzieży",
         },
         {
-            icon: <Share2 size={28} />,
-            title: "Social media, które zatrzymują scrollowanie",
-            desc: "Wjeżdżam na pełnej na Twoje sociale. Karuzele, posty, rolki i miniatury, które zatrzymają scrollowanie i sprawią, że ludzie zaczną klikać.",
+            icon: "social",
+            name: "Posty i grafiki",
+            title: "Posty gotowe do wrzucenia",
+            short: "Po całym dniu pracy mało kto siada do grafik na Facebooka. Zrobię Ci posty, karuzele i okładki w jednym stylu z Twoją firmą. Ty tylko je wrzucasz.",
+            tags: ["posty", "karuzele", "okładki profilu"],
             href: "/#kontakt",
-            wide: false,
+            cta: "Napisz, czego potrzebujesz",
         },
         {
-            icon: <Box size={28} />,
-            title: "Projekty graficzne, które robią robotę",
-            desc: "Potrzebujesz czegoś poza logo i stroną? Projektuję opakowania, etykiety, materiały POS, prezentacje, banery i infografiki — wszystko, czego marka potrzebuje, żeby wyglądać spójnie na każdym nośniku.",
+            icon: "design",
+            name: "Etykiety i banery",
+            title: "Etykiety, opakowania, banery i cała reszta",
+            short: "Etykieta na słoik, pudełko na produkt, baner na płot budowy, menu, roll-up. Wszystko, na czym ludzie widzą Twoją firmę. Pilnuję, żeby każda rzecz wyglądała jak z jednej firmy.",
+            tags: ["etykiety", "opakowania", "banery i roll-upy"],
             href: "/#kontakt",
-            wide: false,
+            cta: "Napisz, co chcesz zrobić",
         },
     ];
 
@@ -148,30 +161,7 @@ export default function Home() {
                     </h2>
                 </AnimatedSection>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto relative z-10">
-                    {services.map((service, i) => (
-                        <AnimatedSection
-                            key={i}
-                            delay={i * 0.08}
-                            className={service.wide ? "lg:col-span-2" : "lg:col-span-1"}
-                        >
-                            {service.href ? (
-                                <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
-                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                    <h3 className={`font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3 ${service.wide ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
-                                    <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm mb-4">{service.desc}</p>
-                                    <span className="inline-flex items-center gap-1 text-gold text-xs font-bold group-hover:gap-2 transition-all">Dowiedz się więcej <ArrowRight size={12} /></span>
-                                </Link>
-                            ) : (
-                                <div className="glass-card p-8 md:p-10 h-full group transition-all duration-300">
-                                    <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                    <h3 className={`font-bold text-white transition-colors duration-300 mb-3 ${service.wide ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
-                                    <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm">{service.desc}</p>
-                                </div>
-                            )}
-                        </AnimatedSection>
-                    ))}
-                </div>
+                <OfferTabs services={services} />
 
                 {/* CTA pod gridem */}
                 <AnimatedSection className="mt-10 max-w-6xl mx-auto relative z-10">

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Palette, Layout, FileText, Share2, Box, Shirt } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { OfferTabs, type OfferService } from "@/components/offer/OfferTabs";
 import { PortfolioGallery } from "@/components/PortfolioGallery";
 import { ProcessSection } from "@/components/ProcessSection";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -39,48 +40,60 @@ const localBusinessSchema = {
     "aggregateRating": BUSINESS_RATING,
 };
 
-const services = [
+const services: OfferService[] = [
     {
-        icon: <Palette size={28} />,
-        title: "A logo people remember",
-        desc: "The foundation of your business. My logos don't look AI-generated or made in Canva. A clean vector people remember and you can use anywhere.",
+        icon: "logo",
+        name: "Logo",
+        title: "A logo that doesn't look like it came from Canva",
+        short: "People see your logo on your van, your sign and your invoice before they ever call. I draw the mark from scratch and make sure it reads well even when it's small. You get 3 options to choose from and all the files are yours.",
+        tags: ["3 options", "files for print and web", "copyright included"],
         href: route("logo", "en"),
-        wide: true,
+        cta: "See logo design",
     },
     {
-        icon: <Layout size={28} />,
-        title: "A website that sells for you",
-        desc: "Coded from scratch in React/Next.js, from fast one-page sites to bigger websites. What it means for you: solid security, technical SEO and speed Google loves.",
+        icon: "www",
+        name: "Website",
+        title: "People check you on their phone. What do they see?",
+        short: "Before anyone calls, they look your business up on Google. If the site won't load or looks like 2010, they call someone else. I build sites that load fast on a phone, keep your number in reach and show your work.",
+        tags: ["fast on a phone", "domain and server for the first year included", "set up for Google"],
         href: route("websites", "en"),
-        wide: true,
+        cta: "See websites",
     },
     {
-        icon: <FileText size={28} />,
-        title: "Print that makes an impression",
-        desc: "Business cards, flyers, posters, vouchers, catalogues, invitations and banners. I design and print in-house up to A3+. Order the design only or design plus print. Short runs without waiting for a print shop.",
+        icon: "print",
+        name: "Print",
+        title: "Design and print in one place",
+        short: "Business cards, flyers, posters, vouchers. I design and print in-house, so you don't have to run between a designer and a print shop. Already have a design? I'll just print it.",
+        tags: ["print up to A3+", "short runs", "shipping across Poland"],
         href: route("print", "en"),
-        wide: false,
+        cta: "See printing",
     },
     {
-        icon: <Shirt size={28} />,
-        title: "Apparel that wears your brand",
-        desc: "DTF-printed T-shirts and hoodies, name personalisation, embroidery on caps and workwear. No minimum order, even a single piece.",
+        icon: "apparel",
+        name: "Printed apparel",
+        title: "T-shirts with your logo, even just one",
+        short: "For your crew, a trade fair or a gift. You don't need to order 50 pieces to get anything. DTF prints on T-shirts and hoodies, embroidery on caps and workwear.",
+        tags: ["no minimum order", "DTF print", "embroidery"],
         href: route("apparel", "en"),
-        wide: false,
+        cta: "See apparel",
     },
     {
-        icon: <Share2 size={28} />,
-        title: "Social media that stops the scroll",
-        desc: "Carousels, posts, reels and thumbnails that stop people scrolling and get them clicking.",
+        icon: "social",
+        name: "Social posts",
+        title: "Posts ready to publish",
+        short: "After a full day of work, hardly anyone sits down to make Facebook graphics. I'll make your posts, carousels and covers in one consistent style. You just post them.",
+        tags: ["posts", "carousels", "profile covers"],
         href: "#kontakt",
-        wide: false,
+        cta: "Tell me what you need",
     },
     {
-        icon: <Box size={28} />,
-        title: "Design that does the job",
-        desc: "Need something beyond a logo and a website? I design packaging, labels, POS materials, presentations, banners and infographics, so your brand looks consistent everywhere.",
+        icon: "design",
+        name: "Labels and banners",
+        title: "Labels, packaging, banners and everything else",
+        short: "A label for a jar, a box for your product, a banner for a building site fence, a menu, a roll-up. Everything people see your business on. I make sure it all looks like it comes from one company.",
+        tags: ["labels", "packaging", "banners and roll-ups"],
         href: "#kontakt",
-        wide: false,
+        cta: "Tell me what you want to make",
     },
 ];
 
@@ -148,18 +161,7 @@ export default function HomeEn() {
                     </h2>
                 </AnimatedSection>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto relative z-10">
-                    {services.map((service, i) => (
-                        <AnimatedSection key={service.title} delay={i * 0.08} className={service.wide ? "lg:col-span-2" : "lg:col-span-1"}>
-                            <Link href={service.href} className="glass-card p-8 md:p-10 h-full group transition-all duration-300 block hover:border-gold/30">
-                                <div className="text-gold transition-colors duration-300 mb-6">{service.icon}</div>
-                                <h3 className={`font-bold text-white group-hover:text-gold transition-colors duration-300 mb-3 ${service.wide ? "text-2xl" : "text-xl"}`}>{service.title}</h3>
-                                <p className="text-white/60 transition-colors duration-300 leading-relaxed text-sm mb-4">{service.desc}</p>
-                                <span className="inline-flex items-center gap-1 text-gold text-xs font-bold group-hover:gap-2 transition-all">Learn more <ArrowRight size={12} /></span>
-                            </Link>
-                        </AnimatedSection>
-                    ))}
-                </div>
+                <OfferTabs services={services} />
 
                 <AnimatedSection className="mt-10 max-w-6xl mx-auto relative z-10">
                     <div className="rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-6">
