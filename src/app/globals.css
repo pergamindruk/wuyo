@@ -1098,7 +1098,7 @@ body {
 }
 
 /* Panel */
-.offer-panel { position: relative; overflow: hidden; min-height: 640px; }
+.offer-panel { position: relative; overflow: hidden; min-height: 660px; }
 .offer-panel.glass-card:hover { transform: none; }
 .offer-panel::before {
   content: "";
@@ -1136,7 +1136,9 @@ body {
 .is-lit .ic-beat { animation: ic-beat 2.4s ease-in-out 1.2s infinite; }
 .is-lit .ic-float { animation: ic-float 2.4s ease-out 1.2s infinite; }
 .is-lit .ic-twinkle { animation: ic-twinkle 2.6s ease-in-out 1.3s infinite; }
+.is-lit .ic-spin { animation: ic-spin 6s linear 1.2s infinite; }
 
+@keyframes ic-spin { to { transform: rotate(360deg); } }
 @keyframes ic-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
 @keyframes ic-tap {
   0%, 70%, 100% { transform: translate(0, 0) scale(1); }

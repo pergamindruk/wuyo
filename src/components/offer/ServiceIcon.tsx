@@ -2,7 +2,7 @@
 // animacją, gdy dotrze do nich wiązka światła (patrz OfferBeam i style .offer-*).
 // Same ścieżki <path> — pathLength="1" na prostokątach i kołach nie wszędzie działa.
 
-export type ServiceIconName = "logo" | "www" | "print" | "apparel" | "social" | "design";
+export type ServiceIconName = "logo" | "www" | "print" | "apparel" | "social" | "design" | "automation";
 
 /** Zaokrąglony prostokąt jako ścieżka. */
 function rr(x: number, y: number, w: number, h: number, r: number) {
@@ -107,7 +107,24 @@ function DesignIcon() {
     );
 }
 
+function AutomationIcon() {
+    return (
+        <>
+            <g className="ic-spin">
+                <D d="M10.2 21.6A14 14 0 0 1 34.7 15" i={0} />
+                <D d="M35 9L34.7 15L28.8 14.3" i={1} />
+                <D d="M37.8 26.4A14 14 0 0 1 13.3 33" i={0} />
+                <D d="M13 39L13.3 33L19.2 33.7" i={1} />
+            </g>
+            <g className="ic-pulse">
+                <D d="M25.5 16L19.5 25H24.5L22.5 32L28.5 23H23.5Z" i={2} />
+            </g>
+        </>
+    );
+}
+
 const ICONS: Record<ServiceIconName, () => React.JSX.Element> = {
+    automation: AutomationIcon,
     logo: LogoIcon,
     www: WwwIcon,
     print: PrintIcon,

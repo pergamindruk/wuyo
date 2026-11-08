@@ -93,6 +93,15 @@ export default function Home() {
             href: "/#kontakt",
             cta: "Napisz, co chcesz zrobić",
         },
+        {
+            icon: "automation",
+            name: "Automatyzacja",
+            title: "Nudną robotę może robić komputer",
+            short: "Przepisujesz zamówienia z maila do Excela? Wysyłasz klientom przypomnienia ręcznie? Takie rzeczy da się ustawić tak, żeby działy same. Powiedz mi, co robisz codziennie, a sprawdzę, co z tego może iść automatem.",
+            tags: ["przypomnienia dla klientów", "zamówienia z formularza do arkusza", "powiadomienia na telefon"],
+            href: "/#kontakt",
+            cta: "Napisz, co Ci zjada czas",
+        },
     ];
 
 
