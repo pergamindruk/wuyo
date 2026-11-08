@@ -7,26 +7,43 @@ import { useState, useEffect, useRef, useId } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { counterpartPath, localeFromPath, route, type Locale } from "@/lib/i18n";
+import { ServiceIcon, type ServiceIconName } from "@/components/offer/ServiceIcon";
 
 const SCROLL_DELAY_SAME_PAGE = 300; // czas na aktualizację DOM przed scrollem
 const SCROLL_DELAY_CROSS_PAGE = 600; // czas na załadowanie nowej strony przed scrollem
 
-// Cztery usługi pod jedną pozycją w menu. Wcześniej w pasku były Druk i Odzież,
-// a Logo i Strony WWW — najdroższe usługi — nie miały linku w ogóle.
-const USLUGI = {
+// Usługi w menu — te same i w tej samej kolejności co w sekcji „Oferta” na stronie
+// głównej (OfferTabs). Usługi bez własnej podstrony otwierają tę sekcję z wybraną
+// zakładką (adres /#oferta-<ikona>, obsługa w OfferTabs).
+type Usluga = { href: string; label: string; icon: ServiceIconName; sekcja?: boolean };
+const USLUGI: Record<Locale, Usluga[]> = {
     pl: [
-        { href: route("logo", "pl"), label: "Logo" },
-        { href: route("websites", "pl"), label: "Strony WWW" },
-        { href: route("print", "pl"), label: "Druk & papeteria" },
-        { href: route("apparel", "pl"), label: "Odzież & nadruki" },
+        { href: route("logo", "pl"), label: "Logo", icon: "logo" },
+        { href: route("websites", "pl"), label: "Strona internetowa", icon: "www" },
+        { href: route("print", "pl"), label: "Druk", icon: "print" },
+        { href: route("apparel", "pl"), label: "Odzież z nadrukiem", icon: "apparel" },
+        { href: "/#oferta-social", label: "Posty i grafiki", icon: "social", sekcja: true },
+        { href: "/#oferta-design", label: "Etykiety i banery", icon: "design", sekcja: true },
+        { href: "/#oferta-automation", label: "Automatyzacje AI", icon: "automation", sekcja: true },
     ],
     en: [
-        { href: route("logo", "en"), label: "Logo design" },
-        { href: route("websites", "en"), label: "Websites" },
-        { href: route("print", "en"), label: "Print & stationery" },
-        { href: route("apparel", "en"), label: "Apparel printing" },
+        { href: route("logo", "en"), label: "Logo", icon: "logo" },
+        { href: route("websites", "en"), label: "Website", icon: "www" },
+        { href: route("print", "en"), label: "Print", icon: "print" },
+        { href: route("apparel", "en"), label: "Printed apparel", icon: "apparel" },
+        { href: "/en#oferta-social", label: "Social posts", icon: "social", sekcja: true },
+        { href: "/en#oferta-design", label: "Labels and banners", icon: "design", sekcja: true },
+        { href: "/en#oferta-automation", label: "AI automation", icon: "automation", sekcja: true },
     ],
-} as const;
+};
+
+/** Na stronie głównej przełącza zakładkę w sekcji „Oferta” bez przeładowania. */
+function wybierzWOfercie(e: React.MouseEvent<HTMLAnchorElement>, u: Usluga, pathname: string, locale: Locale) {
+    if (!u.sekcja || pathname !== route("home", locale)) return;
+    e.preventDefault();
+    window.history.replaceState(null, "", `#oferta-${u.icon}`);
+    window.dispatchEvent(new CustomEvent("oferta:wybierz", { detail: u.icon }));
+}
 
 const TEKSTY = {
     pl: {
@@ -181,14 +198,20 @@ function OfertaMenu({ locale }: { locale: Locale }) {
                     // bo jedna właściwość `transform` nie pomieści dwóch źródeł.
                     className="menu-rozwijane absolute left-1/2 top-full pt-4"
                 >
-                    <ul className="min-w-[13rem] rounded-2xl border border-white/10 bg-navy-dark p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
+                    <ul className="min-w-[15rem] rounded-2xl border border-white/10 bg-navy-dark p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
                         {uslugi.map((u) => (
                             <li key={u.href}>
                                 <Link
                                     href={u.href}
-                                    onClick={() => setOtwarte(false)}
-                                    className={`block rounded-xl px-4 py-2.5 text-sm transition-colors hover:bg-white/5 hover:text-white ${pathname === u.href ? "text-gold" : "text-white/70"}`}
+                                    onClick={(e) => {
+                                        setOtwarte(false);
+                                        wybierzWOfercie(e, u, pathname, locale);
+                                    }}
+                                    className={`menu-usluga flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors hover:bg-white/5 hover:text-white ${pathname === u.href ? "text-gold" : "text-white/70"}`}
                                 >
+                                    <span className="menu-usluga-ikona" aria-hidden>
+                                        <ServiceIcon name={u.icon} />
+                                    </span>
                                     {u.label}
                                 </Link>
                             </li>
@@ -308,7 +331,7 @@ export function Navbar() {
                         aria-label={t.logoLabel}
                         className={`logo-in absolute left-6 md:left-12 lg:left-24 z-50 block cursor-pointer transition-[top,height,width] duration-300 ease-out origin-top-left ${scrolled
                             ? "top-3 md:top-4 h-14 w-14 md:h-14 md:w-14"
-                            : "top-4 md:top-6 h-24 w-48 md:h-32 md:w-44 lg:h-40 lg:w-[22rem]"
+                            : "top-4 md:top-6 h-16 w-32 md:h-32 md:w-44 lg:h-40 lg:w-[22rem]"
                             }`}
                     >
                         {scrolled ? (
@@ -324,7 +347,7 @@ export function Navbar() {
                                 src="/logo_wuya2.webp"
                                 alt="WUYO Dobra Grafa logo"
                                 fill
-                                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 384px"
+                                sizes="(max-width: 768px) 128px, (max-width: 1024px) 256px, 384px"
                                 className="object-contain object-left"
                                 priority
                             />
@@ -401,7 +424,10 @@ export function Navbar() {
                             <Link
                                 key={u.href}
                                 href={u.href}
-                                onClick={closeMenu}
+                                onClick={(e) => {
+                                    closeMenu();
+                                    wybierzWOfercie(e, u, pathname, locale);
+                                }}
                                 className="hover:text-gold transition-colors border-b border-white/5 pb-4 pl-4"
                             >
                                 {u.label}

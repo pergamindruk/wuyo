@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { OfferTabs, type OfferService } from "@/components/offer/OfferTabs";
-import { PortfolioGallery } from "@/components/PortfolioGallery";
+import { PortfolioShowcase } from "@/components/PortfolioShowcase";
 import { ProcessSection } from "@/components/ProcessSection";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
@@ -185,7 +185,7 @@ export default function HomeEn() {
             </section>
 
             <ProcessSection locale="en" />
-            <PortfolioGallery locale="en" />
+            <PortfolioShowcase locale="en" />
             <TestimonialsSection locale="en" />
             <TrustedBySection locale="en" />
             <BlogTeaser locale="en" />

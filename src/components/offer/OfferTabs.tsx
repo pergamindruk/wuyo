@@ -25,6 +25,8 @@ export type OfferService = {
 
 export function OfferTabs({ services }: { services: OfferService[] }) {
     const [active, setActive] = useState(0);
+    // Telefon: wybraną kartę można zwinąć ponownym kliknięciem (komputer zawsze pokazuje panel).
+    const [rozwinieta, setRozwinieta] = useState(true);
     // Stałe id (sekcja jest raz na stronie) — useId dawał różne wartości na serwerze i w przeglądarce.
     const baseId = "oferta";
     const panelsRef = useRef<HTMLDivElement>(null);
@@ -41,6 +43,38 @@ export function OfferTabs({ services }: { services: OfferService[] }) {
         });
         return () => cancelAnimationFrame(frame);
     }, [active]);
+
+    // Wejście z menu: /#oferta-<ikona> albo zdarzenie „oferta:wybierz” (bez przeładowania).
+    useEffect(() => {
+        const wybierz = (ikona: string) => {
+            const i = services.findIndex((s) => s.icon === ikona);
+            if (i < 0) return;
+            setActive(i);
+            setRozwinieta(true);
+            // Celujemy w listę usług pod stałym paskiem menu. Druga korekta po chwili,
+            // bo doładowujące się elementy wyżej potrafią przesunąć stronę.
+            const przewin = (zachowanie: ScrollBehavior) => {
+                const el = document.querySelector(".offer-tabs");
+                if (!el) return;
+                const y = el.getBoundingClientRect().top + window.scrollY - 130;
+                if (Math.abs(window.scrollY - y) > 30) window.scrollTo({ top: y, behavior: zachowanie });
+            };
+            window.setTimeout(() => przewin("smooth"), 80);
+            window.setTimeout(() => przewin("auto"), 1200);
+        };
+        const zAdresu = () => {
+            const m = window.location.hash.match(/^#oferta-([a-z]+)$/);
+            if (m) wybierz(m[1]);
+        };
+        const zMenu = (e: Event) => wybierz((e as CustomEvent<string>).detail);
+        zAdresu();
+        window.addEventListener("hashchange", zAdresu);
+        window.addEventListener("oferta:wybierz", zMenu);
+        return () => {
+            window.removeEventListener("hashchange", zAdresu);
+            window.removeEventListener("oferta:wybierz", zMenu);
+        };
+    }, [services]);
 
     const onKey = (e: KeyboardEvent<HTMLButtonElement>) => {
         const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
@@ -73,11 +107,19 @@ export function OfferTabs({ services }: { services: OfferService[] }) {
                                 role="tab"
                                 id={`${baseId}-tab-${i}`}
                                 aria-selected={selected}
+                                aria-expanded={selected && rozwinieta}
                                 aria-controls={`${baseId}-panel-${i}`}
                                 tabIndex={selected ? 0 : -1}
-                                onClick={() => setActive(i)}
+                                onClick={() => {
+                                    if (i === active) {
+                                        setRozwinieta((r) => !r);
+                                    } else {
+                                        setActive(i);
+                                        setRozwinieta(true);
+                                    }
+                                }}
                                 onKeyDown={onKey}
-                                className={`offer-tab ${selected ? "is-active" : ""}`}
+                                className={`offer-tab ${selected ? "is-active" : ""} ${selected && rozwinieta ? "is-open" : ""}`}
                             >
                                 <span className="offer-node offer-node-sm is-lit">
                                     <ServiceIcon name={s.icon} />
@@ -88,7 +130,7 @@ export function OfferTabs({ services }: { services: OfferService[] }) {
                             </button>
 
                             {/* Telefon: treść pod wybraną pozycją */}
-                            {selected && (
+                            {selected && rozwinieta && (
                                 <div className="offer-panel-in lg:hidden px-2 pt-4 pb-6">
                                     <PanelBody service={s} compact />
                                 </div>

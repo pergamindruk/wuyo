@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { PortfolioGallery } from "@/components/PortfolioGallery";
+import { PortfolioShowcase } from "@/components/PortfolioShowcase";
 import { ProcessSection } from "@/components/ProcessSection";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { TrustedBySection } from "@/components/TrustedBySection";
@@ -194,7 +194,7 @@ export default function Home() {
             <ProcessSection />
 
             {/* ═══════════════════════ REALIZACJE ═══════════════════════ */}
-            <PortfolioGallery />
+            <PortfolioShowcase />
 
             {/* ═══════════════════════ OPINIE ═══════════════════════ */}
             <TestimonialsSection />
