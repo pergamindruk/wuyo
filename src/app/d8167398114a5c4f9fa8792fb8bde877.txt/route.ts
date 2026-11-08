@@ -1,6 +1,6 @@
 // Klucz IndexNow (Bing, Yandex). Plik musi być pod https://wuyo.pl/<klucz>.txt.
 // Jako route, bo *.txt jest w .gitignore. Zgłaszanie adresów: node scripts/indexnow.mjs
-const INDEXNOW_KEY = "46827ee5b740f32b10f162c9a8e33a16";
+const INDEXNOW_KEY = "d8167398114a5c4f9fa8792fb8bde877";
 
 export const dynamic = "force-static";
 
