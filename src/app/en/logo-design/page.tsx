@@ -38,7 +38,7 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "What do I get with my logo?",
-        a: "The full package: SVG (vector, scales to any size), PNG with a transparent background and a print-ready PDF. Colour palette in HEX and CMYK, brand typography and all variants (colour, mono, icon). Full copyright passes to you at no extra cost.",
+        a: "The full package: SVG (vector, scales to any size), PNG with a transparent background and a print-ready PDF. Colour palette in HEX and CMYK, brand fonts and all variants (colour, black and white, symbol). Full copyright passes to you at no extra cost.",
     },
     {
         q: "Can I edit the logo myself afterwards?",
@@ -67,7 +67,7 @@ const packages = [
         name: "Logo",
         price: "from 890 PLN",
         desc: "The starting point: a logo ready to use straight away.",
-        includes: ["Logo (colour + monochrome)", "Icon / symbol (favicon, avatar)", "Colour palette (HEX + CMYK)", "Brand typography", "Files: SVG, PNG, PDF", "Full copyright"],
+        includes: ["Logo in colour and black and white", "The symbol on its own (site icon, profile picture)", "Colour palette (HEX + CMYK)", "Brand fonts", "Files: SVG, PNG, PDF", "Full copyright"],
         highlight: false,
     },
     {
@@ -88,7 +88,7 @@ const packages = [
         name: "Logo refresh",
         price: "from 1,000 PLN",
         desc: "Have a logo but something feels off? I refresh it without losing your brand's identity.",
-        includes: ["Review of your current logo", "Modernisation proposal", "New files in every format", "Updated colours and typography", "Full copyright"],
+        includes: ["Review of your current logo", "Modernisation proposal", "New files in every format", "Refreshed colours and fonts", "Full copyright"],
         highlight: false,
     },
 ];
@@ -102,14 +102,14 @@ const process = [
 ];
 
 const included = [
-    { icon: <Layers size={22} className="text-gold" />, title: "Logo in every variant", desc: "Colour, monochrome (black and white), icon/symbol and versions for dark and light backgrounds. Ready for any medium." },
+    { icon: <Layers size={22} className="text-gold" />, title: "Logo in every variant", desc: "Colour and black and white, the symbol on its own and versions for dark and light backgrounds. Ready for any medium." },
     { icon: <Palette size={22} className="text-gold" />, title: "Colour palette with values", desc: "HEX (websites, social media), CMYK (offset print), RGB (screens, presentations). No guesswork at the print shop." },
-    { icon: <Type size={22} className="text-gold" />, title: "Brand typography", desc: "Fonts chosen to work with the logo, for headings and body text. With download links or a commercial licence." },
+    { icon: <Type size={22} className="text-gold" />, title: "Brand fonts", desc: "Fonts chosen to work with the logo, for headings and body text. With download links or a commercial licence." },
     { icon: <FileText size={22} className="text-gold" />, title: "Complete file package", desc: "SVG (vector, scalable), PNG with transparent background, PDF (print). Source files (Figma/AI) on request." },
 ];
 
 const audience = [
-    { who: "Start-ups and new businesses", desc: "A first logo that opens doors to customers instead of closing them." },
+    { who: "New businesses", desc: "A first logo that draws customers in rather than putting them off." },
     { who: "Freelancers", desc: "A personal brand you can put on a business card and LinkedIn." },
     { who: "Local businesses", desc: "A logo that works on a shop sign, a van and a website, with no compromises." },
     { who: "Shops and e-commerce", desc: "A recognisable mark that builds trust before the first purchase." },
@@ -134,7 +134,7 @@ export default function LogoDesignPage() {
                         A logo that works, not just looks good. I design it with a proper process, a clear idea behind it and a full set of files. No templates: every logo is made from scratch for one specific business.
                     </p>
                     <a href="#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
-                        Get a quote, I reply within 24h
+                        Get a quote. I reply within 24 hours
                     </a>
                 </AnimatedSection>
             </section>

@@ -32,7 +32,7 @@ export const pricingFaqsEn = [
 
 export const finalCtaEn = {
     title: "Not sure which package fits your business?",
-    text: "Tell me in two sentences what you do and I'll reply with a specific recommendation and quote. No obligation.",
+    text: "Tell me in two sentences what you do and I'll reply with the package that fits and a quote. No obligation.",
     button: "Ask for a quote",
 };
 
@@ -49,7 +49,7 @@ const once: PricingCardData[] = [
             "A detailed brief at the start, so the first logo concept hits the mark, plus 2 backup directions",
             "Logo in 3 versions: horizontal, vertical, mono",
             "100 business cards: double-sided design + print",
-            "Full design rights + source files",
+            "Full design rights and source files",
         ],
         delivery: "Turnaround: 5–7 working days",
         cta: "Start with Mini",
@@ -69,7 +69,7 @@ const once: PricingCardData[] = [
             "Mini brand book: colours, fonts, usage rules",
             "150 business cards: double-sided design + print",
             "Email signature ready to paste",
-            "Full design rights + source files",
+            "Full design rights and source files",
         ],
         delivery: "Turnaround: 7–10 working days",
         cta: "Start with a brand",
@@ -87,7 +87,7 @@ const once: PricingCardData[] = [
             "Everything in Marka Start",
             "Custom website up to 5 pages, written from scratch, not a template",
             "Domain and hosting for the first year included",
-            "Contact form + directions map",
+            "Contact form and directions map",
             "Polished mobile version",
             "Basic local SEO: Rzeszów and the area",
             "Training: how to change the website content yourself",
@@ -110,8 +110,8 @@ const once: PricingCardData[] = [
             "Everything in Firma w Internecie",
             "300 business cards instead of 150 + an A5 flyer",
             "Social media graphic templates",
-            "Google Business Profile: setup, configuration, optimisation",
-            "Review strategy: how to collect and reply to reviews",
+            "Google Business Profile: setup and full configuration",
+            "A plan for reviews: how to collect them and how to reply",
             "3 months of full visibility: Google profile, reviews, 5–6 graphics a month, report",
             "Priority turnaround",
         ],

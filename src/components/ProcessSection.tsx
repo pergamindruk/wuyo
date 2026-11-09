@@ -9,14 +9,14 @@ const EN = {
     steps: [
         ["A quick chat", "We start with a relaxed conversation. I get to know you, your business and what you have in mind."],
         ["Quote", "Short and to the point: a clear price with no hidden costs and a specific delivery date."],
-        ["Work starts", "I research and design so your project is ready on time."],
+        ["Design", "I research the topic and design. I make sure everything is ready on time."],
         ["Your review", "I show you the first results. You say what you think, I make changes until it is spot on."],
         ["Handover", "You get everything neatly sorted in folders. Files you can use straight away."],
-        ["Launch", "I help you get it all live online and in print. I stay with you until the end."],
+        ["Launch", "I help you put everything online and send it to print. I stay with you until the end."],
     ],
-    eyebrow: "Peace of mind",
+    eyebrow: "How I work",
     h2: "A process that saves your time",
-    lead: "A clear path without paperwork, from the first conversation to a finished brand.",
+    lead: "From the first conversation to a finished project. No unnecessary paperwork.",
 } as const;
 
 export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {

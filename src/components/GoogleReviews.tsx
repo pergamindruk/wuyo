@@ -10,7 +10,7 @@ const T = {
     pl: { eyebrow: "Opinie z Google", h2: "Co mówią klienci", zobacz: "Zobacz w Google", opinia: "Opinia w Google",
           razem: "Pracowaliśmy razem?", dwa: "Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.", wystaw: "Wystaw opinię",
           zrodlo: "Opinie pobierane bezpośrednio z profilu firmy w Google i odświeżane codziennie.", ocena: "Ocena" , na: "na 5" },
-    en: { eyebrow: "Results speak for themselves", h2: "What clients say", zobacz: "See on Google", opinia: "Google review",
+    en: { eyebrow: "Reviews on Google", h2: "What clients say", zobacz: "See on Google", opinia: "Google review",
           razem: "Worked with me?", dwa: "Two sentences on Google mean more to a small studio than you think.", wystaw: "Leave a review",
           zrodlo: "Reviews come straight from my Google business profile. Clients are Polish, so reviews are in Polish.", ocena: "Rated", na: "out of 5" },
 } as const;

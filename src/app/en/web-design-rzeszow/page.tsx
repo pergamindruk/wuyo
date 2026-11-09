@@ -27,10 +27,10 @@ export const metadata: Metadata = {
 };
 
 const faqs: FaqEntry[] = [
-    { q: "How much does a website cost in Rzeszów?", a: "A one-page site starts at 1,990 PLN, a business website with up to 5 pages is 2,990 PLN and an online shop starts at 6,900 PLN. Domain and hosting for the first year are included. Every quote is fixed: you know the amount before we start, with no hourly rate and no surprises. Prices net, plus 23% VAT." },
+    { q: "How much does a website cost in Rzeszów?", a: "A one-page site starts at 1,990 PLN, a business website with up to 5 pages is 2,990 PLN and an online shop starts at 6,900 PLN. Domain and hosting for the first year are included. The price is fixed: you know the amount before we start, with no hourly rate and no surprises. Prices net, plus 23% VAT." },
     { q: "How much is it to keep the site running after the first year?", a: "Website Care is 199 PLN a month: server, domain, backups, security and 1 hour of small changes a month. Cancel any time with one month's notice." },
-    { q: "Can I get a cheap website in Rzeszów?", a: "My cheapest option is a one-page site from 1,990 PLN: one page, one goal, a contact form, SEO, and domain and hosting for a year. Enough for a new business, a freelancer or a single service. Cheaper offers are usually a ready-made template that is hard to rank in Google." },
-    { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send the content." },
+    { q: "Can I get a cheap website in Rzeszów?", a: "My cheapest option is a one-page site from 1,990 PLN: one page, one goal, a contact form, a basic Google setup, and a domain and server for a year. Enough for a new business, a freelancer or a single service. Cheaper offers are usually a ready-made template that is hard to get high in Google." },
+    { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send me your texts." },
     { q: "Can the website be in English, Polish or both?", a: "Yes. I can build the site in English, Polish or both languages with a language switch, so you can reach both Polish customers and other foreigners in Rzeszów." },
     { q: "Can I edit the content myself?", a: "Yes. If you want to add posts, projects or products yourself, I build the site on WordPress and show you the dashboard. With a Next.js site just message me: Website Care includes 1 hour of small changes a month." },
     { q: "Next.js or WordPress: which should I choose?", a: "Next.js if the site is a fast business card and I make the changes. WordPress if you want to edit content yourself or run a WooCommerce shop. I build both. WordPress needs regular updates, so I hand it over together with a care plan." },
@@ -56,8 +56,8 @@ const priceTable = [
 ];
 
 const packages = [
-    { name: "One-page", price: "from 1,990 PLN", time: "7–14 working days", desc: "One page, one goal. Ideal for freelancers, coaches and new businesses that want to get online fast.", items: ["UI/UX design", "Next.js + React", "Contact form", "On-page SEO", "Domain and hosting for the 1st year included"], highlight: false },
-    { name: "Multi-page", price: "2,990 PLN", time: "7–14 working days", desc: "A website with subpages, a blog and SEO for many phrases. For businesses that want to grow through Google.", items: ["Everything in one-page +", "Service pages with SEO", "Blog ready to publish", "Schema markup JSON-LD", "Google Search Console setup"], highlight: true },
+    { name: "One-page", price: "from 1,990 PLN", time: "7–14 working days", desc: "One page, one goal. Good for freelancers, coaches and new businesses that want to get online fast.", items: ["Custom design", "Next.js + React", "Contact form", "Basic Google setup (SEO)", "Domain and server for the first year included"], highlight: false },
+    { name: "Multi-page", price: "2,990 PLN", time: "7–14 working days", desc: "A website with subpages and a blog, set up for many Google searches. For businesses that want customers to find them through search.", items: ["Everything in One-Page, plus:", "A separate page for each service", "Blog ready to publish", "Structured data for Google (schema)", "Google Search Console connected"], highlight: true },
 ];
 
 const benefits = [

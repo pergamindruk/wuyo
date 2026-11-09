@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 const faqs: FaqEntry[] = [
-    { q: "How much do business cards cost in Rzeszów?", a: "50 with design from 299 PLN, 100 with design from 349 PLN. Already have a file? Print only starts at 99 PLN for 50. The price includes a unique design (not a template) and double-sided print on 300 g gloss paper. Prices net, plus 23% VAT." },
+    { q: "How much do business cards cost in Rzeszów?", a: "50 with design from 299 PLN, 100 with design from 349 PLN. Already have a file? Print only starts at 99 PLN for 50. The price includes a design made from scratch (not a template) and double-sided print on 300 g gloss paper. Prices net, plus 23% VAT." },
     { q: "How long until I can pick up my prints in Rzeszów?", a: "Usually 1–3 working days after you approve the design, and for urgent orders even the next day. You collect in person in Rzeszów without waiting for a courier: I print in-house, so nothing goes back and forth to an outside print shop." },
     { q: "Can you do 50 business cards at the last minute?", a: "Yes. I print in-house on A3+ equipment, so I don't wait for a shared print sheet to fill up and there's no industrial minimum run. Need 50 cards for a meeting in Rzeszów tomorrow? I'll make them." },
     { q: "What if my file isn't ready for print?", a: "I check every file before printing and tell you straight what's wrong. Most often bleed is missing, colours are RGB instead of CMYK or the resolution is too low. I fix small things along the way, and if the file needs rebuilding I give you the price before doing anything." },
@@ -51,9 +51,9 @@ const printSchema = {
 };
 
 const products = [
-    { name: "Business cards", price: "from 299 PLN / 50 pcs", desc: "A unique design + double-sided print on 300 g gloss paper. You can order from just 50 pieces.", items: ["Design", "Double-sided 300 g print", "Gloss finish", "From 50 pcs"] },
+    { name: "Business cards", price: "from 299 PLN / 50 pcs", desc: "A design from scratch and double-sided print on 300 g gloss paper. You can order from just 50 pieces.", items: ["Design", "Double-sided 300 g print", "Gloss finish", "From 50 pcs"] },
     { name: "Flyers", price: "from 449 PLN / 100 pcs", desc: "A5, A6 or DL. A design that actually gets people to act, not just looks nice.", items: ["Design", "A5 / A6 / DL format", "130 g coated paper", "From 50 pcs"] },
-    { name: "Vouchers", price: "from 289 PLN / 50 pcs", desc: "A voucher that looks like a premium product. Perforation and numbering optional.", items: ["Design", "Any format", "Optional perforation", "From 50 pcs"] },
+    { name: "Vouchers", price: "from 289 PLN / 50 pcs", desc: "A voucher that looks elegant. Perforation and numbering optional.", items: ["Design", "Any format", "Optional perforation", "From 50 pcs"] },
     { name: "Stickers and labels", price: "from 219 PLN", desc: "For products, packaging and mailing. Contour-cut to any shape.", items: ["Design", "Any shape", "Standard and premium vinyl", "From 50 pcs"] },
 ];
 
@@ -106,7 +106,7 @@ export default function PrintingRzeszowPage() {
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">What I print in Rzeszów</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Design and print in one place</h2>
-                        <p className="text-white/50 max-w-xl mx-auto mt-4">Every design is unique, no templates from the internet. Prices net, plus 23% VAT.</p>
+                        <p className="text-white/50 max-w-xl mx-auto mt-4">I design everything from scratch, no templates from the internet. Prices net, plus 23% VAT.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {products.map((p, i) => (

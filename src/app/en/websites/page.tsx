@@ -27,8 +27,8 @@ export const metadata: Metadata = {
 };
 
 const faqs: FaqEntry[] = [
-    { q: "How much does a website cost?", a: "A one-page site starts at 1,990 PLN and a multi-page business website at 2,990 PLN. Every quote is fixed: I give you an exact amount before work starts, with no surprises on the invoice. Prices net, plus 23% VAT." },
-    { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send content and feedback." },
+    { q: "How much does a website cost?", a: "A one-page site starts at 1,990 PLN and a multi-page business website at 2,990 PLN. The price is fixed: you get the exact amount before work starts, and it does not change. Prices net, plus 23% VAT." },
+    { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send me your texts and comments." },
     { q: "Will I be able to edit the content myself?", a: "Yes. If you want to add posts, projects or offers yourself, I build the site on WordPress and show you how to use the dashboard. With a Next.js site you can simply message me: small changes are part of Website Care." },
     { q: "Next.js or WordPress: which should I choose?", a: "Next.js if the site is a fast business card and I make the changes. WordPress if you want to edit content yourself in a dashboard. I build both. WordPress needs regular updates, so I hand it over together with a care plan." },
     { q: "Do you build WooCommerce shops?", a: "Yes. A WooCommerce shop where you add products and handle orders yourself. I connect payments (PayU, Przelewy24, Tpay or Stripe) and InPost shipping. Shops start at 6,900 PLN." },
@@ -49,31 +49,31 @@ const packages = [
     {
         name: "One-page website",
         price: "from 1,990 PLN",
-        desc: "One page, one goal: as many enquiries as possible. Ideal for freelancers, coaches and new businesses.",
-        includes: ["Custom design made for your business", "Next.js + React (fast loading)", "Responsive (mobile first)", "Contact form", "Basic on-page SEO", "Image optimisation (WebP/AVIF)", "Domain and hosting for the 1st year included"],
+        desc: "One page with one goal: getting customers to call or write. Good for freelancers, coaches and new businesses.",
+        includes: ["Custom design made for your business", "Next.js + React (fast loading)", "Easy to use on a phone", "Contact form", "Basic Google setup (SEO)", "Light images that load fast", "Domain and server for the first year included"],
         time: "7–14 working days",
         highlight: false,
     },
     {
         name: "Multi-page business website",
         price: "2,990 PLN",
-        desc: "A full website with subpages, a blog and SEO for many search phrases. For businesses that want to grow through Google.",
-        includes: ["Everything in one-page +", "SEO-friendly URL structure", "Service pages with their own SEO", "Blog ready to publish", "Schema markup (JSON-LD)", "Sitemap + robots.txt", "Google Search Console setup"],
+        desc: "A website with subpages and a blog, set up for many Google searches. For businesses that want customers to find them through search.",
+        includes: ["Everything in One-Page, plus:", "Page addresses set up for Google", "A separate page for each service", "Blog ready to publish", "Structured data for Google (schema)", "Site map for Google (sitemap)", "Google Search Console connected"],
         time: "7–14 working days",
         highlight: true,
     },
     {
-        name: "UI/UX design",
+        name: "Design only",
         price: "from 100 PLN / section",
-        desc: "Website design only, if you have your own developers or just want the design priced.",
-        includes: ["Design in Figma", "Desktop + mobile", "Style guide (colours, fonts, components)", "Handover to your developer", "Asset export"],
+        desc: "The look of the website without the coding. For when you have your own developer or only want the design priced.",
+        includes: ["Design in Figma", "Desktop and phone versions", "Style set: colours, fonts, buttons", "Files handed to your developer", "Graphics ready to use"],
         time: "Individual quote",
         highlight: false,
     },
 ];
 
 const reasons = [
-    { icon: <Zap size={22} className="text-gold" />, title: "Next.js: speed that sells", desc: "The site loads in under a second and Google sees the full content straight away. Every extra second of waiting costs you visitors." },
+    { icon: <Zap size={22} className="text-gold" />, title: "Next.js: a fast site", desc: "The site loads in under a second and Google sees the full content straight away. Every extra second of waiting costs you visitors." },
     { icon: <Shield size={22} className="text-gold" />, title: "Next.js: nothing to hack", desc: "No database and no plugins, so there is nothing to update every week. I make content changes for you as part of Website Care." },
     { icon: <PenLine size={22} className="text-gold" />, title: "WordPress: you edit the content", desc: "Posts, projects, offers: you add them in a simple dashboard without messaging me. A lightweight theme and a fixed set of proven plugins keep the site fast." },
     { icon: <ShoppingCart size={22} className="text-gold" />, title: "WooCommerce: a shop you run yourself", desc: "You add products and handle orders yourself. PayU, Przelewy24, Tpay or Stripe payments, InPost shipping. I take care of updates and backups." },
@@ -90,20 +90,20 @@ const comparison = [
 ];
 
 const techStack = [
-    { name: "Next.js 16", desc: "React framework: fast rendering, SEO-friendly, ready to scale." },
+    { name: "Next.js 16", desc: "The site loads fast, Google reads it well and it is easy to extend later." },
     { name: "WordPress + WooCommerce", desc: "When you want to edit content yourself or run a shop. A lightweight theme and a fixed set of proven plugins." },
-    { name: "TypeScript", desc: "Type-safe code, so fewer bugs make it to the live site." },
-    { name: "Tailwind CSS", desc: "A consistent design system with lightweight styles." },
-    { name: "Hosting", desc: "Deployed on your hosting. I help set up the domain, SSL and production environment." },
+    { name: "TypeScript", desc: "Code that is checked as I write it, so the finished site has fewer bugs." },
+    { name: "Tailwind CSS", desc: "A consistent look across the whole site, with lightweight styles." },
+    { name: "Hosting", desc: "I put the site on your server and help set up the domain and SSL certificate." },
     { name: "Framer Motion", desc: "Smooth animations that don't slow the site down." },
 ];
 
 const process = [
-    { n: "01", title: "Brief and research", desc: "We talk about the site's goal, your audience, competitors and keywords. A site without a plan is a site without visitors." },
-    { n: "02", title: "Design (UI)", desc: "A Figma mock-up: structure, colours, typography, layout. You approve the look before I start coding." },
-    { n: "03", title: "Development", desc: "Built in Next.js or on WordPress. Responsive layout, image optimisation, forms and animations, all in one." },
-    { n: "04", title: "SEO and testing", desc: "Metadata, Open Graph, schema markup, sitemap, PageSpeed tests. A site has to rank, not just look good." },
-    { n: "05", title: "Launch and handover", desc: "Deployed to your hosting, domain set up, Google Search Console, a short how-to. You own it and have access to everything." },
+    { n: "01", title: "Talk and research", desc: "We talk about the site's goal, your customers, your competitors and what people type into Google. Without that, a site gets no visitors." },
+    { n: "02", title: "Design", desc: "I design the site in Figma: layout, colours, fonts. You approve the look before I start building." },
+    { n: "03", title: "Development", desc: "I build the site in Next.js or on WordPress. I fit it to phones, slim down the images and set up forms and animations." },
+    { n: "04", title: "SEO and testing", desc: "I set up descriptions for Google and Facebook, structured data and a site map, then test the speed in PageSpeed. The site should rank high in Google, not just look good." },
+    { n: "05", title: "Launch and handover", desc: "I put the site on your server, connect the domain and Google Search Console and give you a short how-to. The site is yours and you have access to everything." },
 ];
 
 export default function WebsitesPage() {
@@ -121,10 +121,10 @@ export default function WebsitesPage() {
                         <span className="text-gold">work for you</span> 24/7
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        I design and build websites with Next.js or WordPress: fast, responsive and SEO-ready from day one. I pick the technology based on how you want to work with your site.
+                        I design and build websites with Next.js or WordPress. They are fast, easy to use on a phone and ready for Google from day one. I pick the technology based on how you want to work with your site.
                     </p>
                     <a href="#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
-                        Get a quote, I reply within 24h
+                        Get a quote. I reply within 24 hours
                     </a>
                 </AnimatedSection>
             </section>
@@ -135,7 +135,7 @@ export default function WebsitesPage() {
                         {[
                             { stat: "< 1s", label: "loading time (LCP)" },
                             { stat: "90+", label: "PageSpeed score" },
-                            { stat: "Next.js / WP", label: "technology that fits your needs" },
+                            { stat: "Next.js / WP", label: "technology chosen for you" },
                         ].map((item) => (
                             <div key={item.label}>
                                 <p className="text-2xl md:text-3xl font-bold text-gold">{item.stat}</p>
@@ -235,7 +235,7 @@ export default function WebsitesPage() {
             <section className="py-20 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-12">
-                        <p className="eyebrow mb-4">Tech stack</p>
+                        <p className="eyebrow mb-4">Tools</p>
                         <h2 className="text-3xl font-bold text-white">What I build with</h2>
                     </AnimatedSection>
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">

@@ -29,11 +29,11 @@ const EN = {
     items: [
         ["Deadline you can count on", "We agree on a specific day, and on that day you get your project. No excuses, no moving deadlines."],
         ["Quote = final price", "The amount I give you before we start is the amount on the invoice. No surprises, no extra charges for revisions."],
-        ["Live project status", "You get your own client panel where you can see how the work is going. No guessing, no asking how your order is doing."],
+        ["See progress online", "You get your own client panel and can see what stage your project is at. No need to ask how your order is doing."],
     ],
     eyebrow: "Peace of mind",
     h2: "Firm rules, not promises",
-    lead: "I am still growing the studio, so every project is my best business card. That is why you get guarantees in black and white.",
+    lead: "I am still growing the studio, so every project is my business card. That is why the rules are in black and white.",
 } as const;
 
 export function TrustedBySection({ locale = "pl" }: { locale?: Locale }) {

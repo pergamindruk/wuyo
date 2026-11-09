@@ -71,7 +71,7 @@ export default function PortfolioPage() {
                 <AnimatedSection>
                     <div className="max-w-3xl mx-auto text-center">
                         <p className="eyebrow mb-4">Your project here?</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Want to join my happy clients?</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Want your project here?</h2>
                         <p className="text-white/60 mb-10 leading-relaxed">
                             Every project starts with a clear brief. No waffle: you know exactly what you get and for how much before you approve anything.
                         </p>

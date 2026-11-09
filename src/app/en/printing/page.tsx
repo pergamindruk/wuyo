@@ -32,7 +32,7 @@ const faqs: FaqEntry[] = [
     { q: "How much do business cards with design cost?", a: "50 business cards from 99 PLN if you already have a design. With design from 299 PLN, 100 cards with design from 349 PLN. Includes double-sided print on 300 g gloss paper. Prices net, plus 23% VAT." },
     { q: "How quickly will I get my prints?", a: "I print business cards and stickers in-house, usually 1–3 working days after you approve the design. Courier delivery or pick-up in Rzeszów." },
     { q: "Can I order a small run, e.g. 50 business cards?", a: "Yes. I print business cards, flyers and stickers in-house from 50 pieces. No minimum runs like at industrial print shops, which usually start at 250." },
-    { q: "Do you only design, or print as well?", a: "Both, in one place. You don't need to find a designer and a print shop separately, explain specifications or send files in the right formats. You get the finished product." },
+    { q: "Do you only design, or print as well?", a: "Both, in one place. You don't need to find a designer and a print shop separately, explain what and how to print, or send files in the right formats. You get the finished product." },
     { q: "What if the print shop sends the file back with comments?", a: "I fix it at my own cost. Preparing the file correctly is my job: scale, bleed, colours, resolution. This doesn't cover content changes after you approve the design, as that is new work." },
 ];
 
@@ -52,9 +52,9 @@ const printSchema = {
 };
 
 const products = [
-    { name: "Business cards", desc: "Standard 85×55 mm, 300 g gloss paper. A unique design, no templates from the internet.", price: "from 299 PLN", details: ["Design", "Double-sided print", "300 g/m² paper", "Gloss finish", "From 50 pcs"] },
+    { name: "Business cards", desc: "Standard 85×55 mm, 300 g gloss paper. Designed from scratch, no templates from the internet.", price: "from 299 PLN", details: ["Design", "Double-sided print", "300 g/m² paper", "Gloss finish", "From 50 pcs"] },
     { name: "Flyers", desc: "A5, A6 or DL. Single or double-sided. A design that catches the eye and actually gets people to act.", price: "from 449 PLN", details: ["Design", "A5 / A6 / DL format", "Single or double-sided", "130 g coated paper", "From 50 pcs"] },
-    { name: "Vouchers", desc: "A great gift for your customers: a voucher that looks like a premium product, not a parking ticket.", price: "from 289 PLN", details: ["Design", "Any format", "With or without perforation", "Optional numbering", "Min. 50 pcs"] },
+    { name: "Vouchers", desc: "A great gift for your customers: a voucher that looks elegant, not like a parking ticket.", price: "from 289 PLN", details: ["Design", "Any format", "With or without perforation", "Optional numbering", "Min. 50 pcs"] },
     { name: "Restaurant menus", desc: "Menus that sell. A layout that guides the eye to the dishes with the best margin.", price: "from 400 PLN", details: ["Design", "A4 / A5 or custom format", "Double-sided print", "Optional lamination", "From 1 pc"] },
     { name: "Roll-up / banner", desc: "For events, fairs and exhibitions. A design that matches your brand, ready for large-format print.", price: "from 260 PLN", details: ["Design", "Print-ready file (300 dpi)", "Help with dimensions", "Print can be ordered", "Up to 5 days"] },
     { name: "Stickers and labels", desc: "For products, packaging and mailing. Contour-cut or on sheets.", price: "from 219 PLN", details: ["Design", "Any shape and size", "Standard and premium vinyl", "Version for local print", "Min. 50 pcs"] },
@@ -81,7 +81,7 @@ export default function PrintingPage() {
                         <span className="bg-gradient-to-r from-[#FFEB52] to-[#e5d34a] bg-clip-text text-transparent">vouchers and more.</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        One place for design and print. No hunting for a print shop, explaining specifications or sending files in five formats. The finished product arrives at your door. Based in Rzeszów?{" "}
+                        One place for design and print. No hunting for a print shop, explaining what and how to print, or sending files in five formats. The finished product arrives at your door. Based in Rzeszów?{" "}
                         <Link href={route("printRzeszow", "en")} className="text-gold hover:underline">Pick up your cards in person</Link>.
                     </p>
                     <Link href="#kontakt" className="btn-gold px-10 py-4 inline-flex items-center justify-center gap-3 group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
