@@ -7,7 +7,7 @@ import { odmienOpinie } from "@/lib/polish-format";
 import type { Locale } from "@/lib/i18n";
 
 const T = {
-    pl: { eyebrow: "Efekty mówią same za siebie", h2: "Co mówią klienci", zobacz: "Zobacz w Google", opinia: "Opinia w Google",
+    pl: { eyebrow: "Opinie z Google", h2: "Co mówią klienci", zobacz: "Zobacz w Google", opinia: "Opinia w Google",
           razem: "Pracowaliśmy razem?", dwa: "Dwa zdania w Google znaczą dla małego studia więcej, niż myślisz.", wystaw: "Wystaw opinię",
           zrodlo: "Opinie pobierane bezpośrednio z profilu firmy w Google i odświeżane codziennie.", ocena: "Ocena" , na: "na 5" },
     en: { eyebrow: "Results speak for themselves", h2: "What clients say", zobacz: "See on Google", opinia: "Google review",

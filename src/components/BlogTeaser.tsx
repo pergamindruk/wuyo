@@ -11,8 +11,8 @@ import { route, type Locale } from "@/lib/i18n";
  */
 const EN = {
     eyebrow: "No-nonsense advice",
-    h2a: "Before you spend money,", h2b: "check what you are paying for",
-    lead: "I write about prices, print and websites so you know what is worth the money and what is a rip-off. No theory, no agency jargon.",
+    h2a: "Read first,", h2b: "pay later",
+    lead: "Prices, print and websites in plain words. You will know what is worth the money and where someone is overcharging you. No theory, no agency jargon.",
     czytaj: "Read article", wszystkie: "See all articles",
 } as const;
 
@@ -28,10 +28,10 @@ export function BlogTeaser({ locale = "pl" }: { locale?: Locale }) {
             <AnimatedSection className="text-center mb-16 relative z-10">
                 <p className="eyebrow mb-4">{en ? EN.eyebrow : "Wiedza bez ściemy"}</p>
                 <h2 className="text-3xl md:text-5xl font-bold text-white">
-                    {en ? EN.h2a : "Zanim wydasz pieniądze,"}<br />{en ? EN.h2b : "sprawdź za co płacisz"}
+                    {en ? EN.h2a : "Najpierw wiedza,"}<br />{en ? EN.h2b : "potem przelew"}
                 </h2>
                 <p className="text-white/60 mt-6 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                    {en ? EN.lead : "Piszę o cenach, druku i stronach tak, żebyś wiedział, co jest warte swojej ceny, a co jest naciąganiem. Bez teorii i bez agencyjnego żargonu."}
+                    {en ? EN.lead : "Piszę prosto o cenach, druku i stronach. Dowiesz się, co jest warte swoich pieniędzy, a gdzie ktoś Cię naciąga. Bez teorii i bez agencyjnego żargonu."}
                 </p>
             </AnimatedSection>
 

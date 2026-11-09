@@ -11,6 +11,8 @@ const nextConfig = {
     },
     images: {
         formats: ["image/avif", "image/webp"],
+        // 90 dla realizacji (portfolio ma wyglądać ostro), 75 domyślnie dla reszty.
+        qualities: [75, 90],
         remotePatterns: [
             {
                 protocol: "https",

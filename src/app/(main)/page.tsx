@@ -10,6 +10,8 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { OfferTabs, type OfferService } from "@/components/offer/OfferTabs";
 import { BlogTeaser } from "@/components/BlogTeaser";
+import { Odslona } from "@/components/Odslona";
+import { BriefIcon, DesignStepIcon, DoneIcon } from "@/components/CollabIcons";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
@@ -166,7 +168,7 @@ export default function Home() {
                 <AnimatedSection className="text-center mb-20 relative z-10">
                     <p className="eyebrow mb-4">Co zyska Twoja marka</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white">
-                        Tworzę wizerunek, który<br />przyciąga i sprzedaje
+                        Logo, strony, druk i odzież.<br />W jednym miejscu
                     </h2>
                 </AnimatedSection>
 
@@ -176,7 +178,7 @@ export default function Home() {
                 <AnimatedSection className="mt-10 max-w-6xl mx-auto relative z-10">
                     <div className="rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-sm px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-6">
                         <p className="text-white/80 text-base font-medium text-center sm:text-left">
-                            Nie wiesz od czego zacząć? Napisz — dostaniesz konkretny plan działania w 24h.
+                            Nie wiesz, od czego zacząć? Napisz. W ciągu 24 godzin dostaniesz konkretny plan.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
                             <Link href="#kontakt" className="btn-gold px-8 py-3 rounded-full font-bold text-sm shadow-[0_0_20px_rgba(255,235,82,0.25)]">
@@ -221,6 +223,7 @@ export default function Home() {
                                     src="/MojeZdjecie.webp"
                                     alt="Mateusz Machoś – założyciel WUYO, projektant graficzny i web developer z Rzeszowa"
                                     fill
+                                    sizes="(max-width: 768px) 256px, 320px"
                                     className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/50 to-transparent pointer-events-none" />
@@ -235,38 +238,45 @@ export default function Home() {
                             Ty robisz swoje.<br />Ja ogarniam resztę.
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>Działam sam — rozmawiasz ze mną, nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost co zrobię, ile to kosztuje i kiedy będzie gotowe. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
-                            <p>Twoja strona czy marka mają jedno zadanie: zarabiać. Nie tylko wyglądać. Zajmuję się tym żebyś Ty mógł skupić się na tym, na czym znasz się najlepiej.</p>
+                            <p>Działam sam, więc rozmawiasz ze mną, a nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost, co zrobię, ile to kosztuje i kiedy będzie gotowe. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
+                            <p>Twoja strona i marka mają zarabiać, a nie tylko ładnie wyglądać. Ja się tym zajmuję, a Ty robisz to, na czym znasz się najlepiej.</p>
                         </div>
 
-                        <div className="mt-8 mb-10 relative">
-                            {/* Ścieżka */}
-                            <div className="absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-gold/50 via-white/10 to-transparent" />
+                        {/* Drzewko kroków: ikony rysują się po wejściu na ekran,
+                            a po ścieżce co chwilę spływa złoty błysk. */}
+                        <Odslona kierunek="brak" className="wsp-drzewo mt-8 mb-10 relative">
+                            <div className="wsp-sciezka absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-gold/50 via-white/10 to-transparent" aria-hidden />
 
                             <ul className="space-y-6">
                                 <li className="relative flex items-start gap-5">
-                                    <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">1</div>
+                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold backdrop-blur-md">
+                                        <BriefIcon />
+                                    </div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">01 — Szybki brief</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gadamy 15 minut. Mówisz mi gdzie jesteś i co chcesz osiągnąć — ja szukam najlepszego rozwiązania i wracam z konkretnym planem.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gadamy 15 minut. Mówisz, gdzie jesteś i co chcesz osiągnąć. Ja szukam rozwiązania i wracam z konkretnym planem.</p>
                                     </div>
                                 </li>
-                                <li className="relative flex items-start gap-5">
-                                    <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">2</div>
+                                <li className="relative flex items-start gap-5" style={{ ["--krok" as string]: 1 }}>
+                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold backdrop-blur-md">
+                                        <DesignStepIcon />
+                                    </div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">02 — Projekt i realizacja</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Po akceptacji przejmuję stery. Tworzę design, piszę kod, drukuję — zależnie od zlecenia. Postępy widzisz na bieżąco.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gdy zaakceptujesz plan, przejmuję stery. Projektuję, piszę kod albo drukuję, zależnie od zlecenia. Postępy widzisz na bieżąco.</p>
                                     </div>
                                 </li>
-                                <li className="relative flex items-start gap-5">
-                                    <div className="relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-gold/10 border border-gold/40 shadow-[0_0_15px_rgba(255,235,82,0.3)] flex items-center justify-center text-gold font-bold text-lg backdrop-blur-md">3</div>
+                                <li className="relative flex items-start gap-5" style={{ ["--krok" as string]: 2 }}>
+                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-gold/10 border border-gold/40 shadow-[0_0_15px_rgba(255,235,82,0.3)] flex items-center justify-center text-gold backdrop-blur-md">
+                                        <DoneIcon />
+                                    </div>
                                     <div className="pt-1.5">
                                         <strong className="block text-white mb-1">03 — Gotowe. Działa.</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz produkt który od pierwszego dnia robi robotę. Strona, logo, materiały — wszystko gotowe do użycia od razu.</p>
+                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz stronę, logo albo materiały gotowe do użycia. Od pierwszego dnia robią robotę.</p>
                                     </div>
                                 </li>
                             </ul>
-                        </div>
+                        </Odslona>
 
                         <Link href="#kontakt" className="btn-gold inline-flex items-center justify-center gap-3 w-full md:w-auto px-10 py-4 shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)] group">
                             <span className="font-bold text-navy text-lg group-hover:scale-105 transition-transform">Przekaż mi stery</span>

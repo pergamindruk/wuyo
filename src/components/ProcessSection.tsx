@@ -24,32 +24,38 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
         {
             title: "Pogawędka",
             icon: <MessageSquare size={24} />,
-            desc: "Zaczynam od luźnej gadki :) Poznaję Ciebie, Twój biznes i wizję."
+            ruch: "rozmowa",
+            desc: "Zaczynamy od luźnej gadki :) Poznaję Ciebie, Twoją firmę i to, co masz w głowie."
         },
         {
-            title: "Wycena pracy",
+            title: "Wycena",
             icon: <Calculator size={24} />,
-            desc: "Krótko i na temat - jasna wycena bez ukrytych kosztów z konkretną datą realizacji"
+            ruch: "liczy",
+            desc: "Krótko i na temat. Dostajesz jasną cenę bez ukrytych kosztów i konkretną datę oddania."
         },
         {
-            title: "Rozpoczęcie prac",
+            title: "Projektowanie",
             icon: <Zap size={24} />,
-            desc: "Analizuję i projektuję, tak by Twoja grafika była na czas."
+            ruch: "iskra",
+            desc: "Analizuję temat i projektuję. Pilnuję, żeby wszystko było gotowe na czas."
         },
         {
-            title: "Audyt klienta",
+            title: "Twoje uwagi",
             icon: <Search size={24} />,
-            desc: "Pokazuję Ci pierwsze efekty. Ty mówisz co myślisz, ja wprowadzam poprawki, aż jest petarda."
+            ruch: "szuka",
+            desc: "Pokazuję Ci pierwsze efekty. Mówisz, co myślisz, a ja poprawiam, aż będzie petarda."
         },
         {
-            title: "Przekazanie paczki",
+            title: "Przekazanie plików",
             icon: <PackageCheck size={24} />,
+            ruch: "paczka",
             desc: "Dostajesz wszystko elegancko poukładane w folderach. Pliki, których użyjesz od razu."
         },
         {
             title: "Wdrożenie",
             icon: <Rocket size={24} />,
-            desc: "Pomagam to wszystko odpalić w sieci i druku. Jestem z Tobą do samego końca."
+            ruch: "start",
+            desc: "Pomagam wrzucić wszystko do sieci i oddać do druku. Jestem z Tobą do samego końca."
         }
     ];
     const steps = locale === "en"
@@ -63,22 +69,23 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
 
             <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
                 <div className="text-center mb-20">
-                    <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Gwarancja spokoju"}</p>
+                    <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Jak pracuję"}</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
                         {locale === "en" ? EN.h2 : "Proces, który oszczędza Twój czas"}
                     </h2>
                     <p className="text-white/60 max-w-2xl mx-auto">
-                        {locale === "en" ? EN.lead : "Przejrzysta ścieżka bez zbędnych formalności — od pierwszej rozmowy do w pełni gotowego wizerunku Twojej marki."}
+                        {locale === "en" ? EN.lead : "Od pierwszej rozmowy do gotowego projektu. Bez zbędnych formalności."}
                     </p>
                 </div>
             </div>
 
             {/* Responsive Process Layout */}
-            <div className="relative w-full mx-auto mt-12">
+            <div className="relative w-full mx-auto mt-12 md:mt-6">
                 {/* DESKTOP: Horizontal Scroll Layout */}
-                <div className="hidden md:flex overflow-x-auto pb-12 pt-[60px] px-6 md:px-12 gap-6 snap-x snap-mandatory relative z-10 w-full hide-scrollbar">
+                <div className="hidden md:flex overflow-x-auto pb-12 pt-[84px] px-6 md:px-12 gap-6 snap-x snap-mandatory relative z-10 w-full hide-scrollbar">
                     {/* Connecting line for the background (horizontal) */}
-                    <div className="absolute top-[90px] left-[150px] w-max min-w-[1500px] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
+                    {/* Po linii co kilka sekund przebiega złoty błysk (jak w drzewku „Współpraca”) */}
+                    <div className="przeplyw-poziom absolute top-[39px] left-[150px] w-max min-w-[1500px] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" aria-hidden />
 
                     {steps.map((step, index) => (
                         <Odslona
@@ -87,7 +94,9 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
                             className="relative flex flex-col group min-w-[280px] max-w-[280px] w-full snap-start shrink-0"
                         >
                             {/* Center Node / Dot for top line */}
-                            <div className="absolute left-1/2 -top-[60px] w-8 h-8 rounded-full bg-navy border-2 border-white/10 flex items-center justify-center -translate-x-1/2 z-20 transition-all duration-300 group-hover:bg-gold group-hover:border-gold shadow-[0_0_0_rgba(255,215,0,0)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.5)]">
+                            <div
+                                className="absolute left-1/2 -top-[60px] w-8 h-8 rounded-full bg-navy border-2 border-white/10 flex items-center justify-center -translate-x-1/2 z-20 transition-all duration-300 group-hover:bg-gold group-hover:border-gold shadow-[0_0_0_rgba(255,215,0,0)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.5)]"
+                            >
                                 <div className="w-2 h-2 rounded-full bg-white/30 group-hover:bg-navy-dark transition-colors" />
                             </div>
                             {/* Vertical connection line from dot to card */}
@@ -109,7 +118,7 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
                             >
 
                                 <div className="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-gold mb-5 group-hover:scale-110 group-hover:from-gold/20 transition-all duration-300 relative z-10 overflow-hidden">
-                                    {step.icon}
+                                    <span className={`proc-ikona proc-${step.ruch}`}>{step.icon}</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2 relative z-10">
                                     {step.title}
@@ -125,7 +134,7 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
                 {/* MOBILE: Vertical Timeline Layout */}
                 <div className="flex flex-col md:hidden px-6 relative z-10 w-full gap-8">
                     {/* Vertical connecting line */}
-                    <div className="absolute top-12 bottom-12 left-[49px] w-[2px] bg-gradient-to-b from-gold/30 via-white/10 to-transparent z-0" />
+                    <div className="przeplyw-pion absolute top-12 bottom-12 left-[49px] w-[2px] bg-gradient-to-b from-gold/30 via-white/10 to-transparent z-0" aria-hidden />
 
                     {steps.map((step, index) => (
                         <Odslona
@@ -155,7 +164,7 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
                                     gradientSize={200}
                                 >
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center text-gold mb-3 group-hover:scale-110 group-hover:from-gold/20 transition-all duration-300 relative z-10">
-                                        {step.icon}
+                                        <span className={`proc-ikona proc-${step.ruch}`}>{step.icon}</span>
                                     </div>
                                     <h3 className="text-lg font-bold text-white mb-2 relative z-10">
                                         {step.title}

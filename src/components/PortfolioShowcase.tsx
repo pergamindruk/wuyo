@@ -21,12 +21,12 @@ const NA_POCZATEK = [16, 17];
 
 const T = {
     pl: {
-        eyebrow: "Dowody, nie obietnice", h2a: "Projekty, które", h2b: "już zarabiają",
+        eyebrow: "Realizacje dla firm", h2a: "Robota, którą", h2b: "widać na mieście",
         wszystkie: "Wszystkie realizacje", online: "Zobacz stronę online", kolejne: "Kolejne zdjęcie",
         poprz: "Poprzednia realizacja", nast: "Następna realizacja", lista: "Wybierz realizację", powieksz: "Powiększ",
     },
     en: {
-        eyebrow: "Proof, not promises", h2a: "Projects that", h2b: "already make money",
+        eyebrow: "Work for businesses", h2a: "Work you can", h2b: "spot around town",
         wszystkie: "All projects", online: "View the live site", kolejne: "Next image",
         poprz: "Previous project", nast: "Next project", lista: "Choose a project", powieksz: "Zoom in",
     },
@@ -50,7 +50,6 @@ export function PortfolioShowcase({ locale = "pl" }: { locale?: Locale }) {
     const [widoczna, setWidoczna] = useState(false);
     const [ruch, setRuch] = useState(true);
     const sekcja = useRef<HTMLElement>(null);
-    const tasma = useRef<HTMLDivElement>(null);
     const dotyk = useRef<number | null>(null);
 
     const project = projects[index];
@@ -88,15 +87,6 @@ export function PortfolioShowcase({ locale = "pl" }: { locale?: Locale }) {
             mq.removeEventListener("change", ustawRuch);
         };
     }, []);
-
-    // Wybrana miniatura zawsze widoczna na taśmie (bez przewijania całej strony).
-    useEffect(() => {
-        const box = tasma.current;
-        const el = box?.children[index] as HTMLElement | undefined;
-        if (!box || !el) return;
-        const cel = el.offsetLeft - box.clientWidth / 2 + el.offsetWidth / 2;
-        box.scrollTo({ left: cel, behavior: ruch ? "smooth" : "auto" });
-    }, [index, ruch]);
 
     const gra = ruch && widoczna && !stoi && !podglad;
 
@@ -165,7 +155,8 @@ export function PortfolioShowcase({ locale = "pl" }: { locale?: Locale }) {
                             src={zdjecia[zdjecie]}
                             alt={project.title}
                             fill
-                            sizes="(max-width: 1024px) 100vw, 640px"
+                            sizes="(max-width: 1024px) 100vw, 760px"
+                            quality={90}
                             className="wystawa-zdjecie object-cover"
                             style={{ objectPosition: project.cardObjectPosition ?? "center" }}
                         />
@@ -225,25 +216,34 @@ export function PortfolioShowcase({ locale = "pl" }: { locale?: Locale }) {
                     </div>
                 </div>
 
-                {/* Taśma miniatur */}
+                {/* Taśma miniatur: płynie w kółko (lista zdublowana, przesuw o połowę),
+                    staje po najechaniu. Przy „mniej ruchu” zwykła przewijana taśma. */}
                 <div
-                    ref={tasma}
                     role="group"
                     aria-label={t.lista}
-                    className="mt-8 flex gap-3 overflow-x-auto hide-scrollbar py-2 px-1"
+                    className={`wystawa-tasma mt-8 ${ruch ? "plynie" : "overflow-x-auto hide-scrollbar"}`}
                 >
-                    {projects.map((p, i) => (
-                        <button
-                            key={p.id}
-                            type="button"
-                            onClick={() => idzDo(i)}
-                            aria-pressed={i === index}
-                            aria-label={p.title}
-                            className={`wystawa-miniatura ${i === index ? "is-active" : ""}`}
-                        >
-                            <Image src={p.image} alt="" fill sizes="112px" className="object-cover" style={{ objectPosition: p.cardObjectPosition ?? "center" }} />
-                        </button>
-                    ))}
+                    <div className="wystawa-tasma-tor" style={{ animationPlayState: widoczna ? undefined : "paused" }}>
+                        {(ruch ? [...projects, ...projects] : projects).map((p, n) => {
+                            const i = n % projects.length;
+                            const kopia = n >= projects.length;
+                            return (
+                                <button
+                                    key={`${p.id}-${n}`}
+                                    type="button"
+                                    onClick={() => idzDo(i)}
+                                    aria-pressed={kopia ? undefined : i === index}
+                                    aria-label={p.title}
+                                    aria-hidden={kopia || undefined}
+                                    tabIndex={kopia ? -1 : undefined}
+                                    className={`wystawa-miniatura ${i === index ? "is-active" : ""}`}
+                                    style={{ animationDelay: `${-(n % 7) * 0.9}s` }}
+                                >
+                                    <Image src={p.image} alt="" fill sizes="160px" quality={90} className="object-cover" style={{ objectPosition: p.cardObjectPosition ?? "center" }} />
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
