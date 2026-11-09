@@ -133,8 +133,8 @@ export default function PricingPage() {
                         Ile kosztują pojedyncze usługi
                     </h2>
                     <p className="text-white/50 text-sm mb-8 max-w-2xl">
-                        Widełki, żebyś wiedział, w jakim rzędzie wielkości się poruszamy. Dokładna
-                        kwota zależy od zakresu — napisz, co potrzebujesz, a policzę konkretnie.
+                        Widełki, żebyś wiedział, ile to mniej więcej kosztuje. Dokładna
+                        kwota zależy od zakresu. Napisz, czego potrzebujesz, a policzę konkretnie.
                     </p>
                 </AnimatedSection>
 
@@ -154,7 +154,7 @@ export default function PricingPage() {
                         </div>
                         <div>
                             <p className="font-bold text-base leading-snug">
-                                Zamów 2 lub więcej produktów — każdy kolejny -15%.
+                                Zamów 2 lub więcej produktów, a każdy kolejny będzie 15% taniej.
                             </p>
                             <p className="font-medium text-sm mt-1 opacity-80">
                                 Projekty spójne wizualnie, druk w jednej partii, jeden kontakt.
@@ -178,7 +178,7 @@ export default function PricingPage() {
                 <AnimatedSection delay={0.2}>
                     <div className="mt-14 flex flex-col items-center text-center gap-6">
                         <p className="text-white/60 max-w-2xl text-sm md:text-base">
-                            Nie wiesz od czego zacząć? Napisz — dostaniesz konkretny plan i wycenę w 24h.
+                            Nie wiesz, od czego zacząć? Napisz. W 24 godziny dostaniesz konkretny plan i wycenę.
                         </p>
                         <Link
                             href="/#kontakt"

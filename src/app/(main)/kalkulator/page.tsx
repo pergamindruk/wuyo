@@ -30,7 +30,7 @@ export default function KalkulatorPage() {
                         Kalkulator cen
                     </h1>
                     <p className="text-white/60 text-lg leading-relaxed max-w-xl mx-auto">
-                        Wybierz usługę i odpowiedz na kilka pytań — dostaniesz orientacyjny przedział cenowy na miejscu. Finalna wycena zawsze przychodzi w mailu.
+                        Wybierz usługę i odpowiedz na kilka pytań. Od razu zobaczysz orientacyjną cenę. Dokładną wycenę wysyłam mailem.
                     </p>
                 </div>
                 <PriceCalculator />

@@ -41,23 +41,23 @@ export async function generateMetadata(): Promise<Metadata> {
 const faqs: FaqEntry[] = [
     {
         q: "Jaka jest minimalna ilość zamówienia?",
-        a: "Koszulki i bluzy z nadrukiem DTF robię od 1 sztuki — bez minimum. Przy haftowaniu minimum to 5 sztuk, bo to inna technologia.",
+        a: "Koszulki i bluzy z nadrukiem DTF robię od 1 sztuki, bez minimum. Przy haftowaniu minimum to 5 sztuk, bo to inna technologia.",
     },
     {
         q: "Czy mogę przynieść własną koszulkę do nadruku?",
-        a: "Tak. Przynosisz swoją odzież — koszulkę, bluzę, torbę — a ja wprasowuję nadruk w Twoim wzorze. Cena zależy od wielkości nadruku, nie od ubrania.",
+        a: "Tak. Przynosisz swoją koszulkę, bluzę albo torbę, a ja wprasowuję nadruk w Twoim wzorze. Cena zależy od wielkości nadruku, nie od ubrania.",
     },
     {
         q: "Ile czasu zajmuje realizacja?",
-        a: "Nadruk DTF i flex/flock: 1–4 dni robocze, zależnie od ilości i tego czy potrzebujesz projektu od zera. Haft ustalam indywidualnie, bo termin zależy od nakładu.",
+        a: "Nadruk DTF i flex/flock: 1–4 dni robocze, zależnie od ilości i od tego, czy potrzebujesz projektu od zera. Haft ustalam indywidualnie, bo termin zależy od nakładu.",
     },
     {
         q: "Czy zajmujesz się też projektem graficznym nadruku?",
-        a: "Tak — projekt i nadruk w jednym miejscu. Jeśli masz gotowy plik, wykorzystam go od razu. Jeśli nie, zaprojektuję grafikę pod Twój pomysł.",
+        a: "Tak. Projekt i nadruk masz w jednym miejscu. Jeśli masz gotowy plik, wykorzystam go od razu. Jeśli nie, zaprojektuję grafikę pod Twój pomysł.",
     },
     {
-        q: "Co lepiej sprawdzi się na drużynowych koszulkach — nadruk czy haft?",
-        a: "Do numerów, imion i prostych logo na koszulkach sportowych lepszy jest nadruk DTF lub flex — jest tańszy i szybszy. Haft sprawdza się na czapkach, polówkach i odzieży roboczej, którą pierze się częściej.",
+        q: "Co lepiej sprawdzi się na koszulkach drużyny: nadruk czy haft?",
+        a: "Do numerów, imion i prostych logo na koszulkach sportowych lepszy jest nadruk DTF lub flex, bo jest tańszy i szybszy. Haft sprawdza się na czapkach, polówkach i odzieży roboczej, którą pierze się częściej.",
     },
 ];
 
@@ -85,15 +85,15 @@ const clothingSchema = {
 const products = [
     {
         name: "Koszulki z nadrukiem",
-        desc: "Twoje logo, hasło albo grafika na koszulce. Nadruk DTF — pełny kolor, trwały, nie pęka i nie blaknie przy praniu.",
+        desc: "Twoje logo, hasło albo grafika na koszulce. Nadruk DTF w pełnym kolorze. Jest trwały, nie pęka i nie blaknie w praniu.",
         price: "od 79 zł/szt",
-        details: ["Nadruk DTF, pełny kolor", "100% bawełna, 205g, unisex", "Bez minimum — 1 szt. 79 zł, 5+ szt. 65 zł, 20+ szt. 49 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
+        details: ["Nadruk DTF, pełny kolor", "100% bawełna, 205g, unisex", "Bez minimum: 1 szt. 79 zł, 5+ szt. 65 zł, 20+ szt. 49 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
         name: "Bluzy z nadrukiem",
-        desc: "Bluza z kapturem albo bez, logo na piersi lub duży wzór na plecach. Sprawdza się na eventy firmowe i prezenty.",
+        desc: "Bluza z kapturem albo bez, logo na piersi lub duży wzór na plecach. Dobra na firmowe wydarzenia i na prezent.",
         price: "od 199 zł/szt",
-        details: ["Nadruk DTF, pełny kolor", "Bluza 280g, kaptur lub bez", "Bez minimum — 1 szt. 199 zł, 5+ szt. 169 zł, 20+ szt. 139 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
+        details: ["Nadruk DTF, pełny kolor", "Bluza 280g, kaptur lub bez", "Bez minimum: 1 szt. 199 zł, 5+ szt. 169 zł, 20+ szt. 139 zł", "Twój wzór albo projekt od zera", "Termin 2–4 dni"],
     },
     {
         name: "Nadruk na Twojej odzieży",
@@ -103,19 +103,19 @@ const products = [
     },
     {
         name: "Personalizacja imienna",
-        desc: "Numer, imię albo nazwisko na koszulce. Idealne na eventy, drużyny, wyjazdy integracyjne i prezenty na jedną osobę.",
+        desc: "Numer, imię albo nazwisko na koszulce. Dobre dla drużyn, na firmowe wydarzenia, wyjazdy integracyjne i na prezent dla jednej osoby.",
         price: "od 15 zł/szt do wzoru",
-        details: ["Dopłata do dowolnego nadruku z oferty", "Imię, numer, inicjały", "Krój czcionki dopasowany do reszty wzoru", "Realizacja pojedynczych sztuk"],
+        details: ["Dopłata do dowolnego nadruku z oferty", "Imię, numer, inicjały", "Krój czcionki dopasowany do reszty wzoru", "Nawet pojedyncze sztuki"],
     },
     {
         name: "Napisy i numery (flex/flock)",
-        desc: "Jednokolorowy napis albo numer wycinany z folii. Dobre rozwiązanie do prostych logotypów i numeracji drużynowej.",
+        desc: "Jednokolorowy napis albo numer wycinany z folii. Dobre do prostych logo i numerów na koszulkach drużyny.",
         price: "od 35 zł/szt",
         details: ["Folia flex (gładka) lub flock (aksamitna)", "Jeden kolor, prosty kształt", "Świetne do krótkich napisów i numerów", "Termin 1–2 dni"],
     },
     {
         name: "Haft",
-        desc: "Czapki, polówki, odzież robocza. Haft trzyma się latami i wygląda solidniej niż nadruk — kosztem dłuższego terminu.",
+        desc: "Czapki, polówki, odzież robocza. Haft trzyma się latami i wygląda solidniej niż nadruk, ale trzeba na niego dłużej poczekać.",
         price: "od 45 zł/szt",
         details: ["Czapki, polo, kurtki, odzież robocza", "Trwałość wyższa niż przy nadruku", "Minimum 5 szt.", "Termin ustalany indywidualnie"],
     },
@@ -140,7 +140,7 @@ export default function OdziezPage() {
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Nadruki, które zostają: DTF, personalizacja imienna, haft. Bez minimum ilościowego — jedna koszulka albo cały zespół, jeden kontakt od projektu do gotowej rzeczy.
+                        Nadruki, które zostają: DTF, imiona i numery, haft. Jedna koszulka albo cały zespół. Od projektu do gotowej rzeczy rozmawiasz z jedną osobą.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
@@ -227,9 +227,9 @@ export default function OdziezPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                         <div className="hidden md:block absolute top-7 left-[calc(16.5%+1rem)] right-[calc(16.5%+1rem)] h-px bg-gradient-to-r from-gold/30 via-white/10 to-gold/30" />
                         {[
-                            { num: "1", title: "Mówisz co potrzebujesz", desc: "Wzór, ilość, rozmiary — swój lub mój projekt. Zajmuje to kilka minut." },
+                            { num: "1", title: "Mówisz, czego potrzebujesz", desc: "Wzór, ilość, rozmiary. Twój albo mój projekt. Zajmuje to kilka minut." },
                             { num: "2", title: "Akceptujesz wzór", desc: "Dostajesz podgląd nadruku na ubraniu, zanim cokolwiek wyląduje pod prasą." },
-                            { num: "3", title: "Odbierasz gotowe", desc: "Odbiór w Rzeszowie albo wysyłka kurierem — bez zbędnego czekania." },
+                            { num: "3", title: "Odbierasz gotowe", desc: "Odbiór w Rzeszowie albo wysyłka kurierem, bez zbędnego czekania." },
                         ].map((step, i) => (
                             <AnimatedSection key={i} delay={i * 0.15} className="text-center">
                                 <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-bold text-xl mx-auto mb-4">

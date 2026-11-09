@@ -169,13 +169,13 @@ export default function OmniePage() {
                                 </h1>
                                 <div className="space-y-4 text-white/65 leading-relaxed text-base md:text-lg">
                                     <p>
-                                        Grafik i developer w jednym. Robię logo, strony internetowe i materiały drukowane dla firm, które chcą wyglądać poważnie i sprzedawać więcej.
+                                        Grafik i programista w jednym. Robię logo, strony internetowe i materiały drukowane dla firm, które chcą wyglądać poważnie i sprzedawać więcej.
                                     </p>
                                     <p>
-                                        Działam sam — bez agencji, bez asystentów, bez ping-ponga. Rozmawiasz bezpośrednio ze mną i to ja siedzę przy komputerze, kiedy tworzę Twój projekt.
+                                        Działam sam, bez agencji, asystentów i ping-ponga. Rozmawiasz bezpośrednio ze mną i to ja siedzę przy komputerze, kiedy tworzę Twój projekt.
                                     </p>
                                     <p>
-                                        Na wyposażeniu mam własny sprzęt poligraficzny, więc od projektu do gotowego wydruku to jeden telefon — bez czekania na zewnętrzne drukarnie.
+                                        Mam własny sprzęt do druku, więc od projektu do gotowego wydruku wystarczy jeden telefon. Nie czekasz na zewnętrzną drukarnię.
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap gap-4 mt-8">
@@ -223,7 +223,7 @@ export default function OmniePage() {
                         <p className="eyebrow mb-3">Pod ręką, nie na zewnątrz</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Własny sprzęt poligraficzny</h2>
                         <p className="text-white/55 mt-4 max-w-2xl leading-relaxed">
-                            Większość grafików zleca druk na zewnątrz — ja drukuję sam. To znaczy szybciej, taniej i z pełną kontrolą nad jakością. Już od 50 sztuk, bez tygodniowego czekania.
+                            Większość grafików zleca druk na zewnątrz, a ja drukuję sam. Dzięki temu jest szybciej, taniej i sam pilnuję jakości. Już od 50 sztuk, bez tygodnia czekania.
                         </p>
                     </AnimatedSection>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -266,7 +266,7 @@ export default function OmniePage() {
                             { label: "Realizacja zamówień", value: "Od grudnia 2026" },
                             { label: "Specjalizacja", value: "Logo, strony WWW, druk" },
                             { label: "Technologia webowa", value: "Next.js, React, TypeScript" },
-                            { label: "Obsługuję", value: "Małe i średnie firmy, lokalne biznesy" },
+                            { label: "Obsługuję", value: "Małe i średnie firmy, lokalne firmy" },
                             { label: "Zasięg", value: "Rzeszów i cała Polska (zdalnie)" },
                         ].map((fact, i) => (
                             <AnimatedSection key={i} delay={i * 0.06}>
@@ -314,7 +314,7 @@ export default function OmniePage() {
                             Daj mi 15 minut.<br />Dam Ci konkretny plan.
                         </h2>
                         <p className="text-white/55 mb-10 leading-relaxed">
-                            Opisz co potrzebujesz, dostaniesz wycenę w 24h. Bez zobowiązań, bez pitu-pitu.
+                            Opisz, czego potrzebujesz, a w 24 godziny dostaniesz wycenę. Bez zobowiązań i bez pitu-pitu.
                         </p>
                         <Link href="/#kontakt" className="btn-gold px-12 py-4 inline-flex items-center gap-3 font-bold text-lg shadow-[0_0_25px_rgba(255,235,82,0.35)]">
                             Zaczynamy <ArrowRight size={20} />

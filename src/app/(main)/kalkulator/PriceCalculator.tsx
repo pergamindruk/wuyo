@@ -41,8 +41,8 @@ const INIT: Selection = {
 const SERVICES = [
     { key: "logo" as ServiceKey, label: "Logo & Identyfikacja", emoji: "✦", desc: "Logotyp, brand book, system wizualny" },
     { key: "www" as ServiceKey, label: "Strona internetowa", emoji: "⬡", desc: "One-Page, multi-page lub sklep e-com" },
-    { key: "druk" as ServiceKey, label: "Materiały drukowane", emoji: "◈", desc: "Wizytówki, ulotki, plakaty, bannery" },
-    { key: "social" as ServiceKey, label: "Social media", emoji: "◉", desc: "Grafiki, karuzele, posty miesięczne" },
+    { key: "druk" as ServiceKey, label: "Materiały drukowane", emoji: "◈", desc: "Wizytówki, ulotki, plakaty, banery" },
+    { key: "social" as ServiceKey, label: "Posty i grafiki", emoji: "◉", desc: "Grafiki, karuzele, posty co miesiąc" },
 ];
 
 // Teksty w dwóch językach. Kwoty i logika liczenia wspólne (CENNIK.md).
@@ -51,24 +51,24 @@ const T = {
         services: [
             ["Logo & Identyfikacja", "Logotyp, brand book, system wizualny"],
             ["Strona internetowa", "One-Page, multi-page lub sklep e-com"],
-            ["Materiały drukowane", "Wizytówki, ulotki, plakaty, bannery"],
-            ["Social media", "Grafiki, karuzele, posty miesięczne"],
+            ["Materiały drukowane", "Wizytówki, ulotki, plakaty, banery"],
+            ["Posty i grafiki", "Grafiki, karuzele, posty co miesiąc"],
         ],
         krok: (n: number) => `Krok ${n} z 3`, czego: "Czego potrzebujesz?", wroc: "Wróć", doprecyzuj: "Doprecyzuj szczegóły",
-        typLogo: "Typ logotypu", logoTypes: [["Wordmark", "Samo słowo / napis"], ["Monogram", "Inicjały / znak"], ["Kombinacja", "Znak + tekst"]],
-        brandbook: "Dodaj Brand Book", brandbookDesc: "Pełna dokumentacja marki — kolory, typografia, użycie logotypu",
+        typLogo: "Rodzaj logo", logoTypes: [["Napis", "Sama nazwa firmy"], ["Monogram", "Inicjały albo znak"], ["Znak i napis", "Znak razem z nazwą"]],
+        brandbook: "Dodaj księgę znaku", brandbookDesc: "Zasady marki: kolory, fonty, jak używać logo",
         zobacz: "Zobacz wycenę", typStrony: "Typ strony",
-        wwwTypes: [["One-Page", "Jedna strona, wszystko w sekcjach — idealna na start"], ["Multi-Page", "Kilka podstron, rozbudowany serwis"], ["Sklep / E-commerce", "Pełny sklep z koszykiem i płatnościami"]],
+        wwwTypes: [["One-Page", "Jedna strona podzielona na sekcje. Dobra na start"], ["Multi-Page", "Strona z kilkoma podstronami"], ["Sklep internetowy", "Sklep z koszykiem i płatnościami"]],
         podstrony: "Liczba podstron", pages: ["Do 5 podstron", "Powyżej 5"],
-        rodzaj: "Rodzaj materiału", druk: ["Wizytówka", "Ulotka / Folder", "Plakat / Billboard", "Banner / Rollup"],
-        drukU: "Druk u mnie (do A3+)", drukUDesc: "Własny druk bezpośrednio — szybciej i taniej niż zewnętrzna drukarnia",
+        rodzaj: "Rodzaj materiału", druk: ["Wizytówka", "Ulotka / folder", "Plakat / billboard", "Baner / roll-up"],
+        drukU: "Druk u mnie (do A3+)", drukUDesc: "Drukuję u siebie, więc szybciej i taniej niż w zewnętrznej drukarni",
         ilePostow: "Ile postów miesięcznie?",
-        posts: [["4 posty / miesiąc", "Podstawowa aktywność — 1 post / tydzień"], ["8 postów / miesiąc", "Regularna obecność — 2 posty / tydzień"], ["12+ postów / miesiąc", "Pełna intensywność — 3+ posty / tydzień"]],
+        posts: [["4 posty / miesiąc", "1 post w tygodniu"], ["8 postów / miesiąc", "2 posty w tygodniu"], ["12+ postów / miesiąc", "3 i więcej postów w tygodniu"]],
         zmien: "Zmień szczegóły", termin: "Termin realizacji",
-        timelines: [["Standard", "logo 7–10, strona 7–14 dni roboczych", "Normalny tryb — bez dopłat"], ["Ekspres", "szybszy termin, ustalany przy wycenie", "+30% do ceny"]],
+        timelines: [["Zwykły", "logo 7–10, strona 7–14 dni roboczych", "Bez dopłat"], ["Ekspres", "szybszy termin, ustalany przy wycenie", "+30% do ceny"]],
         orient: "Orientacyjna wycena", waluta: "zł", liczby: "pl-PL",
-        finalna: "Finalna wycena po krótkiej rozmowie o projekcie — zawsze stała, bez niespodzianek.",
-        wyslij: "Wyślij zapytanie", odNowa: "Zacznij od nowa", stopka: "Kalkulator to orientacja — dokładna wycena zawsze trafia w mailu",
+        finalna: "Dokładną wycenę podam po krótkiej rozmowie o projekcie. Jest stała, bez niespodzianek.",
+        wyslij: "Wyślij zapytanie", odNowa: "Zacznij od nowa", stopka: "Kalkulator pokazuje cenę orientacyjnie. Dokładną wycenę wysyłam mailem",
     },
     en: {
         services: [

@@ -64,23 +64,23 @@ const localSchema = {
 const faqs = [
     {
         q: "Ile kosztują wizytówki w Rzeszowie?",
-        a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk to od 99 zł za 50 szt. W cenie projekt unikalny (nie szablon), druk dwustronny na papierze 300 g z błyskiem.",
+        a: "50 szt. z projektem od 299 zł, 100 szt. z projektem od 349 zł. Masz gotowy plik? Sam druk to od 99 zł za 50 szt. W cenie projekt od zera (nie szablon), druk dwustronny na papierze 300 g z błyskiem.",
     },
     {
         q: "Ile czekam na wydruk z odbiorem w Rzeszowie?",
-        a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu, a przy pilnych zleceniach nawet następnego dnia. Odbierzesz osobiście w Rzeszowie bez czekania na kuriera — drukuję u siebie, więc nie wysyłam nic do zewnętrznej drukarni i z powrotem.",
+        a: "Standardowo 1–3 dni robocze od zatwierdzenia projektu, a przy pilnych zleceniach nawet następnego dnia. Odbierzesz osobiście w Rzeszowie, bez czekania na kuriera. Drukuję u siebie, więc nic nie jeździ do zewnętrznej drukarni i z powrotem.",
     },
     {
         q: "Czy zrobisz 50 wizytówek na ostatnią chwilę?",
-        a: "Tak. Drukuję u siebie na sprzęcie A3+, więc nie czekam na zapełnienie arkusza zbiorczego i nie obowiązują mnie minimalne nakłady drukarni przemysłowych. Potrzebujesz 50 sztuk na jutrzejsze spotkanie w Rzeszowie — zrobię je.",
+        a: "Tak. Drukuję u siebie na sprzęcie A3+, więc nie czekam na zapełnienie arkusza zbiorczego i nie obowiązują mnie minimalne nakłady dużych drukarni. Potrzebujesz 50 sztuk na jutrzejsze spotkanie w Rzeszowie? Zrobię je.",
     },
     {
         q: "Co jeśli mój plik nie nadaje się do druku?",
-        a: "Sprawdzam każdy plik przed drukiem i mówię wprost, co jest nie tak — najczęściej brakuje spadów, kolory są w RGB zamiast CMYK albo rozdzielczość jest za niska. Drobne poprawki robię przy okazji, a jeśli plik trzeba składać od nowa, podaję cenę zanim cokolwiek zrobię.",
+        a: "Sprawdzam każdy plik przed drukiem i mówię wprost, co jest nie tak. Najczęściej brakuje spadów, kolory są w RGB zamiast CMYK albo rozdzielczość jest za niska. Drobne poprawki robię przy okazji, a jeśli plik trzeba składać od nowa, podaję cenę, zanim cokolwiek zrobię.",
     },
     {
         q: "Czy projektujesz i drukujesz jednocześnie?",
-        a: "Tak — jedno zlecenie, jedna osoba, jeden kontakt. Nie musisz szukać oddzielnie grafika i drukarni ani tłumaczyć jednym, czego chcą drudzy.",
+        a: "Tak. Jedno zlecenie i jedna osoba do kontaktu. Nie musisz szukać osobno grafika i drukarni ani przekazywać jednym, czego chcą drudzy.",
     },
 ];
 
@@ -95,9 +95,9 @@ const faqSchema = {
 };
 
 const products = [
-    { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt unikalny + druk dwustronny na papierze 300 g z błyskiem. Możesz zamówić już od 50 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 300 g", "Wykończenie błysk", "Od 50 szt."] },
-    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt który rzeczywiście skłania do działania, nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Kreda 130 g", "Od 50 szt."] },
-    { name: "Vouchery", price: "od 289 zł / 50 szt.", desc: "Voucher który wygląda jak produkt premium. Perforacja, numeracja — opcjonalnie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
+    { name: "Wizytówki", price: "od 299 zł / 50 szt.", desc: "Projekt od zera i druk dwustronny na papierze 300 g z błyskiem. Możesz zamówić już od 50 sztuk.", items: ["Projekt graficzny", "Druk dwustronny 300 g", "Wykończenie błysk", "Od 50 szt."] },
+    { name: "Ulotki", price: "od 449 zł / 100 szt.", desc: "A5, A6 lub DL. Projekt, który zachęca do działania, a nie tylko ładnie wygląda.", items: ["Projekt graficzny", "Format A5 / A6 / DL", "Kreda 130 g", "Od 50 szt."] },
+    { name: "Vouchery", price: "od 289 zł / 50 szt.", desc: "Voucher, który wygląda elegancko. Perforacja i numeracja na życzenie.", items: ["Projekt graficzny", "Format dowolny", "Perforacja opcjonalna", "Od 50 szt."] },
     { name: "Naklejki i etykiety", price: "od 219 zł", desc: "Na produkty, opakowania, kopertowanie. Wycinane konturowo w dowolnym kształcie.", items: ["Projekt graficzny", "Dowolny kształt", "Folie standardowe i premium", "Od 50 szt."] },
 ];
 
@@ -120,11 +120,11 @@ export default function DrukRzeszowPage() {
                         <span className="text-gold">i ulotek w Rzeszowie</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Projekt i druk w jednym miejscu. Nie musisz szukać grafika, potem drukarni, potem tłumaczyć im specyfikacji. Zamówisz, zaprojektuję, wydrukuję — odbierzesz lub wyślę kurierem.
+                        Projekt i druk w jednym miejscu. Nie musisz szukać grafika, potem drukarni, a potem tłumaczyć im, co i jak. Zamawiasz, ja projektuję i drukuję. Odbierasz osobiście albo wysyłam kurierem.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
-                            Napisz — wycena w 24h
+                            Napisz. Wycena w 24 godziny
                         </a>
                         <Link href="/druk" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
                             Pełna oferta druku →
@@ -160,7 +160,7 @@ export default function DrukRzeszowPage() {
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Co drukuję w Rzeszowie</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Projekt i druk w jednym miejscu</h2>
-                        <p className="text-white/50 max-w-xl mx-auto mt-4">Każdy projekt jest unikalny — nie używam szablonów z internetu. Dostajesz grafikę zrobioną pod Twoją firmę.</p>
+                        <p className="text-white/50 max-w-xl mx-auto mt-4">Każdy projekt robię od zera, bez szablonów z internetu. Dostajesz grafikę zrobioną pod Twoją firmę.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {products.map((p, i) => (

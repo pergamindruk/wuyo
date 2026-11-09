@@ -60,15 +60,15 @@ const localSchema = {
 const faqs = [
     {
         q: "Ile kosztuje grafik w Rzeszowie?",
-        a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 1 990 zł. Wizytówki 50 szt. z projektem i drukiem: od 299 zł, sam druk z Twojego pliku: od 99 zł. Ceny netto, dochodzi 23% VAT. Wszystkie ceny stałe — podaję je przed startem, nie po.",
+        a: "Logo: od 890 zł. Pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa): 1 490 zł. Strona internetowa: od 1 990 zł. Wizytówki 50 szt. z projektem i drukiem: od 299 zł, sam druk z Twojego pliku: od 99 zł. Ceny netto, dochodzi 23% VAT. Wszystkie ceny są stałe. Podaję je przed startem, nie po.",
     },
     {
         q: "Czy obsługujesz firmy spoza Rzeszowa?",
-        a: "Tak. Projekt robi się zdalnie równie dobrze co na miejscu — większość moich klientów to firmy spoza Rzeszowa. Cały kontakt przez WhatsApp, Messenger lub e-mail (kontakt@wuyo.pl). Druk wysyłam kurierem.",
+        a: "Tak. Projekt da się zrobić zdalnie tak samo dobrze jak na miejscu. Większość moich klientów to firmy spoza Rzeszowa. Kontaktujemy się przez WhatsApp, Messengera albo e-mail (kontakt@wuyo.pl). Druk wysyłam kurierem.",
     },
     {
         q: "Ile czekam na gotowy projekt?",
-        a: "Logo: 7–10 dni roboczych od briefu. Strona internetowa: 7–14 dni roboczych. Wizytówki z drukiem: 1–3 dni robocze. Jeśli masz pilny termin — napisz, dogadamy się.",
+        a: "Logo: 7–10 dni roboczych od briefu. Strona internetowa: 7–14 dni roboczych. Wizytówki z drukiem: 1–3 dni robocze. Masz pilny termin? Napisz, dogadamy się.",
     },
     {
         q: "Co dostaję razem z logo?",
@@ -82,38 +82,38 @@ const services = [
     {
         title: "Logo i identyfikacja wizualna",
         price: "od 890 zł",
-        desc: "Nie szablon, nie Canva — projekt robiony od zera dla Twojej firmy. Dostajesz gotowe pliki do drukarni, na stronę i do social mediów. Prawa autorskie w cenie, bez dodatkowych opłat.",
+        desc: "Projekt od zera dla Twojej firmy, bez szablonów i Canvy. Dostajesz gotowe pliki do drukarni, na stronę i do mediów społecznościowych. Prawa autorskie w cenie, bez dodatkowych opłat.",
         href: "/logo",
-        items: ["Logotyp + sygnet + warianty", "SVG, PNG, PDF — gotowe wszędzie", "Kolory CMYK i HEX", "Prawa autorskie majątkowe"],
+        items: ["Logo, sam znak i warianty", "Pliki SVG, PNG i PDF do każdego użytku", "Kolory CMYK i HEX", "Prawa autorskie majątkowe"],
     },
     {
         title: "Strony internetowe",
         price: "od 1 990 zł",
         desc: "Robię strony od zera w Next.js albo na WordPressie, gdy chcesz sam zmieniać treść. Strona ładuje się szybko, działa na telefonie i Google ją widzi od pierwszego dnia.",
         href: "/strony-www",
-        items: ["Next.js — poniżej 1s ładowania", "SEO techniczne wbudowane", "Wygląda i działa na każdym telefonie", "Wdrożenie na hostingu klienta"],
+        items: ["Ładuje się poniżej 1 sekundy", "Ustawiona pod Google od startu", "Wygląda i działa na każdym telefonie", "Stawiam ją na Twoim serwerze"],
     },
     {
         title: "Druk i papeteria",
         price: "od 99 zł",
-        desc: "Mam własny sprzęt — drukuję u siebie, nie wysyłam do zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Już od 50 sztuk, bez tygodniowego czekania.",
+        desc: "Mam własny sprzęt i drukuję u siebie, bez zewnętrznej drukarni. Wizytówki możesz mieć następnego dnia. Już od 50 sztuk, bez tygodnia czekania.",
         href: "/druk",
-        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Małe nakłady, od 50 sztuk", "Ekspresowa realizacja"],
+        items: ["Wizytówki, ulotki, vouchery, naklejki", "Projekt + druk w jednym miejscu", "Małe nakłady, od 50 sztuk", "Nawet na następny dzień"],
     },
     {
         title: "Grafika reklamowa",
         price: "wycena ind.",
-        desc: "Posty i karuzele na social media, bannery, roll-upy, opakowania, etykiety — jeśli potrzebujesz żeby marka wyglądała spójnie na każdym nośniku, to jest tu.",
+        desc: "Posty i karuzele, banery, roll-upy, opakowania, etykiety. Wszystko, żeby Twoja firma wyglądała spójnie na każdym materiale.",
         href: null,
         items: ["Posty, stories, karuzele", "Bannery i roll-upy", "Opakowania i etykiety", "Prezentacje i infografiki"],
     },
 ];
 
 const reasons = [
-    { n: "01", title: "Wiesz co dostajesz — zanim zapłacisz", desc: "Przed każdym projektem dostajesz stałą wycenę. Nie stawkę godzinową, nie \"zależy od zakresu\". Konkretna kwota, konkretny termin. Jeśli coś zmienisz w trakcie — mówię o tym od razu, nie na fakturze." },
-    { n: "02", title: "Piszesz do mnie, nie do firmy", desc: "Nie ma tu działu obsługi klienta ani project managera. Piszesz do mnie, ja odpisuję, ja projektuję. Skraca to czas realizacji i eliminuje nieporozumienia które zdarzają się w agencjach." },
-    { n: "03", title: "Logo, strona i druk — jedno zlecenie", desc: "Większość firm potrzebuje tych trzech rzeczy naraz. Możesz zlecić wszystko jednej osobie — nie tracisz czasu na szukanie osobnego grafika, web developera i drukarni." },
-    { n: "04", title: "Małe nakłady drukuję u siebie", desc: "Wizytówki, ulotki i naklejki drukuję sam — nie wysyłam do zewnętrznej drukarni. Możesz zamówić 50 sztuk zamiast 500. Możesz mieć je następnego dnia. Bez czekania." },
+    { n: "01", title: "Wiesz, co dostajesz, zanim zapłacisz", desc: "Przed każdym projektem dostajesz stałą wycenę. Nie stawkę godzinową i nie „zależy od zakresu”, tylko konkretną kwotę i termin. Jeśli coś zmienisz w trakcie, mówię Ci o tym od razu, a nie dopiero na fakturze." },
+    { n: "02", title: "Piszesz do mnie, nie do firmy", desc: "Nie ma tu działu obsługi klienta ani project managera. Piszesz do mnie, ja odpisuję i ja projektuję. Dzięki temu idzie szybciej i nie ma nieporozumień, które zdarzają się w agencjach." },
+    { n: "03", title: "Logo, strona i druk w jednym zleceniu", desc: "Większość firm potrzebuje tych trzech rzeczy naraz. Możesz zlecić wszystko jednej osobie i nie szukać osobno grafika, programisty i drukarni." },
+    { n: "04", title: "Małe nakłady drukuję u siebie", desc: "Wizytówki, ulotki i naklejki drukuję sam, bez zewnętrznej drukarni. Możesz zamówić 50 sztuk zamiast 500 i mieć je następnego dnia." },
 ];
 
 export default function GrafikRzeszowPage() {
@@ -135,11 +135,11 @@ export default function GrafikRzeszowPage() {
                         <span className="text-gold"> z&nbsp;Rzeszowa</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Mówię wprost: podaję cenę, zanim zacznę, i trzymam termin. Nie masz do czynienia z pośrednikiem — rozmawiasz ze mną i ja robię projekt.
+                        Mówię wprost: podaję cenę, zanim zacznę, i trzymam termin. Nie ma pośrednika. Rozmawiasz ze mną i ja robię projekt.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
-                            Napisz — wycena w 24h
+                            Napisz. Wycena w 24 godziny
                         </a>
                         <Link href="/realizacje" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
                             Zobacz realizacje
@@ -173,7 +173,7 @@ export default function GrafikRzeszowPage() {
                     <AnimatedSection className="text-center mb-14">
                         <p className="eyebrow mb-4">Usługi graficzne · Rzeszów</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Co możesz mi zlecić</h2>
-                        <p className="text-white/50 max-w-xl mx-auto mt-4">Logo, strona i wizytówki to trzy rzeczy, które każda firma potrzebuje. U mnie zamawiasz wszystko w jednym miejscu — i rozmawiasz z jedną osobą, nie trzema różnymi wykonawcami.</p>
+                        <p className="text-white/50 max-w-xl mx-auto mt-4">Logo, strona i wizytówki to trzy rzeczy, których potrzebuje każda firma. U mnie zamawiasz wszystko w jednym miejscu i rozmawiasz z jedną osobą, a nie z trzema wykonawcami.</p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
                         {services.map((s, i) => (
@@ -270,7 +270,7 @@ export default function GrafikRzeszowPage() {
                                     Opisz mi firmę.<br />Wycenię w 24h.
                                 </h2>
                                 <p className="text-white/50 text-sm leading-relaxed mb-6">
-                                    Bez automatycznych odpowiedzi. Piszesz, ja czytam i odpisuję z konkretną propozycją — nie z formularzem do wypełnienia.
+                                    Bez automatycznych odpowiedzi. Piszesz, ja czytam i odpisuję z konkretną propozycją, a nie z formularzem do wypełnienia.
                                 </p>
                                 <ul className="space-y-3">
                                     <li className="flex items-center gap-3 text-white/70 text-sm">
@@ -289,7 +289,7 @@ export default function GrafikRzeszowPage() {
                             </div>
                             <div className="flex flex-col gap-3">
                                 <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold text-center shadow-[0_0_20px_rgba(255,235,82,0.3)]">
-                                    Napisz — odpiszę w 24h
+                                    Napisz. Odpiszę w 24 godziny
                                 </a>
                                 <a href="https://wa.me/48725182053" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
                                     WhatsApp

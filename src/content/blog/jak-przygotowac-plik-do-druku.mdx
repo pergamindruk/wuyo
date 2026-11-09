@@ -10,15 +10,15 @@ imageAlt: "Projekt etykiet przygotowany do druku — spady, znaczniki cięcia i 
 dateModified: "2026-11-09"
 ---
 
-Większość plików, które wracają do poprawki, nie ma źle zaprojektowanej grafiki. Ma źle przygotowany plik. To dwie różne rzeczy — i tę drugą naprawisz w kwadrans, jeśli wiesz, czego szukać.
+Większość plików, które wracają do poprawki, nie ma źle zaprojektowanej grafiki. Ma źle przygotowany plik. To dwie różne rzeczy, a tę drugą naprawisz w kwadrans, jeśli wiesz, czego szukać.
 
 Poniżej pięć rzeczy, które sprawdza każdy drukarz, zanim w ogóle spojrzy na projekt.
 
-## 1. Spady — 3 mm zapasu poza formatem
+## 1. Spady: 3 mm zapasu poza formatem
 
 Najczęstszy powód odesłania pliku.
 
-Papier po druku jest cięty w stosie, a gilotyna ma tolerancję rzędu 1 mm w każdą stronę. Jeśli Twoje tło kończy się dokładnie na krawędzi formatu, po cięciu zobaczysz białe paski. Nie czasem — prawie zawsze.
+Papier po druku jest cięty w stosie, a gilotyna ma tolerancję rzędu 1 mm w każdą stronę. Jeśli Twoje tło kończy się dokładnie na krawędzi formatu, po cięciu zobaczysz białe paski. Nie czasem, tylko prawie zawsze.
 
 Rozwiązanie: przedłuż tło i wszystkie elementy dochodzące do krawędzi o **3 mm poza format**.
 
@@ -30,20 +30,20 @@ Rozwiązanie: przedłuż tło i wszystkie elementy dochodzące do krawędzi o **
 | Plakat A3 (297 × 420 mm) | 303 × 426 mm |
 
 <Callout type="info">
-Spad dotyczy tylko elementów dochodzących do krawędzi. Jeśli projekt ma białe tło i nic go nie dotyka, spad nie jest potrzebny — choć i tak lepiej go dodać, bo nic nie kosztuje.
+Spad dotyczy tylko elementów dochodzących do krawędzi. Jeśli projekt ma białe tło i nic go nie dotyka, spad nie jest potrzebny. Mimo to lepiej go dodać, bo nic nie kosztuje.
 </Callout>
 
-## 2. Margines bezpieczeństwa — 3–5 mm do wewnątrz
+## 2. Margines bezpieczeństwa: 3–5 mm do wewnątrz
 
 Odwrotność spadu i błąd popełniany równie często.
 
 Ta sama tolerancja gilotyny działa też w drugą stronę. Jeśli tekst albo logo siedzi 1 mm od krawędzi, po cięciu może zostać przycięty albo znaleźć się niebezpiecznie blisko brzegu.
 
-Trzymaj wszystkie ważne elementy — tekst, logo, numer telefonu, kod QR — **minimum 3 mm od linii cięcia**. Przy wizytówkach wolę 5 mm, bo wygląda spokojniej.
+Trzymaj wszystkie ważne elementy (tekst, logo, numer telefonu, kod QR) **minimum 3 mm od linii cięcia**. Przy wizytówkach wolę 5 mm, bo wygląda spokojniej.
 
 <GreenRed
-  green="Tło na spad 3 mm na zewnątrz, treść 5 mm do wewnątrz. Między jednym a drugim masz zapas na niedokładność cięcia — wystarczająco dużo, żeby nic się nie stało."
-  red="Tekst 1 mm od krawędzi i tło kończące się dokładnie na formacie. Dwa błędy naraz — po cięciu masz biały pasek z jednej strony i uciętą literę z drugiej."
+  green="Tło na spad 3 mm na zewnątrz, treść 5 mm do wewnątrz. Między jednym a drugim masz zapas na niedokładność cięcia. Wystarczająco dużo, żeby nic się nie stało."
+  red="Tekst 1 mm od krawędzi i tło kończące się dokładnie na formacie. Dwa błędy naraz: po cięciu masz biały pasek z jednej strony i uciętą literę z drugiej."
 />
 
 ## 3. CMYK, nie RGB
@@ -54,32 +54,32 @@ Skąd biorą się te skróty i dlaczego kolor z ekranu wychodzi inaczej na papie
 
 Co się psuje najbardziej przy konwersji:
 
-- **Intensywny błękit** — potrafi zmienić się w fioletowy
-- **Neonowa zieleń i pomarańcz** — na papierze zawsze będą bledsze, tego nie da się obejść
-- **Czysta czerń tekstu** — jeśli zostawisz ją jako RGB 0/0/0, drukarka może wydrukować ją z czterech farb i tekst wyjdzie nieostry
+- **Intensywny błękit**: potrafi zmienić się w fioletowy
+- **Neonowa zieleń i pomarańcz**: na papierze zawsze będą bledsze, tego nie da się obejść
+- **Czysta czerń tekstu**: jeśli zostawisz ją jako RGB 0/0/0, drukarka może wydrukować ją z czterech farb i tekst wyjdzie nieostry
 
 Ustaw dokument w CMYK **od początku**, a nie konwertuj na końcu. Konwersja na końcu zawsze coś zmienia i zawsze zaskakuje.
 
 ### Dwie sztuczki z czernią
 
-**Tekst** — używaj czystego czarnego: C0 M0 Y0 **K100**. Jedna farba, ostre krawędzie.
+**Tekst**: używaj czystego czarnego: C0 M0 Y0 **K100**. Jedna farba, ostre krawędzie.
 
-**Duże czarne płaszczyzny** — czysty K100 wygląda na dużym polu jak ciemna szarość. Użyj czerni głębokiej, na przykład C40 M30 Y30 K100. Ale nigdy pod małym tekstem — tam wróć do K100.
+**Duże czarne płaszczyzny**: czysty K100 wygląda na dużym polu jak ciemna szarość. Użyj czerni głębokiej, na przykład C40 M30 Y30 K100. Ale nigdy pod małym tekstem. Tam wróć do K100.
 
 ## 4. Rozdzielczość 300 dpi w skali 1:1
 
 Zdjęcie z internetu ma zwykle 72 dpi. Na ekranie wygląda dobrze, na papierze rozpada się na kwadraty.
 
-Zasada: **300 dpi w docelowym rozmiarze**. Zdjęcie 300 dpi powiększone dwukrotnie to w praktyce 150 dpi — powiększenie nie dodaje informacji, tylko rozciąga to, co jest.
+Zasada: **300 dpi w docelowym rozmiarze**. Zdjęcie 300 dpi powiększone dwukrotnie to w praktyce 150 dpi. Powiększenie nie dodaje informacji, tylko rozciąga to, co jest.
 
 | Element | Wymagana rozdzielczość |
 |---|---|
 | Zdjęcia w druku małoformatowym | 300 dpi |
-| Grafika wektorowa (logo, ikony) | bez znaczenia — skaluje się bez straty |
+| Grafika wektorowa (logo, ikony) | bez znaczenia, skaluje się bez straty |
 | Billboard, baner wielkoformatowy | 25–72 dpi (oglądany z daleka) |
 | Plakat A3–A1 | 150–300 dpi |
 
-Logo zawsze wstawiaj z pliku wektorowego (AI, EPS, SVG, PDF). Jeśli masz je tylko jako PNG albo JPG, to osobny problem — rozpisałem go w tekście [jakie pliki logo powinieneś dostać od grafika](/blog/jakie-pliki-logo-od-grafika).
+Logo zawsze wstawiaj z pliku wektorowego (AI, EPS, SVG, PDF). Jeśli masz je tylko jako PNG albo JPG, to osobny problem. Rozpisałem go w tekście [jakie pliki logo powinieneś dostać od grafika](/blog/jakie-pliki-logo-od-grafika).
 
 ## 5. Teksty zamienione na krzywe
 
@@ -91,7 +91,7 @@ Dwa sposoby, żeby tego uniknąć:
 2. **Osadź czcionki w PDF-ie** przy eksporcie. Wygodniejsze, bo plik zostaje edytowalny, i w większości przypadków wystarcza.
 
 <Callout type="warning">
-**Zanim zamienisz teksty na krzywe — przeczytaj projekt jeszcze raz.** To ostatni moment na wyłapanie literówki w numerze telefonu. Po druku 500 wizytówek jest już tylko dodruk na własny koszt.
+**Zanim zamienisz teksty na krzywe, przeczytaj projekt jeszcze raz.** To ostatni moment na wyłapanie literówki w numerze telefonu. Po druku 500 wizytówek jest już tylko dodruk na własny koszt.
 </Callout>
 
 ## W czym to robić
@@ -131,11 +131,11 @@ Jeśli pracujesz w Canvie, wybierz eksport **PDF do druku** i zaznacz znaczniki 
 
 ## Co jeśli nie masz projektu
 
-Jeśli po przeczytaniu tego myślisz, że nie masz na to czasu — to normalna reakcja i dobra decyzja. Przygotowanie pliku to godzina roboty dla kogoś, kto robi to codziennie, i pół dnia frustracji dla kogoś, kto robi to raz na rok.
+Jeśli po przeczytaniu tego myślisz, że nie masz na to czasu, to normalna reakcja i dobra decyzja. Przygotowanie pliku to godzina roboty dla kogoś, kto robi to codziennie, i pół dnia frustracji dla kogoś, kto robi to raz na rok.
 
-U mnie projekt i druk to jedno zlecenie, więc problem przygotowania pliku po prostu nie istnieje — plik przygotowuję sobie sam. Zakres znajdziesz na stronie [druk w Rzeszowie](/druk-rzeszow). Ile kosztuje sam druk, a ile projekt plus druk, rozpisałem w tekście [ile kosztuje druk wizytówek](/blog/ile-kosztuje-druk-wizytowek).
+U mnie projekt i druk to jedno zlecenie, więc problem przygotowania pliku po prostu nie istnieje. Plik przygotowuję sobie sam. Zakres znajdziesz na stronie [druk w Rzeszowie](/druk-rzeszow). Ile kosztuje sam druk, a ile projekt plus druk, rozpisałem w tekście [ile kosztuje druk wizytówek](/blog/ile-kosztuje-druk-wizytowek).
 
-Te same zasady obowiązują przy naklejkach, z jednym wyjątkiem — wycinanie ma większą tolerancję niż cięcie. Rozpisałem to w poradniku [naklejki na zamówienie](/blog/naklejki-na-zamowienie-poradnik). Przy odzieży dochodzi jeszcze kilka różnic, które opisałem w tekście [DTF czy sitodruk](/blog/nadruk-na-koszulki-dtf-czy-sitodruk).
+Te same zasady obowiązują przy naklejkach, z jednym wyjątkiem: wycinanie ma większą tolerancję niż cięcie. Rozpisałem to w poradniku [naklejki na zamówienie](/blog/naklejki-na-zamowienie-poradnik). Przy odzieży dochodzi jeszcze kilka różnic, które opisałem w tekście [DTF czy sitodruk](/blog/nadruk-na-koszulki-dtf-czy-sitodruk).
 
 ## FAQ
 
@@ -145,11 +145,11 @@ Spad to 3 mm zapasu tła wychodzącego poza docelowy format. Po wydrukowaniu pap
 
 **Czy plik do druku musi być w CMYK?**
 
-Tak, jeśli zależy Ci na przewidywalnych kolorach. Drukarka pracuje na czterech farbach CMYK, a ekran na świetle RGB. Plik w RGB zostanie i tak przekonwertowany — tyle że bez Twojej kontroli, więc intensywne błękity i zielenie mogą wyjść zupełnie inaczej niż na monitorze.
+Tak, jeśli zależy Ci na przewidywalnych kolorach. Drukarka pracuje na czterech farbach CMYK, a ekran na świetle RGB. Plik w RGB zostanie i tak przekonwertowany, tyle że bez Twojej kontroli, więc intensywne błękity i zielenie mogą wyjść zupełnie inaczej niż na monitorze.
 
 **Jaka rozdzielczość jest potrzebna do druku?**
 
-300 dpi w docelowym rozmiarze dla druku małoformatowego: wizytówki, ulotki, plakaty do A3. Przy billboardach i banerach wystarczy 25–72 dpi, bo ogląda się je z kilkunastu metrów. Grafika wektorowa nie ma rozdzielczości — skaluje się bez straty jakości.
+300 dpi w docelowym rozmiarze dla druku małoformatowego: wizytówki, ulotki, plakaty do A3. Przy billboardach i banerach wystarczy 25–72 dpi, bo ogląda się je z kilkunastu metrów. Grafika wektorowa nie ma rozdzielczości i skaluje się bez straty jakości.
 
 **W jakim formacie wysłać plik do druku?**
 
@@ -157,7 +157,7 @@ PDF, najlepiej w standardzie PDF/X-1a albo PDF/X-4. Ma osadzone czcionki, zachow
 
 **Czy muszę zamieniać teksty na krzywe?**
 
-Nie musisz, jeśli poprawnie osadzisz czcionki w PDF-ie — to wystarcza w większości przypadków. Krzywe są pewniejsze, ale nieodwracalne: po zamianie nie poprawisz już literówki, więc zawsze zachowaj wersję edytowalną.
+Nie musisz, jeśli poprawnie osadzisz czcionki w PDF-ie. To wystarcza w większości przypadków. Krzywe są pewniejsze, ale nieodwracalne: po zamianie nie poprawisz już literówki, więc zawsze zachowaj wersję edytowalną.
 
 **Czy Canva nadaje się do przygotowania pliku do druku?**
 

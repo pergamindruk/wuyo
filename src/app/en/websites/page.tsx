@@ -31,7 +31,7 @@ const faqs: FaqEntry[] = [
     { q: "How long does it take to build a website?", a: "7–14 working days, for both one-page and multi-page sites. It mostly depends on how quickly you send content and feedback." },
     { q: "Will I be able to edit the content myself?", a: "Yes. If you want to add posts, projects or offers yourself, I build the site on WordPress and show you how to use the dashboard. With a Next.js site you can simply message me: small changes are part of Website Care." },
     { q: "Next.js or WordPress: which should I choose?", a: "Next.js if the site is a fast business card and I make the changes. WordPress if you want to edit content yourself in a dashboard. I build both. WordPress needs regular updates, so I hand it over together with a care plan." },
-    { q: "Do you build WooCommerce shops?", a: "Yes. A WooCommerce shop where you add products and handle orders yourself. I connect payments (PayU, Przelewy24 or Tpay) and InPost shipping. Shops start at 6,900 PLN." },
+    { q: "Do you build WooCommerce shops?", a: "Yes. A WooCommerce shop where you add products and handle orders yourself. I connect payments (PayU, Przelewy24, Tpay or Stripe) and InPost shipping. Shops start at 6,900 PLN." },
 ];
 
 const serviceSchema = {
@@ -76,7 +76,7 @@ const reasons = [
     { icon: <Zap size={22} className="text-gold" />, title: "Next.js: speed that sells", desc: "The site loads in under a second and Google sees the full content straight away. Every extra second of waiting costs you visitors." },
     { icon: <Shield size={22} className="text-gold" />, title: "Next.js: nothing to hack", desc: "No database and no plugins, so there is nothing to update every week. I make content changes for you as part of Website Care." },
     { icon: <PenLine size={22} className="text-gold" />, title: "WordPress: you edit the content", desc: "Posts, projects, offers: you add them in a simple dashboard without messaging me. A lightweight theme and a fixed set of proven plugins keep the site fast." },
-    { icon: <ShoppingCart size={22} className="text-gold" />, title: "WooCommerce: a shop you run yourself", desc: "You add products and handle orders yourself. PayU, Przelewy24 or Tpay payments, InPost shipping. I take care of updates and backups." },
+    { icon: <ShoppingCart size={22} className="text-gold" />, title: "WooCommerce: a shop you run yourself", desc: "You add products and handle orders yourself. PayU, Przelewy24, Tpay or Stripe payments, InPost shipping. I take care of updates and backups." },
 ];
 
 const comparison = [

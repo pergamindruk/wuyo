@@ -62,7 +62,7 @@ export default function RealizacjePage() {
                             Projekty, które<br />już zarabiają
                         </h1>
                         <p className="text-white/60 text-lg max-w-2xl leading-relaxed mb-12">
-                            Każdy projekt to konkretna historia — realna firma, realny problem, realne rozwiązanie. Przeglądaj według kategorii i klikaj, żeby zobaczyć szczegóły.
+                            Każdy projekt to prawdziwa firma i jej konkretny problem. Wybierz kategorię i kliknij, żeby zobaczyć szczegóły.
                         </p>
 
                         {/* Statystyki */}
@@ -92,10 +92,10 @@ export default function RealizacjePage() {
                     <div className="max-w-3xl mx-auto text-center">
                         <p className="eyebrow mb-4">Twój projekt tu?</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                            Chcesz dołączyć do grona zadowolonych klientów?
+                            Chcesz mieć tu swój projekt?
                         </h2>
                         <p className="text-white/60 mb-10 leading-relaxed">
-                            Każdy projekt zaczynamy od konkretnego briefu. Zero lania wody — wiesz dokładnie co dostajesz i za ile, zanim cokolwiek zaakceptujesz.
+                            Każdy projekt zaczynamy od konkretnego briefu. Bez lania wody: wiesz dokładnie, co dostajesz i za ile, zanim cokolwiek zaakceptujesz.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link

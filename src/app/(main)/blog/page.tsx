@@ -36,7 +36,7 @@ export default function BlogPage() {
                     <p className="eyebrow mb-4">Wiedza bez ściemy</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Blog</h1>
                     <p className="text-lg text-white/70 max-w-xl mx-auto">
-                        Piszę o grafice, stronach i brandingu tak, żebyś wiedział za co płacisz i jak rozpoznać dobrego wykonawcę.
+                        Piszę o grafice, stronach i identyfikacji wizualnej tak, żebyś wiedział, za co płacisz i jak rozpoznać dobrego wykonawcę.
                     </p>
                 </AnimatedSection>
             </section>

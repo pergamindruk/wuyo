@@ -58,7 +58,7 @@ export const packages = [
         features: [
             "Sklep internetowy lub system rezerwacji — sprzedajesz 24/7, bez Twojego udziału.",
             "Panel zarządzania — dodajesz produkty i obsługujesz zamówienia bez programisty.",
-            "Integracja płatności (Stripe / Przelewy24) — klienci płacą od razu.",
+            "Płatności PayU, Przelewy24, Tpay albo Stripe. Klienci płacą od razu.",
             "SEO techniczne i on-page — sklep widoczny w Google od pierwszego dnia.",
             "Szkolenie z obsługi panelu — wychodzisz i działasz samodzielnie.",
             "Czas realizacji: 30–45 dni roboczych.",
@@ -598,13 +598,13 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
 
             {/* Nagłówek */}
             <AnimatedSection className="text-center mb-10 relative z-10">
-                <p className="eyebrow mb-4">Druk &amp; Papeteria</p>
+                <p className="eyebrow mb-4">Druk i papeteria</p>
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                    Projekt + druk. Wszystko w jednym miejscu.
+                    Projekt i druk w jednym miejscu.
                 </h2>
                 <p className="text-white/60 max-w-2xl mx-auto">
-                    Nie musisz szukać drukarni, tłumaczyć wizji i modlić się żeby wyszło.
-                    Projektuję, drukuję, dostarczam — Ty dostajesz gotowy produkt.
+                    Nie musisz szukać drukarni, tłumaczyć, o co Ci chodzi, i modlić się, żeby wyszło.
+                    Projektuję, drukuję i dostarczam. Ty dostajesz gotową rzecz.
                 </p>
             </AnimatedSection>
 
@@ -616,7 +616,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                     </div>
                     <div>
                         <p className="font-bold text-base leading-snug">
-                            Zamów 2 lub więcej produktów — każdy kolejny -15%.
+                            Zamów 2 lub więcej produktów, a każdy kolejny będzie 15% taniej.
                         </p>
                         <p className="font-medium text-sm mt-1 opacity-80">
                             Projekty spójne wizualnie, druk w jednej partii, jeden kontakt.
@@ -638,7 +638,7 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
             {showButton && (
                 <AnimatedSection delay={0.3} className="mt-12 text-center relative z-10">
                     <p className="text-white/60 max-w-2xl mx-auto mb-6 text-sm md:text-base">
-                        Nie wiesz co wybrać? Napisz — w 24h dostajesz konkretny zestaw dopasowany do Twojej firmy i budżetu.
+                        Nie wiesz, co wybrać? Napisz. W 24 godziny dostaniesz zestaw dopasowany do Twojej firmy i budżetu.
                     </p>
                     <Link href="/#kontakt" className="btn-gold px-10 py-4 inline-flex items-center gap-2 font-bold rounded-full">
                         Napisz do mnie

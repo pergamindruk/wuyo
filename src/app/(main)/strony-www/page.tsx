@@ -40,23 +40,23 @@ export async function generateMetadata(): Promise<Metadata> {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje strona internetowa?",
-        a: "Strona One-Page od 1 990 zł, strona firmowa Multi-Page 2 990 zł. Każda wycena jest stała — podaję konkretną kwotę przed startem prac, bez niespodzianek na fakturze.",
+        a: "Strona jednostronicowa (One-Page) kosztuje od 1 990 zł, strona firmowa z podstronami (Multi-Page) 2 990 zł. Kwotę podaję przed startem prac i ona się nie zmienia.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
-        a: "Strona powstaje w 7–14 dni roboczych, zarówno jednostronicowa, jak i z podstronami. Czas zależy głównie od szybkości dostarczenia treści i feedbacku z Twojej strony.",
+        a: "Strona powstaje w 7–14 dni roboczych, zarówno jednostronicowa, jak i z podstronami. Czas zależy głównie od tego, jak szybko dostanę od Ciebie teksty i uwagi.",
     },
     {
         q: "Czy będę mógł samodzielnie edytować treści na stronie?",
-        a: "Tak. Jeśli chcesz sam dodawać wpisy, realizacje albo ofertę, zrobię stronę na WordPressie i pokażę Ci, jak korzystać z panelu. Przy stronie na Next.js możesz po prostu pisać do mnie — drobne zmiany robię w ramach opieki.",
+        a: "Tak. Jeśli chcesz sam dodawać wpisy, realizacje albo ofertę, zrobię stronę na WordPressie i pokażę Ci, jak korzystać z panelu. Przy stronie na Next.js po prostu piszesz do mnie. Drobne zmiany robię w ramach opieki.",
     },
     {
-        q: "Next.js czy WordPress — co wybrać?",
+        q: "Next.js czy WordPress: co wybrać?",
         a: "Next.js, jeśli strona ma być szybką wizytówką, a zmiany robię ja. WordPress, jeśli chcesz sam zmieniać treść w panelu. Robię obie. WordPress potrzebuje regularnych aktualizacji, dlatego taką stronę oddaję razem z opieką.",
     },
     {
         q: "Robisz sklepy na WooCommerce?",
-        a: "Tak. Sklep na WooCommerce, w którym sam dodajesz produkty i obsługujesz zamówienia. Podpinam płatności (PayU, Przelewy24 albo Tpay) i wysyłkę InPost. Sklep od 6 900 zł.",
+        a: "Tak. Sklep na WooCommerce, w którym sam dodajesz produkty i obsługujesz zamówienia. Podpinam płatności (PayU, Przelewy24, Tpay albo Stripe) i wysyłkę InPost. Sklep od 6 900 zł.",
     },
 ];
 
@@ -103,15 +103,15 @@ const packages = [
     {
         name: "Strona One-Page",
         price: "od 1 990 zł",
-        desc: "Jedna strona, jeden cel — maksymalna konwersja. Idealna dla freelancerów, coachów, nowych biznesów.",
+        desc: "Jedna strona i jeden cel: klient ma napisać albo zadzwonić. Dobra dla freelancerów, coachów i nowych firm.",
         includes: [
             "Projekt graficzny od zera, pod Twoją firmę",
             "Next.js + React (szybkie ładowanie)",
-            "Responsywność (mobile first)",
+            "Wygodna na telefonie",
             "Formularz kontaktowy",
-            "Podstawowe SEO on-page",
-            "Optymalizacja obrazów (WebP/AVIF)",
-            "Domena i hosting na 1. rok w cenie",
+            "Podstawowe ustawienia pod Google (SEO)",
+            "Lekkie zdjęcia, które szybko się ładują",
+            "Domena i serwer na pierwszy rok w cenie",
         ],
         time: "7–14 dni roboczych",
         highlight: false,
@@ -119,69 +119,69 @@ const packages = [
     {
         name: "Strona Firmowa Multi-Page",
         price: "2 990 zł",
-        desc: "Pełny serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie.",
+        desc: "Strona z podstronami i blogiem, ustawiona pod wiele haseł w Google. Dla firm, które chcą, żeby klienci trafiali do nich z wyszukiwarki.",
         includes: [
-            "Wszystko z one-page +",
-            "Architektura URL pod SEO",
-            "Podstrony usług z osobnym SEO",
+            "Wszystko z One-Page, a do tego:",
+            "Adresy podstron ułożone pod Google",
+            "Każda usługa na osobnej podstronie",
             "Blog gotowy do publikacji",
-            "Schema markup (JSON-LD)",
-            "Sitemap + robots.txt",
-            "Google Search Console setup",
+            "Dane strukturalne dla Google (schema)",
+            "Mapa strony dla Google (sitemap)",
+            "Podpięcie Google Search Console",
         ],
         time: "7–14 dni roboczych",
         highlight: true,
     },
     {
-        name: "UI/UX Design",
+        name: "Sam projekt graficzny",
         price: "od 100 zł / sekcja",
-        desc: "Sam projekt graficzny strony — jeśli masz własny team deweloperski lub chcesz wycenić samą grafikę.",
+        desc: "Projekt wyglądu strony bez programowania. Gdy masz własnego programistę albo chcesz wycenić tylko grafikę.",
         includes: [
-            "Projekt w Figma",
-            "Desktop + mobile",
-            "Style guide (kolory, fonty, komponenty)",
-            "Przekazanie plików deweloperowi",
-            "Eksport assetów",
+            "Projekt w Figmie",
+            "Wersja na komputer i telefon",
+            "Zestaw stylów: kolory, fonty, przyciski",
+            "Pliki przekazane programiście",
+            "Grafiki gotowe do wstawienia",
         ],
-        time: "Wycena ind.",
+        time: "Wycena indywidualna",
         highlight: false,
     },
 ];
 
 const techStack = [
-    { name: "Next.js 16", desc: "Framework React — szybki rendering, SEO-friendly, gotowy na skalowanie." },
+    { name: "Next.js 16", desc: "Strona szybko się ładuje, Google dobrze ją czyta i łatwo ją potem rozbudować." },
     { name: "WordPress + WooCommerce", desc: "Gdy chcesz sam zmieniać treść albo prowadzić sklep. Lekki motyw i stały zestaw sprawdzonych wtyczek." },
-    { name: "TypeScript", desc: "Bezpieczny kod bez błędów typowania — mniej bugów w produkcji." },
-    { name: "Tailwind CSS", desc: "Spójny design system, lekkie style, bez zbędnego CSS." },
-    { name: "Hosting", desc: "Wdrożenie na hostingu klienta — wspieram konfigurację domeny, SSL i środowiska produkcyjnego." },
-    { name: "Framer Motion", desc: "Płynne animacje które nie spowalniają strony." },
+    { name: "TypeScript", desc: "Kod sprawdzany już przy pisaniu, więc na gotowej stronie jest mniej błędów." },
+    { name: "Tailwind CSS", desc: "Spójny wygląd całej strony i lekkie style bez zbędnego kodu." },
+    { name: "Hosting", desc: "Stawiam stronę na Twoim serwerze i pomagam ustawić domenę oraz certyfikat SSL." },
+    { name: "Framer Motion", desc: "Płynne animacje, które nie spowalniają strony." },
 ];
 
 const process = [
     {
         n: "01",
-        title: "Brief i analiza",
-        desc: "Rozmowa o celu strony, grupie docelowej, konkurencji i słowach kluczowych. Strona bez strategii to strona bez ruchu.",
+        title: "Rozmowa i analiza",
+        desc: "Rozmawiamy o celu strony, Twoich klientach, konkurencji i hasłach, które ludzie wpisują w Google. Bez tego strona nie ma ruchu.",
     },
     {
         n: "02",
-        title: "Projekt graficzny (UI)",
-        desc: "Makieta w Figma — struktura, kolory, typografia, rozmieszczenie elementów. Zatwierdzasz wygląd zanim zacznę kodować.",
+        title: "Projekt wyglądu",
+        desc: "Robię projekt w Figmie: układ, kolory, fonty. Akceptujesz wygląd, zanim zacznę programować.",
     },
     {
         n: "03",
         title: "Programowanie",
-        desc: "Budowa w Next.js albo na WordPressie. Responsywność, optymalizacja obrazów, formularze, animacje — wszystko w jednym.",
+        desc: "Buduję stronę w Next.js albo na WordPressie. Dopasowuję ją do telefonu, odchudzam zdjęcia, podpinam formularze i animacje.",
     },
     {
         n: "04",
         title: "SEO i testy",
-        desc: "Metadata, Open Graph, Schema markup, Sitemap, PageSpeed test. Strona musi nie tylko wyglądać — musi rankować.",
+        desc: "Ustawiam opisy dla Google i Facebooka, dane strukturalne i mapę strony. Sprawdzam szybkość w PageSpeed. Strona ma być wysoko w Google, a nie tylko ładnie wyglądać.",
     },
     {
         n: "05",
-        title: "Deploy i przekazanie",
-        desc: "Wdrożenie na Twoim hostingu, setup domeny, Google Search Console, instrukcja obsługi. Jesteś właścicielem — masz dostęp do wszystkiego.",
+        title: "Start i przekazanie",
+        desc: "Stawiam stronę na Twoim serwerze, podpinam domenę i Google Search Console, daję instrukcję obsługi. Strona jest Twoja i masz dostęp do wszystkiego.",
     },
 ];
 
@@ -195,17 +195,17 @@ export default function StronyWwwPage() {
             <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-20 md:pt-48 overflow-hidden">
                 <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#FFEB52" />
                 <AnimatedSection className="relative z-10 max-w-3xl" animateOnMount={true}>
-                    <p className="eyebrow mb-4">Tworzenie Stron WWW · Rzeszów & cała Polska</p>
+                    <p className="eyebrow mb-4">Strony WWW · Rzeszów i cała Polska</p>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                        Strony internetowe które<br className="hidden md:block" />
+                        Strony internetowe, które<br className="hidden md:block" />
                         <span className="text-gold">pracują na Ciebie</span> 24/7
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Projektuję i programuję strony na Next.js albo WordPressie — szybkie, responsywne i przygotowane pod Google od pierwszego dnia. Technologię dobieram do tego, jak chcesz pracować ze stroną.
+                        Projektuję i programuję strony na Next.js albo WordPressie. Są szybkie, wygodne na telefonie i od pierwszego dnia przygotowane pod Google. Technologię dobieram do tego, jak chcesz pracować ze stroną.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
-                            Zamów wycenę — odpiszę w 24h
+                            Zamów wycenę. Odpiszę w 24 godziny
                         </a>
                     </div>
                 </AnimatedSection>
@@ -217,8 +217,8 @@ export default function StronyWwwPage() {
                     <div className="max-w-4xl mx-auto grid grid-cols-3 gap-6 text-center">
                         {[
                             { stat: "< 1s", label: "czas ładowania (LCP)" },
-                            { stat: "100/100", label: "PageSpeed score" },
-                            { stat: "Next.js / WP", label: "technologia pod Twoje potrzeby" },
+                            { stat: "100/100", label: "wynik w PageSpeed" },
+                            { stat: "Next.js / WP", label: "technologia dobrana do Ciebie" },
                         ].map((item, i) => (
                             <div key={i}>
                                 <p className="text-2xl md:text-3xl font-bold text-gold">{item.stat}</p>
@@ -242,7 +242,7 @@ export default function StronyWwwPage() {
                             {
                                 icon: <Zap size={22} className="text-gold" />,
                                 title: "Next.js: szybkość, która sprzedaje",
-                                desc: "Strona ładuje się poniżej 1 sekundy, a Google widzi całą treść od razu. Każda sekunda opóźnienia to -7% konwersji (Google, 2024).",
+                                desc: "Strona ładuje się poniżej 1 sekundy, a Google widzi całą treść od razu.",
                             },
                             {
                                 icon: <Shield size={22} className="text-gold" />,
@@ -252,12 +252,12 @@ export default function StronyWwwPage() {
                             {
                                 icon: <PenLine size={22} className="text-gold" />,
                                 title: "WordPress: sam zmieniasz treść",
-                                desc: "Wpisy, realizacje, oferta — dodajesz w prostym panelu, bez pisania do mnie. Lekki motyw i stały zestaw sprawdzonych wtyczek, więc strona dalej jest szybka.",
+                                desc: "Wpisy, realizacje i ofertę dodajesz w prostym panelu, bez pisania do mnie. Lekki motyw i stały zestaw sprawdzonych wtyczek, więc strona dalej jest szybka.",
                             },
                             {
                                 icon: <ShoppingCart size={22} className="text-gold" />,
                                 title: "WooCommerce: sklep, który prowadzisz sam",
-                                desc: "Sam dodajesz produkty i obsługujesz zamówienia. Płatności PayU, Przelewy24 albo Tpay, wysyłka InPost. Aktualizacje i kopie zapasowe robię ja.",
+                                desc: "Sam dodajesz produkty i obsługujesz zamówienia. Płatności PayU, Przelewy24, Tpay albo Stripe, wysyłka InPost. Aktualizacje i kopie zapasowe robię ja.",
                             },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.1}>
@@ -292,9 +292,9 @@ export default function StronyWwwPage() {
                                             { c: "Kto zmienia treść", a: "Ja, w ramach opieki", b: "Ty, sam w panelu" },
                                             { c: "Czas ładowania", a: "< 1s", b: "Szybki przy lekkim motywie, który stosuję" },
                                             { c: "SEO", a: "Wbudowane w kod", b: "Wtyczka Rank Math, ustawiona przeze mnie" },
-                                            { c: "Bezpieczeństwo", a: "Brak bazy danych do ataku", b: "Regularne aktualizacje — robię je ja" },
-                                            { c: "Sklep", a: "Na zamówienie, pod wycenę", b: "WooCommerce — produkty i zamówienia w panelu" },
-                                            { c: "Opieka", a: "Opcjonalna", b: "Konieczna — aktualizacje to stała praca" },
+                                            { c: "Bezpieczeństwo", a: "Brak bazy danych do ataku", b: "Regularne aktualizacje, robię je ja" },
+                                            { c: "Sklep", a: "Na zamówienie, pod wycenę", b: "WooCommerce: produkty i zamówienia w panelu" },
+                                            { c: "Opieka", a: "Opcjonalna", b: "Konieczna, bo aktualizacje to stała praca" },
                                         ].map((row, i) => (
                                             <tr key={i}>
                                                 <td className="p-4 text-white/60">{row.c}</td>
@@ -359,7 +359,7 @@ export default function StronyWwwPage() {
             <section className="py-20 px-6 md:px-12">
                 <div className="max-w-4xl mx-auto">
                     <AnimatedSection className="text-center mb-12">
-                        <p className="eyebrow mb-4">Stack technologiczny</p>
+                        <p className="eyebrow mb-4">Narzędzia</p>
                         <h2 className="text-3xl font-bold text-white">Czym buduję strony</h2>
                     </AnimatedSection>
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -410,7 +410,7 @@ export default function StronyWwwPage() {
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
                                 <p className="text-white/60 text-xs mb-1">Z bloga</p>
-                                <p className="font-bold text-white mb-1">Zanim zdecydujesz — przeczytaj</p>
+                                <p className="font-bold text-white mb-1">Przeczytaj, zanim zdecydujesz</p>
                                 <p className="text-white/50 text-sm">Ile kosztuje strona i kiedy one-page wystarczy, a kiedy multi-page to konieczność.</p>
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">

@@ -17,7 +17,7 @@ export function AuditSection() {
         e.preventDefault();
         if (honeypot) return; // cicho odrzucamy bota
         if (!url.trim() || !email.trim()) {
-            setError("Wklej link i podaj e-mail — bez tego nie zadziała! 😅");
+            setError("Wklej link i podaj e-mail, bez tego nie zadziała! 😅");
             return;
         }
         setLoading(true);
@@ -100,7 +100,7 @@ export function AuditSection() {
                             <input
                                 type="email"
                                 aria-label="Twój adres e-mail"
-                                placeholder="Twój e-mail — tu wyślę audyt *"
+                                placeholder="Twój e-mail (tu wyślę audyt) *"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

@@ -79,7 +79,7 @@ export default function ChatBot() {
             } else if (data.error === "RATE_LIMIT") {
                 setMessages((prev) => [...prev, {
                     role: "assistant",
-                    content: "Chwilowo dużo ruchu — za sekundkę odpiszę! ⏳ Napisz ponownie za chwilę.",
+                    content: "Chwilowo jest duży ruch. Napisz ponownie za chwilę. ⏳",
                 }]);
             } else {
                 setMessages((prev) => [...prev, {

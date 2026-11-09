@@ -6,30 +6,30 @@ export interface FaqItem {
 export const faqs: FaqItem[] = [
     {
         question: "Ile to wszystko będzie kosztować?",
-        answer: "Gram w otwarte karty. W Cenniku masz pakiety z konkretnymi cenami i widełki dla pojedynczych usług — od razu wiesz, w jakim rzędzie wielkości się poruszamy. Napisz, czego potrzebujesz, a policzę dokładnie co do złotówki przed startem prac."
+        answer: "Gram w otwarte karty. W Cenniku masz pakiety z konkretnymi cenami i widełki dla pojedynczych usług, więc od razu wiesz, ile to mniej więcej kosztuje. Napisz, czego potrzebujesz, a przed startem prac policzę dokładnie, co do złotówki."
     },
     {
         question: "Jak wygląda rozliczenie zapłaty?",
-        answer: "Standardowo dzielimy sprawę na pół: 50% potężnej zaliczki (tzw. startowe) przed otwarciem programów graficznych, i 50% na mecie, kiedy Ty uśmiechasz się na widok gotowych materiałów."
+        answer: "Dzielimy to na pół: 50% zaliczki, zanim zacznę projektować, i 50% na mecie, kiedy dostajesz gotowe materiały."
     },
     {
         question: "A co jak projekt mi nie wejdzie?",
-        answer: "Zanim w ogóle usiądę do projektowania, robimy solidny brief (wypytuję Cię o wszystko). Dzięki temu wiem, czego potrzebujesz. Po projektowaniu mamy serię poprawek żeby idealnie wyszlifować bryłę, pracuję aż powiesz WOW!"
+        answer: "Zanim w ogóle usiądę do projektowania, robimy solidny brief (wypytuję Cię o wszystko). Dzięki temu wiem, czego potrzebujesz. Potem robię poprawki, aż wszystko będzie dopięte. Pracuję, aż powiesz WOW!"
     },
     {
         question: "Co jeśli drukarnia zwróci plik z uwagami?",
-        answer: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota."
+        answer: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie: skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota."
     },
     {
         question: "Dostaję pliki edytowalne/źródłowe?",
-        answer: "Pewnie. Jesteś szefem, płacisz za projekt, to go masz. Przekazuję Ci wszelkie paczki produkcyjne, tła, fonty, instrukcje i pełne wektory."
+        answer: "Pewnie. Jesteś szefem, płacisz za projekt, to go masz. Przekazuję Ci wszystkie pliki do produkcji, tła, fonty, instrukcje i pełne wektory."
     },
     {
         question: "Ile zazwyczaj trwa projekt strony WWW?",
-        answer: "Dla One-Page'a lecimy szybko – strona powstaje w 7–14 dni roboczych od zebrania materiałów. Dużo zależy od tego, jak szybko dostarczysz mi treści, zdjęcia i jak sprawnie dajesz feedback. Żadnego bujania w chmurach – konkret praca."
+        answer: "Strona One-Page powstaje w 7–14 dni roboczych od zebrania materiałów. Dużo zależy od tego, jak szybko dostarczysz mi teksty i zdjęcia oraz jak szybko odpisujesz z uwagami."
     },
     {
         question: "Skąd będę wiedział, na jakim etapie jest mój projekt?",
-        answer: "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac — od briefu, przez projektowanie, poprawki, aż po finalne przekazanie. Jak śledzenie paczki, tylko że działa. Zero zgadywania i pytania \"jak tam moje zlecenie?\"."
+        answer: "Dostajesz własny panel klienta z linkiem, w którym na bieżąco widzisz postęp prac: od briefu, przez projektowanie i poprawki, aż po przekazanie plików. Jak śledzenie paczki, tylko że działa. Nie musisz pytać „jak tam moje zlecenie?”."
     }
 ]

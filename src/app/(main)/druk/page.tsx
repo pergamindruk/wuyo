@@ -46,19 +46,19 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Jak szybko dostanę wydruk?",
-        a: "Wizytówki i naklejki drukuję u siebie — standardowo 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
+        a: "Wizytówki i naklejki drukuję u siebie. Zwykle trwa to 1–3 dni robocze od zatwierdzenia projektu. Wysyłka kurierem lub odbiór osobisty w Rzeszowie.",
     },
     {
-        q: "Czy mogę zamówić mały nakład — np. 50 wizytówek?",
-        a: "Tak. Wizytówki, ulotki i naklejki drukuję u siebie od 50 sztuk — nie obowiązują mnie minimalne nakłady drukarni przemysłowych, które zwykle zaczynają od 250 sztuk.",
+        q: "Czy mogę zamówić mały nakład, np. 50 wizytówek?",
+        a: "Tak. Wizytówki, ulotki i naklejki drukuję u siebie od 50 sztuk. Nie obowiązują mnie minimalne nakłady dużych drukarni, które zwykle zaczynają od 250 sztuk.",
     },
     {
         q: "Czy zajmujesz się tylko projektem, czy też drukiem?",
-        a: "Jedno i drugie — projekt i druk w jednym miejscu. Nie musisz szukać oddzielnie grafika i drukarni, tłumaczyć specyfikacji ani wysyłać plików w odpowiednich formatach. Dostajesz gotowy produkt.",
+        a: "Jedno i drugie. Nie musisz szukać osobno grafika i drukarni, tłumaczyć, co i jak wydrukować, ani wysyłać plików w odpowiednich formatach. Dostajesz gotową rzecz.",
     },
     {
         q: "Co jeśli drukarnia zwróci plik z uwagami?",
-        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie: skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
     },
 ];
 
@@ -84,19 +84,19 @@ const drukSchema = {
 const products = [
     {
         name: "Wizytówki",
-        desc: "Standard 85×55 mm, papier 300 g z błyskiem. Projekt unikalny — żadnych szablonów z internetu.",
+        desc: "Standard 85×55 mm, papier 300 g z błyskiem. Projekt od zera, bez szablonów z internetu.",
         price: "od 299 zł",
         details: ["Projekt graficzny", "Druk dwustronny", "Papier 300 g/m²", "Wykończenie błysk", "Od 50 szt."],
     },
     {
         name: "Ulotki",
-        desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt który przyciąga wzrok i rzeczywiście skłania do działania.",
+        desc: "A5, A6 lub DL. Jednostronne i dwustronne. Projekt, który przyciąga wzrok i zachęca do działania.",
         price: "od 449 zł",
         details: ["Projekt graficzny", "Format A5 / A6 / DL", "Druk jednostronny lub dwustronny", "Kreda 130 g", "Od 50 szt."],
     },
     {
         name: "Vouchery",
-        desc: "Idealny prezent dla klientów — voucher który wygląda jak produkt premium, nie jak bilet parkingowy.",
+        desc: "Dobry prezent dla klientów. Voucher, który wygląda elegancko, a nie jak bilet parkingowy.",
         price: "od 289 zł",
         details: ["Projekt graficzny", "Format dowolny", "Perforacja lub bez", "Numeracja opcjonalna", "Min. 50 szt."],
     },
@@ -108,9 +108,9 @@ const products = [
     },
     {
         name: "Rollup / Banner",
-        desc: "Na eventy, targi i wystawiennictwo. Projekt spójny z Twoją marką, gotowy do druku wielkogabarytowego.",
+        desc: "Na wydarzenia i targi. Projekt w stylu Twojej firmy, gotowy do druku w dużym formacie.",
         price: "od 260 zł",
-        details: ["Projekt graficzny", "Plik gotowy do druku (300 dpi)", "Konsultacja wymiarów", "Możliwość zamówienia druku", "Termin do 5 dni"],
+        details: ["Projekt graficzny", "Plik gotowy do druku (300 dpi)", "Pomoc w doborze wymiarów", "Druk na życzenie", "Termin do 5 dni"],
     },
     {
         name: "Naklejki i etykiety",
@@ -139,7 +139,7 @@ export default function DrukPage() {
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Jedno miejsce — projekt i druk. Nie musisz szukać drukarni, tłumaczyć specyfikacji ani przesyłać plików w 5 formatach. Dostajesz gotowy produkt pod drzwi. Jesteś z Rzeszowa?{" "}
+                        Projekt i druk w jednym miejscu. Nie musisz szukać drukarni, tłumaczyć, co i jak wydrukować, ani przesyłać plików w 5 formatach. Gotową rzecz dostajesz pod drzwi. Jesteś z Rzeszowa?{" "}
                         <Link href="/druk-rzeszow" className="text-gold hover:underline">Odbierz wizytówki osobiście</Link>.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -232,9 +232,9 @@ export default function DrukPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
                         <div className="hidden md:block absolute top-7 left-[calc(16.5%+1rem)] right-[calc(16.5%+1rem)] h-px bg-gradient-to-r from-gold/30 via-white/10 to-gold/30" />
                         {[
-                            { num: "1", title: "Wypełniasz brief", desc: "Mówisz mi co chcesz osiągnąć, ja pytam o resztę. Zajmuje to 15 minut." },
-                            { num: "2", title: "Projektuję i akceptujesz", desc: "Dostajesz projekt do wglądu. Poprawki do skutku — bez liczenia rund." },
-                            { num: "3", title: "Drukuję i wysyłam", desc: "Finalne pliki trafiają do druku. Gotowy produkt ląduje pod Twoją firmą." },
+                            { num: "1", title: "Wypełniasz brief", desc: "Mówisz mi, co chcesz osiągnąć, ja pytam o resztę. Zajmuje to 15 minut." },
+                            { num: "2", title: "Projektuję i akceptujesz", desc: "Dostajesz projekt do wglądu. Poprawiam do skutku, bez liczenia rund." },
+                            { num: "3", title: "Drukuję i wysyłam", desc: "Drukuję gotowe pliki. Wydruki trafiają prosto do Twojej firmy." },
                         ].map((step, i) => (
                             <AnimatedSection key={i} delay={i * 0.15} className="text-center">
                                 <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-bold text-xl mx-auto mb-4">

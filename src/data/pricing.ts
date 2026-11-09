@@ -31,7 +31,7 @@ export const sectionHeader = {
     eyebrow: "Cennik",
     title: "Przejrzysty cennik. Wiesz, ile zapłacisz, zanim zadzwonisz.",
     subtitle:
-        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Ceny jawne od początku — bez ukrytych kosztów i dopłat po drodze.",
+        "Marka, strona i stała opieka dla firm z Rzeszowa i okolic. Ceny znasz od początku, bez ukrytych kosztów i dopłat po drodze.",
 };
 
 // Linijka à la carte — kwoty wyróżnione w komponencie.
@@ -50,7 +50,7 @@ export const perks = [
 export const pricingFaqs = [
     {
         q: "Jak wygląda płatność?",
-        a: "Zaliczka na start, reszta po akceptacji projektu. Abonament — z góry za dany miesiąc.",
+        a: "Zaliczka na start, reszta po akceptacji projektu. Abonament płacisz z góry za dany miesiąc.",
     },
     {
         q: "Czyje są prawa do projektu?",
@@ -58,10 +58,10 @@ export const pricingFaqs = [
     },
     {
         q: "Ile poprawek jest w cenie?",
-        a: "Poprawki do wybranej koncepcji są w cenie — pracujemy aż do akceptacji.",
+        a: "Poprawki wybranej koncepcji są w cenie. Pracujemy, aż zaakceptujesz projekt.",
     },
     {
-        q: "Chcę tylko stronę albo tylko logo — da się?",
+        q: "Chcę tylko stronę albo tylko logo. Da się?",
         a: "Tak. Strona indywidualna od 1 990 zł, logo od 890 zł. Napisz po wycenę.",
     },
     {
@@ -72,7 +72,7 @@ export const pricingFaqs = [
 
 export const finalCta = {
     title: "Nie wiesz, który pakiet pasuje do Twojej firmy?",
-    text: "Napisz w dwóch zdaniach, czym się zajmujesz — odpiszę z konkretną rekomendacją i wyceną. Bez zobowiązań.",
+    text: "Napisz w dwóch zdaniach, czym się zajmujesz. Odpiszę, który pakiet Ci pasuje, i podam wycenę. Bez zobowiązań.",
     button: "Napisz po wycenę",
 };
 
@@ -93,10 +93,10 @@ export const pricingGroups: PricingGroupData[] = [
                 listPrice: "1 239 zł",
                 saving: "149 zł",
                 features: [
-                    "Dokładny brief na starcie — pierwsza koncepcja logo ma trafić od razu, plus 2 zapasowe kierunki",
+                    "Dokładny brief na starcie, żeby pierwsza koncepcja logo trafiła od razu. Do tego 2 zapasowe kierunki",
                     "Logo w 3 wersjach: pozioma, pionowa, mono",
-                    "Wizytówki 100 szt. — projekt dwustronny + druk",
-                    "Pełne prawa do projektu + pliki źródłowe",
+                    "100 wizytówek: projekt dwustronny i druk",
+                    "Pełne prawa do projektu i pliki źródłowe",
                 ],
                 delivery: "Czas realizacji: 5–7 dni roboczych",
                 cta: "Zacznij od mini",
@@ -112,12 +112,12 @@ export const pricingGroups: PricingGroupData[] = [
                 listPrice: "2 119 zł",
                 saving: "629 zł",
                 features: [
-                    "Dokładny brief na starcie — pierwsza koncepcja logo ma trafić od razu, plus 2 zapasowe kierunki",
+                    "Dokładny brief na starcie, żeby pierwsza koncepcja logo trafiła od razu. Do tego 2 zapasowe kierunki",
                     "Logo w 3 wersjach: pozioma, pionowa, mono",
-                    "Mini księga znaku — kolory, fonty, zasady użycia",
-                    "Wizytówki 150 szt. — projekt dwustronny + druk",
+                    "Mini księga znaku: kolory, fonty, zasady użycia",
+                    "150 wizytówek: projekt dwustronny i druk",
                     "Stopka mailowa gotowa do wklejenia",
-                    "Pełne prawa do projektu + pliki źródłowe",
+                    "Pełne prawa do projektu i pliki źródłowe",
                 ],
                 delivery: "Czas realizacji: 7–10 dni roboczych",
                 cta: "Zacznij od marki",
@@ -127,18 +127,18 @@ export const pricingGroups: PricingGroupData[] = [
                 eyebrow: "Budowlanka, usługi, gabinety, warsztaty",
                 name: "Firma w Internecie",
                 tagline:
-                    "Obecność online, która generuje zapytania — nie tylko ładnie wygląda.",
+                    "Strona, która przynosi zapytania, a nie tylko ładnie wygląda.",
                 price: "3 490 zł",
                 priceSuffix: "jednorazowo",
                 listPrice: "5 308 zł",
                 saving: "1 818 zł",
                 features: [
                     "Wszystko z pakietu Marka Start",
-                    "Indywidualna strona do 5 podstron — pisana od zera, nie szablon",
+                    "Strona do 5 podstron, pisana od zera, bez szablonu",
                     "Domena i hosting na pierwszy rok w cenie",
                     "Formularz kontaktowy + mapa dojazdu",
                     "Dopracowana wersja mobilna",
-                    "Podstawowe SEO lokalne — Rzeszów i okolice",
+                    "Podstawowe ustawienia pod Google na Rzeszów i okolice",
                     "Szkolenie: jak samemu zmienić treść na stronie",
                     "Pierwszy miesiąc opieki nad stroną w cenie",
                 ],
@@ -151,7 +151,7 @@ export const pricingGroups: PricingGroupData[] = [
                 eyebrow: "Firmy, które chcą być znalezione od razu",
                 name: "Pełny Start",
                 tagline:
-                    "Marka, strona i widoczność w Google — kompletny start pod klucz.",
+                    "Marka, strona i widoczność w Google. Cały start pod klucz.",
                 price: "5 900 zł",
                 priceSuffix: "jednorazowo",
                 listPrice: "8 268 zł",
@@ -160,8 +160,8 @@ export const pricingGroups: PricingGroupData[] = [
                     "Wszystko z pakietu Firma w Internecie",
                     "Wizytówki 300 szt. zamiast 150 + ulotka A5",
                     "Szablony grafik pod social media",
-                    "Wizytówka Google: założenie, konfiguracja, optymalizacja",
-                    "Strategia opinii — jak je zbierać i jak odpowiadać",
+                    "Wizytówka Google: założenie i pełne ustawienie",
+                    "Plan na opinie: jak je zbierać i jak na nie odpowiadać",
                     "3 miesiące pełnej widoczności: prowadzenie Google, opinie, 5–6 grafik miesięcznie, raport",
                     "Priorytetowy czas realizacji",
                 ],
@@ -182,13 +182,13 @@ export const pricingGroups: PricingGroupData[] = [
                 eyebrow: "Masz już stronę i chcesz mieć spokój",
                 name: "Opieka Strony",
                 tagline:
-                    "Twoja strona po prostu działa — Ty nie musisz o nią myśleć.",
+                    "Twoja strona po prostu działa, a Ty nie musisz o niej myśleć.",
                 price: "199 zł",
                 priceSuffix: "/ miesiąc",
                 features: [
                     "Strona działa non stop (serwer w cenie)",
                     "Pilnuję adresu strony, żeby nie wygasł",
-                    "Robię kopie — jak coś padnie, przywracam",
+                    "Robię kopie zapasowe. Jak coś padnie, przywracam",
                     "Chronię przed włamaniem i sprawdzam, czy strona żyje",
                     "1 h drobnych zmian w miesiącu (np. nowe godziny, numer)",
                 ],
@@ -219,14 +219,14 @@ export const pricingGroups: PricingGroupData[] = [
                 eyebrow: "Potrzebujesz grafiki co tydzień, nie co pół roku",
                 name: "Stały Opiekun",
                 tagline:
-                    "Masz grafika i marketing na stałe — bez zatrudniania kogokolwiek i bez czekania w kolejce.",
+                    "Masz grafika i marketing na stałe, bez zatrudniania kogokolwiek i bez czekania w kolejce.",
                 price: "1 290 zł",
                 priceSuffix: "/ miesiąc",
                 features: [
                     "Wszystko z Widoczności i Opieki",
                     "Grafika bez limitu pozycji: posty, banery, ulotki, oferty",
-                    "Prowadzę Twoje social media — nie tylko projektuję",
-                    "Wchodzisz przede mną w kolejkę — robię Twoje rzeczy pierwsze",
+                    "Prowadzę Twoje media społecznościowe, a nie tylko projektuję",
+                    "Jesteś pierwszy w kolejce: Twoje rzeczy robię najpierw",
                     "Co miesiąc rozmawiamy: co działa, co zmieniamy",
                 ],
                 delivery: "Odpisuję do 48h, priorytet",
@@ -257,30 +257,30 @@ export interface PriceRangeGroup {
 export const priceRanges: PriceRangeGroup[] = [
     {
         title: "Projekt graficzny",
-        note: "Sam projekt. Druk liczony osobno. Masz gotowe logo, zdjęcia i teksty? To skład, nie projekt — taniej.",
+        note: "Sam projekt. Druk liczony osobno. Masz gotowe logo, zdjęcia i teksty? To skład, a nie projekt, więc taniej.",
         items: [
             { name: "Logo i identyfikacja wizualna", price: "890 – 1 490 zł" },
             { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
             { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
             { name: "Opakowania i etykiety", price: "od 180 zł" },
-            { name: "Grafiki na social media", price: "90 – 1 350 zł" },
+            { name: "Grafiki do mediów społecznościowych", price: "90 – 1 350 zł" },
             { name: "Skład z Twoich gotowych materiałów", price: "od 200 zł" },
         ],
     },
     {
         title: "Druk i papeteria",
-        note: "Sam druk z gotowego pliku. Z projektem: wizytówki od 299 zł, ulotki od 449 zł, naklejki od 219 zł. Zamawiasz 2+ produkty — każdy kolejny -15%.",
+        note: "Sam druk z gotowego pliku. Z projektem: wizytówki od 299 zł, ulotki od 449 zł, naklejki od 219 zł. Zamawiasz 2 lub więcej produktów? Każdy kolejny jest 15% taniej.",
         items: [
-            { name: "Wizytówki — sam druk (50 – 300 szt.)", price: "99 – 299 zł" },
-            { name: "Ulotki A5 — sam druk (50 – 300 szt.)", price: "119 – 359 zł" },
-            { name: "Naklejki i etykiety — sam druk (50 – 200 szt.)", price: "89 – 229 zł" },
+            { name: "Wizytówki, sam druk (50–300 szt.)", price: "99 – 299 zł" },
+            { name: "Ulotki A5, sam druk (50–300 szt.)", price: "119 – 359 zł" },
+            { name: "Naklejki i etykiety, sam druk (50–200 szt.)", price: "89 – 229 zł" },
             { name: "Vouchery, magnesy, koperty", price: "69 – 379 zł" },
             { name: "Plakaty", price: "od 29 zł / szt." },
         ],
     },
     {
         title: "Odzież z nadrukiem",
-        note: "DTF, pełny kolor, bez minimum — od jednej sztuki.",
+        note: "DTF, pełny kolor, bez minimum. Od jednej sztuki.",
         items: [
             { name: "Koszulki", price: "49 – 79 zł / szt." },
             { name: "Bluzy", price: "139 – 199 zł / szt." },
@@ -291,7 +291,7 @@ export const priceRanges: PriceRangeGroup[] = [
         title: "Strony internetowe",
         note: "Next.js, SEO lokalne, dopracowana wersja mobilna. Domena i hosting na pierwszy rok w cenie.",
         items: [
-            { name: "Landing Page / one-page", price: "od 1 990 zł" },
+            { name: "Strona jednostronicowa (one-page)", price: "od 1 990 zł" },
             { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
             { name: "Sklep internetowy", price: "od 6 900 zł" },
             { name: "Stała opieka miesięczna", price: "199 – 1 290 zł / mc" },

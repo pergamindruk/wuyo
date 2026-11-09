@@ -85,7 +85,7 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Ile kosztuje strona internetowa w Rzeszowie?",
-        a: "Strona jednostronicowa (one-page) od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep internetowy od 6 900 zł. Domena i hosting na pierwszy rok są w cenie. Każda wycena jest stała — znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
+        a: "Strona jednostronicowa (one-page) od 1 990 zł, strona firmowa do 5 podstron 2 990 zł, sklep internetowy od 6 900 zł. Domena i hosting na pierwszy rok są w cenie. Cena jest stała. Znasz kwotę przed startem, bez stawki godzinowej i niespodzianek po fakturze.",
     },
     {
         q: "Ile kosztuje domena i serwer po pierwszym roku?",
@@ -101,22 +101,22 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Czy da się zrobić tanią stronę internetową w Rzeszowie?",
-        a: "Najtańsza opcja u mnie to strona jednostronicowa od 1 990 zł — jedna strona, jeden cel, formularz kontaktowy, SEO i domena z hostingiem na rok. Wystarcza nowej firmie, freelancerowi albo jednej usłudze. Tańsze oferty to zwykle gotowy szablon, który trudno potem wypozycjonować w Google.",
+        a: "Najtańsza opcja u mnie to strona jednostronicowa od 1 990 zł: jedna strona, jeden cel, formularz kontaktowy, ustawienia pod Google oraz domena i serwer na rok. Wystarcza nowej firmie, freelancerowi albo jednej usłudze. Tańsze oferty to zwykle gotowy szablon, który trudno potem wypozycjonować w Google.",
     },
     {
         q: "Ile trwa zbudowanie strony internetowej?",
-        a: "7–14 dni roboczych, zarówno przy stronie jednostronicowej, jak i z podstronami. Czas zależy głównie od szybkości dostarczenia treści z Twojej strony.",
+        a: "7–14 dni roboczych, zarówno przy stronie jednostronicowej, jak i z podstronami. Czas zależy głównie od tego, jak szybko dostanę od Ciebie teksty.",
     },
     {
         q: "Czy tworzysz strony dla firm spoza Rzeszowa?",
-        a: "Tak — większość projektów realizuję zdalnie. Rzeszów i Podkarpacie to moja baza, ale obsługuję firmy z całej Polski. Kontakt przez WhatsApp, Messenger lub e-mail.",
+        a: "Tak. Większość projektów robię zdalnie. Pracuję z Rzeszowa, ale robię strony dla firm z całej Polski. Kontaktujemy się przez WhatsApp, Messengera albo e-mail.",
     },
     {
         q: "Czy mogę samodzielnie edytować treści?",
         a: "Tak. Jeśli chcesz sam dodawać wpisy, realizacje albo produkty, zrobię stronę na WordPressie i pokażę Ci panel. Przy stronie na Next.js wystarczy napisać do mnie: w Opiece Strony masz 1 godzinę drobnych zmian w miesiącu.",
     },
     {
-        q: "Next.js czy WordPress — co wybrać?",
+        q: "Next.js czy WordPress: co wybrać?",
         a: "Next.js, jeśli strona ma być szybką wizytówką, a zmiany robię ja. WordPress, jeśli chcesz sam zmieniać treść albo prowadzić sklep na WooCommerce. Robię obie. WordPress potrzebuje regularnych aktualizacji, dlatego taką stronę oddaję razem z opieką.",
     },
 ];
@@ -128,8 +128,8 @@ const priceTable = [
     { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },
     { name: "Sklep internetowy", price: "od 6 900 zł" },
     { name: "Dodatkowa sekcja na istniejącej stronie", price: "od 100 zł" },
-    { name: "Pakiet Firma w Internecie — logo, identyfikacja i strona do 5 podstron", price: "3 490 zł" },
-    { name: "Opieka Strony — serwer, domena, kopie, 1 h zmian", price: "199 zł / mc" },
+    { name: "Pakiet Firma w Internecie: logo, identyfikacja i strona do 5 podstron", price: "3 490 zł" },
+    { name: "Opieka Strony: serwer, domena, kopie, 1 h zmian", price: "199 zł / mc" },
 ];
 
 // Porównanie wariantów. Ceny jak w CENNIK.md 4.1 i 4.3 (zmiana tam = zmiana tu).
@@ -157,7 +157,7 @@ const packages = [
         name: "One-Page",
         price: "od 1 990 zł",
         time: "7–14 dni roboczych",
-        desc: "Jedna strona, jeden cel. Idealna dla freelancerów, coachów i nowych firm, które chcą szybko zaistnieć w sieci.",
+        desc: "Jedna strona, jeden cel. Dobra dla freelancerów, coachów i nowych firm, które chcą szybko pojawić się w internecie.",
         items: ["Projekt graficzny UI/UX", "Next.js + React", "Formularz kontaktowy", "SEO on-page", "Domena i hosting na 1. rok w cenie"],
         highlight: false,
     },
@@ -165,8 +165,8 @@ const packages = [
         name: "Multi-Page",
         price: "2 990 zł",
         time: "7–14 dni roboczych",
-        desc: "Serwis z podstronami, blogiem i SEO pod wiele fraz. Dla firm które chcą rosnąć organicznie w Google.",
-        items: ["Wszystko z One-Page +", "Podstrony usług z SEO", "Blog gotowy do publikacji", "Schema markup JSON-LD", "Google Search Console setup"],
+        desc: "Strona z podstronami i blogiem, ustawiona pod wiele haseł w Google. Dla firm, które chcą, żeby klienci trafiali do nich z wyszukiwarki.",
+        items: ["Wszystko z One-Page, a do tego:", "Każda usługa na osobnej podstronie", "Blog gotowy do publikacji", "Dane strukturalne dla Google (schema)", "Podpięcie Google Search Console"],
         highlight: true,
     },
 ];
@@ -194,7 +194,7 @@ export default function StronyInternetowerRzeszowPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block shadow-[0_0_20px_rgba(255,235,82,0.3)]">
-                            Napisz — wycena w 24h
+                            Napisz. Wycena w 24 godziny
                         </a>
                         <Link href="/strony-www" className="px-8 py-3.5 rounded-full font-bold inline-block border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors">
                             Pełna oferta stron →
@@ -331,7 +331,7 @@ export default function StronyInternetowerRzeszowPage() {
                         <div className="glass-card p-6 border-l-2 border-gold">
                             <h3 className="font-bold text-white mb-2">Tanie strony internetowe w Rzeszowie: kiedy wystarczy one-page za 1 990 zł</h3>
                             <p className="text-white/60 text-sm leading-relaxed">
-                                Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie — nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
+                                Jeśli dopiero startujesz albo sprzedajesz jedną usługę, wystarczy strona jednostronicowa od 1 990 zł. Jedna strona, jeden cel, formularz kontaktowy i SEO od pierwszego dnia. Rozbudujesz ją później, gdy firma urośnie. Nie płacisz za podstrony, których dziś nikt nie czyta. Porównanie znajdziesz we wpisie{" "}
                                 <Link href="/blog/strona-one-page-czy-multi-page" className="text-gold hover:underline">one page czy multi page</Link>.
                             </p>
                         </div>
@@ -450,7 +450,7 @@ export default function StronyInternetowerRzeszowPage() {
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
                                 <p className="text-white/60 text-xs mb-1">Z bloga</p>
-                                <p className="font-bold text-white mb-1">Zanim zdecydujesz — przeczytaj</p>
+                                <p className="font-bold text-white mb-1">Przeczytaj, zanim zdecydujesz</p>
                                 <p className="text-white/50 text-sm">One-page czy multi-page, ile kosztuje strona i jak wybrać wykonawcę.</p>
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">

@@ -51,11 +51,11 @@ export async function generateMetadata(): Promise<Metadata> {
 const faqs: FaqEntry[] = [
     {
         q: "Ile kosztuje zaprojektowanie logo?",
-        a: "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, logo ze 100 wizytówkami (projekt + druk, pakiet Marka Mini) 1 090 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Każda wycena jest stała — znasz cenę przed startem, nie po.",
+        a: "Logotyp od 890 zł, logo z mini księgą znaku 1 190 zł, logo ze 100 wizytówkami (projekt + druk, pakiet Marka Mini) 1 090 zł, pełna identyfikacja wizualna (logo + księga znaku + wizytówki z drukiem + stopka mailowa) 1 490 zł. Lifting istniejącego logo od 1 000 zł. Cena jest stała i znasz ją przed startem, nie po.",
     },
     {
         q: "Ile trwa projekt logo?",
-        a: "Standardowo 7–10 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas — im więcej wiem o Twojej firmie, tym trafniejsza jest pierwsza propozycja.",
+        a: "Zwykle 7–10 dni roboczych od zatwierdzenia briefu. Dobry brief skraca ten czas. Im więcej wiem o Twojej firmie, tym lepiej trafiam pierwszą propozycją.",
     },
     {
         q: "Co dostaję razem z logo?",
@@ -63,11 +63,11 @@ const faqs: FaqEntry[] = [
     },
     {
         q: "Czy mogę samodzielnie edytować logo po projekcie?",
-        a: "Tak — na życzenie przekazuję pliki źródłowe Figma lub Adobe Illustrator. Jeśli nie masz programów graficznych, wystarczą Ci pliki PNG i SVG do codziennego użytku.",
+        a: "Tak. Na życzenie przekazuję pliki źródłowe z Figmy lub Adobe Illustratora. Jeśli nie masz programów graficznych, wystarczą Ci pliki PNG i SVG do codziennego użytku.",
     },
     {
         q: "Co jeśli drukarnia zwróci plik z uwagami?",
-        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie — skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
+        a: "Poprawiam na swój koszt. Odpowiadam za to, żeby plik był przygotowany poprawnie: skala, spady, kolory, rozdzielczość. Nie dotyczy to zmian w treści, które zgłosisz po zaakceptowaniu projektu, bo to już nowa robota.",
     },
     {
         q: "Nie wiem, jakie logo chcę. Czy to problem?",
@@ -81,11 +81,11 @@ const faqs: FaqEntry[] = [
 
 const prepare = [
     "Nazwa firmy dokładnie tak, jak ma być w logo (z „sp. z o.o.” czy bez)",
-    "Czym się zajmujesz i kto jest Twoim klientem — dwa, trzy zdania wystarczą",
-    "2–3 logo, które Ci się podobają, i 2–3, które nie — mogą być z dowolnej branży",
+    "Czym się zajmujesz i kto jest Twoim klientem. Dwa, trzy zdania wystarczą",
+    "2–3 logo, które Ci się podobają, i 2–3, które nie. Mogą być z dowolnej branży",
     "Gdzie logo będzie najczęściej: szyld, auto, odzież, strona, opakowania",
     "Kolory, których na pewno nie chcesz (albo które muszą zostać)",
-    "Twoje stare logo, jeśli jest — nawet słabe, coś mi powie",
+    "Twoje stare logo, jeśli jest. Nawet słabe coś mi powie",
 ];
 
 const briefQuestions = [
@@ -149,12 +149,12 @@ const packages = [
     {
         name: "Logotyp",
         price: "od 890 zł",
-        desc: "Punkt wyjścia — logo gotowe do użycia od razu.",
+        desc: "Podstawa: logo gotowe do użycia od razu.",
         includes: [
-            "Logo (wersja kolorowa + monochromatyczna)",
-            "Sygnet / ikona (favicon, avatar)",
+            "Logo w kolorze i w wersji czarno-białej",
+            "Sam znak (na ikonkę strony i zdjęcie profilowe)",
             "Paleta kolorów (HEX + CMYK)",
-            "Typografia firmowa",
+            "Fonty firmowe",
             "Pliki: SVG, PNG, PDF",
             "Prawa autorskie majątkowe",
         ],
@@ -163,9 +163,9 @@ const packages = [
     {
         name: "Logo + mini księga znaku",
         price: "1 190 zł",
-        desc: "Logo z zasadami użycia — drukarnia, haft czy grawer wiedzą, jak znak ma wyglądać.",
+        desc: "Logo z zasadami użycia. Drukarnia, hafciarnia czy grawer wiedzą, jak znak ma wyglądać.",
         includes: [
-            "Wszystko z pakietu Logotyp +",
+            "Wszystko z pakietu Logotyp, a do tego:",
             "Mini księga znaku (PDF)",
             "Pole ochronne i minimalna wielkość",
             "Kolory HEX, RGB i CMYK",
@@ -176,11 +176,11 @@ const packages = [
     {
         name: "Identyfikacja Wizualna",
         price: "1 490 zł",
-        desc: "Pakiet Marka Start — logo plus wszystko, czego firma potrzebuje od pierwszego dnia.",
+        desc: "Pakiet Marka Start: logo i wszystko, czego firma potrzebuje od pierwszego dnia.",
         includes: [
-            "Wszystko z pakietu Logotyp +",
+            "Wszystko z pakietu Logotyp, a do tego:",
             "Mini księga znaku (kolory, fonty, zasady)",
-            "Wizytówki 150 szt. — projekt dwustronny + druk",
+            "150 wizytówek: projekt dwustronny i druk",
             "Stopka mailowa gotowa do wklejenia",
             "Pliki źródłowe (Figma / AI)",
         ],
@@ -189,12 +189,12 @@ const packages = [
     {
         name: "Lifting Logo",
         price: "od 1 000 zł",
-        desc: "Masz logo ale coś nie gra? Odświeżam bez zmiany tożsamości marki.",
+        desc: "Masz logo, ale coś nie gra? Odświeżam je tak, żeby klienci dalej je rozpoznawali.",
         includes: [
             "Analiza obecnego logo",
-            "Propozycja modernizacji",
+            "Propozycja odświeżenia",
             "Nowe pliki we wszystkich formatach",
-            "Zaktualizowane kolory i typografia",
+            "Odświeżone kolory i fonty",
             "Prawa autorskie majątkowe",
         ],
         highlight: false,
@@ -205,27 +205,27 @@ const process = [
     {
         n: "01",
         title: "Brief",
-        desc: "Rozmowa o Twojej firmie — kto jest klientem, jaka jest konkurencja, co ma komunikować logo. Sprawdzam też, jak wyglądają znaki firm z Twojej branży w okolicy, żeby Twoje się od nich odróżniało. Bez tego etapu nie zaczynam rysować.",
+        desc: "Rozmawiamy o Twojej firmie: kto jest klientem, jaka jest konkurencja, co ma mówić logo. Sprawdzam też, jak wyglądają znaki firm z Twojej branży w okolicy, żeby Twoje się od nich odróżniało. Bez tego etapu nie zaczynam rysować.",
     },
     {
         n: "02",
         title: "Moodboard",
-        desc: "Kierunek wizualny do zatwierdzenia — styl, kolorystyka, nastrój. Zatwierdzasz zanim powstanie pierwsze logo.",
+        desc: "Pokazuję kierunek: styl, kolory, nastrój. Akceptujesz go, zanim powstanie pierwsze logo.",
     },
     {
         n: "03",
         title: "Projekt",
-        desc: "3 koncepcje do wyboru: jedna główna, dopracowana pod Twój brief, i 2 alternatywne kierunki. Każda z uzasadnieniem decyzji projektowych — nie tylko estetyka.",
+        desc: "3 koncepcje do wyboru: jedna główna, dopracowana pod Twój brief, i 2 alternatywne kierunki. Przy każdej tłumaczę, dlaczego wygląda tak, a nie inaczej.",
     },
     {
         n: "04",
         title: "Poprawki",
-        desc: "Poprawki wybranej koncepcji są w cenie — pracujemy do akceptacji. Dobry brief = trafienie w oczekiwania za pierwszym razem.",
+        desc: "Poprawki wybranej koncepcji są w cenie. Pracujemy, aż zaakceptujesz projekt. Z dobrym briefem trafiam za pierwszym razem.",
     },
     {
         n: "05",
         title: "Pliki i dokumentacja",
-        desc: "Pełen pakiet eksportów + księga znaku lub podstawowa dokumentacja kolorów i fontów. Gotowe do użycia wszędzie.",
+        desc: "Komplet plików oraz księga znaku albo prosta rozpiska kolorów i fontów. Gotowe do użycia wszędzie.",
     },
 ];
 
@@ -244,11 +244,11 @@ export default function LogoPage() {
                         Projektowanie logo<br className="hidden md:block" /> <span className="text-gold">w Rzeszowie</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Logo, które działa — nie tylko wygląda. Projektuję je z procesem, strategią i pełnym pakietem plików. Żadnych szablonów — każde logo powstaje od zera dla konkretnej firmy.
+                        Logo ma działać, a nie tylko ładnie wyglądać. Każde projektuję od zera dla konkretnej firmy, bez szablonów, i oddaję z kompletem plików.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/#kontakt" className="btn-gold px-8 py-3.5 rounded-full font-bold inline-block">
-                            Zamów wycenę — odpiszę w 24h
+                            Zamów wycenę. Odpiszę w 24 godziny
                         </a>
                     </div>
                 </AnimatedSection>
@@ -284,17 +284,17 @@ export default function LogoPage() {
                             {
                                 icon: <Layers size={22} className="text-gold" />,
                                 title: "Logo we wszystkich wariantach",
-                                desc: "Wersja kolorowa, monochromatyczna (czarno-biała), sygnet/ikona i warianty na ciemne/jasne tło. Gotowe na każdy nośnik.",
+                                desc: "Wersja kolorowa i czarno-biała, sam znak oraz warianty na ciemne i jasne tło. Gotowe do użycia na każdym materiale.",
                             },
                             {
                                 icon: <Palette size={22} className="text-gold" />,
                                 title: "Paleta kolorów z wartościami",
-                                desc: "HEX (strony, social media), CMYK (druk offsetowy), RGB (ekrany, prezentacje). Żadnych zgadywanek przy drukarni.",
+                                desc: "HEX (strony, social media), CMYK (druk offsetowy), RGB (ekrany, prezentacje). Bez zgadywania w drukarni.",
                             },
                             {
                                 icon: <Type size={22} className="text-gold" />,
                                 title: "Typografia firmowa",
-                                desc: "Dobrane fonty które współgrają z logo — nagłówkowy i treści. Z linkami do pobrania lub licencją komercyjną.",
+                                desc: "Dobrane fonty, które pasują do logo: do nagłówków i do tekstu. Z linkami do pobrania lub licencją komercyjną.",
                             },
                             {
                                 icon: <FileText size={22} className="text-gold" />,
@@ -319,7 +319,7 @@ export default function LogoPage() {
                         <div className="glass-card p-5 flex items-center gap-3 border-l-2 border-gold">
                             <CheckCircle2 size={18} className="text-gold shrink-0" />
                             <p className="text-white/70 text-sm">
-                                <strong className="text-white">Prawa autorskie majątkowe</strong> — przenoszone na Ciebie wraz z dostarczeniem plików. Bez ukrytych opłat za "licencję".
+                                <strong className="text-white">Prawa autorskie majątkowe</strong> przechodzą na Ciebie razem z plikami. Bez ukrytych opłat za „licencję”.
                             </p>
                         </div>
                     </AnimatedSection>
@@ -409,7 +409,7 @@ export default function LogoPage() {
                         <p className="eyebrow mb-4">Przed zamówieniem</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Jak przygotować się do zamówienia logo</h2>
                         <p className="text-white/50 max-w-2xl mx-auto mt-4">
-                            Nie musisz znać się na grafice. Wystarczy 15 minut i kilka rzeczy z tej listy — reszty dopytam w rozmowie.
+                            Nie musisz znać się na grafice. Wystarczy 15 minut i kilka rzeczy z tej listy. O resztę dopytam w rozmowie.
                         </p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -454,7 +454,7 @@ export default function LogoPage() {
                         <p className="eyebrow mb-4">Lokalnie</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Projektowanie logo dla firm z Rzeszowa</h2>
                         <p className="text-white/50 max-w-2xl mx-auto mt-4">
-                            Tworzenie logo to u mnie jedno zlecenie od briefu do gotowych plików — bez pośredników. Pracuję z Rzeszowa, dla firm z Podkarpacia i całej Polski.
+                            Logo robię sam, od briefu do gotowych plików, bez pośredników. Pracuję z Rzeszowa, dla firm z Podkarpacia i całej Polski.
                         </p>
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-4">
@@ -500,12 +500,12 @@ export default function LogoPage() {
                     </AnimatedSection>
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {[
-                            { who: "Startupy i nowe firmy", desc: "Pierwsze logo które otwiera drzwi do klientów zamiast je zamykać." },
-                            { who: "Freelancerzy", desc: "Marka osobista którą można pokazać na wizytówce i LinkedIn." },
-                            { who: "Lokalne biznesy", desc: "Logo które działa na szyldzie, samochodzie i stronie — bez kompromisów." },
-                            { who: "Sklepy i e-commerce", desc: "Rozpoznawalny znak który buduje zaufanie przed pierwszym zakupem." },
-                            { who: "Rebranding", desc: "Odświeżenie marki bez utraty rozpoznawalności — gdy firma wyrosła ze starego logo." },
-                            { who: "Klienci zagraniczni", desc: "Projekty dla firm z Europy i świata — komunikacja w języku angielskim." },
+                            { who: "Nowe firmy", desc: "Pierwsze logo, które przyciąga klientów, a nie ich odstrasza." },
+                            { who: "Freelancerzy", desc: "Marka osobista, którą możesz pokazać na wizytówce i LinkedInie." },
+                            { who: "Lokalne biznesy", desc: "Logo, które dobrze wygląda na szyldzie, samochodzie i stronie." },
+                            { who: "Sklepy i e-commerce", desc: "Znak, który budzi zaufanie przed pierwszym zakupem." },
+                            { who: "Rebranding", desc: "Gdy firma wyrosła ze starego logo. Odświeżam markę tak, żeby klienci dalej ją rozpoznawali." },
+                            { who: "Klienci zagraniczni", desc: "Projektuję dla firm z Europy i świata. Rozmawiamy po angielsku." },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.07}>
                                 <div className="glass-card p-5">
@@ -528,7 +528,7 @@ export default function LogoPage() {
                         <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center gap-6">
                             <div className="flex-1">
                                 <p className="text-white/60 text-xs mb-1">Z bloga</p>
-                                <p className="font-bold text-white mb-1">Zanim zapłacisz — przeczytaj</p>
+                                <p className="font-bold text-white mb-1">Przeczytaj, zanim zapłacisz</p>
                                 <p className="text-white/50 text-sm">Ile kosztuje logo i jak wybrać projektanta żeby nie żałować.</p>
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">

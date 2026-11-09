@@ -72,7 +72,7 @@ export function PricingSection({
                     <p className="text-white/60 text-sm md:text-base">
                         Potrzebujesz tylko części? Indywidualna strona od{" "}
                         <strong className="text-gold font-semibold">{carte.siteFrom}</strong>, samo logo od{" "}
-                        <strong className="text-gold font-semibold">{carte.logoFrom}</strong>. Napisz — wycenię
+                        <strong className="text-gold font-semibold">{carte.logoFrom}</strong>. Napisz, a wycenię
                         konkretnie pod Ciebie.
                     </p>
                 )}

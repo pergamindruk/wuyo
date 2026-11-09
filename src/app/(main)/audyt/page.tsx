@@ -115,7 +115,7 @@ export default function AudytPage() {
                     </h2>
                     <p className="text-white/60">
                         Audyt jest dla tych, którzy chcą najpierw wiedzieć, co jest nie tak. Jeśli już
-                        wiesz, czego potrzebujesz — napisz od razu, wycenię w 24 godziny.
+                        wiesz, czego potrzebujesz, napisz od razu. Wycenię w 24 godziny.
                     </p>
                     <Link
                         href="/#kontakt"
