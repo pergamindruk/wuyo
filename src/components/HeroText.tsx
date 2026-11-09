@@ -8,7 +8,7 @@ function ZWithDot({ color = "white" }: { color?: string }) {
         // inline-block tworzy własne pole, do którego nie sięga `background-clip: text`
         // rodzica — bez własnego koloru litera byłaby przezroczysta i zostałaby sama kropka.
         <span className="relative inline-block" style={{ color }}>
-            Z
+            <span className="glyph" data-glyph="Z" />
             <span
                 aria-hidden="true"
                 style={{
@@ -36,17 +36,20 @@ export function HeroText({ locale = "pl" }: { locale?: Locale }) {
                 style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0 }}
             >
                 <span className="silver-flow">PIERWSZE</span>
-            </span>
+            </span>{" "}
             <span
                 className="hero-word block font-cs-harley font-bold"
                 style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}
             >
-                {/* aria-label na zwykłym <span> jest przez ARIA zabroniony i tak czy tak
-                    ignorowany. Zamiast niego prawdziwy tekst — czytniki ekranu i roboty
-                    dostają słowo, a obok jedzie wersja rysowana z kropką nad Z. */}
+                {/* Prawdziwe słowo tylko w sr-only. Wersja rysowana (Z + kropka) bierze
+                    litery z CSS (.glyph), więc Google nie czyta „WRAŻENIEWRAZENIE". */}
                 <span className="sr-only">WRAŻENIE</span>
-                <span aria-hidden="true" className="silver-flow">WRA<ZWithDot color="#e4e7ea" />ENIE</span>
-            </span>
+                <span aria-hidden="true" className="silver-flow">
+                    <span className="glyph" data-glyph="WRA" />
+                    <ZWithDot color="#e4e7ea" />
+                    <span className="glyph" data-glyph="ENIE" />
+                </span>
+            </span>{" "}
             <span
                 className="hero-word block font-cs-harley font-normal mt-2"
                 style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}
@@ -63,10 +66,10 @@ function HeroTextEn() {
         <h1 className="mb-8 tracking-tight uppercase">
             <span className="hero-word block font-cs-harley font-bold" style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0 }}>
                 <span className="silver-flow">FIRST</span>
-            </span>
+            </span>{" "}
             <span className="hero-word block font-cs-harley font-bold" style={{ fontSize: "clamp(36px, 11vw, 54px)", lineHeight: 1.0, animationDelay: "0.05s" }}>
                 <span className="silver-flow">IMPRESSION.</span>
-            </span>
+            </span>{" "}
             <span className="hero-word block font-cs-harley font-normal mt-2" style={{ fontSize: "clamp(26px, 8.5vw, 42px)", lineHeight: 1.1, animationDelay: "0.10s" }}>
                 <span className="gold-flow">YOU ONLY GET ONE.</span>
             </span>

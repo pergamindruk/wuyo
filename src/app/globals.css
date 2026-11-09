@@ -1304,3 +1304,9 @@ body {
 .menu-usluga-ikona svg { width: 18px; height: 18px; overflow: visible; }
 .menu-usluga-ikona .ic-thin { stroke-width: 1.2; }
 .menu-usluga:hover .menu-usluga-ikona { border-color: rgba(255, 235, 82, 0.5); transform: scale(1.08); }
+
+/* Litery rysowane z CSS (content), nie z DOM-u. Google i textContent
+   ich nie widzą, więc nagłówek nie dubluje słowa obok wersji sr-only. */
+.glyph::before {
+  content: attr(data-glyph);
+}
