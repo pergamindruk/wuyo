@@ -215,8 +215,8 @@ export default function HomeEn() {
                             You run your business.<br />I handle the rest.
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>I work alone, so you talk to me, not to an assistant. No agency ping-pong and no waffle. I tell you straight what I will do, what it costs and when it will be ready. You can write to me in English.</p>
-                            <p>Your website or brand has one job: to make money, not just to look nice. I take care of it so you can focus on what you do best.</p>
+                            <p>No customer service team and no middlemen. You talk to the person who makes your project. You know the price and the deadline before we start. You can write to me in English.</p>
+                            <p>You know your trade, I know how a business should look. Let's split the work: you look after your customers, I make sure there are more of them.</p>
                         </div>
 
                         <div className="mt-8 mb-10 relative">

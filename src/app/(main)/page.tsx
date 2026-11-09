@@ -238,8 +238,8 @@ export default function Home() {
                             Ty robisz swoje.<br />Ja ogarniam resztę.
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>Działam sam, więc rozmawiasz ze mną, a nie z asystentem. Nie ma tu agencyjnego ping-ponga ani lania wody. Mówię wprost, co zrobię, ile to kosztuje i kiedy będzie gotowe. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
-                            <p>Twoja strona i marka mają zarabiać, a nie tylko ładnie wyglądać. Ja się tym zajmuję, a Ty robisz to, na czym znasz się najlepiej.</p>
+                            <p>Nie ma tu działu obsługi ani pośredników. Rozmawiasz z osobą, która robi Twój projekt. Cenę i termin znasz, zanim zaczniemy. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
+                            <p>Ty znasz swoją branżę, ja znam się na wyglądzie firmy. Podzielmy się pracą: Ty obsługujesz klientów, ja robię tak, żeby było ich więcej.</p>
                         </div>
 
                         {/* Drzewko kroków: ikony rysują się po wejściu na ekran,

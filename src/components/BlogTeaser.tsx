@@ -12,7 +12,7 @@ import { route, type Locale } from "@/lib/i18n";
 const EN = {
     eyebrow: "No-nonsense advice",
     h2a: "Read first,", h2b: "pay later",
-    lead: "Prices, print and websites in plain words. You will know what is worth the money and where someone is overcharging you. No theory, no agency jargon.",
+    lead: "Short articles about prices, print and websites. Once you have read them, you will spot a fair offer and won't get overcharged.",
     czytaj: "Read article", wszystkie: "See all articles",
 } as const;
 
@@ -31,7 +31,7 @@ export function BlogTeaser({ locale = "pl" }: { locale?: Locale }) {
                     {en ? EN.h2a : "Najpierw wiedza,"}<br />{en ? EN.h2b : "potem przelew"}
                 </h2>
                 <p className="text-white/60 mt-6 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                    {en ? EN.lead : "Piszę prosto o cenach, druku i stronach. Dowiesz się, co jest warte swoich pieniędzy, a gdzie ktoś Cię naciąga. Bez teorii i bez agencyjnego żargonu."}
+                    {en ? EN.lead : "Krótkie artykuły o cenach, druku i stronach. Po lekturze rozpoznasz dobrą ofertę i nie dasz się naciągnąć."}
                 </p>
             </AnimatedSection>
 
