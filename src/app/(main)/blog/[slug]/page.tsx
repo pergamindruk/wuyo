@@ -147,9 +147,6 @@ export default async function ArticlePage({ params }: Props) {
                                 sizes={isPortrait ? "(max-width: 768px) 100vw, 384px" : "(max-width: 768px) 100vw, 768px"}
                                 className="w-full h-auto rounded-2xl border border-white/10"
                             />
-                            {post.imageAlt && (
-                                <figcaption className="text-white/60 text-xs mt-3">{post.imageAlt}</figcaption>
-                            )}
                         </figure>
                     )}
                 </div>
