@@ -87,6 +87,10 @@ function FlagGB() {
     );
 }
 
+// Po najechaniu wyróżniona jest flaga języka, na który przełącza link.
+const FLAGA_HOVER =
+    "inline-flex transition-[transform,filter] duration-200 ease-out group-hover:scale-125 group-hover:-rotate-3 group-hover:drop-shadow-[0_0_6px_rgba(255,214,10,0.7)] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:rotate-0";
+
 /**
  * Przełącznik PL / EN. Strony stałe mają pary w lib/i18n.ts. Wpis bloga ma inny adres
  * w każdym języku, więc odpowiednik czytamy z <link rel="alternate" hreflang> w <head>
@@ -116,14 +120,14 @@ function LanguageSwitch({ locale, onNavigate, className = "" }: { locale: Locale
             hrefLang={target}
             onClick={naKlikniecie}
             aria-label={TEKSTY[locale].jezyk}
-            className={`inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
+            className={`group inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
         >
-            <span className={`inline-flex items-center gap-1.5 ${locale === "pl" ? "text-gold" : ""}`}>
-                <FlagPL /> PL
+            <span className={`inline-flex items-center gap-1.5 transition-colors ${locale === "pl" ? "text-gold" : "group-hover:text-white"}`}>
+                <span className={locale === "pl" ? "inline-flex" : FLAGA_HOVER}><FlagPL /></span> PL
             </span>
             <span aria-hidden="true" className="text-white/25">/</span>
-            <span className={`inline-flex items-center gap-1.5 ${locale === "en" ? "text-gold" : ""}`}>
-                <FlagGB /> EN
+            <span className={`inline-flex items-center gap-1.5 transition-colors ${locale === "en" ? "text-gold" : "group-hover:text-white"}`}>
+                <span className={locale === "en" ? "inline-flex" : FLAGA_HOVER}><FlagGB /></span> EN
             </span>
         </Link>
     );
