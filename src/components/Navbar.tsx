@@ -63,7 +63,7 @@ const TEKSTY = {
 // Flagi jako SVG, nie emoji: Windows zamiast emoji flag pokazuje same litery „PL” / „GB”.
 function FlagPL() {
     return (
-        <svg viewBox="0 0 16 10" width="16" height="10" aria-hidden="true" className="rounded-[2px] shrink-0 ring-1 ring-white/20">
+        <svg viewBox="0 0 16 10" width="22" height="14" preserveAspectRatio="none" aria-hidden="true" className="rounded-[3px] shrink-0 ring-1 ring-white/40 shadow-sm">
             <rect width="16" height="5" fill="#ffffff" />
             <rect y="5" width="16" height="5" fill="#dc143c" />
         </svg>
@@ -74,7 +74,7 @@ function FlagGB() {
     // Przełącznik bywa na stronie dwa razy (pasek i menu mobilne) — id musi być unikalne.
     const clipId = useId();
     return (
-        <svg viewBox="0 0 60 30" width="16" height="10" aria-hidden="true" className="rounded-[2px] shrink-0 ring-1 ring-white/20">
+        <svg viewBox="0 0 60 30" width="22" height="14" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className="rounded-[3px] shrink-0 ring-1 ring-white/40 shadow-sm">
             <clipPath id={clipId}><rect width="60" height="30" /></clipPath>
             <g clipPath={`url(#${clipId})`}>
                 <rect width="60" height="30" fill="#012169" />
@@ -116,13 +116,13 @@ function LanguageSwitch({ locale, onNavigate, className = "" }: { locale: Locale
             hrefLang={target}
             onClick={naKlikniecie}
             aria-label={TEKSTY[locale].jezyk}
-            className={`inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
+            className={`inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold tracking-wider text-white/60 transition-colors hover:border-gold/50 hover:text-white ${className}`}
         >
-            <span className={`inline-flex items-center gap-1.5 ${locale === "pl" ? "text-gold" : "opacity-80"}`}>
+            <span className={`inline-flex items-center gap-1.5 ${locale === "pl" ? "text-gold" : ""}`}>
                 <FlagPL /> PL
             </span>
             <span aria-hidden="true" className="text-white/25">/</span>
-            <span className={`inline-flex items-center gap-1.5 ${locale === "en" ? "text-gold" : "opacity-80"}`}>
+            <span className={`inline-flex items-center gap-1.5 ${locale === "en" ? "text-gold" : ""}`}>
                 <FlagGB /> EN
             </span>
         </Link>
