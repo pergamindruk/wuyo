@@ -16,6 +16,8 @@ import {
 import { splitAnswer } from '@/lib/lab/ai/context'
 import { PostCreator, type PostCreatorInit } from './PostCreator'
 import { RefineBar } from './RefineBar'
+import { ScoreEditor } from '@/components/lab/ScoreEditor'
+import { CallNoteBox } from '@/components/lab/CallNoteBox'
 
 type Tab = 'odpowiedz' | 'telefon' | 'post' | 'historia'
 
@@ -248,6 +250,18 @@ function CallTab({ firmId }: { firmId: string | null }) {
                             <div>
                                 <h2 className="font-bold text-white">{selected.name}</h2>
                                 <p className="text-xs text-zinc-500">{selected.website || 'brak strony'}</p>
+                                {selected.score > 0 && (
+                                    <ScoreEditor
+                                        key={selected.id}
+                                        queueId={selected.id}
+                                        score={selected.score}
+                                        manualReason={selected.score_manual_reason}
+                                        onSaved={(score, reason) => {
+                                            setSelected({ ...selected, score, score_manual_reason: reason })
+                                            setFirms((l) => (l ?? []).map((x) => (x.id === selected.id ? { ...x, score, score_manual_reason: reason } : x)))
+                                        }}
+                                    />
+                                )}
                             </div>
                             {selected.phone && (
                                 <a href={`tel:${selected.phone.replace(/\s/g, '')}`} className="flex items-center gap-1.5 rounded-lg bg-yellow-400 px-3 py-2 text-sm font-bold text-zinc-950 hover:bg-yellow-300">
@@ -260,9 +274,10 @@ function CallTab({ firmId }: { firmId: string | null }) {
                         ) : (
                             <div className={PROSE}><ReactMarkdown remarkPlugins={[remarkGfm]}>{script}</ReactMarkdown></div>
                         )}
-                        <p className="mt-4 border-t border-zinc-800 pt-3 text-xs text-zinc-500">
-                            Wynik rozmowy zapisujesz na ekranie Dziś, w kolejce telefonów (klawisze 1-4).
-                        </p>
+                        <div className="mt-4 border-t border-zinc-800 pt-4">
+                            <p className="mb-2 text-xs text-zinc-500">Po rozmowie: wklej notatkę, a zapiszę wynik i następny krok. Krótki wynik możesz też kliknąć na ekranie Dziś (klawisze 1-4).</p>
+                            <CallNoteBox key={selected.id} queueId={selected.id} jobId={selected.job_id} clientId={selected.client_id} compact />
+                        </div>
                     </>
                 )}
             </div>

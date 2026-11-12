@@ -9,6 +9,8 @@ import { CALL_OPENERS, OUTCOMES, SOURCE_LABEL } from '@/lib/lab/today/constants'
 import { telHref } from '@/lib/lab/today/format'
 import type { CallOutcome, QueueItem } from '@/lib/lab/today/types'
 import { addManualQueueItem, recordCallOutcome } from '@/app/lab/dzis/actions'
+import { ScoreEditor } from '@/components/lab/ScoreEditor'
+import { CallNoteBox } from '@/components/lab/CallNoteBox'
 
 const TONE: Record<string, string> = {
     zinc: 'border-zinc-700 bg-zinc-800 text-zinc-100 hover:bg-zinc-700',
@@ -37,6 +39,7 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
     const [pickDate, setPickDate] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [showForm, setShowForm] = useState(false)
+    const [noteBox, setNoteBox] = useState(false)
     const [formPending, startForm] = useTransition()
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -144,6 +147,20 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                         </span>
                         {current.industry && <span className="text-sm text-zinc-500">{current.industry}</span>}
                         {current.attempts > 0 && <span className="text-xs text-zinc-600">próba {current.attempts + 1}</span>}
+                        <ScoreEditor
+                            key={current.id}
+                            queueId={current.id}
+                            score={current.score}
+                            manualReason={current.score_manual_reason}
+                            onSaved={(score, reason) =>
+                                setItems((prev) => prev.map((i) => (i.id === current.id ? { ...i, score, score_manual: score, score_manual_reason: reason } : i)))
+                            }
+                        />
+                        {current.client_id && (
+                            <Link href={`/lab/klienci/${current.client_id}`} className="text-xs text-yellow-400 hover:text-yellow-300">
+                                Karta klienta
+                            </Link>
+                        )}
                     </div>
 
                     <h2 className="mt-3 break-words text-3xl font-bold leading-tight text-white sm:text-4xl">{current.name}</h2>
@@ -223,6 +240,34 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                             className="w-full resize-none rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-base text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none"
                         />
                     </label>
+
+                    {!picking && (
+                        <button
+                            type="button"
+                            onClick={() => setNoteBox((v) => !v)}
+                            className="mt-1 flex min-h-11 items-center gap-1.5 text-sm text-zinc-400 hover:text-yellow-400"
+                        >
+                            <Sparkles size={14} /> {noteBox ? 'Schowaj rozpisywanie' : 'Dłuższa rozmowa? Rozpisz notatkę na następny krok'}
+                        </button>
+                    )}
+                    {noteBox && !picking && (
+                        <div className="mt-2">
+                            <CallNoteBox
+                                key={current.id}
+                                queueId={current.id}
+                                jobId={current.job_id}
+                                clientId={current.client_id}
+                                initialText={note}
+                                onApplied={(wynik) => {
+                                    if (wynik !== 'brak') {
+                                        setItems((prev) => prev.filter((i) => i.id !== current.id))
+                                        advance()
+                                        setNoteBox(false)
+                                    }
+                                }}
+                            />
+                        </div>
+                    )}
 
                     {picking ? (
                         <div className="mt-4 rounded-xl border border-yellow-400/30 bg-yellow-400/5 p-4">
