@@ -230,7 +230,7 @@ export function CallQueue({ initialItems }: { initialItems: QueueItem[] }) {
                         )}
                     </div>
 
-                    <label className="mt-3 block">
+                    <label className={`mt-3 ${noteBox ? 'hidden' : 'block'}`}>
                         <span className="sr-only">Notatka z rozmowy</span>
                         <textarea
                             value={note}
