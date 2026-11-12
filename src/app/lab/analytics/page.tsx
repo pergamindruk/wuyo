@@ -5,11 +5,12 @@ import { getGoogleStats, type Ga4Summary, type GscSummary } from '@/lib/lab/goog
 import { serviceAccountEmail } from '@/lib/ai-endpoint'
 import { getOwnStats, type OwnStats } from './actions'
 import { MarketingTips } from './MarketingTips'
+import { List, Tile, rel, statCard } from '@/components/lab/stats/StatBlocks'
 
 export const dynamic = 'force-dynamic'
 
 const DAYS = 28
-const card = 'rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5'
+const card = statCard
 const fmt = (n: number, d = 0) => n.toLocaleString('pl-PL', { maximumFractionDigits: d, minimumFractionDigits: d })
 const pct = (n: number) => `${fmt(n * 100, 1)}%`
 
@@ -21,16 +22,6 @@ function Delta({ now, before }: { now: number; before: number }) {
         <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${up ? 'text-emerald-400' : 'text-red-400'}`}>
             {up ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}{fmt(Math.abs(d) * 100)}%
         </span>
-    )
-}
-
-function Tile({ label, value, sub, delta }: { label: string; value: string; sub?: string; delta?: React.ReactNode }) {
-    return (
-        <div className={card}>
-            <p className="text-xs text-zinc-400">{label}</p>
-            <div className="mt-2 flex items-baseline gap-2"><p className="text-3xl font-bold text-white">{value}</p>{delta}</div>
-            {sub && <p className="mt-1 text-[11px] text-zinc-500">{sub}</p>}
-        </div>
     )
 }
 
@@ -46,29 +37,6 @@ function Bars({ data }: { data: { label: string; value: number }[] }) {
             ))}
         </div>
     )
-}
-
-function List({ title, rows }: { title: string; rows: { k: string; v: string; w: number }[] }) {
-    return (
-        <div className={card}>
-            <p className="mb-3 text-sm font-semibold text-white">{title}</p>
-            {rows.length === 0 ? <p className="text-xs text-zinc-600">Brak danych.</p> : (
-                <ul className="flex flex-col gap-1.5">
-                    {rows.map((r) => (
-                        <li key={r.k} className="relative overflow-hidden rounded-lg px-2.5 py-1.5 text-xs">
-                            <span className="absolute inset-y-0 left-0 bg-white/[0.05]" style={{ width: `${Math.max(3, r.w * 100)}%` }} />
-                            <span className="relative flex justify-between gap-3"><span className="truncate text-zinc-300">{r.k}</span><span className="shrink-0 font-semibold text-white">{r.v}</span></span>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    )
-}
-
-function rel<T>(rows: T[], val: (r: T) => number) {
-    const max = Math.max(1, ...rows.map(val))
-    return (r: T) => val(r) / max
 }
 
 function summaryText(ga4: Ga4Summary | null, gsc: GscSummary | null, own: OwnStats | null): string {

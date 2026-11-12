@@ -134,12 +134,14 @@ export async function markLost(jobId: string, reason: string): Promise<ActionRes
     const { data: job } = await supabase.from('jobs').select('notes').eq('id', jobId).maybeSingle()
     if (!job) return fail('Nie znaleziono zlecenia.')
 
-    const line = `Przegrane: ${reason.trim() || 'bez podanego powodu'}`
+    const why = reason.trim() || 'bez podanego powodu'
+    const line = `Przegrane: ${why}`
     const notes = job.notes ? `${job.notes}\n${line}` : line
     const now = new Date().toISOString()
-    const { error } = await supabase.from('jobs')
-        .update({ outcome: 'przegrane', closed_at: now, updated_at: now, notes })
-        .eq('id', jobId)
+    const base = { outcome: 'przegrane', closed_at: now, updated_at: now, notes }
+    let { error } = await supabase.from('jobs').update({ ...base, lost_reason: why }).eq('id', jobId)
+    // Przed migracją 011 nie ma kolumny lost_reason: zapis bez niej (powód i tak jest w notatkach).
+    if (error) ({ error } = await supabase.from('jobs').update(base).eq('id', jobId))
     if (error) return fail('Nie udało się oznaczyć jako przegrane.')
     return done()
 }

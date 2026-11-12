@@ -59,3 +59,6 @@ export const CALL_OPENERS: Record<QueueSource, string> = {
         'Dzień dobry, Mateusz Machos z Rzeszowa. Widzę, że firma dopiero ruszyła, gratuluję. Robię logo, wizytówki i strony na start. Mogę wysłać krótką propozycję?',
     reczny: 'Dzień dobry, Mateusz Machos, studio WUYO z Rzeszowa.',
 }
+
+/** Szybkie powody przegranej w lejku (jobs.lost_reason). Statystyki grupują po tym tekście. */
+export const LOST_REASONS = ['Za drogo', 'Termin', 'Wybrał kogoś innego', 'Cisza po ofercie', 'Odłożył na później'] as const
