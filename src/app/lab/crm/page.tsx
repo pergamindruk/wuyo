@@ -256,10 +256,10 @@ export default function CRMDashboard() {
                                             <div className="flex items-center justify-end gap-1">
                                                 {item.jobId ? (
                                                     <Link
-                                                        href="/lab/lejek"
+                                                        href={`/lab/klienci/zlecenie/${item.jobId}`}
                                                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
                                                     >
-                                                        W lejku <ArrowRight size={12} />
+                                                        Karta klienta <ArrowRight size={12} />
                                                     </Link>
                                                 ) : (
                                                     <button

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck } from 'lucide-react'
+import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck, Users, TrendingUp } from 'lucide-react'
 
 const navGroups = [
     // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
@@ -12,11 +12,13 @@ const navGroups = [
         label: 'Sprzedaż',
         items: [
             { href: '/lab', label: 'Dziś', icon: Sun },
-            { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
-            { href: '/lab/crm', label: 'Zapytania (CRM)', icon: Inbox },
+            { href: '/lab/crm', label: 'Zapytania', icon: Inbox },
+            { href: '/lab/klienci', label: 'Klienci', icon: Users },
             { href: '/lab/lejek', label: 'Lejek', icon: Kanban },
             { href: '/lab/oferty', label: 'Brief i oferta', icon: FileSignature },
             { href: '/lab/maile', label: 'Maile Harveya', icon: Mail },
+            { href: '/lab/ai-studio', label: 'AI Studio', icon: Bot },
+            { href: '/lab/sprzedaz', label: 'Sprzedaż (liczby)', icon: TrendingUp },
         ],
     },
     {
@@ -103,7 +105,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                             <div className="flex flex-col gap-0.5">
                                 {group.items.map((item) => {
                                     const Icon = item.icon
-                                    const isActive = pathname === item.href
+                                    const isActive = pathname === item.href || (item.href === '/lab/klienci' && pathname.startsWith('/lab/klienci/'))
 
                                     return (
                                         <Link

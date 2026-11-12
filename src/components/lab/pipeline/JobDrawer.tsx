@@ -3,10 +3,11 @@
 // Uzasadnienie "use client": panel ze stanem formularzy i wywołaniami akcji serwera.
 // Importowany tylko przez Board (też wyspa kliencka).
 
+import Link from 'next/link'
 import { useState, useTransition } from 'react'
 import { X } from 'lucide-react'
 import { markLost, recordPayment, updateJob } from '@/app/lab/lejek/actions'
-import { JOB_STAGES } from '@/lib/lab/today/constants'
+import { JOB_STAGES, LOST_REASONS } from '@/lib/lab/today/constants'
 import { formatPLN } from '@/lib/lab/today/format'
 import type { ActionResult, PipelineJob } from './types'
 import { groszeToZlInput, zlToGrosze } from './view'
@@ -72,7 +73,14 @@ export function JobDrawer({ job, onClose, onMove }: {
             >
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <p className="text-xs text-zinc-500">{job.client_name}</p>
+                        <p className="text-xs text-zinc-500">
+                            {job.client_name}
+                            {job.client_id && (
+                                <Link href={`/lab/klienci/${job.client_id}`} className="ml-2 text-yellow-400 hover:text-yellow-300">
+                                    Karta klienta
+                                </Link>
+                            )}
+                        </p>
                         <h2 className="text-lg font-bold text-white leading-snug">{job.title}</h2>
                         <p className="font-heading text-2xl font-bold text-yellow-400 mt-1">
                             {formatPLN(job.price_grosze)} <span className="text-[10px] font-normal text-zinc-500">netto</span>
@@ -163,7 +171,19 @@ export function JobDrawer({ job, onClose, onMove }: {
                     ) : (
                         <div className="flex flex-col gap-2">
                             <label className={label} htmlFor="jd-reason">Dlaczego przegrane?</label>
-                            <input id="jd-reason" value={reason} onChange={(e) => setReason(e.target.value)} className={input} placeholder="np. za drogo, wybrał innego" />
+                            <div className="flex flex-wrap gap-1.5">
+                                {LOST_REASONS.map((r) => (
+                                    <button
+                                        key={r}
+                                        type="button"
+                                        onClick={() => setReason(r)}
+                                        className={`rounded-full border px-2.5 py-1 text-[11px] ${reason === r ? 'border-red-400/60 bg-red-500/10 text-red-300' : 'border-zinc-700 text-zinc-400 hover:border-zinc-600'}`}
+                                    >
+                                        {r}
+                                    </button>
+                                ))}
+                            </div>
+                            <input id="jd-reason" value={reason} onChange={(e) => setReason(e.target.value)} className={input} placeholder="albo wpisz własny powód" />
                             <div className="flex gap-2">
                                 <button type="button" disabled={pending} onClick={lost} className="bg-red-500/90 hover:bg-red-500 disabled:opacity-50 text-white font-semibold px-3 py-2 rounded-lg text-xs">
                                     Potwierdź
