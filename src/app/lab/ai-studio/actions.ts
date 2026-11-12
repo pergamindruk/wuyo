@@ -99,13 +99,16 @@ export type CallCandidate = {
     reason: string
     problems: string[]
     score: number
+    score_manual_reason?: string | null
+    job_id?: string | null
+    client_id?: string | null
 }
 
 export async function getCallCandidates(limit = 12): Promise<CallCandidate[]> {
     const supabase = await createClient()
     const { data } = await supabase
         .from('call_queue')
-        .select('id, name, industry, phone, website, reason, problems, score')
+        .select('*') // '*' zamiast listy: działa też przed migracją 011 (score_manual_reason)
         .in('status', ['do_kontaktu', 'nie_odebral', 'oddzwonic'])
         .lte('next_at', new Date().toISOString())
         .order('score', { ascending: false })

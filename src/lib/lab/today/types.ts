@@ -13,6 +13,9 @@ export interface QueueItem {
     reason: string
     problems: string[]
     score: number
+    /** Ręczna ocena (migracja 011); sync_centrum.py jej nie nadpisuje. */
+    score_manual?: number | null
+    score_manual_reason?: string | null
     status: QueueStatus
     attempts: number
     next_at: string
@@ -24,7 +27,7 @@ export interface QueueItem {
 /** Wynik rozmowy wybierany w kolejce (klawisze 1–4). */
 export type CallOutcome = 'nie_odebral' | 'nie_chce' | 'oddzwonic' | 'chce_oferte'
 
-export type ActivityKind = 'telefon' | 'mail' | 'oferta' | 'zaliczka' | 'platnosc' | 'notatka_dnia'
+export type ActivityKind = 'telefon' | 'mail' | 'oferta' | 'zaliczka' | 'platnosc' | 'notatka_dnia' | 'rozmowa'
 
 export interface Activity {
     id: string

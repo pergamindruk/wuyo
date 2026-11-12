@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { MAX_ATTEMPTS, NO_ANSWER_RETRY_DAYS, OUTCOMES, SERVICES } from '@/lib/lab/today/constants'
 import type { CallOutcome, QueueItem } from '@/lib/lab/today/types'
 import { warsawIsoDate } from '@/lib/lab/today/format'
+import { logAuditEvent } from '@/lib/audit'
 
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
@@ -99,6 +100,27 @@ export async function recordCallOutcome(
     if (logError) console.error('activity_log insert failed:', logError.message)
 
     revalidatePath('/lab')
+    return { ok: true }
+}
+
+/** Ręczna ocena leada 0–100 z powodem. Nocny sync jej nie nadpisze (score_manual). */
+export async function setManualScore(queueId: string, score: number, reason: string): Promise<ActionResult> {
+    const supabase = await createClient()
+    if (!(await requireUser(supabase))) return { ok: false, error: 'Brak dostępu. Zaloguj się ponownie.' }
+    const value = Math.round(Number(score))
+    const why = reason.trim()
+    if (!Number.isFinite(value) || value < 0 || value > 100) return { ok: false, error: 'Ocena musi być od 0 do 100.' }
+    if (!why) return { ok: false, error: 'Napisz krótko, dlaczego zmieniasz ocenę.' }
+
+    const { error } = await supabase
+        .from('call_queue')
+        .update({ score: value, score_manual: value, score_manual_reason: why, updated_at: new Date().toISOString() })
+        .eq('id', queueId)
+    if (error) return { ok: false, error: 'Nie udało się zapisać oceny.' }
+
+    await logAuditEvent('lead_score_manual', { queueId, score: value, reason: why })
+    revalidatePath('/lab')
+    revalidatePath('/lab/ai-studio')
     return { ok: true }
 }
 

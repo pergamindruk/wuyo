@@ -15,7 +15,9 @@ export type AuditAction =
     | "post_publish"
     | "post_schedule"
     | "calendar_event_add"
-    | "calendar_event_delete";
+    | "calendar_event_delete"
+    | "lead_score_manual"
+    | "call_note_apply";
 
 export async function logAuditEvent(
     action: AuditAction,
