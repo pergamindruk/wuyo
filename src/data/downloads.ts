@@ -19,6 +19,27 @@ export const DOWNLOADS: DownloadFile[] = [
         desc: '3 strony: pytania na logo i stronę internetową oraz lista rzeczy do sprawdzenia przed wysłaniem. Wydrukujesz i wypełnisz długopisem w 30 do 60 minut.',
         article: '/blog/jak-napisac-brief-dla-projektanta',
     },
+    {
+        slug: 'lista-nowa-firma',
+        file: 'lista-nowa-firma-wuyo.pdf',
+        title: 'Nowa firma: lista materiałów na start (PDF)',
+        desc: '2 strony: co zamówić przed pierwszym klientem, co w pierwszych miesiącach, a co może poczekać. Do tego formalności, o których łatwo zapomnieć, i 5 najdroższych błędów.',
+        article: '/blog/identyfikacja-wizualna-mala-firma-od-czego-zaczac',
+    },
+    {
+        slug: 'plik-do-druku',
+        file: 'plik-do-druku-wuyo.pdf',
+        title: 'Plik do druku: ściąga przed wysłaniem (PDF)',
+        desc: '2 strony: spady i wymiary formatów, kolory CMYK, rozdzielczość, czcionki, eksport z Canvy i lista kontrolna przed wysłaniem do drukarni. Plus wskazówki do nadruku na koszulki.',
+        article: '/blog/jak-przygotowac-plik-do-druku',
+    },
+    {
+        slug: 'strona-firmowa-lista',
+        file: 'strona-firmowa-lista-wuyo.pdf',
+        title: 'Strona firmowa: lista kontrolna w 25 punktach (PDF)',
+        desc: '2 strony: co musi mieć strona małej firmy, żeby klient zadzwonił. Pierwszy ekran, treść, kontakt, telefon, Google, prawo i własność domeny.',
+        article: '/blog/jak-stworzyc-strone-internetowa-dla-firmy',
+    },
 ]
 
 export const findDownload = (slug: string) => DOWNLOADS.find((d) => d.slug === slug)
