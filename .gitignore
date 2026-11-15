@@ -55,3 +55,6 @@ leads.json
 
 # Pliki do pobrania dla odwiedzajacych (szablony) - publiczne
 !pliki-do-pobrania/*.pdf
+
+# Sticker Studio: lokalne paczki i projekty naklejek
+output/

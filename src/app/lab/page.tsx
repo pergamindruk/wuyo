@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Sticker } from 'lucide-react'
 import { getAlerts } from './actions'
 import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
 import { TZ, warsawIsoDate, warsawMidnightMs, warsawParts } from '@/lib/lab/today/format'
@@ -112,6 +113,23 @@ export default async function TodayPage() {
                 <WeekStatsCard activities={weekActivities} />
                 <EveningCard todayActivities={todayActivities} />
             </div>
+
+            {/* Narzędzia produkcyjne studia */}
+            <Link
+                href="/lab/stickers"
+                className="group flex items-center justify-between gap-4 rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 transition hover:border-yellow-400/30"
+            >
+                <div className="flex items-center gap-4">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-400/20 bg-yellow-400/5 text-yellow-400">
+                        <Sticker size={20} />
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-white">Sticker Studio A4</p>
+                        <p className="text-xs text-zinc-500">Naklejki: Gemini lub plik → obwódka → arkusz 300 DPI + DXF do Cameo 5</p>
+                    </div>
+                </div>
+                <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
+            </Link>
         </div>
     )
 }
