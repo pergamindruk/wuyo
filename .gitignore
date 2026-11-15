@@ -54,4 +54,4 @@ leads.json
 !public/fonts/OFL-*.txt
 
 # Pliki do pobrania dla odwiedzajacych (szablony) - publiczne
-!public/pobierz/*.pdf
+!pliki-do-pobrania/*.pdf

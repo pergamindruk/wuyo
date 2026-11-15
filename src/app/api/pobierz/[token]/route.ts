@@ -21,12 +21,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
     const expired = row && Date.now() - new Date(row.created_at as string).getTime() > VALID_DAYS * 86_400_000;
     if (!row || !plik || expired) return NextResponse.redirect(plik ? `https://wuyo.pl/pobierz/${plik.slug}?wygasl=1` : "https://wuyo.pl/blog", 302);
 
+    // Najpierw plik, potem licznik: nieudane pobranie się nie liczy.
+    const data = await readFile(path.join(process.cwd(), "pliki-do-pobrania", plik.file));
     await db.from("downloads").update({
         confirmed_at: row.confirmed_at ?? new Date().toISOString(),
         download_count: (row.download_count as number) + 1,
     }).eq("id", row.id);
-
-    const data = await readFile(path.join(process.cwd(), "pliki-do-pobrania", plik.file));
     return new NextResponse(new Uint8Array(data), {
         headers: {
             "Content-Type": "application/pdf",

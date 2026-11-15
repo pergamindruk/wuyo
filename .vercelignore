@@ -6,4 +6,4 @@
 *.zip
 *.pdf
 .next
-!public/pobierz/*.pdf
+!pliki-do-pobrania/*.pdf
