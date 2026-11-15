@@ -3,6 +3,7 @@ import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/ema
 import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
+import { sourceForVisitor, visitorId } from "@/lib/visitor";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -222,13 +223,16 @@ export async function POST(req: NextRequest) {
 
         if (supabase) {
             try {
+                const visitor = visitorId(req);
                 const { error: dbError } = await supabase
                     .from('leads')
                     .insert([{
                         name: data.name,
                         email: data.email,
                         type: typeLabel[data.path] || data.path,
-                        details: buildDetails(data)
+                        details: buildDetails(data),
+                        visitor,
+                        source: await sourceForVisitor(supabase, visitor),
                     }]);
 
                 if (dbError) console.error("Database save error (brief):", dbError);

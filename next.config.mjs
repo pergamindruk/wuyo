@@ -26,6 +26,16 @@ const nextConfig = {
         ],
     },
     reactStrictMode: true,
+    // Pliki do pobrania leżą poza public; trasa z linku w mailu czyta je z dysku.
+    outputFileTracingIncludes: {
+        "/api/pobierz/[token]": ["./pliki-do-pobrania/**"],
+    },
+    async redirects() {
+        return [
+            // Stary bezpośredni link do PDF (zaindeksowany w Google) prowadzi teraz do formularza.
+            { source: "/pobierz/brief-dla-projektanta-wuyo.pdf", destination: "/pobierz/brief-dla-projektanta", permanent: true },
+        ];
+    },
     async headers() {
         return [
             {

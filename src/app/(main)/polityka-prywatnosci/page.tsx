@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage() {
                             <li>Do działania Serwisu korzystam z usług firm, którym powierzam przetwarzanie danych (art. 28 RODO). Przetwarzają one dane tylko na moje zlecenie i w zakresie potrzebnym do wykonania usługi:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li><strong>Vercel Inc.</strong> (USA): hosting Serwisu. Przez jego serwery przechodzą wszystkie dane wysyłane przez stronę, w tym treść formularzy. Vercel zbiera też anonimowe statystyki odwiedzin i szybkości strony (Vercel Analytics, Speed Insights), bez plików cookies.</li>
-                                    <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy i czatu oraz anonimowe dane o odwiedzanych podstronach.</li>
+                                    <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy i czatu, adresy e-mail podane przy pobraniu plików oraz anonimowe dane o odwiedzanych podstronach: adres podstrony, skąd przyszło wejście (np. wyszukiwarka, Facebook, link z kampanii) i jednodniowy skrót technicznych danych przeglądarki. Skrótu nie da się odwrócić do adresu IP ani powiązać z Tobą między dniami. Nic nie zapisuję w Twojej przeglądarce.</li>
                                     <li><strong>Resend</strong> (Plus Five Five Inc., USA): wysyłka wiadomości e-mail z Serwisu, czyli powiadomień o Twoim zapytaniu i potwierdzeń wysłanych na Twój adres.</li>
                                     <li><strong>Google</strong> (Gemini API): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Korzystam z bezpłatnej wersji tej usługi, dlatego Google może wykorzystywać treść rozmów do ulepszania swoich usług, a jego pracownicy mogą ją przeglądać. W tym zakresie Google działa jako osobny administrator danych na zasadach swojej polityki prywatności (policies.google.com/privacy). Nie wpisuj w czacie danych osobowych innych niż potrzebne do kontaktu ani danych wrażliwych. Jeśli wolisz, napisz na kontakt@wuyo.pl albo skorzystaj z formularza.</li>
                                     <li><strong>Google Ireland Limited</strong> i <strong>Meta Platforms Ireland Limited</strong>: statystyki i pomiar reklam, tylko po Twojej zgodzie (szczegóły w § 5).</li>
@@ -82,6 +82,8 @@ export default function PrivacyPolicyPage() {
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li>odpowiedź na zapytanie i przygotowanie wyceny: działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO),</li>
                                     <li>realizacja zamówionej usługi: wykonanie umowy (art. 6 ust. 1 lit. b RODO),</li>
+                                    <li>wysłanie pliku do pobrania (np. szablonu briefu) na podany e-mail: wykonanie usługi, o którą prosisz (art. 6 ust. 1 lit. b RODO),</li>
+                                    <li>maile z poradami i ofertami: Twoja zgoda zaznaczona przy pobraniu pliku (art. 6 ust. 1 lit. a RODO oraz art. 398 Prawa komunikacji elektronicznej); bez tej zgody nie wysyłam Ci żadnych ofert,</li>
                                     <li>wystawianie faktur i prowadzenie księgowości: obowiązek prawny (art. 6 ust. 1 lit. c RODO),</li>
                                     <li>dochodzenie lub obrona przed roszczeniami oraz anonimowe statystyki działania strony: prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO),</li>
                                     <li>cookies analityczne i marketingowe: Twoja zgoda (art. 6 ust. 1 lit. a RODO).</li>
@@ -92,6 +94,7 @@ export default function PrivacyPolicyPage() {
                                     <li>zapytania, po których nie doszło do współpracy: do 12 miesięcy od ostatniego kontaktu,</li>
                                     <li>dane klientów: przez czas współpracy, a potem do upływu terminu przedawnienia roszczeń,</li>
                                     <li>faktury i dokumenty księgowe: 5 lat od końca roku, w którym minął termin zapłaty podatku,</li>
+                                    <li>e-mail podany przy pobraniu pliku bez zgody na maile: do 12 miesięcy, a ze zgodą: do jej wycofania (wystarczy odpisać „wypisz”),</li>
                                     <li>dane z cookies: do wycofania zgody lub wygaśnięcia pliku cookie.</li>
                                 </ul>
                             </li>

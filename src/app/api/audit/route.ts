@@ -3,6 +3,7 @@ import { sendEmail, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { escapeHtml, isValidEmail, isSafeHttpUrl, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
+import { sourceForVisitor, visitorId } from "@/lib/visitor";
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
@@ -26,13 +27,17 @@ export async function POST(req: NextRequest) {
         }
         const emailClean = normalizeEmail(email);
 
+        const visitor = visitorId(req);
+        const source = await sourceForVisitor(supabase, visitor);
         const { error: dbError } = await supabase
             .from('leads')
             .insert([{
                 name: 'Zgłoszenie Audytu',
                 email,
                 type: 'Audit',
-                details: `URL: ${url}`
+                details: `URL: ${url}`,
+                visitor,
+                source,
             }]);
 
         if (dbError) console.error("Database save error (audit):", dbError);

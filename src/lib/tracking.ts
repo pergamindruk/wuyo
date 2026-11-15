@@ -12,7 +12,7 @@ type TrackingWindow = Window & {
     fbq?: (command: 'track', eventName: string, params?: GtagParams) => void
 }
 
-export type LeadType = 'quick' | 'branding' | 'web' | 'audyt' | 'druk' | 'czatbot'
+export type LeadType = 'quick' | 'branding' | 'web' | 'audyt' | 'druk' | 'czatbot' | 'pobranie'
 export type ContactMethod = 'phone' | 'whatsapp'
 
 // Bezpieczne wywołanie GA4 — działa tylko gdy gtag załadowany
@@ -47,6 +47,12 @@ export function trackPhoneClick() {
 export function trackWhatsAppClick() {
     gtagEvent('contact_click', { method: 'whatsapp' satisfies ContactMethod })
     fbqEvent('Contact', { method: 'whatsapp' })
+}
+
+// Konwersja: ktoś zostawił e-mail, żeby dostać plik (szablon briefu itp.).
+export function trackDownloadRequest(file: string) {
+    gtagEvent('generate_lead', { lead_type: 'pobranie', file_name: file })
+    fbqEvent('Lead', { content_name: `pobranie:${file}` })
 }
 
 // Konwersja: czatbot wyciagnal od kogos imie i adres e-mail.

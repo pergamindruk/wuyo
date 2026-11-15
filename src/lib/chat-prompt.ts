@@ -88,7 +88,7 @@ ${SHOW_PRICES ? "- Pakiety: czas realizacji podany przy każdym pakiecie wyżej.
 - Strona internetowa: domena i serwer na pierwszy rok są w cenie. Od drugiego roku: abonament Opieka Strony${SHOW_PRICES ? " 199 zł/mc" : ""} (serwer, domena, kopie, 1 h drobnych zmian) — inne rozwiązania ustala Mateusz.
 
 ## Przydatne linki dla klienta
-- Szablon briefu do wydruku (PDF, za darmo): wuyo.pl/pobierz/brief-dla-projektanta-wuyo.pdf
+- Szablon briefu do wydruku (PDF, za darmo, link przychodzi na e-mail): wuyo.pl/pobierz/brief-dla-projektanta
 ${SHOW_PRICES ? PRICE_LINKS : ""}- Wszystkie poradniki: wuyo.pl/blog
 
 ## Zbieranie kontaktu

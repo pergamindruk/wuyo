@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
-import { trackPhoneClick, trackWhatsAppClick } from "@/lib/tracking";
 import { usePathname } from "next/navigation";
 import { localeFromPath } from "@/lib/i18n";
 
@@ -90,7 +89,6 @@ export function MobileContactBar() {
                     href={WHATSAPP}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={trackWhatsAppClick}
                     tabIndex={widoczny ? 0 : -1}
                     className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 text-white font-bold text-sm active:bg-white/10 transition-colors"
                 >
@@ -108,7 +106,6 @@ export function MobileContactBar() {
                 </a>
                 <a
                     href={`tel:${TELEFON}`}
-                    onClick={trackPhoneClick}
                     tabIndex={widoczny ? 0 : -1}
                     className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ffeb52] text-[#1c1b17] font-bold text-sm active:bg-[#ffe000] transition-colors"
                 >

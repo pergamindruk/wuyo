@@ -53,7 +53,9 @@ function summaryText(ga4: Ga4Summary | null, gsc: GscSummary | null, own: OwnSta
         out.push('Zapytania: ' + gsc.queries.map((q) => `"${q.query}" klik ${q.clicks}, wyśw ${q.impressions}, poz ${fmt(q.position, 1)}`).join('; '))
     }
     if (own) {
-        out.push(`Własny licznik: ${own.views} odsłon (poprzednio ${own.prevViews}). Strony: ${own.pages.map((p) => `${p.page} ${p.views}`).join('; ')}. Polecające: ${own.referrers.map((r) => `${r.referrer} ${r.views}`).join('; ')}.`)
+        out.push(`Potwierdzone (własny licznik od ${own.since}): ${own.visitors} osób (poprzednio ${own.prevVisitors}), ${own.views} odsłon, leady ${own.leads.total}, pobrania potwierdzone ${own.downloads.confirmed}.`)
+        out.push('Źródła (osoby/leady/pobrania/kliknięcia kontakt): ' + own.sources.map((r) => `${r.source} ${r.visitors}/${r.leads}/${r.downloads}/${r.contacts}`).join('; '))
+        out.push('Strony wejścia: ' + own.landings.map((p) => `${p.page} ${p.views}`).join('; '))
     }
     return out.join('\n') || 'Brak danych.'
 }
@@ -158,19 +160,47 @@ export default async function AnalyticsPage() {
 
             {own && (
                 <>
+                    <div>
+                        <p className="text-sm font-semibold text-white">Potwierdzone dane z własnego licznika</p>
+                        <p className="text-xs text-white/40">Od {own.since}. Bez robotów, testów i Twojego komputera. Osoba = unikalny odwiedzający danego dnia. Leady i pobrania prosto z bazy.</p>
+                    </div>
                     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                        <Tile label="Odsłony (własny licznik)" value={fmt(own.views)} delta={<Delta now={own.views} before={own.prevViews} />} sub={`poprzednie ${DAYS} dni: ${fmt(own.prevViews)}`} />
-                        <Tile label="Średnio dziennie" value={fmt(own.views / DAYS, 1)} />
-                        <Tile label="Najlepszy dzień" value={fmt(Math.max(0, ...own.daily.map((d) => d.views)))} sub={own.daily.reduce((a, b) => (b.views > a.views ? b : a), own.daily[0] ?? { date: '', views: 0 }).date} />
-                        <Tile label="Podstron z ruchem" value={fmt(own.pages.length)} />
+                        <Tile label="Osoby" value={fmt(own.visitors)} delta={<Delta now={own.visitors} before={own.prevVisitors} />} sub={`poprzednie ${DAYS} dni: ${fmt(own.prevVisitors)}`} />
+                        <Tile label="Leady (formularze, czat, audyt)" value={fmt(own.leads.total)} sub={own.leads.byType.map((t) => `${t.type} ${t.count}`).join(' · ') || 'brak'} />
+                        <Tile label="Pobrania potwierdzone" value={fmt(own.downloads.confirmed)} sub={`prośby: ${fmt(own.downloads.requested)} · ze zgodą na maile: ${fmt(own.downloads.withConsent)}`} />
+                        <Tile label="Kliknięcia telefon / WhatsApp" value={fmt(own.events.reduce((a, e) => a + e.count, 0))} sub={own.events.map((e) => `${e.event} ${e.count}`).join(' · ') || 'brak'} />
                     </div>
                     <div className={card}>
-                        <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-white"><Users size={15} className="text-yellow-400" /> Odsłony dziennie</p>
+                        <p className="mb-3 text-sm font-semibold text-white">Skąd przychodzą klienci</p>
+                        {own.sources.length === 0 ? <p className="text-sm text-white/40">Jeszcze brak danych z nowego licznika.</p> : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead className="text-left text-xs text-white/40">
+                                        <tr><th className="py-2 pr-4 font-medium">Źródło</th><th className="py-2 pr-4 font-medium text-right">Osoby</th><th className="py-2 pr-4 font-medium text-right">Leady</th><th className="py-2 pr-4 font-medium text-right">Pobrania</th><th className="py-2 font-medium text-right">Tel./WhatsApp</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {own.sources.map((r) => (
+                                            <tr key={r.source} className="border-t border-white/5 text-white/80">
+                                                <td className="py-2 pr-4">{r.source}</td>
+                                                <td className="py-2 pr-4 text-right">{fmt(r.visitors)}</td>
+                                                <td className="py-2 pr-4 text-right">{r.leads ? <b className="text-yellow-400">{r.leads}</b> : 0}</td>
+                                                <td className="py-2 pr-4 text-right">{r.downloads}</td>
+                                                <td className="py-2 text-right">{r.contacts}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        <p className="mt-3 text-xs text-white/40">Kampanie: dodawaj do linków ?utm_source=facebook&amp;utm_campaign=grudzien, wtedy wejścia pokażą się tu osobno.</p>
+                    </div>
+                    <div className={card}>
+                        <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-white"><Users size={15} className="text-yellow-400" /> Osoby dziennie</p>
                         <Bars data={own.daily.map((d) => ({ label: d.date, value: d.views }))} />
                     </div>
                     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                        <List title="Podstrony" rows={own.pages.map((p) => ({ k: p.page, v: String(p.views), w: rel(own.pages, (x) => x.views)(p) }))} />
-                        <List title="Strony, z których ktoś przyszedł" rows={own.referrers.map((r) => ({ k: r.referrer, v: String(r.views), w: rel(own.referrers, (x) => x.views)(r) }))} />
+                        <List title="Strony wejścia (pierwsza oglądana)" rows={own.landings.map((p) => ({ k: p.page, v: String(p.views), w: rel(own.landings, (x) => x.views)(p) }))} />
+                        <List title="Wszystkie odsłony podstron" rows={own.pages.map((p) => ({ k: p.page, v: String(p.views), w: rel(own.pages, (x) => x.views)(p) }))} />
                     </div>
                 </>
             )}

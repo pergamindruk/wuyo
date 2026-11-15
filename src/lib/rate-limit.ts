@@ -54,4 +54,5 @@ export const LIMITS = {
     brief: { limit: 5,  windowMs: 60_000 },   // 5 req / min
     audit: { limit: 3,  windowMs: 60_000 },   // 3 req / min
     lead:  { limit: 5,  windowMs: 60_000 },   // 5 req / min
+    download: { limit: 5, windowMs: 600_000 }, // 5 próśb o plik / 10 min
 } as const

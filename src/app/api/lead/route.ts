@@ -3,6 +3,7 @@ import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { sendEmail, FROM_NOTIFICATION, TO_MATEUSZ } from "@/lib/email";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { escapeHtml, isValidEmail, normalizeEmail } from "@/lib/sanitize";
+import { sourceForVisitor, visitorId } from "@/lib/visitor";
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
@@ -21,13 +22,16 @@ export async function POST(req: NextRequest) {
 
         const safeName = escapeHtml(name);
         const emailClean = normalizeEmail(email);
+        const visitor = visitorId(req);
         const { error: dbError } = await supabase
             .from('leads')
             .insert([{
                 name,
                 email,
                 type: 'Chatbot',
-                details: 'Lead pozyskany przez chatbota AI.'
+                details: 'Lead pozyskany przez chatbota AI.',
+                visitor,
+                source: await sourceForVisitor(supabase, visitor),
             }]);
 
         if (dbError) console.error("Database save error:", dbError);
