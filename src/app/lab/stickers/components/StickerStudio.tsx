@@ -3,13 +3,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { Download, FileUp, ImagePlus, Loader2, Save, Sparkles, Trash2, Upload, Wand2 } from 'lucide-react'
+import { Download, FileUp, ImagePlus, Loader2, Maximize2, Save, Sparkles, Trash2, Undo2, Upload, Wand2, ZoomIn } from 'lucide-react'
 import { layoutSheet } from '@/lib/lab/stickers/geometry'
 import {
     DEFAULT_SETTINGS, SIZE_MAX, SIZE_MIN, clampQty, clampSize, sanitizeSettings,
     type StickerGeometry, type StickerSettings,
 } from '@/lib/lab/stickers/types'
 import SheetPreviewA4, { type PreviewDesign } from './SheetPreviewA4'
+import ZoomModal, { StickerCloseup } from './ZoomModal'
 
 type Design = {
     id: string
@@ -22,6 +23,8 @@ type Design = {
     qty: number
     geo?: StickerGeometry
     geoKey?: string
+    /** Poprzednie wersje grafiki (do „Cofnij”), tylko w tej sesji. */
+    history?: string[]
 }
 
 type Preset = { name: string; settings: StickerSettings }
@@ -33,6 +36,14 @@ const STYLES: { id: string; label: string }[] = [
     { id: 'comic', label: 'Komiks' },
     { id: 'realistic', label: 'Realistyczny 3D' },
     { id: 'logo', label: 'Logo firmy' },
+]
+
+const REFINE_CHIPS = [
+    'większy i czytelniejszy napis',
+    'grubszy ciemny kontur',
+    'bardziej nasycone kolory',
+    'mniej drobnych detali',
+    'usuń cienie i połysk',
 ]
 
 const DRAFT_KEY = 'wuyo-stickers-draft'
@@ -131,6 +142,13 @@ export default function StickerStudio() {
     const [exporting, setExporting] = useState(false)
     const [showCut, setShowCut] = useState(true)
     const [selectedId, setSelectedId] = useState<string | null>(null)
+    const [zoomId, setZoomId] = useState<string | null>(null)
+    const [sheetZoom, setSheetZoom] = useState(false)
+    const [refineText, setRefineText] = useState('')
+    const [refining, setRefining] = useState(false)
+    const [enhancing, setEnhancing] = useState<'new' | 'edit' | null>(null)
+    /** Tekst sprzed ulepszenia, do „Przywróć mój”. */
+    const [before, setBefore] = useState<{ new?: string; edit?: string }>({})
 
     const inflight = useRef(new Set<string>())
     const projectInput = useRef<HTMLInputElement>(null)
@@ -148,7 +166,7 @@ export default function StickerStudio() {
     useEffect(() => {
         if (!loaded) return
         const t = setTimeout(() => {
-            const ok = writeStore(DRAFT_KEY, { designs: designs.map(({ geo, geoKey, ...rest }) => { void geo; void geoKey; return rest }), settings })
+            const ok = writeStore(DRAFT_KEY, { designs: designs.map(({ geo, geoKey, history, ...rest }) => { void geo; void geoKey; void history; return rest }), settings })
             if (!ok) writeStore(DRAFT_KEY, { designs: [], settings })
         }, 800)
         return () => clearTimeout(t)
@@ -156,11 +174,11 @@ export default function StickerStudio() {
 
     // Licznik sekund przy generowaniu (Gemini potrafi myśleć minutę).
     useEffect(() => {
-        if (!busy) return
+        if (!busy && !refining) return
         setElapsed(0)
         const t = setInterval(() => setElapsed((e) => e + 1), 1000)
         return () => clearInterval(t)
-    }, [busy])
+    }, [busy, refining])
 
     // Prawdziwe kontury z serwera, z opóźnieniem, żeby suwak nie strzelał zapytaniami.
     useEffect(() => {
@@ -221,6 +239,66 @@ export default function StickerStudio() {
         } finally {
             setBusy(false)
         }
+    }
+
+    async function refine(d: Design, instruction: string) {
+        if (instruction.trim().length < 3) return toast.error('Napisz, co poprawić.')
+        setRefining(true)
+        try {
+            const r = await postJson<{ cutout: string }>('/api/lab/stickers/generate', { mode: 'edit', image: d.src, instruction })
+            const { w, h } = await imageSize(r.cutout)
+            setDesigns((all) => all.map((x) => (x.id === d.id ? { ...x, src: r.cutout, w, h, history: [...(x.history ?? []), x.src].slice(-5) } : x)))
+            setRefineText('')
+            toast.success('Poprawione. Nie pasuje? Kliknij „Cofnij”.')
+        } catch (e) {
+            toast.error((e as Error).message)
+        } finally {
+            setRefining(false)
+        }
+    }
+
+    /** AI dopisuje detale do opisu. Wynik ląduje w polu, można go jeszcze poprawić ręcznie. */
+    async function enhance(kind: 'new' | 'edit') {
+        const text = kind === 'new' ? prompt : refineText
+        if (text.trim().length < 3) return toast.error('Najpierw wpisz choć kilka słów.')
+        setEnhancing(kind)
+        try {
+            const r = await postJson<{ prompt: string }>('/api/lab/stickers/generate', { mode: 'enhance', kind, prompt: text, style })
+            setBefore((b) => ({ ...b, [kind]: text }))
+            if (kind === 'new') setPrompt(r.prompt)
+            else setRefineText(r.prompt)
+        } catch (e) {
+            toast.error((e as Error).message)
+        } finally {
+            setEnhancing(null)
+        }
+    }
+
+    function restore(kind: 'new' | 'edit') {
+        const text = before[kind]
+        if (text === undefined) return
+        if (kind === 'new') setPrompt(text)
+        else setRefineText(text)
+        setBefore((b) => ({ ...b, [kind]: undefined }))
+    }
+
+    const enhanceRow = (kind: 'new' | 'edit') => (
+        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            <button type="button" onClick={() => enhance(kind)} disabled={!!enhancing || busy || refining} className={btnGhost}
+                title="AI rozpisze opis na szczegóły: kolory, detale, kompozycja, napisy">
+                {enhancing === kind ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} />}
+                {enhancing === kind ? 'Dopracowuję opis…' : 'Ulepsz opis (AI)'}
+            </button>
+            {before[kind] !== undefined && (
+                <button type="button" onClick={() => restore(kind)} className="text-[11px] text-zinc-500 underline-offset-2 hover:text-white hover:underline">Przywróć mój</button>
+            )}
+        </div>
+    )
+
+    function undo(d: Design) {
+        const prev = d.history?.at(-1)
+        if (!prev) return
+        imageSize(prev).then(({ w, h }) => updateDesign(d.id, { src: prev, w, h, history: d.history!.slice(0, -1) }))
     }
 
     async function upload(files: FileList | null) {
@@ -308,6 +386,8 @@ export default function StickerStudio() {
     }
 
     const total = layout.placements.length
+    const zoomDesign = zoomId ? designs.find((d) => d.id === zoomId) ?? null : null
+    const zoomGeo = zoomDesign ? previewMap.get(zoomDesign.id)!.geo : null
     const overflow = Object.entries(layout.overflow)
 
     return (
@@ -330,9 +410,10 @@ export default function StickerStudio() {
                         <div className="flex flex-col gap-3">
                             <div>
                                 <label className={label} htmlFor="st-prompt">Co ma być na naklejce</label>
-                                <textarea id="st-prompt" value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={3} maxLength={1200}
+                                <textarea id="st-prompt" value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={5} maxLength={1200}
                                     placeholder="np. uśmiechnięta filiżanka kawy z napisem „Kawiarnia Rynek”, ciepłe kolory"
                                     className={`${input} resize-y`} />
+                                {enhanceRow('new')}
                             </div>
                             <div>
                                 <span className={label}>Styl</span>
@@ -407,7 +488,7 @@ export default function StickerStudio() {
                                 return (
                                     <li key={d.id} onClick={() => setSelectedId(d.id)}
                                         className={`grid grid-cols-[56px_minmax(0,1fr)] gap-3 rounded-2xl border p-2.5 transition sm:grid-cols-[56px_minmax(0,1fr)_auto] ${selectedId === d.id ? 'border-yellow-400/40 bg-yellow-400/[0.04]' : 'border-white/[0.06] bg-zinc-950/30'}`}>
-                                        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[repeating-conic-gradient(#27272a_0_25%,#1f1f23_0_50%)] bg-[length:12px_12px] p-1">
+                                        <div onClick={(e) => { e.stopPropagation(); setZoomId(d.id) }} title="Lupa i poprawki" className="flex h-14 w-14 cursor-zoom-in items-center justify-center rounded-xl bg-[repeating-conic-gradient(#27272a_0_25%,#1f1f23_0_50%)] bg-[length:12px_12px] p-1">
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img src={d.src} alt={d.name} className="max-h-full max-w-full object-contain" />
                                         </div>
@@ -433,6 +514,10 @@ export default function StickerStudio() {
                                                     onChange={(e) => updateDesign(d.id, { qty: clampQty(e.target.value) })}
                                                     className="w-16 rounded-lg border border-white/10 bg-zinc-950/60 px-2 py-1 text-right text-sm text-white outline-none focus:border-yellow-400/60" />
                                             </label>
+                                            <button onClick={(e) => { e.stopPropagation(); setZoomId(d.id) }} title="Lupa i poprawki"
+                                                className="rounded-full p-1.5 text-zinc-400 transition hover:bg-yellow-400/10 hover:text-yellow-300" aria-label={`Lupa i poprawki: ${d.name}`}>
+                                                <ZoomIn size={15} />
+                                            </button>
                                             <button onClick={(e) => { e.stopPropagation(); setDesigns((all) => all.filter((x) => x.id !== d.id)) }}
                                                 className="rounded-full p-1.5 text-zinc-500 transition hover:bg-red-400/10 hover:text-red-400" aria-label={`Usuń ${d.name}`}>
                                                 <Trash2 size={14} />
@@ -508,9 +593,12 @@ export default function StickerStudio() {
                 <section className={card}>
                     <div className="mb-3 flex items-center justify-between gap-2">
                         <h2 className="text-base font-semibold text-white"><span className="mr-2 text-yellow-400">4.</span>Arkusz A4</h2>
-                        <Toggle checked={showCut} onChange={setShowCut} label="Linie cięcia" small />
+                        <div className="flex items-center gap-3">
+                            <Toggle checked={showCut} onChange={setShowCut} label="Linie cięcia" small />
+                            <button onClick={() => setSheetZoom(true)} className={btnGhost} title="Powiększ arkusz"><Maximize2 size={13} /> Lupa</button>
+                        </div>
                     </div>
-                    <div className="mx-auto max-w-[420px]">
+                    <div className="mx-auto max-w-[420px]" onDoubleClick={() => setSheetZoom(true)} title="Dwuklik: lupa">
                         <SheetPreviewA4 layout={layout} designs={previewMap} settings={settings} showCut={showCut} selectedId={selectedId} onSelect={setSelectedId} />
                     </div>
                     <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
@@ -547,6 +635,66 @@ export default function StickerStudio() {
                     </ol>
                 </section>
             </aside>
+
+            {sheetZoom && (
+                <ZoomModal title="Arkusz A4 · kliknij naklejkę, żeby ją poprawić" onClose={() => setSheetZoom(false)} baseMax={640}>
+                    <SheetPreviewA4 layout={layout} designs={previewMap} settings={settings} showCut={showCut} selectedId={selectedId}
+                        onSelect={(id) => { setSelectedId(id); setSheetZoom(false); setZoomId(id) }} />
+                </ZoomModal>
+            )}
+
+            {zoomDesign && zoomGeo && (
+                <ZoomModal title={`${zoomDesign.name} · ${zoomDesign.sizeMm} mm`} onClose={() => setZoomId(null)} baseMax={720}
+                    side={
+                        <div className="flex flex-col gap-5">
+                            <div>
+                                <div className="mb-1 flex items-baseline justify-between">
+                                    <span className={label}>Rozmiar grafiki</span>
+                                    <span className="text-xs tabular-nums text-zinc-200">{zoomDesign.sizeMm} mm</span>
+                                </div>
+                                <input type="range" min={SIZE_MIN} max={SIZE_MAX} step={1} value={zoomDesign.sizeMm}
+                                    onChange={(e) => updateDesign(zoomDesign.id, { sizeMm: clampSize(e.target.value) })} className="w-full accent-yellow-400" aria-label="Rozmiar w mm" />
+                                <p className="mt-1 text-[11px] text-zinc-500">
+                                    Z obwódką {fmt(zoomGeo.w)} × {fmt(zoomGeo.h)} mm · na arkuszu {countById[zoomDesign.id] ?? 0} szt.
+                                </p>
+                            </div>
+                            <div>
+                                <label className={label} htmlFor="st-refine">Co poprawić w grafice</label>
+                                <textarea id="st-refine" value={refineText} onChange={(e) => setRefineText(e.target.value)} rows={4} maxLength={800}
+                                    onKeyDown={(e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) refine(zoomDesign, refineText) }}
+                                    placeholder="np. napis „KAWA” na czerwono, filiżanka bez łyżeczki, więcej pary"
+                                    className={`${input} resize-y`} />
+                                {enhanceRow('edit')}
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                    {REFINE_CHIPS.map((c) => (
+                                        <button key={c} onClick={() => setRefineText((t) => (t.trim() ? `${t.trim()}, ${c}` : c))}
+                                            className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-400 transition hover:border-yellow-400/40 hover:text-white">+ {c}</button>
+                                    ))}
+                                </div>
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
+                                    <button onClick={() => refine(zoomDesign, refineText)} disabled={refining || refineText.trim().length < 3} className={btnPrimary}>
+                                        {refining ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                                        {refining ? `Gemini poprawia… ${elapsed} s` : 'Popraw grafikę'}
+                                    </button>
+                                    <button onClick={() => undo(zoomDesign)} disabled={refining || !zoomDesign.history?.length} className={btnGhost}>
+                                        <Undo2 size={13} /> Cofnij{zoomDesign.history?.length ? ` (${zoomDesign.history.length})` : ''}
+                                    </button>
+                                </div>
+                                <p className="mt-2 text-[11px] text-zinc-500">Gemini zmienia tylko to, co wpiszesz. Każda poprawka to jedno płatne zapytanie. Ctrl+Enter wysyła.</p>
+                            </div>
+                            <Toggle checked={showCut} onChange={setShowCut} label="Pokaż linię cięcia" small />
+                        </div>
+                    }>
+                    <div className="relative">
+                        <StickerCloseup src={zoomDesign.src} geo={zoomGeo} settings={settings} showCut={showCut} />
+                        {refining && (
+                            <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/50">
+                                <Loader2 size={32} className="animate-spin text-yellow-400" />
+                            </div>
+                        )}
+                    </div>
+                </ZoomModal>
+            )}
         </div>
     )
 }

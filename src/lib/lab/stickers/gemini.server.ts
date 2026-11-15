@@ -36,6 +36,44 @@ export function buildPrompt(description: string, style: StickerStyle, hasReferen
     ].filter(Boolean).join('\n')
 }
 
+/** Polecenie dla modelu tekstowego: krótki opis -> dopracowany opis naklejki (po polsku, do edycji). */
+export function buildEnhancePrompt(text: string, kind: 'new' | 'edit', style: StickerStyle): string {
+    const common = `Piszesz po polsku, zwykłym tekstem, bez markdownu, bez wstępu i bez komentarzy. Zwróć TYLKO gotowy opis.
+Napisy, które mają być na grafice, podaj dokładnie w cudzysłowie „...” i nie zmieniaj ich pisowni.
+Nie wymyślaj nazw firm ani napisów, których użytkownik nie podał.`
+    if (kind === 'edit') {
+        return `Użytkownik chce poprawić gotową grafikę naklejki. Jego polecenie: "${text.trim()}"
+
+Przepisz to na precyzyjne polecenie dla grafika AI (2-4 zdania):
+- co dokładnie zmienić (konkretne kolory, położenie, wielkość, grubość linii),
+- co ma zostać bez zmian (postać, kompozycja, styl, reszta kolorów i napisów).
+${common}`
+    }
+    return `Użytkownik opisał naklejkę do druku i wycięcia ploterem: "${text.trim()}"
+Wybrany styl: ${STICKER_STYLES[style]}.
+
+Rozpisz to na dopracowany opis dla grafika AI (4-6 zdań):
+- główny motyw, jego poza i wyraz (konkretnie, bez ogólników),
+- 3-5 kolorów z nazwy (np. ciepła musztardowa żółć, butelkowa zieleń),
+- detale, które dodają charakteru, ale są czytelne w rozmiarze 5-8 cm,
+- kompozycja: jeden zwarty kształt, bez cienkich wystających elementów (łatwiej wyciąć),
+- wyraźny ciemny kontur, czysta grafika na białym tle,
+- napis (jeśli jest): krój, kolor, położenie.
+${common}`
+}
+
+/** Poprawka istniejącej grafiki: reszta ma zostać bez zmian. */
+export function buildEditPrompt(instruction: string): string {
+    return [
+        'Edit the attached sticker artwork.',
+        `Change only this: ${instruction.trim()}.`,
+        'Keep everything else exactly the same: subject, composition, proportions, style, colors and any text, unless the change asks otherwise.',
+        'Background: perfectly flat pure white #FFFFFF, no shadow, no gradient, no texture.',
+        'Do NOT add a white sticker border, frame, cut line or mockup.',
+        'Keep a clear dark outline around the subject. Any text must be spelled exactly and stay legible. Print-ready, sharp.',
+    ].join('\n')
+}
+
 type Part = { text?: string; inlineData?: { mimeType?: string; data?: string }; inline_data?: { mime_type?: string; data?: string } }
 type GeminiResponse = {
     candidates?: { content?: { parts?: Part[] }; finishReason?: string }[]
