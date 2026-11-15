@@ -74,6 +74,42 @@ const faqs = [
         q: "Co dostaję razem z logo?",
         a: "Pełen pakiet plików: SVG (wektor do skalowania), PNG z przezroczystym tłem, PDF gotowy do każdej drukarni. Prawa autorskie majątkowe przechodzą na Ciebie bez dodatkowej opłaty. Pliki źródłowe Figma lub AI na życzenie.",
     },
+    {
+        q: "Czy zrobisz też druk, czy muszę szukać drukarni?",
+        a: "Zrobię. Wizytówki, ulotki, naklejki i vouchery drukuję u siebie, od 50 sztuk. Koszulki z nadrukiem też robię sam. Większe rzeczy, jak banery czy szyldy, zlecam sprawdzonej firmie i pilnuję, żeby kolory zgadzały się z projektem. Ty dostajesz gotowy towar, nie plik do załatwienia.",
+    },
+    {
+        q: "Jaka grafika jest potrzebna nowej firmie na start?",
+        a: "Minimum to logo, wizytówki i jedna spójna grafika do profilu w Google i na Facebooku. Strona przyda się, gdy klienci szukają Cię w internecie. Ulotki i banery możesz dorobić później. Nie musisz zamawiać wszystkiego naraz.",
+    },
+];
+
+// Typowe sytuacje lokalnych firm: co zamawiają i gdzie o tym poczytać.
+const situations = [
+    {
+        title: "Otwierasz firmę",
+        desc: "Potrzebujesz logo, wizytówek i czegoś, co pokażesz w Google. Robię to w jednym zleceniu, żeby wszystko było w tych samych kolorach i tym samym stylu.",
+        href: "/logo",
+        link: "Projektowanie logo",
+    },
+    {
+        title: "Masz firmę, ale nie ma Cię w internecie",
+        desc: "Klienci pytają o stronę, a Ty odsyłasz ich na Facebooka. Robię prostą stronę z telefonem, mapą i cennikiem, którą Google znajdzie po nazwie miasta.",
+        href: "/strony-internetowe-rzeszow",
+        link: "Strony internetowe w Rzeszowie",
+    },
+    {
+        title: "Potrzebujesz ulotek albo wizytówek na już",
+        desc: "Targi, otwarcie, nowa usługa. Projektuję i drukuję u siebie małe nakłady, więc nie czekasz tygodnia na drukarnię i nie zamawiasz 1000 sztuk, gdy wystarczy 100.",
+        href: "/druk-rzeszow",
+        link: "Druk w Rzeszowie",
+    },
+    {
+        title: "Chcesz koszulki albo bluzy z logo",
+        desc: "Dla ekipy, na event albo do sprzedaży. Nadruk robię sam, od jednej sztuki, w pełnym kolorze. Grafikę przygotuję pod nadruk, żeby dobrze wyglądała na materiale.",
+        href: "/odziez",
+        link: "Nadruki na odzieży",
+    },
 ];
 
 const faqSchema = faqPageSchema(faqs);
@@ -197,6 +233,30 @@ export default function GrafikRzeszowPage() {
                                             Więcej o usłudze <ArrowRight size={12} />
                                         </Link>
                                     )}
+                                </div>
+                            </AnimatedSection>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── GRAFIKA DLA FIRM ── */}
+            <section className="py-20 px-6 md:px-12 bg-white/[0.02]">
+                <div className="max-w-5xl mx-auto">
+                    <AnimatedSection className="text-center mb-14">
+                        <p className="eyebrow mb-4">Grafika dla firm</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Grafika w Rzeszowie: co zrobię dla Twojej firmy</h2>
+                        <p className="text-white/50 max-w-xl mx-auto mt-4">Grafika dla firmy to nie tylko logo. To wszystko, co klient widzi, zanim do Ciebie zadzwoni. Oto cztery sytuacje, z którymi najczęściej przychodzą lokalne firmy.</p>
+                    </AnimatedSection>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {situations.map((s, i) => (
+                            <AnimatedSection key={i} delay={i * 0.07}>
+                                <div className="glass-card p-6 h-full flex flex-col">
+                                    <h3 className="font-bold text-white mb-2">{s.title}</h3>
+                                    <p className="text-white/55 text-sm leading-relaxed flex-1">{s.desc}</p>
+                                    <Link href={s.href} className="mt-4 inline-flex items-center gap-1.5 text-gold text-xs font-bold hover:gap-2.5 transition-all">
+                                        {s.link} <ArrowRight size={12} />
+                                    </Link>
                                 </div>
                             </AnimatedSection>
                         ))}
