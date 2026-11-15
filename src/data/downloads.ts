@@ -16,7 +16,7 @@ export const DOWNLOADS: DownloadFile[] = [
         slug: 'brief-dla-projektanta',
         file: 'brief-dla-projektanta-wuyo.pdf',
         title: 'Szablon briefu dla projektanta (PDF)',
-        desc: '3 strony: pytania na logo i stronę internetową oraz lista rzeczy do sprawdzenia przed wysłaniem. Wydrukujesz i wypełnisz w pół godziny.',
+        desc: '3 strony: pytania na logo i stronę internetową oraz lista rzeczy do sprawdzenia przed wysłaniem. Wydrukujesz i wypełnisz długopisem w 30 do 60 minut.',
         article: '/blog/jak-napisac-brief-dla-projektanta',
     },
 ]
