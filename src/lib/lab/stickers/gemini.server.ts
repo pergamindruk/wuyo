@@ -36,6 +36,26 @@ export function buildPrompt(description: string, style: StickerStyle, hasReferen
     ].filter(Boolean).join('\n')
 }
 
+/**
+ * Kolejna naklejka z serii. Wzór to pierwsza naklejka serii: nowa ma wyglądać jak z tego samego zestawu
+ * (kreska, paleta, postać), zmienia się tylko motyw z listy.
+ */
+export function buildSeriesPrompt(theme: string, variant: string, style: StickerStyle, hasReference: boolean): string {
+    return [
+        `Design a single die-cut sticker artwork that is part of a sticker set. Set theme: ${theme.trim()}.`,
+        `This sticker shows: ${variant.trim()}.`,
+        `Style: ${STICKER_STYLES[style]}.`,
+        hasReference
+            ? 'The attached image is another sticker from the SAME set. Match it exactly: the same art style, line weight, outline color, color palette, shading and, if there is a character, the same character design. Only the pose, object or scene changes. Do not copy its composition.'
+            : '',
+        'Composition: one subject, centered, fully visible, nothing cropped, compact silhouette without thin protruding parts.',
+        'Background: perfectly flat pure white #FFFFFF, no shadow, no gradient, no texture, no ground.',
+        'Do NOT draw a white sticker border, outline frame, cut line, mockup or paper. We add the border ourselves.',
+        'Give the subject a clear dark outline so it separates cleanly from the white background.',
+        'Any text must be spelled exactly as given and be large and legible. Print-ready, high detail, sharp.',
+    ].filter(Boolean).join('\n')
+}
+
 /** Polecenie dla modelu tekstowego: krótki opis -> dopracowany opis naklejki (po polsku, do edycji). */
 export function buildEnhancePrompt(text: string, kind: 'new' | 'edit', style: StickerStyle): string {
     const common = `Piszesz po polsku, zwykłym tekstem, bez markdownu, bez wstępu i bez komentarzy. Zwróć TYLKO gotowy opis.

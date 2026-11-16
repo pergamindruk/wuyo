@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { errorResponse, requireLabUser } from '@/lib/lab/stickers/auth.server'
-import { buildEditPrompt, buildEnhancePrompt, buildPrompt, generateStickerImage, STICKER_STYLES, type StickerStyle } from '@/lib/lab/stickers/gemini.server'
+import { buildEditPrompt, buildEnhancePrompt, buildPrompt, buildSeriesPrompt, generateStickerImage, STICKER_STYLES, type StickerStyle } from '@/lib/lab/stickers/gemini.server'
 import sharp from 'sharp'
 import { generateWithFallback } from '@/lib/gemini'
 import { StickerError, decodeDataUrl, makeCutout, toDataUrl } from '@/lib/lab/stickers/image.server'
@@ -14,6 +14,8 @@ type Body = {
     kind?: 'new' | 'edit'
     instruction?: string
     prompt?: string
+    /** Seria: motyw przewodni całego zestawu; `prompt` to wtedy jeden wariant z listy. */
+    theme?: string
     style?: string
     reference?: string
     image?: string
@@ -54,11 +56,13 @@ export async function POST(req: Request) {
         const style = (body.style && body.style in STICKER_STYLES ? body.style : 'vector') as StickerStyle
         let reference: { mime: string; data: string } | undefined
         if (body.reference) {
-            const buf = decodeDataUrl(body.reference)
-            const mime = /^data:(image\/[a-z]+);/.exec(body.reference)?.[1] ?? 'image/png'
-            reference = { mime: mime === 'image/jpg' ? 'image/jpeg' : mime, data: buf.toString('base64') }
+            // Przezroczystość (np. naklejka z arkusza jako wzór) spłaszczamy na białe tło, jak w poprawkach.
+            const flat = await sharp(decodeDataUrl(body.reference)).flatten({ background: '#ffffff' }).png().toBuffer()
+            reference = { mime: 'image/png', data: flat.toString('base64') }
         }
-        const { buf, model } = await generateStickerImage(buildPrompt(description, style, !!reference), reference)
+        const theme = (body.theme ?? '').trim().slice(0, 800)
+        const text = theme ? buildSeriesPrompt(theme, description, style, !!reference) : buildPrompt(description, style, !!reference)
+        const { buf, model } = await generateStickerImage(text, reference)
         const cut = await makeCutout(buf, 'tak')
         return NextResponse.json({ cutout: toDataUrl(cut.buf, 'image/webp'), w: cut.w, h: cut.h, removed: true, model })
     } catch (e) {

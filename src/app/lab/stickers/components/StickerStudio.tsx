@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { Download, FileUp, ImagePlus, Loader2, Maximize2, Save, Sparkles, Trash2, Undo2, Upload, Wand2, ZoomIn } from 'lucide-react'
+import { Download, FileUp, ImagePlus, Layers, Loader2, Maximize2, Save, Sparkles, Square, Trash2, Undo2, Upload, Wand2, ZoomIn } from 'lucide-react'
 import { layoutSheet } from '@/lib/lab/stickers/geometry'
 import {
     DEFAULT_SETTINGS, SIZE_MAX, SIZE_MIN, clampQty, clampSize, sanitizeSettings,
@@ -46,6 +46,9 @@ const REFINE_CHIPS = [
     'usuń cienie i połysk',
 ]
 
+/** Ile naklejek najwyżej w jednej serii (każda to osobne płatne zapytanie do Gemini). */
+const SERIES_MAX = 12
+
 const DRAFT_KEY = 'wuyo-stickers-draft'
 const PRESETS_KEY = 'wuyo-stickers-presets'
 /** Vercel przyjmuje do 4,5 MB w zapytaniu. */
@@ -79,7 +82,7 @@ function writeStore(key: string, value: unknown): boolean {
 }
 
 /** Plik -> data URL, zmniejszony do maxSide (WebP zachowuje przezroczystość). */
-async function fileToDataUrl(file: File, maxSide: number): Promise<string> {
+async function fileToDataUrl(file: Blob, maxSide: number): Promise<string> {
     const url = URL.createObjectURL(file)
     try {
         const img = new Image()
@@ -132,10 +135,14 @@ export default function StickerStudio() {
     const [presetName, setPresetName] = useState('')
     const [loaded, setLoaded] = useState(false)
 
-    const [tab, setTab] = useState<'ai' | 'upload'>('ai')
+    const [tab, setTab] = useState<'ai' | 'series' | 'upload'>('ai')
     const [prompt, setPrompt] = useState('')
     const [style, setStyle] = useState('vector')
     const [reference, setReference] = useState<string | null>(null)
+    const [theme, setTheme] = useState('')
+    const [variants, setVariants] = useState('')
+    const [seriesStep, setSeriesStep] = useState<{ i: number; n: number; name: string } | null>(null)
+    const stopSeries = useRef(false)
     const [removeBg, setRemoveBg] = useState<'auto' | 'tak' | 'nie'>('auto')
     const [busy, setBusy] = useState(false)
     const [elapsed, setElapsed] = useState(0)
@@ -239,6 +246,44 @@ export default function StickerStudio() {
         } finally {
             setBusy(false)
         }
+    }
+
+    /**
+     * Seria: każdy wariant z listy to osobna naklejka z własną linią cięcia.
+     * Pierwsza gotowa naklejka staje się wzorem dla kolejnych, żeby cały zestaw miał tę samą kreskę i kolory.
+     */
+    async function generateSeries() {
+        if (theme.trim().length < 3) return toast.error('Opisz motyw serii.')
+        const list = variants.split('\n').map((v) => v.trim()).filter((v) => v.length >= 2)
+        if (!list.length) return toast.error('Wpisz warianty, każdy w osobnej linii.')
+        if (list.length > SERIES_MAX) return toast.error(`Najwyżej ${SERIES_MAX} naklejek w jednej serii.`)
+        setBusy(true)
+        stopSeries.current = false
+        let ref = reference
+        let done = 0
+        try {
+            for (let i = 0; i < list.length; i++) {
+                if (stopSeries.current) break
+                setSeriesStep({ i: i + 1, n: list.length, name: list[i] })
+                try {
+                    const r = await postJson<{ cutout: string }>('/api/lab/stickers/generate', { mode: 'ai', theme, prompt: list[i], style, reference: ref })
+                    await addDesign(r.cutout, list[i].slice(0, 40))
+                    if (done === 0) ref = await fileToDataUrl(await (await fetch(r.cutout)).blob(), 1024)
+                    done++
+                } catch (e) {
+                    toast.error(`${list[i]}: ${(e as Error).message}`)
+                }
+            }
+            if (done) toast.success(`Seria: ${done} z ${list.length} naklejek na arkuszu, każda z własną linią cięcia.`)
+        } finally {
+            setBusy(false)
+            setSeriesStep(null)
+        }
+    }
+
+    async function pickAsReference(d: Design) {
+        setReference(await fileToDataUrl(await (await fetch(d.src)).blob(), 1024))
+        toast.success(`„${d.name}” jest teraz wzorem dla nowych naklejek.`)
     }
 
     async function refine(d: Design, instruction: string) {
@@ -390,6 +435,36 @@ export default function StickerStudio() {
     const zoomGeo = zoomDesign ? previewMap.get(zoomDesign.id)!.geo : null
     const overflow = Object.entries(layout.overflow)
 
+    const styleAndReference = (
+        <>
+                        <div>
+                            <span className={label}>Styl</span>
+                            <div className="flex flex-wrap gap-1.5">
+                                {STYLES.map((s) => (
+                                    <button key={s.id} onClick={() => setStyle(s.id)}
+                                        className={`rounded-full border px-3 py-1 text-xs transition ${style === s.id ? 'border-yellow-400/60 bg-yellow-400/10 text-yellow-300' : 'border-white/10 text-zinc-400 hover:text-white'}`}>
+                                        {s.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <label className={`${btnGhost} cursor-pointer`}>
+                                <ImagePlus size={14} /> {reference ? 'Zmień wzór' : 'Dodaj wzór (opcjonalnie)'}
+                                <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+                                    onChange={async (e) => { const f = e.target.files?.[0]; if (f) setReference(await fileToDataUrl(f, 1024)); e.target.value = '' }} />
+                            </label>
+                            {reference && (
+                                <span className="flex items-center gap-2">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={reference} alt="Wzór" className="h-9 w-9 rounded-lg object-cover" />
+                                    <button onClick={() => setReference(null)} className="text-xs text-zinc-500 hover:text-red-400">usuń</button>
+                                </span>
+                            )}
+                        </div>
+        </>
+    )
+
     return (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,460px)]">
             <div className="flex min-w-0 flex-col gap-5">
@@ -398,9 +473,9 @@ export default function StickerStudio() {
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                         <h2 className="text-base font-semibold text-white"><span className="mr-2 text-yellow-400">1.</span>Nowa naklejka</h2>
                         <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
-                            {(['ai', 'upload'] as const).map((t) => (
+                            {(['ai', 'series', 'upload'] as const).map((t) => (
                                 <button key={t} onClick={() => setTab(t)} className={`rounded-full px-3 py-1.5 font-medium transition ${tab === t ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
-                                    {t === 'ai' ? 'Generuj z Gemini' : 'Wgraj plik'}
+                                    {t === 'ai' ? 'Generuj z Gemini' : t === 'series' ? 'Seria' : 'Wgraj plik'}
                                 </button>
                             ))}
                         </div>
@@ -415,37 +490,42 @@ export default function StickerStudio() {
                                     className={`${input} resize-y`} />
                                 {enhanceRow('new')}
                             </div>
-                            <div>
-                                <span className={label}>Styl</span>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {STYLES.map((s) => (
-                                        <button key={s.id} onClick={() => setStyle(s.id)}
-                                            className={`rounded-full border px-3 py-1 text-xs transition ${style === s.id ? 'border-yellow-400/60 bg-yellow-400/10 text-yellow-300' : 'border-white/10 text-zinc-400 hover:text-white'}`}>
-                                            {s.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-3">
-                                <label className={`${btnGhost} cursor-pointer`}>
-                                    <ImagePlus size={14} /> {reference ? 'Zmień wzór' : 'Dodaj wzór (opcjonalnie)'}
-                                    <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
-                                        onChange={async (e) => { const f = e.target.files?.[0]; if (f) setReference(await fileToDataUrl(f, 1024)); e.target.value = '' }} />
-                                </label>
-                                {reference && (
-                                    <span className="flex items-center gap-2">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={reference} alt="Wzór" className="h-9 w-9 rounded-lg object-cover" />
-                                        <button onClick={() => setReference(null)} className="text-xs text-zinc-500 hover:text-red-400">usuń</button>
-                                    </span>
-                                )}
-                            </div>
+                            {styleAndReference}
                             <div className="flex flex-wrap items-center gap-3">
                                 <button onClick={generate} disabled={busy} className={btnPrimary}>
                                     {busy ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                                     {busy ? `Gemini rysuje… ${elapsed} s` : 'Generuj naklejkę'}
                                 </button>
                                 <p className="text-[11px] text-zinc-500">Gemini 3 Pro Image, 1:1, 2K. Jedno kliknięcie = jedno płatne zapytanie.</p>
+                            </div>
+                        </div>
+                    ) : tab === 'series' ? (
+                        <div className="flex flex-col gap-3">
+                            <div>
+                                <label className={label} htmlFor="st-theme">Motyw serii (wspólny dla wszystkich)</label>
+                                <textarea id="st-theme" value={theme} onChange={(e) => setTheme(e.target.value)} rows={3} maxLength={800}
+                                    placeholder="np. rudy lis w zielonym szaliku, zimowy klimat, pastelowe kolory"
+                                    className={`${input} resize-y`} />
+                            </div>
+                            <div>
+                                <label className={label} htmlFor="st-variants">Naklejki w serii, każda w osobnej linii (najwyżej {SERIES_MAX})</label>
+                                <textarea id="st-variants" value={variants} onChange={(e) => setVariants(e.target.value)} rows={6}
+                                    placeholder={'lis z kubkiem gorącej czekolady\nlis na nartach\nlis lepi bałwana\nśpiący lis pod kocem'}
+                                    className={`${input} resize-y`} />
+                            </div>
+                            {styleAndReference}
+                            <p className="text-[11px] text-zinc-500">Pierwsza gotowa naklejka staje się wzorem dla kolejnych, więc cała seria ma tę samą kreskę i kolory. Każda dostaje własną linię cięcia.</p>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <button onClick={generateSeries} disabled={busy} className={btnPrimary}>
+                                    {busy ? <Loader2 size={16} className="animate-spin" /> : <Layers size={16} />}
+                                    {seriesStep ? `${seriesStep.i}/${seriesStep.n}: ${seriesStep.name.slice(0, 24)}… ${elapsed} s` : 'Generuj serię'}
+                                </button>
+                                {seriesStep && (
+                                    <button onClick={() => { stopSeries.current = true; toast('Zatrzymam po bieżącej naklejce.') }} className={btnGhost}>
+                                        <Square size={12} /> Zatrzymaj
+                                    </button>
+                                )}
+                                <p className="text-[11px] text-zinc-500">Każda naklejka to jedno płatne zapytanie, około minuty.</p>
                             </div>
                         </div>
                     ) : (
@@ -514,6 +594,10 @@ export default function StickerStudio() {
                                                     onChange={(e) => updateDesign(d.id, { qty: clampQty(e.target.value) })}
                                                     className="w-16 rounded-lg border border-white/10 bg-zinc-950/60 px-2 py-1 text-right text-sm text-white outline-none focus:border-yellow-400/60" />
                                             </label>
+                                            <button onClick={(e) => { e.stopPropagation(); pickAsReference(d) }} title="Użyj jako wzoru dla nowych naklejek i serii"
+                                                className="rounded-full p-1.5 text-zinc-400 transition hover:bg-yellow-400/10 hover:text-yellow-300" aria-label={`Użyj jako wzoru: ${d.name}`}>
+                                                <ImagePlus size={15} />
+                                            </button>
                                             <button onClick={(e) => { e.stopPropagation(); setZoomId(d.id) }} title="Lupa i poprawki"
                                                 className="rounded-full p-1.5 text-zinc-400 transition hover:bg-yellow-400/10 hover:text-yellow-300" aria-label={`Lupa i poprawki: ${d.name}`}>
                                                 <ZoomIn size={15} />
