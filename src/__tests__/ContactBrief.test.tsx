@@ -23,7 +23,7 @@ describe("ContactBrief", () => {
 
     it("TC-1 renderuje nagłówek, 3 zakładki i pola kontaktowe", () => {
         renderBrief();
-        expect(screen.getByText(/Zacznijmy tworzyć wizerunek/i)).toBeInTheDocument();
+        expect(screen.getByText(/Napisz, czego potrzebujesz/i)).toBeInTheDocument();
         expect(screen.getByRole("tab", { name: /Wiadomość/i })).toBeInTheDocument();
         expect(screen.getByRole("tab", { name: /Logo \/ Branding/i })).toBeInTheDocument();
         expect(screen.getByRole("tab", { name: /Strona WWW/i })).toBeInTheDocument();

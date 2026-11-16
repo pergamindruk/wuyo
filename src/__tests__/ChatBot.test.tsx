@@ -57,7 +57,7 @@ describe("ChatBot", () => {
         );
     });
 
-    it("TC-4 pokazuje 'Chwilowo dużo ruchu' przy odpowiedzi RATE_LIMIT", async () => {
+    it("TC-4 pokazuje 'Chwilowo jest duży ruch' przy odpowiedzi RATE_LIMIT", async () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok: true,
             json: async () => ({ error: "RATE_LIMIT" }),
@@ -73,7 +73,7 @@ describe("ChatBot", () => {
         await user.type(input, "Test");
         await user.click(screen.getByRole("button", { name: /Wyślij wiadomość/i }));
 
-        expect(await screen.findByText(/Chwilowo dużo ruchu/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Chwilowo jest duży ruch/i)).toBeInTheDocument();
     });
 
     it("TC-5 pokazuje 'Problem z siecią' gdy fetch rzuca wyjątek", async () => {
