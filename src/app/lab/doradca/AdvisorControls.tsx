@@ -4,9 +4,9 @@
 // Lista i liczby renderują się na serwerze w page.tsx.
 
 import { useState, useTransition } from 'react'
-import { Check, Trash2, Undo2 } from 'lucide-react'
+import { Check, RotateCcw, Trash2, Undo2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { addCost, addDeadline, addFact, deleteCost, deleteDeadline, deleteFact, setDeadlineDone, toggleGrant } from './actions'
+import { addCost, addDeadline, addFact, addTask, deleteCost, deleteDeadline, deleteFact, deleteTask, retryTask, setDeadlineDone, toggleGrant } from './actions'
 
 const input = 'rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
 const button = 'rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50'
@@ -114,6 +114,66 @@ export function DeadlineRowActions({ id, zrobione }: { id: string; zrobione: boo
                 }}
                 className={iconBtn}
                 aria-label="Usuń termin"
+            >
+                <Trash2 size={15} />
+            </button>
+        </span>
+    )
+}
+
+export function TaskForm() {
+    const { pending, run } = useAction()
+    const [tresc, setTresc] = useState('')
+    const [termin, setTermin] = useState('')
+    return (
+        <form
+            className="mt-4 flex flex-col gap-2"
+            onSubmit={(e) => {
+                e.preventDefault()
+                run(() => addTask(tresc, termin), () => {
+                    setTresc('')
+                    setTermin('')
+                    toast.success('Zadanie w kolejce. Komputer weźmie je po włączeniu.')
+                })
+            }}
+        >
+            <textarea
+                required
+                rows={2}
+                placeholder="Np. Przygotuj 3 posty o tym, jak przygotować logo do druku. Szkice do pliku z wynikiem."
+                value={tresc}
+                onChange={(e) => setTresc(e.target.value)}
+                className={`${input} w-full resize-y`}
+                aria-label="Opis zadania"
+            />
+            <div className="flex flex-wrap items-center gap-2">
+                <label className="flex items-center gap-2 text-sm text-zinc-400">
+                    Nie wcześniej niż
+                    <input type="date" value={termin} onChange={(e) => setTermin(e.target.value)} className={input} aria-label="Najwcześniejszy dzień" />
+                </label>
+                <button type="submit" disabled={pending} className={button}>Dodaj zadanie</button>
+            </div>
+        </form>
+    )
+}
+
+export function TaskRowActions({ id, status }: { id: string; status: string }) {
+    const { pending, run } = useAction()
+    return (
+        <span className="flex shrink-0 items-center gap-1">
+            {(status === 'blad' || status === 'w_toku') && (
+                <button type="button" disabled={pending} onClick={() => run(() => retryTask(id))} className={iconBtn} aria-label="Spróbuj jeszcze raz">
+                    <RotateCcw size={15} />
+                </button>
+            )}
+            <button
+                type="button"
+                disabled={pending}
+                onClick={() => {
+                    if (confirm('Usunąć to zadanie?')) run(() => deleteTask(id))
+                }}
+                className={iconBtn}
+                aria-label="Usuń zadanie"
             >
                 <Trash2 size={15} />
             </button>

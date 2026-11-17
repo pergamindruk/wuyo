@@ -5,7 +5,14 @@ import { createClient } from '@/lib/supabase/server'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import { zl } from '@/lib/lab/doradca/conversation'
 import { Tile, statCard } from '@/components/lab/stats/StatBlocks'
-import { CostForm, CostRowActions, DeadlineForm, DeadlineRowActions, FactForm, FactRowActions } from './AdvisorControls'
+import { CostForm, CostRowActions, DeadlineForm, DeadlineRowActions, FactForm, FactRowActions, TaskForm, TaskRowActions } from './AdvisorControls'
+
+const STATUS: Record<string, { label: string; cls: string }> = {
+    oczekuje: { label: 'czeka na komputer', cls: 'border-zinc-700 text-zinc-400' },
+    w_toku: { label: 'komputer pracuje', cls: 'border-yellow-400/40 text-yellow-300' },
+    zrobione: { label: 'zrobione', cls: 'border-emerald-400/40 text-emerald-300' },
+    blad: { label: 'nie wyszło', cls: 'border-red-400/40 text-red-300' },
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -27,14 +34,15 @@ export default async function AdvisorPage({ searchParams }: { searchParams: Prom
     const od = `${miesiac}-01`
     const doDnia = new Date(Date.UTC(Number(miesiac.slice(0, 4)), Number(miesiac.slice(5, 7)), 0)).toISOString().slice(0, 10)
 
-    const [koszty, terminy, fakty, rok] = await Promise.all([
+    const [koszty, terminy, fakty, rok, zadania] = await Promise.all([
         supabase.from('koszty').select('id, data, kwota_grosze, opis, sprzedawca, z_dotacji, zrodlo').gte('data', od).lte('data', doDnia).order('data', { ascending: false }),
         supabase.from('doradca_terminy').select('id, data, tytul, zrobione').order('zrobione').order('data').limit(50),
         supabase.from('doradca_fakty').select('id, tresc, created_at').order('created_at', { ascending: false }),
         supabase.from('koszty').select('kwota_grosze, z_dotacji').gte('data', `${miesiac.slice(0, 4)}-01-01`).lte('data', `${miesiac.slice(0, 4)}-12-31`),
+        supabase.from('doradca_zadania').select('id, tresc, termin, status, wynik, plik, created_at, finished_at').order('created_at', { ascending: false }).limit(30),
     ])
 
-    const brakTabel = [koszty.error, terminy.error, fakty.error].some((e) => e?.code === '42P01')
+    const brakTabel = [koszty.error, terminy.error, fakty.error, zadania.error].some((e) => e?.code === '42P01')
     const lista = koszty.data ?? []
     const suma = lista.reduce((s, k) => s + k.kwota_grosze, 0)
     const zDotacji = lista.filter((k) => k.z_dotacji).reduce((s, k) => s + k.kwota_grosze, 0)
@@ -46,7 +54,7 @@ export default async function AdvisorPage({ searchParams }: { searchParams: Prom
         <div className="mx-auto flex max-w-6xl flex-col gap-6">
             <header>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Doradca</p>
-                <h1 className="mt-1 text-3xl font-bold text-white">Koszty, terminy i pamięć</h1>
+                <h1 className="mt-1 text-3xl font-bold text-white">Zadania, koszty, terminy i pamięć</h1>
                 <p className="mt-1 text-sm text-zinc-500">
                     To samo, co widzi bot na Telegramie. Zmiana tutaj = bot wie o niej przy następnej wiadomości.
                 </p>
@@ -54,9 +62,46 @@ export default async function AdvisorPage({ searchParams }: { searchParams: Prom
 
             {brakTabel && (
                 <p className="rounded-2xl border border-red-400/30 bg-red-400/[0.06] px-4 py-3 text-sm text-red-300">
-                    Brak tabel doradcy w bazie. Odpal migracje 013 i 014 w Supabase.
+                    Brak tabel doradcy w bazie. Odpal migracje 013, 014 i 015 w Supabase.
                 </p>
             )}
+
+            <section className={statCard}>
+                <h2 className="text-lg font-semibold text-white">Zadania dla komputera</h2>
+                <p className="mt-1 text-xs text-zinc-500">
+                    Komputer sprawdza kolejkę co 15 minut, gdy jest włączony, i odsyła wynik na Telegram. Robi szkice i research, niczego nie wysyła ani nie publikuje.
+                </p>
+                <TaskForm />
+                {(zadania.data ?? []).length === 0 ? (
+                    <p className="mt-4 text-sm text-zinc-500">Brak zadań.</p>
+                ) : (
+                    <ul className="mt-4 divide-y divide-white/[0.06]">
+                        {(zadania.data ?? []).map((z) => {
+                            const s = STATUS[z.status] ?? STATUS.oczekuje
+                            return (
+                                <li key={z.id} className="py-3 text-sm">
+                                    <div className="flex items-start gap-3">
+                                        <span className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs ${s.cls}`}>{s.label}</span>
+                                        <span className="min-w-0 flex-1 whitespace-pre-line text-zinc-200">
+                                            {z.tresc}
+                                            {z.termin && <span className="ml-2 text-xs text-zinc-500">od {z.termin}</span>}
+                                        </span>
+                                        <TaskRowActions id={z.id} status={z.status} />
+                                    </div>
+                                    {z.wynik && (
+                                        <details className="mt-2 rounded-2xl border border-white/[0.06] bg-black/20 px-4 py-2">
+                                            <summary className="cursor-pointer text-xs text-zinc-400">
+                                                Wynik{z.plik ? `, plik: ${z.plik}` : ''}
+                                            </summary>
+                                            <p className="mt-2 whitespace-pre-line text-zinc-300">{z.wynik}</p>
+                                        </details>
+                                    )}
+                                </li>
+                            )
+                        })}
+                    </ul>
+                )}
+            </section>
 
             <section className={statCard}>
                 <div className="flex flex-wrap items-center justify-between gap-3">

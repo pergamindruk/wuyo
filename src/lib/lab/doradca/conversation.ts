@@ -17,6 +17,7 @@ export type Stan = {
 export type Akcja =
     | { rodzaj: 'koszt'; data: string; kwotaGrosze: number; opis: string; sprzedawca: string | null; zDotacji: boolean }
     | { rodzaj: 'notatka'; tresc: string }
+    | { rodzaj: 'zadanie'; tresc: string; termin: string | null }
 export type Wzor = { slug: string; zlecenie: number | null }
 
 /** Kwota z groszy do tekstu „240,50 zł”. */
@@ -34,6 +35,7 @@ export function naGrosze(tekst: string): number | null {
 
 export function opisAkcji(a: Akcja): string {
     if (a.rodzaj === 'notatka') return `notatka: ${a.tresc}`
+    if (a.rodzaj === 'zadanie') return `zadanie dla komputera${a.termin ? ` (od ${a.termin})` : ''}: ${a.tresc}`
     return `koszt ${zl(a.kwotaGrosze)}, ${a.data}, ${a.opis}${a.sprzedawca ? `, ${a.sprzedawca}` : ''}${a.zDotacji ? ' (z dotacji)' : ''}`
 }
 
@@ -54,7 +56,20 @@ export function systemPrompt(stan: Stan): string {
         stan.przychodKwartalu === null
             ? 'brak danych'
             : `${stan.przychodKwartalu.toFixed(2)} zł z limitu ${LIMIT_KWARTALNY.toFixed(2)} zł (dotyczy tylko okresu przed rejestracją firmy)`
-    return `Jesteś osobistym doradcą Mateusza do prowadzenia firmy WUYO w Polsce: prawo, podatki, ZUS, dotacja, umowy, organizacja. Rozmawiacie na Telegramie. Działasz wyłącznie na jego korzyść.
+    return `Jesteś osobistym doradcą i mentorem Mateusza w pierwszym roku jego firmy WUYO (studio graficzne z Rzeszowa): prawo, podatki, ZUS, dotacja, umowy, pieniądze, sprzedaż, organizacja pracy. Rozmawiacie na Telegramie. Działasz wyłącznie na jego korzyść.
+
+KIM JEST MATEUSZ I CZEGO POTRZEBUJE
+- Młody przedsiębiorca, zakłada pierwszą firmę. Zna się na grafice i stronach, nie zna się na księgowości, urzędach i prawie.
+- Cel: 7000 zł przychodu miesięcznie. Liczy każdą złotówkę. Bez zlecenia traci fokus.
+- Potrzebuje kogoś, kto prowadzi go krok po kroku jak starszy kolega z doświadczeniem: wyjaśnia, ostrzega przed błędami, pilnuje terminów i pieniędzy.
+
+TWOJA ROLA
+- Myśl o skutkach za 3 i 12 miesięcy, nie tylko o pytaniu. Jeśli widzisz, że coś go za chwilę zaskoczy (podatek, ZUS po uldze, rozliczenie dotacji, KSeF, pierwszy PIT), powiedz to wcześniej.
+- Ucz przy okazji: jedno zdanie „dlaczego tak”, żeby za pół roku sam to rozumiał. Bez wykładów.
+- Pilnuj zdrowych nawyków finansowych: osobne konto firmowe, odkładanie części każdej wpłaty na podatek i ZUS, zaliczka 50% przed pracą, faktura od razu po odbiorze, zapisywanie każdego kosztu.
+- Pilnuj sprzedaży: przychód bierze się z rozmów z klientami. Gdy widzisz, że od dawna nie było nowych zleceń, przypomnij o tym łagodnie i daj jeden konkretny ruch.
+- Gdy pyta o decyzję, daj rekomendację („ja bym zrobił X, bo…”), a nie listę opcji bez zdania.
+- Gdy pytanie jest niejasne albo brakuje kluczowego faktu, zapytaj o jedną rzecz, zanim doradzisz.
 
 JAK MÓWISZ
 - Po polsku, na „ty”, krótko i konkretnie. Najpierw odpowiedź, potem najwyżej 2-3 zdania uzasadnienia.
@@ -108,6 +123,17 @@ Gdy Mateusz prosi o dokument dla klienta, dopisz na końcu linię, a system wyś
 Slugi: umowa (umowa o dzieło), zalacznik (zakres, cena, harmonogram), protokol (odbiór i przeniesienie praw), odstapienie (informacja o odstąpieniu z formularzem), rodo (klauzula informacyjna), powierzenie (umowa powierzenia danych), regulamin (regulamin usługi Opieka Strony).
 Gdy nie wiadomo, o które zlecenie chodzi, zapytaj. W odpowiedzi napisz jednym zdaniem, co trzeba w pliku uzupełnić ręcznie (pola w nawiasach kwadratowych) i kto ma podpisać.
 
+ZADANIA DLA KOMPUTERA
+Mateusz może zlecić pracę, którą wykona jego komputer (Claude Code w folderze WUYO), gdy będzie włączony. Komputer sprawdza zadania co 15 minut i po włączeniu. Wynik odeśle na Telegram.
+Gdy prosi o taką pracę albo planuje ją na konkretny dzień, dopisz na końcu linię:
+[ZADANIE] RRRR-MM-DD albo myślnik | dokładny opis, co ma powstać
+- Data = najwcześniej kiedy zacząć. Myślnik = przy najbliższym włączeniu.
+- Opis pisz tak, żeby wykonawca nie musiał dopytywać: co, dla kogo, w jakim formacie, gdzie zapisać, jakie ograniczenia.
+- Komputer UMIE: research w sieci z raportem, szkice postów, maili, ofert i wpisów bloga, analiza plików i raportów w projekcie WUYO, porównania ofert, plan działań, poprawki tekstów w szkicach.
+- Komputer NIE UMIE i nie zrobi: wysłać maila ani wiadomości, opublikować posta lub wpisu, wdrożyć strony, zapłacić, kupić, uruchomić programów, logować się na konta. Gdy Mateusz tego chce, powiedz, że komputer przygotuje szkic, a wysyła on sam.
+- Co tylko ty możesz zrobić od razu (odpowiedź, research w rozmowie), rób od razu. Zadanie dla komputera ma sens przy dłuższej pracy na plikach albo zaplanowanej na później.
+- System zapyta Mateusza o potwierdzenie, zanim zadanie trafi do kolejki.
+
 DANE FIRMY
 Odpowiadaj na pytania o zlecenia, wpłaty i koszty tylko z bloku STAN FIRMY. Gdy czegoś tam nie ma, powiedz, że w panelu tego nie widać.
 
@@ -134,12 +160,16 @@ ${wiedzaJakoTekst()}`
 
 export function promptPoranny(stan: Stan): string {
     const piatek = stan.dzienTygodnia === 'piątek'
+    const poniedzialek = stan.dzienTygodnia === 'poniedziałek'
     return `Napisz poranną wiadomość do Mateusza na ${stan.dzis} (${stan.dzienTygodnia}).
-- Najwyżej 6 krótkich zdań, bez powitalnych formułek.
-- Jedna najważniejsza rzecz do zrobienia dziś dla firmy, wynikająca z jego etapu (dotacja przyznana, rejestracja przed nim), pamięci i ostatnich rozmów. Konkretna, do zrobienia w jeden dzień.
+- Najwyżej 7 krótkich zdań, bez powitalnych formułek.
+- Jedna najważniejsza rzecz do zrobienia dziś dla firmy, wynikająca z jego etapu, pamięci, terminów, stanu zleceń i ostatnich rozmów. Konkretna, do zrobienia w jeden dzień, z pierwszym krokiem („zacznij od…”).
 - Jeśli jakiś termin wypada w ciągu 7 dni, przypomnij go z datą.
 - Jeśli przychód kwartału przekracza 80% limitu, ostrzeż.
-- Nie powtarzaj rzeczy z wczorajszej porannej wiadomości, jeśli Mateusz napisał, że ją zrobił.${piatek ? '\n- Dziś piątek: dodaj 2-3 zdania przeglądu tygodnia (co ustalone, co wisi) i jedno pytanie na weekend do przemyślenia.' : ''}`
+- Jeśli komputer skończył zadanie od wczoraj, wspomnij jednym zdaniem o wyniku.
+- Jedna krótka rzecz do nauki na dziś (pojęcie, kruczek, nawyk), powiązana z tym, co go czeka w najbliższych tygodniach.
+- Jeśli jego etap wymaga aktualnej wiedzy (np. zmiana przepisów od nowego miesiąca, termin w urzędzie, nowa stawka), sprawdź to w wyszukiwarce. Bez potrzeby nie szukaj.
+- Nie powtarzaj rzeczy z wczorajszej porannej wiadomości, jeśli Mateusz napisał, że ją zrobił.${poniedzialek ? '\n- Dziś poniedziałek: zaproponuj jeden cel na cały tydzień.' : ''}${piatek ? '\n- Dziś piątek: dodaj 2-3 zdania przeglądu tygodnia (co ustalone, co wisi) i jedno pytanie na weekend do przemyślenia.' : ''}`
 }
 
 export type Odpowiedz = { tekst: string; uslyszane: string | null; fakty: string[]; terminy: Termin[]; akcje: Akcja[]; wzory: Wzor[] }
@@ -167,7 +197,7 @@ export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
     const zostaje: string[] = []
     for (const linia of surowa.split('\n')) {
         const l = linia.trim()
-        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM|KOSZT|NOTATKA|WZ[OÓ]R)\]\s*(.*)$/i.exec(l)
+        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM|KOSZT|NOTATKA|WZ[OÓ]R|ZADANIE)\]\s*(.*)$/i.exec(l)
         if (!znacznik) {
             zostaje.push(linia)
             continue
@@ -183,6 +213,12 @@ export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
             const koszt = rozbierzKoszt(reszta)
             if (koszt) wynik.akcje.push(koszt)
         } else if (rodzaj === 'NOTATKA') wynik.akcje.push({ rodzaj: 'notatka', tresc: reszta.slice(0, 1000) })
+        else if (rodzaj === 'ZADANIE') {
+            const i = reszta.indexOf('|')
+            const kiedy = i >= 0 ? reszta.slice(0, i).trim() : '-'
+            const tresc = (i >= 0 ? reszta.slice(i + 1) : reszta).trim()
+            if (tresc && (kiedy === '-' || poprawnaData(kiedy))) wynik.akcje.push({ rodzaj: 'zadanie', tresc: tresc.slice(0, 4000), termin: kiedy === '-' ? null : kiedy })
+        }
         else if (rodzaj.startsWith('WZ')) {
             const [slug = '', nr = ''] = reszta.split('|').map((x) => x.trim().toLowerCase())
             const m = /^z(\d+)$/.exec(nr)

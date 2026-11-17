@@ -45,7 +45,7 @@ async function callModel(model: string, system: string, turns: Turn[], szukaj: b
             systemInstruction: { parts: [{ text: system }] },
             contents: turns,
             ...(szukaj ? { tools: [{ googleSearch: {} }] } : {}),
-            generationConfig: { maxOutputTokens: 6144, temperature: 0.4, thinkingConfig: { thinkingBudget: 2048 } },
+            generationConfig: { maxOutputTokens: 10240, temperature: 0.4, thinkingConfig: { thinkingBudget: 4096 } },
         }),
         signal: AbortSignal.timeout(80_000),
     })

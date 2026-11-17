@@ -85,11 +85,22 @@ function opisFirmy(
     return linie.join('\n')
 }
 
+const STATUS_ZADANIA: Record<string, string> = { oczekuje: 'czeka na komputer', w_toku: 'komputer pracuje', zrobione: 'zrobione', blad: 'nie wyszło' }
+
+function opisZadan(zadania: { tresc: string; status: string; termin: string | null; wynik: string | null; finished_at: string | null }[]): string {
+    if (!zadania.length) return ''
+    const linie = zadania.map((z) => {
+        const wynik = z.wynik ? ` Wynik: ${z.wynik.replace(/\s+/g, ' ').slice(0, 300)}` : ''
+        return `- [${STATUS_ZADANIA[z.status] ?? z.status}${z.termin ? `, od ${z.termin}` : ''}] ${z.tresc.slice(0, 200)}${wynik}`
+    })
+    return `\nZadania dla komputera (najnowsze):\n${linie.join('\n')}`
+}
+
 async function wczytajKontekst(db: SupabaseClient): Promise<Kontekst> {
     const { data: dzis, dzienTygodnia } = czasWarszawa()
     const q = kwartal(dzis)
     const miesiacOd = `${dzis.slice(0, 7)}-01`
-    const [fakty, terminy, finanse, jobs, wplaty, koszty, nieoplacone] = await Promise.all([
+    const [fakty, terminy, finanse, jobs, wplaty, koszty, nieoplacone, zadania] = await Promise.all([
         db.from('doradca_fakty').select('tresc').order('created_at', { ascending: true }).limit(60),
         db.from('doradca_terminy').select('data, tytul').eq('zrobione', false).gte('data', dzis).order('data').limit(15),
         db.from('finances').select('amount').gte('date', q.od).lte('date', q.do),
@@ -103,6 +114,7 @@ async function wczytajKontekst(db: SupabaseClient): Promise<Kontekst> {
         db.from('payments').select('amount_grosze').gte('paid_at', miesiacOd).lte('paid_at', dzis),
         db.from('koszty').select('data, kwota_grosze, opis, z_dotacji').gte('data', miesiacOd).order('data', { ascending: false }).limit(200),
         db.from('finances').select('number, client_info, amount, due_date').neq('payment_status', 'Zaplacona').order('due_date').limit(10),
+        db.from('doradca_zadania').select('tresc, status, termin, wynik, finished_at').order('created_at', { ascending: false }).limit(8),
     ])
     const zlecenia = (jobs.data ?? []) as unknown as Zlecenie[]
     const listaKosztow = koszty.data ?? []
@@ -116,7 +128,7 @@ async function wczytajKontekst(db: SupabaseClient): Promise<Kontekst> {
         },
         listaKosztow.slice(0, 8),
         nieoplacone.data ?? [],
-    )
+    ) + opisZadan(zadania.data ?? [])
     const przychod = finanse.error ? null : (finanse.data ?? []).reduce((s, r) => s + Number(r.amount ?? 0), 0)
     return {
         stan: { dzis, dzienTygodnia, fakty: fakty.data ?? [], terminy: terminy.data ?? [], przychodKwartalu: przychod, firma },
@@ -149,7 +161,9 @@ async function wykonajAkcje(db: SupabaseClient, akcje: Akcja[]): Promise<string>
         const wynik =
             a.rodzaj === 'koszt'
                 ? await db.from('koszty').insert({ data: a.data, kwota_grosze: a.kwotaGrosze, opis: a.opis, sprzedawca: a.sprzedawca, z_dotacji: a.zDotacji })
-                : await db.from('activity_log').insert({ kind: 'notatka_dnia', note: a.tresc })
+                : a.rodzaj === 'zadanie'
+                  ? await db.from('doradca_zadania').insert({ tresc: a.tresc, termin: a.termin })
+                  : await db.from('activity_log').insert({ kind: 'notatka_dnia', note: a.tresc })
         linie.push(wynik.error ? `Nie udało się zapisać: ${opisAkcji(a)}` : `Zapisane: ${opisAkcji(a)}`)
         if (wynik.error) console.error('Doradca: zapis akcji', wynik.error.message)
     }
@@ -201,7 +215,7 @@ async function komenda(db: SupabaseClient, chatId: number, tekst: string): Promi
     if (cmd === '/start' || cmd === '/pomoc') {
         await sendMessage(
             chatId,
-            'Jestem Twoim doradcą do prowadzenia WUYO. Pisz albo nagrywaj pytania o firmę, podatki, ZUS, dotację, umowy.\n\nCo jeszcze umiem:\n- zapisać koszt: napisz „toner 240 zł” albo wyślij zdjęcie paragonu, zapytam o potwierdzenie\n- zapisać notatkę: „zanotuj, że…”\n- wysłać wzór: „daj umowę dla zlecenia…”\n- powiedzieć, co ze zleceniami i wpłatami\n\n/pamiec pokazuje, co o Tobie zapamiętałem\n/terminy pokazuje pilnowane terminy\n/koszty pokazuje koszty z tego miesiąca\n\nCodziennie o 8 rano wyślę jedną rzecz na dziś. Nie wysyłaj tu numerów kont, PESEL-u ani haseł.',
+            'Jestem Twoim doradcą do prowadzenia WUYO. Pisz albo nagrywaj pytania o firmę, podatki, ZUS, dotację, umowy.\n\nCo jeszcze umiem:\n- zapisać koszt: napisz „toner 240 zł” albo wyślij zdjęcie paragonu, zapytam o potwierdzenie\n- zapisać notatkę: „zanotuj, że…”\n- wysłać wzór: „daj umowę dla zlecenia…”\n- zlecić pracę komputerowi: „jutro przygotuj 3 posty o wizytówkach”, zrobi ją po włączeniu PC\n- powiedzieć, co ze zleceniami i wpłatami\n\n/pamiec pokazuje, co o Tobie zapamiętałem\n/terminy pokazuje pilnowane terminy\n/koszty pokazuje koszty z tego miesiąca\n/zadania pokazuje zadania dla komputera\n\nCodziennie o 8 rano wyślę jedną rzecz na dziś. Nie wysyłaj tu numerów kont, PESEL-u ani haseł.',
         )
         return true
     }
@@ -213,6 +227,16 @@ async function komenda(db: SupabaseClient, chatId: number, tekst: string): Promi
     if (cmd === '/terminy') {
         const { data } = await db.from('doradca_terminy').select('data, tytul').eq('zrobione', false).order('data')
         await sendMessage(chatId, data?.length ? data.map((t) => `- ${t.data}: ${t.tytul}`).join('\n') : 'Nie pilnuję jeszcze żadnego terminu.')
+        return true
+    }
+    if (cmd === '/zadania') {
+        const { data } = await db.from('doradca_zadania').select('tresc, status, termin').order('created_at', { ascending: false }).limit(10)
+        await sendMessage(
+            chatId,
+            data?.length
+                ? data.map((z) => `- ${STATUS_ZADANIA[z.status] ?? z.status}${z.termin ? ` (od ${z.termin})` : ''}: ${z.tresc.slice(0, 160)}`).join('\n')
+                : 'Komputer nie ma żadnych zadań. Napisz, co ma zrobić, np. „jutro przygotuj 3 posty o wizytówkach”.',
+        )
         return true
     }
     if (cmd === '/koszty') {
@@ -325,12 +349,12 @@ export async function wyslijPoranna(db: SupabaseClient, chatId: string, wymus = 
     if (!wymus && (count ?? 0) > 0) return 'pominięto: dziś już wysłano'
 
     const [kontekst, historia] = await Promise.all([wczytajKontekst(db), wczytajHistorie(db)])
-    // Poranek bez wyszukiwarki: liczy się plan dnia z pamięci i terminów, nie research.
-    const wynik = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: [{ text: promptPoranny(kontekst.stan) }] }], { szukaj: false })
+    const wynik = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: [{ text: promptPoranny(kontekst.stan) }] }])
     const odp = rozbierzOdpowiedz(wynik.tekst)
     if (!odp.tekst) return 'pominięto: pusta odpowiedź AI'
-    await sendMessage(chatId, odp.tekst)
-    await db.from('doradca_wiadomosci').insert({ rola: 'model', rodzaj: 'poranek', tresc: odp.tekst })
+    const tekst = wynik.zrodla.length ? `${odp.tekst}\n\nŹródła:\n${wynik.zrodla.map((z) => `- ${z.tytul}: ${z.url}`).join('\n')}` : odp.tekst
+    await sendMessage(chatId, tekst)
+    await db.from('doradca_wiadomosci').insert({ rola: 'model', rodzaj: 'poranek', tresc: tekst })
     await zapiszPamiec(db, odp.fakty, odp.terminy)
     return 'wyslano'
 }

@@ -85,6 +85,39 @@ export async function deleteDeadline(id: string): Promise<Result> {
     return { ok: true }
 }
 
+export async function addTask(tresc: string, termin: string): Promise<Result> {
+    const supabase = await authed()
+    if (!supabase) return brak
+    if (tresc.trim().length < 10) return { ok: false, error: 'Opisz dokładniej, co komputer ma zrobić.' }
+    if (termin && !DATE_RE.test(termin)) return { ok: false, error: 'Zła data.' }
+    const { error } = await supabase.from('doradca_zadania').insert({ tresc: tresc.trim().slice(0, 4000), termin: termin || null })
+    if (error) return { ok: false, error: error.message }
+    revalidatePath(PATH)
+    return { ok: true }
+}
+
+/** Zadanie z błędem albo przerwane wraca do kolejki. */
+export async function retryTask(id: string): Promise<Result> {
+    const supabase = await authed()
+    if (!supabase) return brak
+    const { error } = await supabase
+        .from('doradca_zadania')
+        .update({ status: 'oczekuje', wynik: null, started_at: null, finished_at: null })
+        .eq('id', id)
+    if (error) return { ok: false, error: error.message }
+    revalidatePath(PATH)
+    return { ok: true }
+}
+
+export async function deleteTask(id: string): Promise<Result> {
+    const supabase = await authed()
+    if (!supabase) return brak
+    const { error } = await supabase.from('doradca_zadania').delete().eq('id', id)
+    if (error) return { ok: false, error: error.message }
+    revalidatePath(PATH)
+    return { ok: true }
+}
+
 export async function addFact(tresc: string): Promise<Result> {
     const supabase = await authed()
     if (!supabase) return brak

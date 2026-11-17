@@ -67,6 +67,14 @@ describe('zapis do panelu', () => {
             { slug: 'rodo', zlecenie: null },
         ])
     })
+    it('zadanie dla komputera z datą i bez', () => {
+        const odp = rozbierzOdpowiedz('Dam to komputerowi.\n[ZADANIE] 2026-11-20 | Przygotuj 3 posty | o wizytówkach\n[ZADANIE] - | Research cen księgowości w Rzeszowie\n[ZADANIE] jutro | zła data')
+        expect(odp.akcje).toEqual([
+            { rodzaj: 'zadanie', tresc: 'Przygotuj 3 posty | o wizytówkach', termin: '2026-11-20' },
+            { rodzaj: 'zadanie', tresc: 'Research cen księgowości w Rzeszowie', termin: null },
+        ])
+        expect(opisAkcji(odp.akcje[0])).toBe('zadanie dla komputera (od 2026-11-20): Przygotuj 3 posty | o wizytówkach')
+    })
     it('kwoty: zapis i odczyt', () => {
         expect(naGrosze('1 240,5')).toBe(124050)
         expect(naGrosze('240.00 PLN')).toBe(24000)
