@@ -289,11 +289,12 @@ export async function obsluzWiadomosc(db: SupabaseClient, update: TelegramUpdate
         }
 
         const [kontekst, historia] = await Promise.all([wczytajKontekst(db), wczytajHistorie(db, wiadomoscId)])
-        const surowa = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: teraz }])
-        const odp = rozbierzOdpowiedz(surowa)
+        const wynik = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: teraz }])
+        const odp = rozbierzOdpowiedz(wynik.tekst)
 
         if (zal?.rodzaj === 'glos' && odp.uslyszane) await db.from('doradca_wiadomosci').update({ tresc: odp.uslyszane }).eq('id', wiadomoscId)
         let tekst = odp.tekst || 'Nie mam na to odpowiedzi. Napisz to inaczej.'
+        if (wynik.zrodla.length) tekst += `\n\nŹródła:\n${wynik.zrodla.map((z) => `- ${z.tytul}: ${z.url}`).join('\n')}`
         if (odp.akcje.length) {
             await db.from('doradca_oczekujace').insert({ akcje: odp.akcje })
             tekst += `\n\nZapisać w panelu?\n${odp.akcje.map((a) => `- ${opisAkcji(a)}`).join('\n')}\nOdpisz: tak albo nie.`
@@ -324,8 +325,9 @@ export async function wyslijPoranna(db: SupabaseClient, chatId: string, wymus = 
     if (!wymus && (count ?? 0) > 0) return 'pominięto: dziś już wysłano'
 
     const [kontekst, historia] = await Promise.all([wczytajKontekst(db), wczytajHistorie(db)])
-    const surowa = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: [{ text: promptPoranny(kontekst.stan) }] }])
-    const odp = rozbierzOdpowiedz(surowa)
+    // Poranek bez wyszukiwarki: liczy się plan dnia z pamięci i terminów, nie research.
+    const wynik = await askAdvisor(systemPrompt(kontekst.stan), [...historia, { role: 'user', parts: [{ text: promptPoranny(kontekst.stan) }] }], { szukaj: false })
+    const odp = rozbierzOdpowiedz(wynik.tekst)
     if (!odp.tekst) return 'pominięto: pusta odpowiedź AI'
     await sendMessage(chatId, odp.tekst)
     await db.from('doradca_wiadomosci').insert({ rola: 'model', rodzaj: 'poranek', tresc: odp.tekst })

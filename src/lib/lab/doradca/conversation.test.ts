@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import { czasWarszawa, kwartal, naGrosze, opisAkcji, potnij, potwierdzenie, rozbierzOdpowiedz, systemPrompt, zl } from './conversation'
 import { secretMatches } from './telegram'
+import { zrodlaZOdpowiedzi } from './ai'
+
+describe('zrodlaZOdpowiedzi', () => {
+    it('bez powtórek, najwyżej 5, pomija puste', () => {
+        const chunk = (n: number) => ({ web: { uri: `https://a.pl/${n}`, title: `a.pl ${n}` } })
+        const zrodla = zrodlaZOdpowiedzi({
+            candidates: [{ groundingMetadata: { groundingChunks: [chunk(1), chunk(1), { web: {} }, chunk(2), chunk(3), chunk(4), chunk(5), chunk(6)] } }],
+        })
+        expect(zrodla.map((z) => z.url)).toEqual(['https://a.pl/1', 'https://a.pl/2', 'https://a.pl/3', 'https://a.pl/4', 'https://a.pl/5'])
+    })
+    it('brak wyszukiwania = pusta lista', () => {
+        expect(zrodlaZOdpowiedzi({ candidates: [{}] })).toEqual([])
+    })
+})
 
 describe('rozbierzOdpowiedz', () => {
     it('wycina linie sterujące i zostawia tekst dla Mateusza', () => {
