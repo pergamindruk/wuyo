@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest'
 import sharp from 'sharp'
 import { unzipSync, strFromU8 } from 'fflate'
 import {
-    A4, bbox, cutContourFromMask, layoutSheet, placeContour, polygonArea, pxFromMm, regMarkZones, toDxf,
+    A4, bbox, cutContourFromMask, layoutSheet, placeContour, polygonArea, pxFromMm, REG_MARKS, regMarkRects, regMarkZones, toDxf,
     type Mask,
 } from '@/lib/lab/stickers/geometry'
-import { DEFAULT_SETTINGS, sanitizeSettings } from '@/lib/lab/stickers/types'
+import { DEFAULT_SETTINGS, REG_CLEARANCE_MM, sanitizeSettings } from '@/lib/lab/stickers/types'
 
 function circleMask(size: number, r: number): Mask {
     const data = new Uint8Array(size * size)
@@ -86,7 +86,8 @@ describe('skład A4', () => {
         const r = sanitizeSettings({ offsetMm: 99, borderColor: 'red', marginMm: 0, bleedMm: 2 })
         expect(r.offsetMm).toBe(8)
         expect(r.borderColor).toBe('#ffffff')
-        expect(r.marginMm).toBe(3)
+        expect(r.marginMm).toBe(17) // pasery: 10 + 0,5 + 4 zapasu + 2 spadu, w górę
+        expect(sanitizeSettings({ marginMm: 0, bleedMm: 2, regMarks: false }).marginMm).toBe(3)
     })
 })
 
@@ -138,6 +139,23 @@ describe('pełny eksport', () => {
         expect(alpha(190, 10.25)).toBe(255) // górna linia L-ki z prawej, na wysokości górnej krawędzi kwadratu
         expect(alpha(10.25, 277)).toBe(255) // lewa linia L-ki na dole, na linii lewej krawędzi kwadratu
         expect(alpha(190, 9.5)).toBe(0) // nic nad linią kwadratu
+
+        // Nic poza paserami: każdy kryjący piksel spoza samych paserów leży w środku prostokąta paserów z zapasem.
+        const { inset, thickness } = REG_MARKS
+        const lo = pxFromMm(inset + thickness + REG_CLEARANCE_MM) - 1
+        const hiX = pxFromMm(A4.w - inset - thickness - REG_CLEARANCE_MM) + 1
+        const hiY = pxFromMm(A4.h - inset - thickness - REG_CLEARANCE_MM) + 1
+        const marks = regMarkRects().map((r) => ({ x1: pxFromMm(r.x) - 2, y1: pxFromMm(r.y) - 2, x2: pxFromMm(r.x + r.w) + 2, y2: pxFromMm(r.y + r.h) + 2 }))
+        let outside = 0
+        for (let y = 0; y < info.height; y++) {
+            for (let x = 0; x < info.width; x++) {
+                if (data[(y * info.width + x) * 4 + 3] === 0) continue
+                if (x >= lo && x <= hiX && y >= lo && y <= hiY) continue
+                if (marks.some((m) => x >= m.x1 && x <= m.x2 && y >= m.y1 && y <= m.y2)) continue
+                outside++
+            }
+        }
+        expect(outside).toBe(0)
 
         // Każda naklejka osobno: między sąsiadami zostaje przezroczysta szczelina.
         const [a, b] = out.layout.placements

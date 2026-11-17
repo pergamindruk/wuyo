@@ -1,4 +1,4 @@
-import type { Pt, Rect, SheetSettings } from './geometry'
+import { REG_MARKS, type Pt, type Rect, type SheetSettings } from './geometry'
 
 export type Laminate = 'blysk' | 'mat' | 'brak'
 
@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS: StickerSettings = {
     borderColor: '#ffffff',
     smooth: 2,
     laminate: 'blysk',
-    marginMm: 10,
+    marginMm: 16,
     gapMm: 3,
     regMarks: true,
     fill: false,
@@ -54,12 +54,27 @@ const num = (v: unknown, def: number, min: number, max: number) => {
 /** Najmniejszy odstęp, przy którym obwódki (ze spadem) sąsiednich naklejek się nie stykają. */
 export const minGapMm = (bleedMm: number) => Math.round((2 * bleedMm + 0.5) * 2) / 2
 
+/** Zapas od wewnętrznej krawędzi linii paserów do najbliższej naklejki (ze spadem). */
+export const REG_CLEARANCE_MM = 4
+
+/**
+ * Najmniejszy margines (od krawędzi kartki do linii cięcia).
+ * Z paserami: cała naklejka razem ze spadem musi leżeć wewnątrz prostokąta wyznaczonego
+ * przez pasery (+ zapas), bo Cameo nie tnie niczego poza nim.
+ * Bez paserów: spad + 1 mm, żeby nic nie wyszło poza kartkę.
+ */
+export const minMarginMm = (bleedMm: number, regMarks: boolean) =>
+    regMarks
+        ? Math.ceil(REG_MARKS.inset + REG_MARKS.thickness + REG_CLEARANCE_MM + bleedMm)
+        : Math.max(3, Math.ceil(bleedMm + 1))
+
 /** Ustawienia z zewnątrz (formularz, plik projektu) zawsze przez tę funkcję. */
 export function sanitizeSettings(raw: unknown): StickerSettings {
     const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
     const d = DEFAULT_SETTINGS
     const color = typeof r.borderColor === 'string' && /^#[0-9a-f]{6}$/i.test(r.borderColor) ? r.borderColor.toLowerCase() : d.borderColor
     const bleedMm = num(r.bleedMm, d.bleedMm, 0, 3)
+    const regMarks = typeof r.regMarks === 'boolean' ? r.regMarks : d.regMarks
     return {
         offsetMm: num(r.offsetMm, d.offsetMm, 0.5, 8),
         bleedMm,
@@ -67,11 +82,11 @@ export function sanitizeSettings(raw: unknown): StickerSettings {
         smooth: Math.round(num(r.smooth, d.smooth, 0, 4)),
         laminate: r.laminate === 'mat' || r.laminate === 'brak' ? r.laminate : 'blysk',
         // Margines co najmniej spad + 1 mm, żeby nic nie wyszło poza kartkę.
-        marginMm: num(r.marginMm, d.marginMm, Math.max(3, bleedMm + 1), 40),
+        marginMm: num(r.marginMm, d.marginMm, minMarginMm(bleedMm, regMarks), 40),
         // Spad wychodzi poza linię cięcia z obu stron: przy mniejszym odstępie obwódki sąsiadów
         // zlewałyby się w jedną grafikę. Każda naklejka ma być osobna.
         gapMm: num(r.gapMm, d.gapMm, minGapMm(bleedMm), 20),
-        regMarks: typeof r.regMarks === 'boolean' ? r.regMarks : d.regMarks,
+        regMarks,
         fill: typeof r.fill === 'boolean' ? r.fill : d.fill,
         rotate: typeof r.rotate === 'boolean' ? r.rotate : d.rotate,
     }

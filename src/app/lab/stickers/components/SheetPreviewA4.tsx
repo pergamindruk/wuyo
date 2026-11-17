@@ -1,4 +1,4 @@
-import { A4, pathD, regMarkRects, regMarkZones, type Layout } from '@/lib/lab/stickers/geometry'
+import { A4, REG_MARKS, pathD, regMarkRects, regMarkZones, type Layout } from '@/lib/lab/stickers/geometry'
 import type { StickerGeometry, StickerSettings } from '@/lib/lab/stickers/types'
 
 /**
@@ -35,6 +35,10 @@ export default function SheetPreviewA4({ layout, designs, settings, showCut, sel
                 <g>
                     {regMarkZones().map((z, k) => <rect key={k} x={z.x} y={z.y} width={z.w} height={z.h} fill="url(#sp-hatch)" />)}
                     {regMarkRects().map((r, k) => <rect key={`m${k}`} x={r.x} y={r.y} width={r.w} height={r.h} fill="#000" shapeRendering="crispEdges" />)}
+                    {/* Obszar cięcia Cameo: prostokąt wyznaczony przez pasery. Nic poza nim nie zostanie wycięte. */}
+                    <rect x={REG_MARKS.inset} y={REG_MARKS.inset} width={A4.w - 2 * REG_MARKS.inset} height={A4.h - 2 * REG_MARKS.inset}
+                        fill="none" stroke="#4338ca" strokeWidth="0.5" strokeOpacity="0.7" pointerEvents="none" />
+                    <text x={A4.w / 2} y={A4.h - REG_MARKS.inset + 4} textAnchor="middle" fontSize="2.6" fill="#4338ca" fillOpacity="0.8">obszar cięcia Cameo (pasery)</text>
                 </g>
             )}
             <rect x={m} y={m} width={A4.w - 2 * m} height={A4.h - 2 * m} fill="none" stroke="#3b82f6" strokeWidth="0.3" strokeDasharray="2 2" strokeOpacity="0.6" />
