@@ -1,6 +1,6 @@
 import sharp from 'sharp'
 import {
-    A4, bbox, cutContourFromMask, dilate, mmFromPx, pxFromMm, rasterizePolygon,
+    A4, bbox, cutContourFromMask, dilate, mmFromPx, pxFromMm, rasterizePolygon, regMarksSvg,
     type Mask, type Placement, type Pt,
 } from './geometry'
 import type { StickerGeometry, StickerSettings } from './types'
@@ -202,10 +202,14 @@ export async function renderTile(p: PreparedSticker, s: Pick<StickerSettings, 'b
     return { buf, wPx: x1 - x0, hPx: y1 - y0, offX: mmFromPx(x0 - p.bb.x), offY: mmFromPx(y0 - p.bb.y) }
 }
 
-/** Arkusz A4 300 DPI (2480 × 3508 px), białe tło, bez linii cięcia i bez znaczników. */
+/**
+ * Arkusz A4 300 DPI (2480 × 3508 px), PNG z przezroczystym tłem, bez linii cięcia.
+ * Każda naklejka to osobny kafelek z własną obwódką. Pasery (gdy włączone) są na arkuszu.
+ */
 export async function composeSheet(
     placements: Placement[],
     tiles: Map<string, { tile: Tile; rotated: Tile | null; geo: StickerGeometry }>,
+    opts: { regMarks?: boolean } = {},
 ): Promise<Buffer> {
     const layers: sharp.OverlayOptions[] = []
     for (const p of placements) {
@@ -221,7 +225,8 @@ export async function composeSheet(
         if (left < 0 || top < 0 || left + tile.wPx > A4.wPx || top + tile.hPx > A4.hPx) continue
         layers.push({ input: tile.buf, left, top })
     }
-    return sharp({ create: { width: A4.wPx, height: A4.hPx, channels: 3, background: '#ffffff' } })
+    if (opts.regMarks) layers.push({ input: Buffer.from(regMarksSvg(A4.wPx, A4.hPx)), left: 0, top: 0 })
+    return sharp({ create: { width: A4.wPx, height: A4.hPx, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
         .composite(layers)
         .withMetadata({ density: 300 })
         .png({ compressionLevel: 9, adaptiveFiltering: true })
@@ -235,7 +240,8 @@ export async function rotateTile(t: Tile): Promise<Tile> {
 
 /** Podgląd do sprawdzenia: arkusz zmniejszony, na nim linie cięcia i strefy znaczników. */
 export async function composeProof(sheet: Buffer, overlaySvg: string, widthPx = 1240): Promise<Buffer> {
-    const small = await sharp(sheet).resize({ width: widthPx }).png().toBuffer()
+    // Arkusz ma przezroczyste tło: do JPG kładziemy go na białej kartce.
+    const small = await sharp(sheet).resize({ width: widthPx }).flatten({ background: '#ffffff' }).png().toBuffer()
     const heightPx = Math.round((widthPx * A4.hPx) / A4.wPx)
     const svg = Buffer.from(overlaySvg.replace('<svg ', `<svg width="${widthPx}" height="${heightPx}" `))
     return sharp(small).composite([{ input: svg, left: 0, top: 0 }]).jpeg({ quality: 85 }).toBuffer()

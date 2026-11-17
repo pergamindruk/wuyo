@@ -51,6 +51,9 @@ const num = (v: unknown, def: number, min: number, max: number) => {
     return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : def
 }
 
+/** Najmniejszy odstęp, przy którym obwódki (ze spadem) sąsiednich naklejek się nie stykają. */
+export const minGapMm = (bleedMm: number) => Math.round((2 * bleedMm + 0.5) * 2) / 2
+
 /** Ustawienia z zewnątrz (formularz, plik projektu) zawsze przez tę funkcję. */
 export function sanitizeSettings(raw: unknown): StickerSettings {
     const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
@@ -65,7 +68,9 @@ export function sanitizeSettings(raw: unknown): StickerSettings {
         laminate: r.laminate === 'mat' || r.laminate === 'brak' ? r.laminate : 'blysk',
         // Margines co najmniej spad + 1 mm, żeby nic nie wyszło poza kartkę.
         marginMm: num(r.marginMm, d.marginMm, Math.max(3, bleedMm + 1), 40),
-        gapMm: num(r.gapMm, d.gapMm, 0, 20),
+        // Spad wychodzi poza linię cięcia z obu stron: przy mniejszym odstępie obwódki sąsiadów
+        // zlewałyby się w jedną grafikę. Każda naklejka ma być osobna.
+        gapMm: num(r.gapMm, d.gapMm, minGapMm(bleedMm), 20),
         regMarks: typeof r.regMarks === 'boolean' ? r.regMarks : d.regMarks,
         fill: typeof r.fill === 'boolean' ? r.fill : d.fill,
         rotate: typeof r.rotate === 'boolean' ? r.rotate : d.rotate,

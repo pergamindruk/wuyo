@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { Download, FileUp, ImagePlus, Layers, Loader2, Maximize2, Save, Sparkles, Square, Trash2, Undo2, Upload, Wand2, ZoomIn } from 'lucide-react'
 import { layoutSheet } from '@/lib/lab/stickers/geometry'
 import {
-    DEFAULT_SETTINGS, SIZE_MAX, SIZE_MIN, clampQty, clampSize, sanitizeSettings,
+    DEFAULT_SETTINGS, SIZE_MAX, SIZE_MIN, clampQty, clampSize, minGapMm, sanitizeSettings,
     type StickerGeometry, type StickerSettings,
 } from '@/lib/lab/stickers/types'
 import SheetPreviewA4, { type PreviewDesign } from './SheetPreviewA4'
@@ -622,7 +622,7 @@ export default function StickerStudio() {
                             hint="Odległość linii cięcia od grafiki." />
                         <Slider label="Spad za linią cięcia" unit="mm" min={0} max={3} step={0.25} value={settings.bleedMm} onChange={(v) => set('bleedMm', v)}
                             hint="Kolor obwódki wychodzi poza cięcie, żeby nie było białych krawędzi." />
-                        <Slider label="Odstęp między naklejkami" unit="mm" min={0} max={15} step={0.5} value={settings.gapMm} onChange={(v) => set('gapMm', v)} />
+                        <Slider label="Odstęp między naklejkami" unit="mm" min={minGapMm(settings.bleedMm)}max={15} step={0.5} value={settings.gapMm} onChange={(v) => set('gapMm', v)} />
                         <Slider label="Margines arkusza" unit="mm" min={3} max={30} step={1} value={settings.marginMm} onChange={(v) => set('marginMm', v)} />
                         <Slider label="Wygładzanie konturu" unit="" min={0} max={4} step={1} value={settings.smooth} onChange={(v) => set('smooth', v)}
                             hint="Wyżej = łagodniejsze łuki, nóż mniej szarpie." />

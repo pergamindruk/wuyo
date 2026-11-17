@@ -354,6 +354,30 @@ export type SheetSettings = {
     rotate: boolean
 }
 
+/**
+ * Pasery jako wypełnione prostokąty (mm). Kwadrat w lewym górnym rogu,
+ * „L” w prawym górnym i lewym dolnym. Zewnętrzne krawędzie L-ek leżą
+ * dokładnie na liniach krawędzi kwadratu: górna linia L-ki z prawej = górna
+ * krawędź kwadratu, lewa linia L-ki na dole = lewa krawędź kwadratu.
+ */
+export function regMarkRects(): Rect[] {
+    const { inset: i, length: l, square: sq, thickness: t } = REG_MARKS
+    return [
+        { x: i, y: i, w: sq, h: sq },
+        { x: A4.w - i - l, y: i, w: l, h: t },
+        { x: A4.w - i - t, y: i, w: t, h: l },
+        { x: i, y: A4.h - i - l, w: t, h: l },
+        { x: i, y: A4.h - i - t, w: l, h: t },
+    ]
+}
+
+/** Pasery jako SVG w mm (viewBox = A4). */
+export function regMarksSvg(widthPx?: number, heightPx?: number): string {
+    const size = widthPx && heightPx ? ` width="${widthPx}" height="${heightPx}"` : ''
+    const rects = regMarkRects().map((r) => `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}"/>`).join('')
+    return `<svg xmlns="http://www.w3.org/2000/svg"${size} viewBox="0 0 ${A4.w} ${A4.h}" shape-rendering="crispEdges"><g fill="#000000">${rects}</g></svg>`
+}
+
 export function regMarkZones(): Rect[] {
     const z = REG_MARKS.inset + REG_MARKS.length + 2
     return [

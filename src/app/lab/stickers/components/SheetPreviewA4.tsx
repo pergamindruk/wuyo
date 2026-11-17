@@ -1,4 +1,4 @@
-import { A4, REG_MARKS, pathD, regMarkZones, type Layout } from '@/lib/lab/stickers/geometry'
+import { A4, pathD, regMarkRects, regMarkZones, type Layout } from '@/lib/lab/stickers/geometry'
 import type { StickerGeometry, StickerSettings } from '@/lib/lab/stickers/types'
 
 /**
@@ -19,7 +19,6 @@ type Props = {
 
 export default function SheetPreviewA4({ layout, designs, settings, showCut, selectedId, onSelect }: Props) {
     const m = settings.marginMm
-    const { inset: i, length: l, square: sq, thickness: t } = REG_MARKS
     return (
         <svg viewBox={`0 0 ${A4.w} ${A4.h}`} className="h-auto w-full rounded-md bg-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" role="img" aria-label="Podgląd arkusza A4">
             <defs>
@@ -35,9 +34,7 @@ export default function SheetPreviewA4({ layout, designs, settings, showCut, sel
             {settings.regMarks && (
                 <g>
                     {regMarkZones().map((z, k) => <rect key={k} x={z.x} y={z.y} width={z.w} height={z.h} fill="url(#sp-hatch)" />)}
-                    <rect x={i} y={i} width={sq} height={sq} fill="#111" />
-                    <path d={`M${A4.w - i - l} ${i}H${A4.w - i}V${i + l}`} stroke="#111" strokeWidth={t} fill="none" />
-                    <path d={`M${i} ${A4.h - i - l}V${A4.h - i}H${i + l}`} stroke="#111" strokeWidth={t} fill="none" />
+                    {regMarkRects().map((r, k) => <rect key={`m${k}`} x={r.x} y={r.y} width={r.w} height={r.h} fill="#000" shapeRendering="crispEdges" />)}
                 </g>
             )}
             <rect x={m} y={m} width={A4.w - 2 * m} height={A4.h - 2 * m} fill="none" stroke="#3b82f6" strokeWidth="0.3" strokeDasharray="2 2" strokeOpacity="0.6" />

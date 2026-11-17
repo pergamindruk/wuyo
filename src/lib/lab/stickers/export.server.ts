@@ -45,7 +45,9 @@ function instructions(s: StickerSettings, count: number, cutBox: ExportResult['c
         skipped.length ? `Nie zmieściło się: ${skipped.join(', ')}.` : '',
         '',
         'W PACZCE',
-        '  arkusz_A4_300dpi.png  plik do druku, 2480 x 3508 px, bez linii cięcia',
+        s.regMarks
+            ? '  arkusz_A4_300dpi.png  plik do druku, 2480 x 3508 px, przezroczyste tło, z paserami, bez linii cięcia'
+            : '  arkusz_A4_300dpi.png  plik do druku, 2480 x 3508 px, przezroczyste tło, bez linii cięcia',
         '  linie_ciecia.dxf      linie cięcia 1:1 w mm, dla Silhouette Studio Basic',
         '  linie_ciecia.svg      to samo w SVG (Designer Edition, Inkscape)',
         '  podglad.jpg           arkusz z liniami cięcia, do sprawdzenia przed drukiem',
@@ -54,7 +56,8 @@ function instructions(s: StickerSettings, count: number, cutBox: ExportResult['c
         '1. SILHOUETTE STUDIO',
         '  Ustawienia strony: A4, pionowo, Cameo 5.',
         s.regMarks
-            ? `  Znaczniki rejestracyjne: włącz, Typ 1, odstęp od krawędzi ${REG_MARKS.inset} mm, długość ${REG_MARKS.length} mm.`
+            ? `  Znaczniki rejestracyjne: włącz, Typ 1, odstęp od krawędzi ${REG_MARKS.inset} mm, długość ${REG_MARKS.length} mm, grubość ${f(REG_MARKS.thickness)} mm.\n` +
+              '  Pasery są już na arkuszu PNG, dokładnie w tych samych miejscach, więc pokryją się ze znacznikami programu.'
             : '  Znaczniki rejestracyjne były wyłączone przy składzie. Włącz je i sprawdź, czy nic nie wchodzi w ich pole.',
         '  Wstaw arkusz_A4_300dpi.png i ustaw: X 0, Y 0, szerokość 210 mm, wysokość 297 mm.',
         '  Otwórz linie_ciecia.dxf, skopiuj wszystkie linie do dokumentu z arkuszem.',
@@ -95,7 +98,7 @@ export async function buildExport(designs: DesignInput[], s: StickerSettings, no
     )
     if (!layout.placements.length) throw new StickerError('Na arkuszu nic się nie zmieściło. Zmniejsz naklejki albo margines.')
     const polys = layout.placements.map((p) => placeContour(prepared.get(p.id)!.geo.contour, p))
-    const sheet = await composeSheet(layout.placements, prepared)
+    const sheet = await composeSheet(layout.placements, prepared, { regMarks: s.regMarks })
     const proof = await composeProof(sheet, proofSvg(polys, s))
     const all = bbox(polys.flat())
     const cutBox = { x: all.x, y: all.y, w: all.w, h: all.h }

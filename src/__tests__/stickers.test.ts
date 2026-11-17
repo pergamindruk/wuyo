@@ -128,5 +128,23 @@ describe('pełny eksport', () => {
         const center = px(p.x + p.w / 2, p.y + p.h / 2)
         expect(center[0]).toBeGreaterThan(180) // czerwony środek gwiazdy
         expect(center[1]).toBeLessThan(90)
+
+        // Tło przezroczyste, pasery czarne i kryjące.
+        expect(info.channels).toBe(4)
+        const alpha = (xMm: number, yMm: number) => data[(Math.round(pxFromMm(yMm)) * info.width + Math.round(pxFromMm(xMm))) * 4 + 3]
+        expect(alpha(105, 5)).toBe(0) // pusty pasek u góry
+        expect(alpha(12.5, 12.5)).toBe(255) // środek kwadratu
+        expect(px(12.5, 12.5)).toEqual([0, 0, 0])
+        expect(alpha(190, 10.25)).toBe(255) // górna linia L-ki z prawej, na wysokości górnej krawędzi kwadratu
+        expect(alpha(10.25, 277)).toBe(255) // lewa linia L-ki na dole, na linii lewej krawędzi kwadratu
+        expect(alpha(190, 9.5)).toBe(0) // nic nad linią kwadratu
+
+        // Każda naklejka osobno: między sąsiadami zostaje przezroczysta szczelina.
+        const [a, b] = out.layout.placements
+        if (b && Math.abs(a.y - b.y) < 1e-6) expect(alpha((a.x + a.w + b.x) / 2, a.y + a.h / 2)).toBe(0)
     }, 60_000)
+
+    it('odstęp nie jest mniejszy niż dwa spady', () => {
+        expect(sanitizeSettings({ gapMm: 0, bleedMm: 2 }).gapMm).toBeGreaterThanOrEqual(4)
+    })
 })
