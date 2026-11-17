@@ -31,6 +31,17 @@ export async function sendMessage(chatId: string | number, text: string): Promis
     }
 }
 
+/** Wysyła tekst jako plik (np. wypełniony wzór umowy). */
+export async function sendDocument(chatId: string | number, filename: string, content: string, caption?: string): Promise<void> {
+    const form = new FormData()
+    form.append('chat_id', String(chatId))
+    if (caption) form.append('caption', caption.slice(0, 1000))
+    form.append('document', new Blob([content], { type: 'text/markdown; charset=utf-8' }), filename)
+    const res = await fetch(`${API}/bot${token()}/sendDocument`, { method: 'POST', body: form, signal: AbortSignal.timeout(20_000) })
+    const data = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null
+    if (!res.ok || !data?.ok) throw new Error(`Telegram sendDocument: ${res.status} ${data?.description ?? ''}`)
+}
+
 /** „pisze…” na górze czatu, żeby było widać, że bot pracuje. Błąd nieistotny. */
 export async function sendTyping(chatId: string | number): Promise<void> {
     await call('sendChatAction', { chat_id: chatId, action: 'typing' }).catch(() => undefined)

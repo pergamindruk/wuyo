@@ -4,7 +4,46 @@ import { wiedzaJakoTekst } from './knowledge'
 
 export type Fakt = { tresc: string }
 export type Termin = { data: string; tytul: string }
-export type Stan = { dzis: string; dzienTygodnia: string; fakty: Fakt[]; terminy: Termin[]; przychodKwartalu: number | null }
+export type Stan = {
+    dzis: string
+    dzienTygodnia: string
+    fakty: Fakt[]
+    terminy: Termin[]
+    przychodKwartalu: number | null
+    /** Gotowy opis stanu firmy z /lab (zlecenia, wpłaty, koszty). Pusty = brak danych. */
+    firma: string
+}
+
+export type Akcja =
+    | { rodzaj: 'koszt'; data: string; kwotaGrosze: number; opis: string; sprzedawca: string | null; zDotacji: boolean }
+    | { rodzaj: 'notatka'; tresc: string }
+export type Wzor = { slug: string; zlecenie: number | null }
+
+/** Kwota z groszy do tekstu „240,50 zł”. */
+export function zl(grosze: number): string {
+    return `${(grosze / 100).toFixed(2).replace('.', ',')} zł`
+}
+
+/** „240”, „240,50”, „1 240.5 zł” → grosze. null = to nie kwota. */
+export function naGrosze(tekst: string): number | null {
+    const czysty = tekst.replace(/zł|pln/gi, '').replace(/\s/g, '').replace(',', '.')
+    if (!/^\d+(\.\d{1,2})?$/.test(czysty)) return null
+    const grosze = Math.round(Number(czysty) * 100)
+    return grosze > 0 ? grosze : null
+}
+
+export function opisAkcji(a: Akcja): string {
+    if (a.rodzaj === 'notatka') return `notatka: ${a.tresc}`
+    return `koszt ${zl(a.kwotaGrosze)}, ${a.data}, ${a.opis}${a.sprzedawca ? `, ${a.sprzedawca}` : ''}${a.zDotacji ? ' (z dotacji)' : ''}`
+}
+
+/** Czy wiadomość to zgoda albo odmowa na czekający zapis. */
+export function potwierdzenie(tekst: string): 'tak' | 'nie' | null {
+    const t = tekst.trim().toLowerCase().replace(/[.!]+$/, '')
+    if (/^(tak|ok|okej|zapisz|dobrze|potwierdzam|zgoda|jasne)$/.test(t)) return 'tak'
+    if (/^(nie|anuluj|nie zapisuj|stop)$/.test(t)) return 'nie'
+    return null
+}
 
 export const LIMIT_KWARTALNY = 10813.5
 
@@ -43,6 +82,25 @@ Na samym końcu odpowiedzi możesz dopisać osobne linie (Mateusz ich nie zobacz
 [TERMIN] RRRR-MM-DD | krótki tytuł
 Zapisuj tylko rzeczy trwałe (decyzja, data z umowy, wybrana księgowa), nie przebieg rozmowy. Nie powtarzaj tego, co już jest w pamięci. Termin tylko z datą podaną przez Mateusza albo wynikającą wprost z bazy.
 
+ZAPIS DO PANELU (koszty i notatki)
+Gdy Mateusz podaje wydatek firmy („kupiłem toner 240 zł”) albo przysyła zdjęcie paragonu lub faktury, dopisz na końcu linię:
+[KOSZT] RRRR-MM-DD | kwota brutto | co kupiono | sprzedawca | dotacja:tak albo dotacja:nie
+Gdy prosi o zapisanie notatki do firmy:
+[NOTATKA] treść notatki
+- Brak daty = dzisiejsza. Brak sprzedawcy = myślnik. dotacja:tak tylko gdy powie, że to zakup z dotacji.
+- Nie zgaduj kwoty. Gdy jej nie ma albo jest nieczytelna na zdjęciu, zapytaj i nie dopisuj linii.
+- System sam zapyta Mateusza o potwierdzenie i zapisze dopiero po „tak”. Ty nie pisz „zapisałem”, tylko krótko powiedz, co odczytałeś, i dodaj uwagę podatkową, jeśli jest ważna (zakup z dotacji nie idzie w koszty).
+- Zdjęcie, które nie jest paragonem ani fakturą: opisz, co widzisz, i odpowiedz na pytanie z podpisu.
+
+WZORY DOKUMENTÓW
+Gdy Mateusz prosi o dokument dla klienta, dopisz na końcu linię, a system wyśle plik:
+[WZOR] slug | numer zlecenia z listy poniżej (np. Z2) albo myślnik
+Slugi: umowa (umowa o dzieło), zalacznik (zakres, cena, harmonogram), protokol (odbiór i przeniesienie praw), odstapienie (informacja o odstąpieniu z formularzem), rodo (klauzula informacyjna), powierzenie (umowa powierzenia danych), regulamin (regulamin usługi Opieka Strony).
+Gdy nie wiadomo, o które zlecenie chodzi, zapytaj. W odpowiedzi napisz jednym zdaniem, co trzeba w pliku uzupełnić ręcznie (pola w nawiasach kwadratowych) i kto ma podpisać.
+
+DANE FIRMY
+Odpowiadaj na pytania o zlecenia, wpłaty i koszty tylko z bloku STAN FIRMY. Gdy czegoś tam nie ma, powiedz, że w panelu tego nie widać.
+
 GŁOSÓWKI
 Gdy dostaniesz nagranie, zacznij odpowiedź od linii:
 [USLYSZALEM] wierny zapis tego, co powiedział Mateusz
@@ -50,6 +108,9 @@ a w następnej linii odpowiedz normalnie.
 
 DZIŚ: ${stan.dzis} (${stan.dzienTygodnia})
 PRZYCHÓD W TYM KWARTALE: ${przychod}
+
+STAN FIRMY (z panelu /lab):
+${stan.firma || '(brak danych z panelu)'}
 
 PAMIĘĆ (ustalenia z poprzednich rozmów):
 ${fakty}
@@ -71,15 +132,32 @@ export function promptPoranny(stan: Stan): string {
 - Nie powtarzaj rzeczy z wczorajszej porannej wiadomości, jeśli Mateusz napisał, że ją zrobił.${piatek ? '\n- Dziś piątek: dodaj 2-3 zdania przeglądu tygodnia (co ustalone, co wisi) i jedno pytanie na weekend do przemyślenia.' : ''}`
 }
 
-export type Odpowiedz = { tekst: string; uslyszane: string | null; fakty: string[]; terminy: Termin[] }
+export type Odpowiedz = { tekst: string; uslyszane: string | null; fakty: string[]; terminy: Termin[]; akcje: Akcja[]; wzory: Wzor[] }
+
+const SLUGI = new Set(['umowa', 'zalacznik', 'protokol', 'odstapienie', 'rodo', 'powierzenie', 'regulamin'])
+const poprawnaData = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d))
+
+function rozbierzKoszt(reszta: string): Akcja | null {
+    const [data = '', kwota = '', opis = '', sprzedawca = '', dotacja = ''] = reszta.split('|').map((x) => x.trim())
+    const kwotaGrosze = naGrosze(kwota)
+    if (!poprawnaData(data) || kwotaGrosze === null || !opis) return null
+    return {
+        rodzaj: 'koszt',
+        data,
+        kwotaGrosze,
+        opis: opis.slice(0, 300),
+        sprzedawca: sprzedawca && sprzedawca !== '-' ? sprzedawca.slice(0, 200) : null,
+        zDotacji: /dotacja\s*:\s*tak/i.test(dotacja),
+    }
+}
 
 /** Wycina z odpowiedzi modelu linie sterujące; reszta idzie do Mateusza. */
 export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
-    const wynik: Odpowiedz = { tekst: '', uslyszane: null, fakty: [], terminy: [] }
+    const wynik: Odpowiedz = { tekst: '', uslyszane: null, fakty: [], terminy: [], akcje: [], wzory: [] }
     const zostaje: string[] = []
     for (const linia of surowa.split('\n')) {
         const l = linia.trim()
-        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM)\]\s*(.*)$/i.exec(l)
+        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM|KOSZT|NOTATKA|WZ[OÓ]R)\]\s*(.*)$/i.exec(l)
         if (!znacznik) {
             zostaje.push(linia)
             continue
@@ -91,6 +169,14 @@ export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
         else if (rodzaj === 'TERMIN') {
             const m = /^(\d{4}-\d{2}-\d{2})\s*\|\s*(.+)$/.exec(reszta)
             if (m && !Number.isNaN(Date.parse(m[1]))) wynik.terminy.push({ data: m[1], tytul: m[2].trim().slice(0, 200) })
+        } else if (rodzaj === 'KOSZT') {
+            const koszt = rozbierzKoszt(reszta)
+            if (koszt) wynik.akcje.push(koszt)
+        } else if (rodzaj === 'NOTATKA') wynik.akcje.push({ rodzaj: 'notatka', tresc: reszta.slice(0, 1000) })
+        else if (rodzaj.startsWith('WZ')) {
+            const [slug = '', nr = ''] = reszta.split('|').map((x) => x.trim().toLowerCase())
+            const m = /^z(\d+)$/.exec(nr)
+            if (SLUGI.has(slug)) wynik.wzory.push({ slug, zlecenie: m ? Number(m[1]) : null })
         } else wynik.uslyszane = reszta
     }
     wynik.tekst = zostaje.join('\n').replace(/\n{3,}/g, '\n\n').trim()

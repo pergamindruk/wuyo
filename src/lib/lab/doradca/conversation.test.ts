@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { czasWarszawa, kwartal, potnij, rozbierzOdpowiedz, systemPrompt } from './conversation'
+import { czasWarszawa, kwartal, naGrosze, opisAkcji, potnij, potwierdzenie, rozbierzOdpowiedz, systemPrompt, zl } from './conversation'
 import { secretMatches } from './telegram'
 
 describe('rozbierzOdpowiedz', () => {
@@ -24,6 +24,51 @@ describe('rozbierzOdpowiedz', () => {
         const odp = rozbierzOdpowiedz('[USŁYSZAŁEM] test\n[ZAPAMIĘTAJ] fakt\nTreść')
         expect(odp.uslyszane).toBe('test')
         expect(odp.fakty).toEqual(['fakt'])
+    })
+})
+
+describe('zapis do panelu', () => {
+    it('koszt z poprawnej linii, kwota w groszach', () => {
+        const odp = rozbierzOdpowiedz('Odczytałem paragon.\n[KOSZT] 2026-11-17 | 240,50 zł | toner do drukarki | Media Expert | dotacja:nie')
+        expect(odp.tekst).toBe('Odczytałem paragon.')
+        expect(odp.akcje).toEqual([
+            { rodzaj: 'koszt', data: '2026-11-17', kwotaGrosze: 24050, opis: 'toner do drukarki', sprzedawca: 'Media Expert', zDotacji: false },
+        ])
+    })
+    it('koszt z dotacji i bez sprzedawcy', () => {
+        const [a] = rozbierzOdpowiedz('[KOSZT] 2026-12-05 | 4999 | laptop | - | dotacja:tak').akcje
+        expect(a).toMatchObject({ kwotaGrosze: 499900, sprzedawca: null, zDotacji: true })
+    })
+    it('odrzuca koszt bez kwoty, z zerem albo ze złą datą', () => {
+        expect(rozbierzOdpowiedz('[KOSZT] 2026-11-17 | około 200 | toner | - | dotacja:nie').akcje).toEqual([])
+        expect(rozbierzOdpowiedz('[KOSZT] 2026-11-17 | 0 | toner | - | dotacja:nie').akcje).toEqual([])
+        expect(rozbierzOdpowiedz('[KOSZT] wczoraj | 200 | toner | - | dotacja:nie').akcje).toEqual([])
+        expect(rozbierzOdpowiedz('[KOSZT] 2026-11-17 | 200 |  | - | dotacja:nie').akcje).toEqual([])
+    })
+    it('notatka i wzory', () => {
+        const odp = rozbierzOdpowiedz('Jasne.\n[NOTATKA] Klient chce wizytówki na styczeń\n[WZOR] umowa | Z2\n[WZÓR] rodo | -\n[WZOR] nieznany | Z1')
+        expect(odp.akcje).toEqual([{ rodzaj: 'notatka', tresc: 'Klient chce wizytówki na styczeń' }])
+        expect(odp.wzory).toEqual([
+            { slug: 'umowa', zlecenie: 2 },
+            { slug: 'rodo', zlecenie: null },
+        ])
+    })
+    it('kwoty: zapis i odczyt', () => {
+        expect(naGrosze('1 240,5')).toBe(124050)
+        expect(naGrosze('240.00 PLN')).toBe(24000)
+        expect(naGrosze('-5')).toBeNull()
+        expect(naGrosze('12,345')).toBeNull()
+        expect(zl(24050)).toBe('240,50 zł')
+        expect(opisAkcji({ rodzaj: 'koszt', data: '2026-12-05', kwotaGrosze: 499900, opis: 'laptop', sprzedawca: null, zDotacji: true })).toBe(
+            'koszt 4999,00 zł, 2026-12-05, laptop (z dotacji)',
+        )
+    })
+    it('potwierdzenie tylko na jednoznaczne słowo', () => {
+        expect(potwierdzenie('Tak')).toBe('tak')
+        expect(potwierdzenie(' ok. ')).toBe('tak')
+        expect(potwierdzenie('nie')).toBe('nie')
+        expect(potwierdzenie('tak, ale zmień kwotę na 250')).toBeNull()
+        expect(potwierdzenie('a ile to będzie podatku?')).toBeNull()
     })
 })
 
@@ -64,7 +109,9 @@ describe('systemPrompt', () => {
             fakty: [{ tresc: 'Księgowa: inFakt' }],
             terminy: [{ data: '2026-12-01', tytul: 'Rejestracja CEIDG' }],
             przychodKwartalu: 1200,
+            firma: '- Z1: Logo dla Piekarni Kowalski, Realizacja, 890,00 zł',
         })
+        expect(p).toContain('Z1: Logo dla Piekarni Kowalski')
         expect(p).toContain('Księgowa: inFakt')
         expect(p).toContain('2026-12-01: Rejestracja CEIDG')
         expect(p).toContain('240 000 zł')
