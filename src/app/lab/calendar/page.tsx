@@ -16,7 +16,6 @@ import {
     addCalendarEvent, createSocialUploadUrl, deleteEvents, getCalendar, planWeek, regeneratePost, schedulePost, setPostImage,
     updateEventContent, updateEventImageUrl, updateEventStatus,
 } from './actions'
-import { publishToFacebook, publishToInstagram } from '../social-media/actions'
 
 /** Treść posta = tekst do publikacji, a po linii „---” notatki dla Mateusza (slajdy, scenariusz, uzasadnienie). */
 function splitContent(content?: string): { caption: string; notes: string } {
@@ -66,14 +65,16 @@ const STATUS_STYLE: Record<string, string> = {
     Zaplanowane: 'bg-yellow-400',
     Opublikowane: 'bg-emerald-400',
     Canva: 'bg-[#00c4cc]',
+    Postiz: 'bg-violet-400',
 }
 /** „Canva” = post przeniesiony do planera Canvy. Cron panelu go nie publikuje (bierze tylko „Zaplanowane”). */
-const STATUS_LABEL: Record<string, string> = { Szkic: 'Szkic', Zaplanowane: 'W kolejce', Canva: 'W Canvie', Opublikowane: 'Opublikowany' }
+const STATUS_LABEL: Record<string, string> = { Szkic: 'Szkic', Zaplanowane: 'W kolejce', Canva: 'W Canvie', Postiz: 'W Postiz', Opublikowane: 'Opublikowany' }
 
 function postStatus(p: Post): string {
     const s = rows(p).map((r) => r.status)
     if (s.every((x) => x === 'Opublikowane')) return 'Opublikowane'
     if (s.some((x) => x === 'Canva')) return 'Canva'
+    if (s.some((x) => x === 'Postiz')) return 'Postiz'
     if (s.some((x) => x === 'Zaplanowane' || x === 'Opublikowane')) return 'Zaplanowane'
     return 'Szkic'
 }
@@ -353,15 +354,13 @@ function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
         if (s === 'Zaplanowane') await schedulePost(ev.id, `${ev.date}T08:00:00.000Z`)
         else await updateEventStatus(ev.id, s)
     })
-    const publish = () => act(async () => {
-        if (dirty) await updateEventContent(ev.id, original.notes ? `${text.trim()}\n\n---\n${original.notes}` : text.trim())
-        if (isIg) {
-            if (!imgUrl) return { ok: false, text: 'Instagram potrzebuje grafiki.' }
-            const r = await publishToInstagram(ev.id, imgUrl, text.trim())
-            return r.success ? { ok: true, text: 'Opublikowane na Instagramie.' } : { ok: false, text: r.error }
-        }
-        const r = await publishToFacebook(ev.id, text.trim(), imgUrl || undefined)
-        return r.success ? { ok: true, text: 'Opublikowane na Facebooku.' } : { ok: false, text: r.error }
+    /** Publikacja przeniesiona do /lab/publikuj (Postiz + zapas Graph API). Najpierw zapisujemy zmiany w tekście. */
+    const openPublisher = () => act(async () => {
+        if (dirty) await updateEventContent(ev.id, original.notes ? `${text.trim()}
+
+---
+${original.notes}` : text.trim())
+        window.location.href = `/lab/publikuj?z=${encodeURIComponent(ev.id)}`
     })
     const remove = () => act(async () => {
         if (!window.confirm('Usunąć ten post (FB i IG)?')) return
@@ -530,9 +529,9 @@ function PostDrawer({ post, onClose, onChanged, onTopicChange }: {
                         </p>
                     )}
                     {ev.status !== 'Opublikowane' && (isIg || isFb) && (
-                        <button onClick={publish} disabled={busy}
+                        <button onClick={openPublisher} disabled={busy}
                             className="self-start rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
-                            {busy ? 'Chwila…' : `Opublikuj teraz na ${ev.platform}`}
+                            {busy ? 'Chwila…' : 'Publikuj w panelu (wybór kont)'}
                         </button>
                     )}
                     {msg && <p className={`text-xs ${msg.ok ? 'text-emerald-400' : 'text-red-400'}`}>{msg.text}</p>}

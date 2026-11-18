@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Sticker } from 'lucide-react'
+import { MapPinned, Sticker } from 'lucide-react'
 import { getAlerts } from './actions'
 import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
 import { TZ, warsawIsoDate, warsawMidnightMs, warsawParts } from '@/lib/lab/today/format'
@@ -17,6 +17,7 @@ import { FollowUpsCard } from '@/components/lab/today/FollowUpsCard'
 import { WeekStatsCard } from '@/components/lab/today/WeekStatsCard'
 import { EveningCard } from '@/components/lab/today/EveningCard'
 import { ConductorCard } from '@/components/lab/today/ConductorCard'
+import { SocialPublisher } from '@/components/lab/social/SocialPublisher'
 
 export const dynamic = 'force-dynamic'
 
@@ -114,7 +115,24 @@ export default async function TodayPage() {
                 <EveningCard todayActivities={todayActivities} />
             </div>
 
+            <SocialPublisher compact />
+
             {/* Narzędzia produkcyjne studia */}
+            <Link
+                href="/lab/szukaj-firm"
+                className="group flex items-center justify-between gap-4 rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 transition hover:border-yellow-400/30"
+            >
+                <div className="flex items-center gap-4">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-400/20 bg-yellow-400/5 text-yellow-400">
+                        <MapPinned size={20} />
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-white">Szukaj firm (Google Maps)</p>
+                        <p className="text-xs text-zinc-500">Lokalne firmy po branży i mieście, filtr „bez strony WWW”, eksport do CSV</p>
+                    </div>
+                </div>
+                <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
+            </Link>
             <Link
                 href="/lab/stickers"
                 className="group flex items-center justify-between gap-4 rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 transition hover:border-yellow-400/30"

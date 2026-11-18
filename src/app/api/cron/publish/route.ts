@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { publishToFB, publishToIG } from '@/lib/social-publish'
+import { processQueue } from '@/lib/social/publisher'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -24,6 +25,15 @@ export async function GET(request: Request) {
 
     const now = new Date().toISOString()
 
+    // Kolejka panelu /lab/publikuj: kanały, które czekały na Postiz (PC wyłączony) albo na termin.
+    let socialQueue: { checked: number; done: number } | { error: string }
+    try {
+        socialQueue = await processQueue()
+    } catch (e) {
+        console.error('Cron: social queue error:', e)
+        socialQueue = { error: e instanceof Error ? e.message : 'queue error' }
+    }
+
     // Get events scheduled for now or earlier that are still pending
     const { data: events, error } = await supabase
         .from('calendar_events')
@@ -39,7 +49,7 @@ export async function GET(request: Request) {
     }
 
     if (!events || events.length === 0) {
-        return NextResponse.json({ published: 0, message: 'No scheduled posts ready' })
+        return NextResponse.json({ published: 0, message: 'No scheduled posts ready', socialQueue })
     }
 
     let published = 0
@@ -87,5 +97,5 @@ export async function GET(request: Request) {
         }
     }
 
-    return NextResponse.json({ published, total: events.length, results })
+    return NextResponse.json({ published, total: events.length, results, socialQueue })
 }

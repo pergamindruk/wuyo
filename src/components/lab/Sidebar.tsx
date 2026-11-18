@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck, Users, TrendingUp, Sticker, Wallet } from 'lucide-react'
+import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck, Users, TrendingUp, Sticker, Wallet, Send, MapPinned } from 'lucide-react'
 
 const navGroups = [
     // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
@@ -13,6 +13,7 @@ const navGroups = [
         items: [
             { href: '/lab', label: 'Dziś', icon: Sun },
             { href: '/lab/crm', label: 'Zapytania', icon: Inbox },
+            { href: '/lab/szukaj-firm', label: 'Szukaj firm', icon: MapPinned },
             { href: '/lab/klienci', label: 'Klienci', icon: Users },
             { href: '/lab/lejek', label: 'Lejek', icon: Kanban },
             { href: '/lab/oferty', label: 'Brief i oferta', icon: FileSignature },
@@ -35,7 +36,8 @@ const navGroups = [
     {
         label: 'Treści i dane',
         items: [
-            { href: '/lab/calendar', label: 'Posty (plan i publikacja)', icon: Calendar },
+            { href: '/lab/calendar', label: 'Posty (plan)', icon: Calendar },
+            { href: '/lab/publikuj', label: 'Publikuj', icon: Send },
             { href: '/lab/analytics', label: 'Statystyki strony', icon: BarChart3 },
             { href: '/lab/seo', label: 'SEO-radca', icon: SearchCheck },
             { href: '/lab/audit-log', label: 'Dziennik zmian', icon: Shield },
