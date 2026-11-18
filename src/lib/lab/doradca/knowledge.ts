@@ -141,6 +141,23 @@ Wstępna ocena dla WUYO (do przeliczenia na prawdziwych liczbach):
 - Pytania do księgowej przed podpisaniem: czy rozliczała dotacje z PUP, kto składa VAT-9M, czy pomaga wybrać formę opodatkowania na 2027, ile kosztuje wyjście z umowy.`,
     },
     {
+        id: 'zaopatrzenie',
+        tytul: 'Zakupy materiałów do personalizacji (koszulki, bluzy, folia DTF)',
+        sprawdzono: '2026-11-18',
+        zrodlo: 'ustalenia z 18.11.2026, skill zaopatrzenie (wiedza ogólna, cen sklepów tu nie ma)',
+        tresc: `
+- Do rejestracji firmy Mateusz kupuje na próbę jako osoba prywatna, żeby nabrać praktyki z prasą i DTF.
+- Proces DTF: WUYO zleca tylko wydruk folii, wgrzewa sam na własnej prasie, pakuje i dostarcza.
+- Cen sklepów nie podawaj z pamięci. Wyszukaj w Google i podaj źródło z datą. Pełne porównanie (3 oferty, koszt sztuki z dostawą) robi komputer: zaproponuj zadanie „uruchom zaopatrzenie: <co, ile sztuk, budżet>”.
+- Liczy się koszt sztuki z dostawą do Rzeszowa, nie cena z cennika. Wzór: (cena × ilość + dostawa) / ilość.
+- Wiele hurtowni B2B sprzedaje tylko firmom albo pokazuje ceny po zalogowaniu. Przed rejestracją szukaj sklepów sprzedających bez NIP.
+- Plus zakupu jako osoba prywatna: 14 dni na zwrot przy zakupie przez internet (nie dotyczy wydruku DTF z własnym wzorem, bo to rzecz na zamówienie).
+- Na kartach produktów sprawdzaj skład i gramaturę (g/m²). DTF trzyma się bawełny i poliestru. Przy ciemnym poliestrze barwnik może przebijać przez biały nadruk.
+- Na próbę kupuj małe ilości (ok. 10 szt.) i różne modele, żeby porównać, co dobrze znosi prasę i pranie.
+- Zachowuj paragony i faktury na imię i nazwisko. [DO POTWIERDZENIA z księgową] wydatki sprzed rejestracji związane z późniejszą firmą bywają uznawane za koszt po starcie.
+- [DO POTWIERDZENIA w umowie PUP] Zakupy na próbę przed umową nie idą z dotacji. Nie wpisuj ich jako wydatków dotacyjnych.`,
+    },
+    {
         id: 'klienci',
         tytul: 'Umowy i klienci',
         sprawdzono: '2026-10-30',
