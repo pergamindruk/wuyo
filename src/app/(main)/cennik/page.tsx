@@ -26,7 +26,7 @@ import { alternatesFor } from "@/lib/i18n";
 
 const metadata: Metadata = {
     title: "Cennik grafiki, druku i stron WWW — Rzeszów",
-    description: "Jawne widełki: logo 890–1 490 zł, wizytówki z projektem od 299 zł, sam druk od 99 zł, strona od 1 990 zł. Projekt i druk w jednym miejscu.",
+    description: "Jawne widełki: logo od 890 zł, wizytówki z projektem od 299 zł, baner od 350 zł, strona od 1 990 zł. Projekt i druk w jednym miejscu.",
     openGraph: {
         title: "Cennik | WUYO Dobra Grafa",
         description: "Pakiety z konkretnymi cenami i widełki dla pojedynczych usług — grafika, druk, odzież, strony www.",
@@ -36,7 +36,7 @@ const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Cennik | WUYO Dobra Grafa",
-        description: "Jawne widełki: logo od 890 zł, druk wizytówek od 99 zł, strona od 1 990 zł. Wycena konkretna po jednej wiadomości.",
+        description: "Jawne widełki: logo od 890 zł, baner od 350 zł, druk wizytówek od 99 zł, strona od 1 990 zł. Wycena konkretna po jednej wiadomości.",
         images: ["/og-image.webp"],
     },
     alternates: alternatesFor("pricing", "pl"),
@@ -145,6 +145,12 @@ export default function PricingPage() {
                         </AnimatedSection>
                     ))}
                 </div>
+
+                <AnimatedSection delay={0.25}>
+                    <p className="text-white/60 text-sm mt-6 max-w-3xl">
+                        Przy stronie przed startem ustalamy liczbę podstron, funkcje i materiały do dostarczenia. Dopracowanie zaakceptowanego kierunku jest w cenie; nowe podstrony, funkcje lub zmiana zaakceptowanej koncepcji wymagają osobnej wyceny.
+                    </p>
+                </AnimatedSection>
 
                 {/* Rabat na zamówienia łączone */}
                 <AnimatedSection delay={0.3}>

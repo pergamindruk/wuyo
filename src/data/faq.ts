@@ -14,7 +14,7 @@ export const faqs: FaqItem[] = [
     },
     {
         question: "A co jak projekt mi nie wejdzie?",
-        answer: "Zanim w ogóle usiądę do projektowania, robimy solidny brief (wypytuję Cię o wszystko). Dzięki temu wiem, czego potrzebujesz. Potem robię poprawki, aż wszystko będzie dopięte. Pracuję, aż powiesz WOW!"
+        answer: "Zanim zacznę projektować, robimy brief, żebym wiedział, czego potrzebujesz. Dopracowujemy wybrany kierunek do akceptacji. Zmiana kierunku po akceptacji albo rozszerzenie ustalonego zakresu wymaga osobnej wyceny."
     },
     {
         question: "Co jeśli drukarnia zwróci plik z uwagami?",

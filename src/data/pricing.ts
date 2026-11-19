@@ -58,7 +58,7 @@ export const pricingFaqs = [
     },
     {
         q: "Ile poprawek jest w cenie?",
-        a: "Poprawki wybranej koncepcji są w cenie. Pracujemy, aż zaakceptujesz projekt.",
+        a: "Dopracowujemy wybrany kierunek, aż zaakceptujesz projekt. Zmiana koncepcji po jej akceptacji albo rozszerzenie ustalonego zakresu wymaga osobnej wyceny.",
     },
     {
         q: "Chcę tylko stronę albo tylko logo. Da się?",
@@ -261,7 +261,8 @@ export const priceRanges: PriceRangeGroup[] = [
         items: [
             { name: "Logo i identyfikacja wizualna", price: "890 – 1 490 zł" },
             { name: "Materiały do druku (wizytówka, ulotka, plakat, menu)", price: "160 – 480 zł" },
-            { name: "Reklama zewnętrzna (baner, roll-up, szyld)", price: "260 – 650 zł" },
+            { name: "Projekt reklamy zewnętrznej (baner, roll-up, szyld)", price: "330 – 650 zł" },
+            { name: "Skład baneru z kompletnych materiałów", price: "od 260 zł" },
             { name: "Opakowania i etykiety", price: "od 180 zł" },
             { name: "Grafiki do mediów społecznościowych", price: "90 – 1 350 zł" },
             { name: "Skład z Twoich gotowych materiałów", price: "od 200 zł" },
@@ -289,7 +290,7 @@ export const priceRanges: PriceRangeGroup[] = [
     },
     {
         title: "Strony internetowe",
-        note: "Next.js, SEO lokalne, dopracowana wersja mobilna. Domena i hosting na pierwszy rok w cenie.",
+        note: "Next.js, SEO lokalne, dopracowana wersja mobilna. Domena i hosting na pierwszy rok w cenie. Zakres, liczba podstron i funkcje są ustalane w ofercie; nowe podstrony i funkcje wyceniamy osobno.",
         items: [
             { name: "Strona jednostronicowa (one-page)", price: "od 1 990 zł" },
             { name: "Strona firmowa do 5 podstron", price: "2 990 zł" },

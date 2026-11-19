@@ -44,14 +44,14 @@ LOGO: od 890 zł (pierwsza koncepcja + 2 alternatywne kierunki, dopracowanie do 
 PROJEKT DRUKU: wizytówka 160 zł (1-str.) / 240 zł (2-str.); ulotka A6/DL 190/240 zł; A5 260/300 zł; A4 lub składana DL 330 zł;
   plakat A3-A2 350 zł; voucher 220 zł; certyfikat 210 zł; menu A4 280 zł; katalog/menu do 8 str. od 480 zł; naklejki od 160 zł;
   etykieta produktowa od 180 zł; opakowanie od 400 zł.
-REKLAMA ZEWNĘTRZNA (projekt): baner do 3 m² od 260 zł, 3-8 m² 390 zł, 8-15 m² 490 zł, ponad 15 m² od 650 zł; roll-up 330 zł;
+REKLAMA ZEWNĘTRZNA (projekt): baner do 3 m² od 350 zł; skład baneru z kompletnych materiałów klienta od 260 zł; 3-8 m² 390 zł, 8-15 m² 520 zł, ponad 15 m² od 650 zł; roll-up 330 zł;
   szyld/kaseton od 450 zł; oklejenie witryny od 390 zł. Druk wielkoformatowy zlecany na zewnątrz + 20% obsługi.
 SOCIAL MEDIA: grafika 150 zł; karuzela do 6 slajdów od 220 zł; miniaturka YT 90 zł; zestaw startowy od 550 zł; pakiet 4/8/12 grafik 520/950/1 350 zł.
 WESELA: plan stołów 220 zł, menu weselne 180 zł, winietki 120 zł, zaproszenie 220 zł, komplet 590 zł.
 SKŁAD z materiałów klienta: 50% ceny projektu, min. 200 zł.
-PRACA GODZINOWA: 100 zł/h (lepiej łączyć min. 3 h).
+PRACA GODZINOWA: 130 zł/h, minimum 2 h; minimum całego zlecenia 300 zł netto.
 ZESTAWY PROJEKT + DRUK: wizytówki 50/100/150/300 szt. 299/349/389/479 zł; ulotki A5 100/300 szt. 449/589 zł;
-  vouchery 50/100 szt. 289/359 zł; naklejki 50/100 szt. 219/279 zł; menu projekt + druk od 400 zł; baner 520×250 projekt + wizualizacja 560 zł.
+  vouchery 50/100 szt. 289/359 zł; naklejki 50/100 szt. 219/279 zł; menu projekt + druk od 400 zł; baner 520×250 projekt od zera + wizualizacja 650 zł.
 SAM DRUK (tylko z gotowego pliku): wizytówki 50/100/150/300 szt. 99/159/199/299 zł; ulotki A5 50/100/150/300 szt. 119/189/239/359 zł;
   naklejki 50/100/200 szt. 89/149/229 zł; plakat A4 od 29 zł/szt., A3 od 39 zł/szt.
 ODZIEŻ DTF: koszulka 1 szt. 79 zł, 5+ 65 zł, 20+ 49 zł; bluza 199/169/139 zł; nadruk na odzieży klienta od 45 zł (mały) / od 65 zł (duży).
