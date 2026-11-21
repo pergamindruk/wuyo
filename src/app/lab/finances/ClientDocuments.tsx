@@ -41,7 +41,7 @@ export function ClientDocuments() {
             EMAIL: j.email || EMPTY.EMAIL,
             NR: `${j.id.slice(0, 4).toUpperCase()}/${todayPl().slice(3)}`,
             DZIELO: j.title || EMPTY.DZIELO,
-            KWOTA: j.priceGrosze ? `${pln(j.priceGrosze)} netto` : EMPTY.KWOTA,
+            KWOTA: j.priceGrosze ? pln(j.priceGrosze) : EMPTY.KWOTA,
             ZALICZKA: j.priceGrosze ? pln(half) : EMPTY.ZALICZKA,
         })
     }

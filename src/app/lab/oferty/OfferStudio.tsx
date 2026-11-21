@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react'
 import { Check, ClipboardList, Copy, Download, FileText, Send, Sparkles } from 'lucide-react'
 import { OfferDocument } from '@/components/lab/OfferDocument'
 import type { OfferData } from '@/lib/lab/offer'
+import { offerTemplate } from '@/lib/lab/offer-templates'
 import { draftOffer, ensureJobToken, saveOffer } from './actions'
 
 export type StudioJob = {
@@ -37,13 +38,10 @@ function emptyOffer(j: StudioJob): OfferData {
         validDays: 14,
         clientName: j.clientName,
         clientCompany: j.clientCompany,
-        title: j.title || j.service,
-        intro: '',
-        scope: [],
+        ...offerTemplate(j.serviceKey, j.clientCompany || j.clientName),
         priceGrosze: j.priceGrosze,
         priceNote: 'Cena netto, do ceny doliczam 23% VAT. Płatność: 50% zaliczki na start, reszta po odbiorze.',
         timeline: '',
-        cta: '',
     }
 }
 
@@ -107,6 +105,11 @@ function JobPanel({ job }: { job: StudioJob }) {
         else setMsg({ ok: false, text: r.error })
     })
 
+    const applyTemplate = () => {
+        setOffer((o) => ({ ...o, ...offerTemplate(job.serviceKey, o.clientCompany || o.clientName) }))
+        setMsg({ ok: true, text: 'Szablon wstawiony. Uzupełnij pola w [nawiasach] przed wysłaniem.' })
+    }
+
     const save = (markSent: boolean) => start(async () => {
         const r = await saveOffer(job.id, offer, markSent)
         if (!r.ok) return setMsg({ ok: false, text: r.error })
@@ -148,6 +151,9 @@ function JobPanel({ job }: { job: StudioJob }) {
                         <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Np. otwiera piekarnię w Łańcucie w grudniu, chce logo w stylu retro, 200 wizytówek" className={`${field} resize-none`} /></label>
                     <button onClick={draft} disabled={pending} className="flex items-center justify-center gap-2 rounded-full bg-white/10 py-2.5 text-sm font-semibold text-white hover:bg-white/15 disabled:opacity-50">
                         <Sparkles size={15} className="text-yellow-400" /> {pending ? 'Chwila…' : 'Napisz wstęp, zakres i CTA (AI)'}
+                    </button>
+                    <button onClick={applyTemplate} disabled={pending} className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm font-semibold text-zinc-200 hover:border-white/30 disabled:opacity-50">
+                        <FileText size={15} className="text-yellow-400" /> Wstaw szablon ({job.service})
                     </button>
                     <label className="flex flex-col gap-1.5"><span className={label}>Tytuł</span><input value={offer.title} onChange={(e) => set('title', e.target.value)} className={field} /></label>
                     <label className="flex flex-col gap-1.5"><span className={label}>Wstęp</span><textarea rows={3} value={offer.intro} onChange={(e) => set('intro', e.target.value)} className={`${field} resize-y`} /></label>
