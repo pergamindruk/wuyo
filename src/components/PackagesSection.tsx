@@ -7,6 +7,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { trackOrderSubmit } from "@/lib/tracking";
 import { PRINT_PRODUCTS, designFeeFor, type PrintProductData, type PrintVariant } from "@/data/print-products";
+import { ORDERS_OPEN, ORDERS_CLOSED_MESSAGE } from "@/data/orders-status";
 
 // Pakiety biznesowe przeniesione do osobnej sekcji cennika (PricingSection / src/data/pricing.ts).
 
@@ -123,7 +124,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
     const canAdd = selectedVariant !== null && withDesign !== null;
 
     function handleAdd() {
-        if (!selectedVariant || withDesign === null) return;
+        if (!ORDERS_OPEN || !selectedVariant || withDesign === null) return;
         onAddToCart({
             productId: product.id,
             productName: product.name,
@@ -233,17 +234,21 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                             <p className="text-white/50 text-xs text-center">wycena indywidualna po kontakcie</p>
                         )}
 
-                        <button
-                            onClick={handleAdd}
-                            disabled={justAdded}
-                            className={`w-full py-2.5 rounded-full text-xs font-bold transition-all duration-200 ${
-                                justAdded
-                                    ? "bg-green-500/20 text-green-400 border border-green-500/40"
-                                    : "bg-[#ffeb52] text-[#1c1b17] hover:bg-[#ffe000]"
-                            }`}
-                        >
-                            {justAdded ? "Dodano ✓" : "Dodaj do koszyka"}
-                        </button>
+                        {ORDERS_OPEN ? (
+                            <button
+                                onClick={handleAdd}
+                                disabled={justAdded}
+                                className={`w-full py-2.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                                    justAdded
+                                        ? "bg-green-500/20 text-green-400 border border-green-500/40"
+                                        : "bg-[#ffeb52] text-[#1c1b17] hover:bg-[#ffe000]"
+                                }`}
+                            >
+                                {justAdded ? "Dodano ✓" : "Dodaj do koszyka"}
+                            </button>
+                        ) : (
+                            <p className="text-white/60 text-xs text-center">Zamówienia od grudnia 2026</p>
+                        )}
                 </div>
             )}
         </div>
@@ -299,7 +304,7 @@ function CartDrawer({ items, onRemove, onClose, widoczna }: CartDrawerProps) {
                 body: JSON.stringify({ items, name: name.trim(), email: email.trim(), note: note.trim(), hp: honeypot }),
             });
             if (!res.ok) {
-                if (res.status === 400) {
+                if (res.status === 400 || res.status === 503) {
                     const info = await res.json().catch(() => null);
                     if (typeof info?.error === "string") setErrorMsg(info.error);
                 }
@@ -557,6 +562,11 @@ export function PackagesSection({ showButton = true, className = "py-28 px-6 md:
                     Nie musisz szukać drukarni, tłumaczyć, o co Ci chodzi, i modlić się, żeby wyszło.
                     Projektuję, drukuję i dostarczam. Ty dostajesz gotową rzecz.
                 </p>
+                {!ORDERS_OPEN && (
+                    <p role="status" className="mt-5 inline-block rounded-xl border border-[#ffeb52]/30 bg-[#ffeb52]/10 px-4 py-3 text-sm font-semibold text-[#ffeb52]">
+                        {ORDERS_CLOSED_MESSAGE}
+                    </p>
+                )}
             </AnimatedSection>
 
             {/* Baner rabatowy */}

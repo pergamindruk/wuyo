@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
 import { sourceForVisitor, visitorId } from "@/lib/visitor";
 import { pricedLine, type PricedLine } from "@/data/print-products";
+import { ORDERS_OPEN, ORDERS_CLOSED_MESSAGE } from "@/data/orders-status";
 
 // Pozycje mają ceny policzone na serwerze z @/data/print-products.
 // Cena z przeglądarki jest tylko podglądem i tutaj w ogóle nie wchodzi.
@@ -208,6 +209,11 @@ function buildAutoReplyHtml(d: OrderData): string {
 }
 
 export async function POST(req: NextRequest) {
+    // Blokada na serwerze: obejmuje też strony otwarte przed wyłączeniem zamówień.
+    if (!ORDERS_OPEN) {
+        return NextResponse.json({ error: ORDERS_CLOSED_MESSAGE }, { status: 503 });
+    }
+
     const ip = getClientIp(req);
 
     // Klucz serwisowy: tabela `leads` ma RLS, anon nie ma do niej dostępu.
