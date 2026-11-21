@@ -1,23 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, FROM_NOTIFICATION, FROM_CLIENT, TO_MATEUSZ } from "@/lib/email";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
+import { sourceForVisitor, visitorId } from "@/lib/visitor";
+import { pricedLine, type PricedLine } from "@/data/print-products";
 
-interface CartItem {
-    productId: string;
-    productName: string;
-    qty: string;
-    price: string;
-    priceNum: number;
-}
-
+// Pozycje mają ceny policzone na serwerze z @/data/print-products.
+// Cena z przeglądarki jest tylko podglądem i tutaj w ogóle nie wchodzi.
 interface OrderData {
-    items: CartItem[];
+    items: PricedLine[];
     name: string;
     email: string;
     note: string;
-    hp?: string; // honeypot — puste pole niewidoczne dla ludzi
+}
+
+const LEAD_TYPE = "Zamówienie druku";
+const MAX_ITEMS = 20;
+const NAME_MAX = 200;
+const NOTE_MAX = 2000;
+const DETAILS_MAX = 2000;
+// Ten sam koszyk od tej samej osoby w tym oknie to ponowne kliknięcie albo
+// ponowienie po błędzie sieci, nie nowe zamówienie.
+const DUPLICATE_WINDOW_MS = 10 * 60_000;
+
+function priceLabel(item: PricedLine): string {
+    if (item.priceNum === 0) return "wycena indywidualna";
+    return `${item.priceNum} zł`;
+}
+
+function variantLabel(item: PricedLine): string {
+    return item.withDesign ? `${item.qty}, z projektem` : `${item.qty}, bez projektu`;
+}
+
+// Treść zamówienia do kolumny `details`: wpis w CRM ma wystarczyć bez maila.
+function buildDetails(d: OrderData): string {
+    const lines = d.items.map((i) => `${i.productName} (${variantLabel(i)}): ${priceLabel(i)}`).join("; ");
+    const total = d.items.reduce((sum, i) => sum + i.priceNum, 0);
+    const hasCustom = d.items.some((i) => i.priceNum === 0);
+    const sum = total > 0 ? `${total} zł${hasCustom ? " + pozycje z wyceną indywidualną" : ""}` : "do wyceny";
+    const rabat = d.items.length >= 2 ? " | Rabat -15% na każdy kolejny produkt do ustalenia" : "";
+    return `Pozycje: ${lines} | Suma orientacyjna: ${sum}${rabat} | Notatka: ${d.note || "Brak"}`.slice(0, DETAILS_MAX);
 }
 
 function buildOrderHtml(d: OrderData): string {
@@ -30,9 +53,9 @@ function buildOrderHtml(d: OrderData): string {
             (item) => `
             <tr>
                 <td style="padding: 10px 14px; color: #eee; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${escapeHtml(item.productName)}</td>
-                <td style="padding: 10px 14px; color: #aaa; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${escapeHtml(item.qty)}</td>
+                <td style="padding: 10px 14px; color: #aaa; font-size: 14px; border-bottom: 1px solid #2a2a3e;">${escapeHtml(variantLabel(item))}</td>
                 <td style="padding: 10px 14px; color: ${item.priceNum === 0 ? "#888" : "#FFD700"}; font-size: 14px; font-weight: 700; border-bottom: 1px solid #2a2a3e; text-align: right; white-space: nowrap;">${
-                    item.priceNum === 0 ? "wycena indywidualna" : escapeHtml(item.price)
+                    escapeHtml(priceLabel(item))
                 }</td>
             </tr>`
         )
@@ -112,9 +135,9 @@ function buildAutoReplyHtml(d: OrderData): string {
             (item) =>
                 `<li style="padding: 8px 0; border-bottom: 1px solid #1e293b; color: #e2e8f0; font-size: 14px;">
                     <strong style="color:#d99e28;">${escapeHtml(item.productName)}</strong>
-                    <span style="color:#94a3b8;"> — ${escapeHtml(item.qty)} &nbsp; </span>
+                    <span style="color:#94a3b8;"> — ${escapeHtml(variantLabel(item))} &nbsp; </span>
                     <span style="color:${item.priceNum === 0 ? "#64748b" : "#d99e28"}; font-weight: 700;">${
-                        item.priceNum === 0 ? "wycena indywidualna" : escapeHtml(item.price)
+                        escapeHtml(priceLabel(item))
                     }</span>
                 </li>`
         )
@@ -186,7 +209,15 @@ function buildAutoReplyHtml(d: OrderData): string {
 
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
-    const supabase = await createClient();
+
+    // Klucz serwisowy: tabela `leads` ma RLS, anon nie ma do niej dostępu.
+    // Baza jest dodatkiem do maila, nie warunkiem: bez niej zamówienie i tak dochodzi pocztą.
+    let supabase: ReturnType<typeof createAdminClient> | null = null;
+    try {
+        supabase = createAdminClient();
+    } catch (error) {
+        console.error("Zamówienie: brak połączenia z bazą, pójdzie tylko mailem:", error);
+    }
 
     if (!(await rateLimit(supabase, `order:${ip}`, LIMITS.brief.limit, LIMITS.brief.windowMs))) {
         return NextResponse.json(
@@ -196,23 +227,74 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const data: OrderData = await req.json();
+        const body = await req.json();
 
-        if (isHoneypotTripped(data.hp)) {
+        if (isHoneypotTripped(body?.hp)) {
             return NextResponse.json({ success: true }); // cicho odrzucamy bota
         }
-        if (!data.name) {
+        const name = typeof body?.name === "string" ? body.name.trim().slice(0, NAME_MAX) : "";
+        if (!name) {
             return NextResponse.json({ error: "Podaj imię, żebym wiedział jak się do Ciebie zwracać." }, { status: 400 });
         }
-        if (!isValidEmail(data.email)) {
+        if (!isValidEmail(body?.email)) {
             return NextResponse.json({ error: "Sprawdź adres e-mail — coś się w nim nie zgadza." }, { status: 400 });
         }
-        data.email = normalizeEmail(data.email);
-        if (!Array.isArray(data.items) || data.items.length === 0) {
+        if (!Array.isArray(body.items) || body.items.length === 0) {
             return NextResponse.json({ error: "Koszyk jest pusty" }, { status: 400 });
         }
+        if (body.items.length > MAX_ITEMS) {
+            return NextResponse.json({ error: "Za dużo pozycji w koszyku. Napisz do mnie, wycenię to osobno." }, { status: 400 });
+        }
+        const items = (body.items as unknown[]).map(pricedLine);
+        if (items.some((i) => i === null)) {
+            return NextResponse.json(
+                { error: "Któraś pozycja w koszyku jest nieaktualna. Odśwież stronę i dodaj ją jeszcze raz." },
+                { status: 400 }
+            );
+        }
 
-        const firstName = data.name.split(" ")[0] ?? data.name;
+        const data: OrderData = {
+            items: items as PricedLine[],
+            name,
+            email: normalizeEmail(body.email),
+            note: typeof body.note === "string" ? body.note.trim().slice(0, NOTE_MAX) : "",
+        };
+        const details = buildDetails(data);
+
+        if (supabase) {
+            try {
+                const since = new Date(Date.now() - DUPLICATE_WINDOW_MS).toISOString();
+                const { data: earlier, error: dupError } = await supabase
+                    .from("leads")
+                    .select("id")
+                    .eq("email", data.email)
+                    .eq("type", LEAD_TYPE)
+                    .eq("details", details)
+                    .gte("created_at", since)
+                    .limit(1);
+                if (dupError) {
+                    console.error("Zamówienie: nie udało się sprawdzić duplikatu:", dupError);
+                } else if (earlier && earlier.length > 0) {
+                    // To zamówienie już jest w CRM. Drugi wpis i drugi komplet maili nic nie dadzą.
+                    return NextResponse.json({ success: true });
+                }
+
+                const visitor = visitorId(req);
+                const { error: dbError } = await supabase.from("leads").insert([{
+                    name: data.name,
+                    email: data.email,
+                    type: LEAD_TYPE,
+                    details,
+                    visitor,
+                    source: await sourceForVisitor(supabase, visitor),
+                }]);
+                if (dbError) console.error("Database save error (order):", dbError);
+            } catch (dbError) {
+                console.error("Database save error (order):", dbError);
+            }
+        }
+
+        const firstName = data.name.split(" ")[0] || data.name;
 
         await sendEmail({
             from: FROM_NOTIFICATION,
@@ -222,12 +304,18 @@ export async function POST(req: NextRequest) {
             html: buildOrderHtml(data),
         }, "zamowienie-powiadomienie");
 
-        await sendEmail({
-            from: FROM_CLIENT,
-            to: data.email,
-            subject: `Hej ${firstName}! Dostałem Twoje zamówienie 🎉`,
-            html: buildAutoReplyHtml(data),
-        }, "zamowienie-autoodpowiedz");
+        // Powiadomienie doszło, więc zamówienie jest przyjęte. Błąd potwierdzenia
+        // dla klienta nie może zwrócić 500, bo klient wysłałby koszyk drugi raz.
+        try {
+            await sendEmail({
+                from: FROM_CLIENT,
+                to: data.email,
+                subject: `Hej ${firstName}! Dostałem Twoje zamówienie 🎉`,
+                html: buildAutoReplyHtml(data),
+            }, "zamowienie-autoodpowiedz");
+        } catch (error) {
+            console.error("Zamówienie: autoodpowiedź nie wyszła, powiadomienie doszło:", error);
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

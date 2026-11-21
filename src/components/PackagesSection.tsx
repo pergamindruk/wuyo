@@ -6,6 +6,7 @@ import { Tag, ShoppingCart, X, Loader2, CheckCircle, AlertCircle, CreditCard, Bo
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { useMountTransition } from "@/lib/useMountTransition";
 import { trackOrderSubmit } from "@/lib/tracking";
+import { PRINT_PRODUCTS, designFeeFor, type PrintProductData, type PrintVariant } from "@/data/print-products";
 
 // Pakiety biznesowe przeniesione do osobnej sekcji cennika (PricingSection / src/data/pricing.ts).
 
@@ -68,66 +69,18 @@ export const packages = [
     },
 ];
 
-// designFee = dopłata za projekt przy danym nakładzie. Tam, gdzie CENNIK.md
-// (CZĘŚĆ 3) ma gotowy zestaw projekt + druk, wariant nadpisuje ją tak, żeby
-// suma równała się cenie zestawu. Bez zestawu — cena projektu z CZĘŚCI 1.2.
-const printProducts: PrintProduct[] = [
-    {
-        id: "wizytowki", name: "Wizytówki", note: "dwustronne, 300g błysk", designFee: 190, icon: <CreditCard size={44} />,
-        variants: [
-            { qty: "50 szt.", price: "99 zł", priceNum: 99, designFee: 200 },
-            { qty: "100 szt.", price: "159 zł", priceNum: 159 },
-            { qty: "150 szt.", price: "199 zł", priceNum: 199 },
-            { qty: "300 szt.", price: "299 zł", priceNum: 299, designFee: 180 },
-        ],
-    },
-    {
-        id: "ulotki", name: "Ulotki A5", note: "dwustronne, pełny kolor", designFee: 300, icon: <BookOpen size={44} />,
-        variants: [
-            { qty: "50 szt.", price: "119 zł", priceNum: 119 },
-            { qty: "100 szt.", price: "189 zł", priceNum: 189, designFee: 260 },
-            { qty: "150 szt.", price: "239 zł", priceNum: 239 },
-            { qty: "300 szt.", price: "359 zł", priceNum: 359, designFee: 230 },
-        ],
-    },
-    {
-        id: "vouchery", name: "Vouchery / bony", note: "", designFee: 180, icon: <Gift size={44} />,
-        variants: [
-            { qty: "50 szt.", price: "109 zł", priceNum: 109 },
-            { qty: "100 szt.", price: "179 zł", priceNum: 179 },
-        ],
-    },
-    {
-        id: "naklejki", name: "Naklejki i etykiety", note: "", designFee: 160, icon: <Tag size={44} />,
-        variants: [
-            { qty: "50 szt.", price: "89 zł", priceNum: 89, designFee: 130 },
-            { qty: "100 szt.", price: "149 zł", priceNum: 149, designFee: 130 },
-            { qty: "200 szt.", price: "229 zł", priceNum: 229 },
-        ],
-    },
-    {
-        id: "plakaty", name: "Plakaty", note: "", designFee: 350, icon: <Frame size={44} />,
-        variants: [
-            { qty: "A4", price: "od 29 zł/szt.", priceNum: 29 },
-            { qty: "A3", price: "od 39 zł/szt.", priceNum: 39 },
-            { qty: "10+ szt.", price: "wycena indywidualna", priceNum: 0 },
-        ],
-    },
-    {
-        id: "magnesy", name: "Magnesy reklamowe", note: "z laminatem, format wizytówki", designFee: 130, icon: <Magnet size={44} />,
-        variants: [
-            { qty: "50 szt.", price: "229 zł", priceNum: 229 },
-            { qty: "100 szt.", price: "379 zł", priceNum: 379 },
-        ],
-    },
-    {
-        id: "koperty", name: "Koperty z nadrukiem", note: "", designFee: 110, icon: <Mail size={44} />,
-        variants: [
-            { qty: "25 szt.", price: "69 zł", priceNum: 69 },
-            { qty: "50 szt.", price: "119 zł", priceNum: 119 },
-        ],
-    },
-];
+// Dane produktów (ceny, warianty) są w @/data/print-products, bo z tego samego
+// źródła liczy cenę /api/order. Tu tylko ikony.
+const productIcons: Record<string, React.ReactNode> = {
+    wizytowki: <CreditCard size={44} />,
+    ulotki: <BookOpen size={44} />,
+    vouchery: <Gift size={44} />,
+    naklejki: <Tag size={44} />,
+    plakaty: <Frame size={44} />,
+    magnesy: <Magnet size={44} />,
+    koperty: <Mail size={44} />,
+};
+const printProducts: PrintProduct[] = PRINT_PRODUCTS.map((p) => ({ ...p, icon: productIcons[p.id] }));
 
 type CartItem = {
     productId: string;
@@ -139,20 +92,9 @@ type CartItem = {
     designFee: number;
 };
 
-type Variant = { qty: string; price: string; priceNum: number; designFee?: number };
+type Variant = PrintVariant;
 
-type PrintProduct = {
-    id: string;
-    name: string;
-    note: string;
-    designFee: number;
-    icon: React.ReactNode;
-    variants: Variant[];
-};
-
-function designFeeFor(product: PrintProduct, variant: Variant | null): number {
-    return variant?.designFee ?? product.designFee;
-}
+type PrintProduct = PrintProductData & { icon: React.ReactNode };
 
 // --- Product Card ---
 interface ProductCardProps {
@@ -324,6 +266,8 @@ function CartDrawer({ items, onRemove, onClose, widoczna }: CartDrawerProps) {
     const [honeypot, setHoneypot] = useState(""); // bot trap — niewidoczne dla ludzi
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+    // Przy 400 serwer mówi, co poprawić (np. nieaktualna pozycja koszyka).
+    const [errorMsg, setErrorMsg] = useState("");
     const closeRef = useRef<HTMLButtonElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -347,13 +291,20 @@ function CartDrawer({ items, onRemove, onClose, widoczna }: CartDrawerProps) {
         if (!name.trim() || !email.trim() || items.length === 0) return;
         setLoading(true);
         setStatus("idle");
+        setErrorMsg("");
         try {
             const res = await fetch("/api/order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ items, name: name.trim(), email: email.trim(), note: note.trim(), hp: honeypot }),
             });
-            if (!res.ok) throw new Error("Błąd serwera");
+            if (!res.ok) {
+                if (res.status === 400) {
+                    const info = await res.json().catch(() => null);
+                    if (typeof info?.error === "string") setErrorMsg(info.error);
+                }
+                throw new Error("Błąd serwera");
+            }
             trackOrderSubmit(items.length);
             setStatus("success");
         } catch {
@@ -521,7 +472,7 @@ function CartDrawer({ items, onRemove, onClose, widoczna }: CartDrawerProps) {
                             {status === "error" && (
                                 <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
                                     <AlertCircle size={16} className="shrink-0" />
-                                    <span>Coś poszło nie tak. Spróbuj jeszcze raz lub napisz bezpośrednio.</span>
+                                    <span>{errorMsg || "Coś poszło nie tak. Spróbuj jeszcze raz lub napisz bezpośrednio."}</span>
                                 </div>
                             )}
 
