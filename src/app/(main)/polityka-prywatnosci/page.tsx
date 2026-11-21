@@ -65,7 +65,8 @@ export default function PrivacyPolicyPage() {
                                     <li><strong>Vercel Inc.</strong> (USA): hosting Serwisu. Przez jego serwery przechodzą wszystkie dane wysyłane przez stronę, w tym treść formularzy. Vercel zbiera też anonimowe statystyki odwiedzin i szybkości strony (Vercel Analytics, Speed Insights), bez plików cookies.</li>
                                     <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy i czatu, adresy e-mail podane przy pobraniu plików oraz anonimowe dane o odwiedzanych podstronach: adres podstrony, skąd przyszło wejście (np. wyszukiwarka, Facebook, link z kampanii) i jednodniowy skrót technicznych danych przeglądarki. Skrótu nie da się odwrócić do adresu IP ani powiązać z Tobą między dniami. Nic nie zapisuję w Twojej przeglądarce.</li>
                                     <li><strong>Resend</strong> (Plus Five Five Inc., USA): wysyłka wiadomości e-mail z Serwisu, czyli powiadomień o Twoim zapytaniu i potwierdzeń wysłanych na Twój adres.</li>
-                                    <li><strong>Google</strong> (Gemini API): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Korzystam z bezpłatnej wersji tej usługi, dlatego Google może wykorzystywać treść rozmów do ulepszania swoich usług, a jego pracownicy mogą ją przeglądać. W tym zakresie Google działa jako osobny administrator danych na zasadach swojej polityki prywatności (policies.google.com/privacy). Nie wpisuj w czacie danych osobowych innych niż potrzebne do kontaktu ani danych wrażliwych. Jeśli wolisz, napisz na kontakt@wuyo.pl albo skorzystaj z formularza.</li>
+                                    <li><strong>Google</strong> (Vertex AI w Google Cloud): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Gdy Vertex AI jest dostępny, korzystam z płatnej usługi Google Cloud: Google przetwarza wiadomości na moje zlecenie na podstawie Cloud Data Processing Addendum i nie używa ich do trenowania modeli bez mojej zgody lub instrukcji. Jeśli konfiguracja Vertex AI jest niedostępna, aplikacja może użyć Gemini API (Google AI Studio); zasady użycia danych w tym wariancie zależą od planu API, a bezpłatny plan może wykorzystywać treści do ulepszania usług Google. W obu wariantach wiadomości mogą być przetwarzane poza Europejskim Obszarem Gospodarczym. Samych rozmów nie zapisuję w bazie. Zapisuję tylko imię i e-mail, jeśli podasz je w czacie, żeby odpisać. Nie wpisuj w czacie danych wrażliwych. Jeśli wolisz, napisz na kontakt@wuyo.pl albo skorzystaj z formularza.</li>
+                                    <li><strong>MailerLite</strong> (UAB MailerLite, Litwa, UE): wysyłka maili z poradami i ofertami. Trafia tam Twoje imię i e-mail tylko wtedy, gdy w formularzu kontaktowym zaznaczysz zgodę na takie maile.</li>
                                     <li><strong>Google Ireland Limited</strong> i <strong>Meta Platforms Ireland Limited</strong>: statystyki i pomiar reklam, tylko po Twojej zgodzie (szczegóły w § 5).</li>
                                 </ul>
                             </li>
@@ -83,7 +84,7 @@ export default function PrivacyPolicyPage() {
                                     <li>odpowiedź na zapytanie i przygotowanie wyceny: działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO),</li>
                                     <li>realizacja zamówionej usługi: wykonanie umowy (art. 6 ust. 1 lit. b RODO),</li>
                                     <li>wysłanie pliku do pobrania (np. szablonu briefu) na podany e-mail: wykonanie usługi, o którą prosisz (art. 6 ust. 1 lit. b RODO),</li>
-                                    <li>maile z poradami i ofertami: Twoja zgoda zaznaczona przy pobraniu pliku (art. 6 ust. 1 lit. a RODO oraz art. 398 Prawa komunikacji elektronicznej); bez tej zgody nie wysyłam Ci żadnych ofert,</li>
+                                    <li>maile z poradami i ofertami: Twoja zgoda zaznaczona przy pobraniu pliku albo w formularzu kontaktowym (art. 6 ust. 1 lit. a RODO oraz art. 398 Prawa komunikacji elektronicznej); zgoda jest dobrowolna, a bez niej nie wysyłam Ci żadnych ofert,</li>
                                     <li>wystawianie faktur i prowadzenie księgowości: obowiązek prawny (art. 6 ust. 1 lit. c RODO),</li>
                                     <li>dochodzenie lub obrona przed roszczeniami oraz anonimowe statystyki działania strony: prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO),</li>
                                     <li>cookies analityczne i marketingowe: Twoja zgoda (art. 6 ust. 1 lit. a RODO).</li>
@@ -94,7 +95,8 @@ export default function PrivacyPolicyPage() {
                                     <li>zapytania, po których nie doszło do współpracy: do 12 miesięcy od ostatniego kontaktu,</li>
                                     <li>dane klientów: przez czas współpracy, a potem do upływu terminu przedawnienia roszczeń,</li>
                                     <li>faktury i dokumenty księgowe: 5 lat od końca roku, w którym minął termin zapłaty podatku,</li>
-                                    <li>e-mail podany przy pobraniu pliku bez zgody na maile: do 12 miesięcy, a ze zgodą: do jej wycofania (wystarczy odpisać „wypisz”),</li>
+                                    <li>e-mail podany przy pobraniu pliku bez zgody na maile: do 12 miesięcy,</li>
+                                    <li>imię i e-mail na liście maili z poradami (zgoda przy pobraniu pliku albo w formularzu kontaktowym): do wycofania zgody (wystarczy odpisać „wypisz” albo kliknąć link wypisu w mailu),</li>
                                     <li>dane z cookies: do wycofania zgody lub wygaśnięcia pliku cookie.</li>
                                 </ul>
                             </li>
@@ -138,7 +140,7 @@ export default function PrivacyPolicyPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Postanowienia końcowe</h2>
                         <p>Zawsze wiesz gdzie mnie znaleźć. Napisz na maila <strong>kontakt@wuyo.pl</strong> jeśli masz jakiekolwiek wątpliwości lub pytania o swoje dane.</p>
-                        <p className="mt-4 text-sm text-white/50">Ostatnia aktualizacja: 27.10.2026.</p>
+                        <p className="mt-4 text-sm text-white/50">Ostatnia aktualizacja: 21.11.2026.</p>
                     </AnimatedSection>
                 </div>
             </div>

@@ -9,6 +9,8 @@ import { pricingGroupsEn } from "@/data/pricing-en";
 import { trackFormSubmit } from "@/lib/tracking";
 import { usePathname } from "next/navigation";
 import { localeFromPath, route } from "@/lib/i18n";
+import Link from "next/link";
+import { BRIEF_MARKETING_CONSENT } from "@/data/marketing-consent";
 
 /* ─ Linki kontaktowe ─ */
 const WA_LINK = "https://wa.me/48725182053";
@@ -63,7 +65,9 @@ const T = {
         daneH: "Twoje dane kontaktowe 📬", daneS: "Gdzie wysłać odpowiedź i wycenę?",
         imie: "Imię *", imiePh: "Jak mam się do Ciebie zwracać?", emailPh: "Na jaki adres mam odpisać?",
         cos: "Coś jeszcze? Termin? (opcjonalne)", cosPh: "Szczegóły, termin realizacji, specjalne życzenia...",
-        rodo: "Administratorem danych jest Wuyo. Wysyłając wiadomość zgadzasz się, że je przechowam tylko po to, by odpisać. 😉",
+        rodo: "Administratorem danych jest Wuyo. Dane z formularza wykorzystam, żeby odpisać i przygotować wycenę.",
+        rodoLink: "Więcej w polityce prywatności.",
+        zgodaOpc: "(nieobowiązkowe)",
         wysylam: "Wysyłam...", wyslij: "Wyślij, załatwione!",
     },
     en: {
@@ -93,7 +97,9 @@ const T = {
         daneH: "Your contact details 📬", daneS: "Where should I send my reply and quote?",
         imie: "Name *", imiePh: "What should I call you?", emailPh: "Where should I reply?",
         cos: "Anything else? A deadline? (optional)", cosPh: "Details, deadline, special requests...",
-        rodo: "WUYO is the data controller. By sending this message you agree that I keep your details only to reply to you. 😉",
+        rodo: "WUYO is the data controller. I will use the details from this form to reply and prepare a quote.",
+        rodoLink: "More in the privacy policy.",
+        zgodaOpc: "(optional)",
         wysylam: "Sending...", wyslij: "Send it!",
     },
 } as const;
@@ -109,6 +115,8 @@ export function ContactBrief() {
     const [honeypot, setHoneypot] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [sending, setSending] = useState(false);
+    // Zgoda na maile z poradami: osobna, domyślnie odznaczona, nie blokuje wysyłki briefu.
+    const [marketingConsent, setMarketingConsent] = useState(false);
     const [error, setError] = useState("");
     const [skopiowano, setSkopiowano] = useState(false);
     const kopiujMail = () => {
@@ -220,7 +228,7 @@ export function ContactBrief() {
             const res = await fetch("/api/brief", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...data, note: locale === "en" ? `[EN, odpisz po angielsku] ${data.note ?? ""}`.trim() : data.note, hp: honeypot }),
+                body: JSON.stringify({ ...data, note: locale === "en" ? `[EN, odpisz po angielsku] ${data.note ?? ""}`.trim() : data.note, hp: honeypot, marketingConsent, lang: locale }),
             });
             if (!res.ok) {
                 // Przy 400 serwer mówi konkretnie, co poprawić (np. zły adres) —
@@ -503,13 +511,26 @@ export function ContactBrief() {
                                 <textarea rows={2} className="brief-input w-full resize-none" placeholder={t.cosPh} value={data.note ?? ""} onChange={(e) => setData((d) => ({ ...d, note: e.target.value }))} />
                             </div>
 
+                            <label className="flex items-start gap-3 text-sm text-white/60 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={marketingConsent}
+                                    onChange={(e) => setMarketingConsent(e.target.checked)}
+                                    className="mt-1 accent-[#ffeb52]"
+                                />
+                                <span>{BRIEF_MARKETING_CONSENT[locale]} {t.zgodaOpc}</span>
+                            </label>
+
                             {/* Przycisk + błąd */}
                             <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row items-start md:items-center gap-5 justify-between">
                                 <div className="flex-1">
                                     {error ? (
                                         <p className="text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">⚠️ {error}</p>
                                     ) : (
-                                        <p className="text-white/50 text-xs">{t.rodo}</p>
+                                        <p className="text-white/50 text-xs">
+                                            {t.rodo}{" "}
+                                            <Link href={route("privacy", locale)} className="underline hover:text-white">{t.rodoLink}</Link>
+                                        </p>
                                     )}
                                 </div>
                                 <button

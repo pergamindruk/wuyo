@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { escapeHtml, isValidEmail, isHoneypotTripped, normalizeEmail } from "@/lib/sanitize";
 import { sourceForVisitor, visitorId } from "@/lib/visitor";
+import { BRIEF_MARKETING_CONSENT, type ConsentLocale } from "@/data/marketing-consent";
 
 // Technical update to trigger Vercel redeploy with new Env Vars
 
@@ -22,6 +23,23 @@ interface BriefData {
     note?: string;
     budget?: string;
     hp?: string; // honeypot — puste pole niewidoczne dla ludzi
+    /** Osobne, nieobowiązkowe pole wyboru. Tylko dosłowne true oznacza zgodę. */
+    marketingConsent?: unknown;
+    lang?: unknown;
+}
+
+// Zgoda na maile z poradami i ofertami. Brief i odpowiedź na niego jej nie
+// wymagają (art. 6 ust. 1 lit. b RODO), więc bez niej nikogo nie zapisujemy do MailerLite.
+type MarketingConsent = { given: false } | { given: true; text: string; at: string };
+
+function readConsent(d: BriefData): MarketingConsent {
+    if (d.marketingConsent !== true) return { given: false };
+    const locale: ConsentLocale = d.lang === "en" ? "en" : "pl";
+    return { given: true, text: BRIEF_MARKETING_CONSENT[locale], at: new Date().toISOString() };
+}
+
+function consentLine(c: MarketingConsent): string {
+    return c.given ? ` | Zgoda na maile z poradami i ofertami: TAK (${c.at}): „${c.text}”` : "";
 }
 
 const siteTypeLabel: Record<string, string> = {
@@ -70,21 +88,24 @@ function pathRows(d: BriefData): [string, string][] {
 // jest jedyną kopią, więc musi zawierać to, co klient faktycznie napisał.
 const DETAILS_MAX = 2000;
 
-function buildDetails(d: BriefData): string {
+function buildDetails(d: BriefData, consent: MarketingConsent): string {
     // String(): dane przychodzą z sieci, typ z interfejsu nie jest gwarancją.
     const extra = pathRows(d)
         .map(([k, v]): [string, string] => [k, String(v ?? "").trim()])
         .filter(([, v]) => v && v !== "—")
         .map(([k, v]) => ` | ${k}: ${v}`)
         .join("");
-    return `Budżet: ${d.budget || 'Brak'}. Notatka: ${d.note || 'Brak'}${extra}`.slice(0, DETAILS_MAX);
+    // Dowód zgody na końcu i nigdy nie ucinany: przycinamy treść, nie zgodę.
+    const zgoda = consentLine(consent);
+    return `Budżet: ${d.budget || 'Brak'}. Notatka: ${d.note || 'Brak'}${extra}`.slice(0, DETAILS_MAX - zgoda.length) + zgoda;
 }
 
-function buildHtml(d: BriefData): string {
+function buildHtml(d: BriefData, consent: MarketingConsent): string {
     const rows = pathRows(d);
 
     rows.push(["Budżet orientacyjny", d.budget ?? "Nie podano"]);
     if (d.note) rows.push(["Dodatkowe uwagi", d.note]);
+    rows.push(["Zgoda na maile z poradami i ofertami", consent.given ? "TAK (dopisany do MailerLite)" : "nie"]);
 
     const tableRows = rows
         .map(([k, v]) => `
@@ -184,6 +205,39 @@ function buildAutoReply(d: BriefData): string {
     </html>`;
 }
 
+async function addToMailerLite(email: string, name: string, consent: Extract<MarketingConsent, { given: true }>) {
+    const apiKey = process.env.MAILERLITE_API_KEY;
+    const groupId = process.env.MAILERLITE_GROUP_ID;
+    if (!apiKey || !groupId) {
+        console.error("Mailerlite: brak MAILERLITE_API_KEY albo MAILERLITE_GROUP_ID, pomijam zapis");
+        return;
+    }
+    try {
+        const mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                email,
+                fields: { name },
+                groups: [groupId],
+                // Kiedy padła zgoda. Format wymagany przez MailerLite: Y-m-d H:i:s (UTC).
+                opted_in_at: consent.at.slice(0, 19).replace("T", " "),
+            }),
+            signal: AbortSignal.timeout(10_000),
+        });
+        if (!mlRes.ok) {
+            const mlErr = await mlRes.text();
+            console.error('Mailerlite error:', mlRes.status, mlErr.slice(0, 500));
+        }
+    } catch (mlErr) {
+        console.error('Mailerlite fetch error:', mlErr);
+    }
+}
+
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req)
 
@@ -214,6 +268,7 @@ export async function POST(req: NextRequest) {
         }
         // Klienci wklejają adresy ze spacją na końcu albo wielkimi literami.
         data.email = normalizeEmail(data.email);
+        const consent = readConsent(data);
 
         const typeLabel: Record<string, string> = {
             branding: 'Branding',
@@ -230,7 +285,7 @@ export async function POST(req: NextRequest) {
                         name: data.name,
                         email: data.email,
                         type: typeLabel[data.path] || data.path,
-                        details: buildDetails(data),
+                        details: buildDetails(data, consent),
                         visitor,
                         source: await sourceForVisitor(supabase, visitor),
                     }]);
@@ -252,7 +307,7 @@ export async function POST(req: NextRequest) {
             to: TO_MATEUSZ,
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
-            html: buildHtml(data),
+            html: buildHtml(data, consent),
         }, "brief-powiadomienie");
 
         // Powiadomienie już doszło, więc zgłoszenie jest przyjęte. Błąd potwierdzenia
@@ -268,30 +323,8 @@ export async function POST(req: NextRequest) {
             console.error("Brief: autoodpowiedź nie wyszła, powiadomienie doszło:", error);
         }
 
-        // Dodaj do Mailerlite
-        try {
-            const mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${process.env.MAILERLITE_API_KEY}`,
-                },
-                body: JSON.stringify({
-                    email: data.email,
-                    fields: { name: data.name },
-                    groups: [process.env.MAILERLITE_GROUP_ID],
-                }),
-            });
-            if (!mlRes.ok) {
-                const mlErr = await mlRes.text();
-                console.error('Mailerlite error:', mlRes.status, mlErr);
-            } else {
-                console.log('Mailerlite: subscriber added OK');
-            }
-        } catch (mlErr) {
-            console.error('Mailerlite fetch error:', mlErr);
-        }
+        // Do MailerLite tylko po wyraźnej zgodzie zaznaczonej w osobnym polu.
+        if (consent.given) await addToMailerLite(data.email, data.name, consent);
 
         return NextResponse.json({ success: true });
     } catch (error) {

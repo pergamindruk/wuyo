@@ -325,13 +325,89 @@ describe("/api/brief", () => {
     });
 
     it("TC-14 zwraca 200 gdy Mailerlite nie działa", async () => {
+        process.env.MAILERLITE_API_KEY = "ml-key";
+        process.env.MAILERLITE_GROUP_ID = "123";
         global.fetch = vi.fn().mockRejectedValue(new Error("network down"));
         const res = await POST(makeReq(
-            { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "Test" },
+            { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "Test", marketingConsent: true },
             "/api/brief"
         ));
         expect(res.status).toBe(200);
         expect(mockSendMail).toHaveBeenCalledTimes(2);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        delete process.env.MAILERLITE_API_KEY;
+        delete process.env.MAILERLITE_GROUP_ID;
+    });
+
+    describe("zgoda na maile (MailerLite)", () => {
+        beforeEach(() => {
+            process.env.MAILERLITE_API_KEY = "ml-key";
+            process.env.MAILERLITE_GROUP_ID = "123";
+        });
+        afterEach(() => {
+            delete process.env.MAILERLITE_API_KEY;
+            delete process.env.MAILERLITE_GROUP_ID;
+        });
+        const mailerLiteCalls = () =>
+            vi.mocked(global.fetch).mock.calls.filter(([url]) => String(url).includes("mailerlite"));
+
+        it.each([undefined, false, "true", 1, "on"])("TC-ML-1 bez zgody (%s) nie zapisuje do MailerLite", async (marketingConsent) => {
+            const res = await POST(makeReq(
+                { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "Test", marketingConsent },
+                "/api/brief"
+            ));
+            expect(res.status).toBe(200);
+            expect(mailerLiteCalls()).toHaveLength(0);
+            const { details } = mockInsert.mock.calls[0][0][0];
+            expect(details).not.toContain("Zgoda");
+            expect(mockSendMail.mock.calls[0][0].html).toMatch(/Zgoda na maile z poradami i ofertami[\s\S]*nie/);
+        });
+
+        it("TC-ML-2 ze zgodą zapisuje do MailerLite i zostawia dowód w leadzie", async () => {
+            const res = await POST(makeReq(
+                { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "Test", marketingConsent: true },
+                "/api/brief"
+            ));
+            expect(res.status).toBe(200);
+            const calls = mailerLiteCalls();
+            expect(calls).toHaveLength(1);
+            const body = JSON.parse(String((calls[0][1] as RequestInit).body));
+            expect(body).toEqual(expect.objectContaining({ email: "ola@test.pl", groups: ["123"] }));
+            expect(body.opted_in_at).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+            const { details } = mockInsert.mock.calls[0][0][0];
+            expect(details).toContain("Zgoda na maile z poradami i ofertami: TAK");
+            expect(details).toContain("odpisując „wypisz”");
+        });
+
+        it("TC-ML-3 tekst zgody bierze z serwera według języka, nie z żądania", async () => {
+            await POST(makeReq(
+                { path: "quick", name: "Ola", email: "ola@test.pl", marketingConsent: true, lang: "en", consentText: "cokolwiek" },
+                "/api/brief"
+            ));
+            const { details } = mockInsert.mock.calls[0][0][0];
+            expect(details).toContain("I want to receive emails with tips and offers");
+            expect(details).not.toContain("cokolwiek");
+        });
+
+        it("TC-ML-4 dowód zgody nie jest ucinany przy długiej treści", async () => {
+            await POST(makeReq(
+                { path: "quick", name: "Ola", email: "ola@test.pl", quickMessage: "x".repeat(5000), marketingConsent: true },
+                "/api/brief"
+            ));
+            const { details } = mockInsert.mock.calls[0][0][0];
+            expect(details.length).toBeLessThanOrEqual(2000);
+            expect(details).toMatch(/„wypisz”\.”$/);
+        });
+
+        it("TC-ML-5 bez klucza MailerLite niczego nie wysyła", async () => {
+            delete process.env.MAILERLITE_API_KEY;
+            const res = await POST(makeReq(
+                { path: "quick", name: "Ola", email: "ola@test.pl", marketingConsent: true },
+                "/api/brief"
+            ));
+            expect(res.status).toBe(200);
+            expect(mailerLiteCalls()).toHaveLength(0);
+        });
     });
 
     it("TC-15 ścieżka web: typ leada, temat i etykiety zamiast kluczy", async () => {

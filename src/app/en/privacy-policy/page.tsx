@@ -71,7 +71,8 @@ export default function PrivacyPolicyEnPage() {
                                     <li><strong>Vercel Inc.</strong> (USA): website hosting. All data sent through the website passes through its servers, including form content. Vercel also collects anonymous visit and performance statistics (Vercel Analytics, Speed Insights) without cookies.</li>
                                     <li><strong>Supabase Inc.</strong> (servers in Ireland, EU): the database where I store enquiries from forms and the chat, and anonymous data on visited pages.</li>
                                     <li><strong>Resend</strong> (Plus Five Five Inc., USA): sending emails from the Website, i.e. notifications about your enquiry and confirmations sent to your address.</li>
-                                    <li><strong>Google</strong> (Gemini API): the chat on the website. Messages you type in the chat are sent to Google, which generates the reply. I use the free version of this service, so Google may use chat content to improve its services, and Google staff may review it. For that purpose Google acts as a separate controller under its own privacy policy (policies.google.com/privacy). Do not enter personal data beyond what is needed to contact you, and no sensitive data. If you prefer, email kontakt@wuyo.pl or use the contact form.</li>
+                                    <li><strong>Google</strong> (Vertex AI on Google Cloud): the chat on the website. Messages you type in the chat are sent to Google, which generates the reply. When Vertex AI is available, I use the paid Google Cloud service: Google processes messages on my instructions under the Cloud Data Processing Addendum and does not use them to train models without my permission or instruction. If Vertex AI configuration is unavailable, the app may use the Gemini API (Google AI Studio); data use in that route depends on the API plan, and the free plan may use content to improve Google's services. In both routes, messages may be processed outside the European Economic Area. I do not store the conversations themselves in the database. I only store your name and email if you give them in the chat, so I can reply. Do not enter sensitive data in the chat. If you prefer, email kontakt@wuyo.pl or use the contact form.</li>
+                                    <li><strong>MailerLite</strong> (UAB MailerLite, Lithuania, EU): sending emails with tips and offers. Your name and email go there only if you tick the consent box for such emails in the contact form.</li>
                                     <li><strong>Google Ireland Limited</strong> and <strong>Meta Platforms Ireland Limited</strong>: statistics and ad measurement, only with your consent (see § 5).</li>
                                 </ul>
                             </li>
@@ -88,6 +89,7 @@ export default function PrivacyPolicyEnPage() {
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li>answering your enquiry and preparing a quote: steps taken at your request before entering into a contract (Art. 6(1)(b) GDPR),</li>
                                     <li>providing the ordered service: performance of a contract (Art. 6(1)(b) GDPR),</li>
+                                    <li>emails with tips and offers: your consent ticked when downloading a file or in the contact form (Art. 6(1)(a) GDPR and Art. 398 of the Polish Electronic Communications Law); consent is voluntary, and without it I send you no offers,</li>
                                     <li>issuing invoices and keeping accounts: legal obligation (Art. 6(1)(c) GDPR),</li>
                                     <li>establishing or defending legal claims and anonymous website statistics: legitimate interest of the Controller (Art. 6(1)(f) GDPR),</li>
                                     <li>analytics and marketing cookies: your consent (Art. 6(1)(a) GDPR).</li>
@@ -98,6 +100,7 @@ export default function PrivacyPolicyEnPage() {
                                     <li>enquiries that did not lead to cooperation: up to 12 months from the last contact,</li>
                                     <li>client data: for the duration of cooperation, then until claims become time-barred,</li>
                                     <li>invoices and accounting records: 5 years from the end of the year in which the tax payment deadline passed,</li>
+                                    <li>name and email on the tips and offers list: until you withdraw consent (reply “unsubscribe” or click the unsubscribe link in the email),</li>
                                     <li>cookie data: until you withdraw consent or the cookie expires.</li>
                                 </ul>
                             </li>
@@ -141,7 +144,7 @@ export default function PrivacyPolicyEnPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Final provisions</h2>
                         <p>You always know where to find me. Email <strong>kontakt@wuyo.pl</strong> if you have any doubts or questions about your data.</p>
-                        <p className="mt-4 text-sm text-white/50">Last updated: 27 October 2026.</p>
+                        <p className="mt-4 text-sm text-white/50">Last updated: 21 November 2026.</p>
                     </AnimatedSection>
                 </div>
             </div>
