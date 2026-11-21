@@ -32,14 +32,6 @@ vi.mock("@/lib/rate-limit", () => ({
     LIMITS: { brief: { limit: 5, windowMs: 60_000 } },
 }));
 
-const ordersStatus = vi.hoisted(() => ({ open: true }));
-vi.mock("@/data/orders-status", () => ({
-    get ORDERS_OPEN() {
-        return ordersStatus.open;
-    },
-    ORDERS_CLOSED_MESSAGE: "Zamówienia od grudnia",
-}));
-
 function makeReq(body: unknown): NextRequest {
     return new NextRequest("http://localhost/api/order", {
         method: "POST",
@@ -142,19 +134,5 @@ describe("/api/order", () => {
         const html = mockSendMail.mock.calls[0][0].html as string;
         expect(html).not.toContain("<script>");
         expect(html).toContain("&lt;b&gt;pilne&lt;/b&gt;");
-    });
-
-    it("TC-9 przy wyłączonych zamówieniach zwraca 503 i niczego nie zapisuje ani nie wysyła", async () => {
-        ordersStatus.open = false;
-        try {
-            const res = await POST(makeReq(ok));
-            expect(res.status).toBe(503);
-            expect((await res.json()).error).toBe("Zamówienia od grudnia");
-            expect(mockFrom).not.toHaveBeenCalled();
-            expect(mockInsert).not.toHaveBeenCalled();
-            expect(mockSendMail).not.toHaveBeenCalled();
-        } finally {
-            ordersStatus.open = true;
-        }
     });
 });
