@@ -6,6 +6,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactBrief } from "@/components/ContactBrief";
+import { BusinessPackages } from "@/components/BusinessPackages";
 import { Suspense } from "react";
 import { BUSINESS_REF } from "@/lib/business-schema";
 import { alternatesFor } from "@/lib/i18n";
@@ -153,6 +154,8 @@ export default function DrukRzeszowPage() {
                     </div>
                 </div>
             </AnimatedSection>
+
+            <BusinessPackages />
 
             {/* PRODUKTY */}
             <section className="py-20 px-6 md:px-12">
