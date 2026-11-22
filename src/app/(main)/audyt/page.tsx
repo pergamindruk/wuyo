@@ -7,11 +7,11 @@ import { AuditSection } from "@/components/AuditSection";
 import { BUSINESS_REF } from "@/lib/business-schema";
 
 export const metadata: Metadata = {
-    title: "Bezpłatny audyt strony i grafiki",
+    title: "Bezpłatny przegląd strony i grafiki",
     description:
         "Wklej link do swojej strony, a powiem Ci wprost, co odstrasza klientów i co zmienić. Bezpłatnie, bez owijania w bawełnę, odpowiedź w 24–48 h.",
     openGraph: {
-        title: "Audyt Bez Znieczulenia | WUYO Dobra Grafa",
+        title: "Przegląd Bez Znieczulenia | WUYO Dobra Grafa",
         description: "Bezpłatna, szczera analiza strony i materiałów graficznych. Odpowiedź w 24–48 h.",
         images: ["/og-image.webp"],
         url: "https://wuyo.pl/audyt",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Audyt Bez Znieczulenia | WUYO",
+        title: "Przegląd Bez Znieczulenia | WUYO",
         description: "Bezpłatna, szczera analiza strony i materiałów graficznych.",
         images: ["/og-image.webp"],
     },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Audyt Konwersji Bez Znieczulenia",
+    name: "Przegląd Strony Bez Znieczulenia",
     description:
         "Bezpłatna analiza strony internetowej i materiałów graficznych pod kątem tego, co zniechęca klientów i co poprawić.",
     provider: BUSINESS_REF,
@@ -41,7 +41,7 @@ const serviceSchema = {
         "@type": "Offer",
         price: "0",
         priceCurrency: "PLN",
-        description: "Audyt bezpłatny, bez zobowiązań.",
+        description: "Przegląd bezpłatny, bez zobowiązań.",
     },
 };
 
@@ -114,7 +114,7 @@ export default function AudytPage() {
                         Wolisz od razu porozmawiać o konkretnym projekcie?
                     </h2>
                     <p className="text-white/60">
-                        Audyt jest dla tych, którzy chcą najpierw wiedzieć, co jest nie tak. Jeśli już
+                        Przegląd jest dla tych, którzy chcą najpierw wiedzieć, co jest nie tak. Jeśli już
                         wiesz, czego potrzebujesz, napisz od razu. Wycenię w 24 godziny.
                     </p>
                     <Link

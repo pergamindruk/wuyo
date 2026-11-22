@@ -59,7 +59,7 @@ export function AuditSection() {
                     </div>
                     <p className="eyebrow mb-4 text-red-500 font-bold uppercase tracking-[0.2em] animate-pulse">Szczera i bolesna analiza</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                        Audyt Konwersji Bez Znieczulenia
+                        Przegląd Strony Bez Znieczulenia
                     </h2>
                     <p className="text-white/70 leading-relaxed mb-10 text-lg max-w-2xl mx-auto">
                         Twoja strona nie sprzedaje, a grafika w social mediach przypomina ubiegłą dekadę? Wklej link lub prześlij materiały. Wskażę Ci najsłabsze punkty Twojego wizerunku i powiem dokładnie, co zmienić, by w końcu zacząć na nich zarabiać. Bez owijania w bawełnę.
@@ -71,7 +71,7 @@ export function AuditSection() {
                                 <Check size={24} color="#000" />
                             </div>
                             <p className="text-white font-semibold text-lg">Git! Dostałem Twoje zgłoszenie 🎉</p>
-                            <p className="text-white/60 text-sm">Audyt wyślę na <span className="text-gold">{email}</span> — zazwyczaj w ciągu 24–48 h.</p>
+                            <p className="text-white/60 text-sm">Wynik wyślę na <span className="text-gold">{email}</span> — zazwyczaj w ciągu 24–48 h.</p>
                         </div>
                     ) : (
                         <form
@@ -91,7 +91,7 @@ export function AuditSection() {
                             />
                             <input
                                 type="text"
-                                aria-label="Adres strony do audytu"
+                                aria-label="Adres strony do przeglądu"
                                 placeholder="Wklej link (np. www.mojastrona.pl)"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
@@ -100,7 +100,7 @@ export function AuditSection() {
                             <input
                                 type="email"
                                 aria-label="Twój adres e-mail"
-                                placeholder="Twój e-mail (tu wyślę audyt) *"
+                                placeholder="Twój e-mail (tu wyślę wynik) *"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

@@ -185,7 +185,7 @@ export default function Home() {
                                 Napisz do mnie →
                             </Link>
                             <Link href="/audyt" className="px-6 py-3 rounded-full font-bold text-sm text-gold border border-gold/40 hover:bg-gold/10 hover:border-gold transition-colors whitespace-nowrap">
-                                Bezpłatny audyt
+                                Bezpłatny przegląd
                             </Link>
                         </div>
                     </div>

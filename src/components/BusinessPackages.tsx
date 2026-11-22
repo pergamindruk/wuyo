@@ -2,15 +2,14 @@ import Image from "next/image";
 import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
-// Kwoty i zawartość: CENNIK.md, część 3A. Ceny w groszach, brutto.
+// Kwoty i zawartość: CENNIK.md, część 3A. Ceny końcowe w groszach.
 const PACKAGES = [
     {
         id: "staly-klient",
         name: "Stały Klient",
         forWho: "Beauty, barber, trenerzy, gabinety, gastro",
         headline: "Druki, których klienci nie wyrzucają do kosza",
-        grossGrosze: 109900,
-        netGrosze: 89350,
+        priceGrosze: 109900,
         items: [
             "Projekt druków z Twoim logo",
             "200 wizytówek z soft-touch i zaokrąglonymi narożnikami",
@@ -23,8 +22,7 @@ const PACKAGES = [
         name: "Ekipa",
         forWho: "Wykończenia, detailing, elektrycy, serwis",
         headline: "Dobre wrażenie, zanim wyjmiesz narzędzia",
-        grossGrosze: 149000,
-        netGrosze: 121138,
+        priceGrosze: 149000,
         items: [
             "Projekt znakowania z Twoim logo",
             "4 grube koszulki: logo z przodu i duży nadruk na plecach",
@@ -37,8 +35,7 @@ const PACKAGES = [
         name: "Cała Marka",
         forWho: "Firmy, którym urosły stare materiały",
         headline: "Dział graficzny bez etatu",
-        grossGrosze: 399000,
-        netGrosze: 324390,
+        priceGrosze: 399000,
         items: [
             "Odświeżone logo, kolory i typografia",
             "2 bluzy, 4 koszulki i 2 czapki",
@@ -49,11 +46,8 @@ const PACKAGES = [
 ];
 
 const NBSP = String.fromCharCode(160);
-const pln = (grosze: number, digits: 0 | 2) => {
-    const [whole, fraction] = (grosze / 100).toFixed(digits).split(".");
-    const grouped = whole.replace(/\B(?=(\d{3})+$)/g, NBSP);
-    return `${grouped}${fraction ? `,${fraction}` : ""}${NBSP}zł`;
-};
+const pln = (grosze: number) =>
+    `${String(grosze / 100).replace(/\B(?=(\d{3})+$)/g, NBSP)}${NBSP}zł`;
 
 const whatsapp = (name: string) =>
     `https://wa.me/48725182053?text=${encodeURIComponent(`Dzień dobry, interesuje mnie pakiet ${name}. Prowadzę: `)}`;
@@ -89,8 +83,8 @@ export function BusinessPackages() {
                                         ))}
                                     </ul>
                                     <div className="mt-auto">
-                                        <p className="text-3xl font-bold text-gold">{pln(p.grossGrosze, 0)}</p>
-                                        <p className="text-white/45 text-xs mt-1">brutto · {pln(p.netGrosze, 2)} netto</p>
+                                        <p className="text-3xl font-bold text-gold">{pln(p.priceGrosze)}</p>
+                                        <p className="text-white/45 text-xs mt-1">cena końcowa</p>
                                         <a href={whatsapp(p.name)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-4 px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 text-sm">
                                             Napisz na WhatsApp <ArrowRight size={16} />
                                         </a>
