@@ -41,7 +41,7 @@ const personSchema = {
     "jobTitle": "Projektant graficzny i web developer",
     "description": "Projektant graficzny i web developer z Rzeszowa. Założyciel studia WUYO. Specjalizuje się w logo, identyfikacji wizualnej, stronach internetowych na Next.js oraz druku dla małych i średnich firm.",
     "url": "https://wuyo.pl/o-mnie",
-    "image": "https://wuyo.pl/MojeZdjecie.webp",
+    "image": "https://wuyo.pl/mateusz-machos.webp",
     "email": "kontakt@wuyo.pl",
     "telephone": "+48725182053",
     "address": {
@@ -145,10 +145,10 @@ export default function OmniePage() {
                                     <div className="absolute inset-0 bg-gold/15 blur-[60px] rounded-full scale-110 group-hover:scale-125 transition-transform duration-700" />
                                     <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.6)] transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
                                         <Image
-                                            src="/MojeZdjecie.webp"
+                                            src="/mateusz-machos.webp"
                                             alt="Mateusz Machoś – projektant graficzny i web developer, WUYO Rzeszów"
                                             fill
-                                            className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-105"
+                                            className="object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-105"
                                             priority
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/60 to-transparent pointer-events-none" />

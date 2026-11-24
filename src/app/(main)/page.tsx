@@ -220,11 +220,11 @@ export default function Home() {
                             {/* Image Container */}
                             <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
                                 <Image
-                                    src="/MojeZdjecie.webp"
+                                    src="/mateusz-machos.webp"
                                     alt="Mateusz Machoś – założyciel WUYO, projektant graficzny i web developer z Rzeszowa"
                                     fill
                                     sizes="(max-width: 768px) 256px, 320px"
-                                    className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-110"
+                                    className="object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/50 to-transparent pointer-events-none" />
                             </div>

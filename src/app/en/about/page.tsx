@@ -63,7 +63,7 @@ export default function AboutPage() {
                                 <div className="relative w-72 h-72 md:w-96 md:h-96 group">
                                     <div className="absolute inset-0 bg-gold/15 blur-[60px] rounded-full scale-110 group-hover:scale-125 transition-transform duration-700" />
                                     <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.6)] transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
-                                        <Image src="/MojeZdjecie.webp" alt="Mateusz Machoś, graphic designer and web developer, WUYO Rzeszów" fill className="object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-105" priority />
+                                        <Image src="/mateusz-machos.webp" alt="Mateusz Machoś, graphic designer and web developer, WUYO Rzeszów" fill className="object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-105" priority />
                                         <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/60 to-transparent pointer-events-none" />
                                     </div>
                                     <div className="absolute -bottom-4 -right-4 bg-gold text-navy-dark font-bold text-xs px-4 py-2 rounded-full shadow-lg">Rzeszów · Poland</div>
