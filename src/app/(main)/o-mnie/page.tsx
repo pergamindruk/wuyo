@@ -172,7 +172,7 @@ export default function OmniePage() {
                                         Grafik i programista w jednym. Robię logo, strony internetowe i materiały drukowane dla firm, które chcą wyglądać poważnie i sprzedawać więcej.
                                     </p>
                                     <p>
-                                        Zanim założyłem WUYO, pracowałem jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.
+                                        Zanim założyłem WUYO, pracowałem m.in. jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.
                                     </p>
                                     <p>
                                         Cenię sobie wolność i niezależność, dlatego działam sam, bez agencji, asystentów i ping-ponga. Rozmawiasz bezpośrednio ze mną i to ja siedzę przy komputerze, kiedy tworzę Twój projekt.

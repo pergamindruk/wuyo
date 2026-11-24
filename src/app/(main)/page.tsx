@@ -133,10 +133,6 @@ export default function Home() {
                     {/* LEFT — tekst + CTA */}
                     <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
                         <HeroText />
-                        <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
-                            <span className="text-[#FFEB52] font-semibold">Jestem Mateusz z Rzeszowa.</span>{" "}
-                            Projektuję logo i strony, drukuję u siebie, a nadruki na koszulki wgrzewam sam na swojej prasie.
-                        </p>
                         <div className="flex flex-col sm:flex-row gap-6">
                             <Link href="#oferta" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
                                 <span className="font-bold text-lg text-navy">Sprawdź ofertę</span>
@@ -236,7 +232,7 @@ export default function Home() {
                             Cześć, jestem Mateusz
                         </h2>
                         <div className="text-white/60 leading-relaxed mb-10 space-y-4 text-sm md:text-base">
-                            <p>Zanim założyłem WUYO, pracowałem jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.</p>
+                            <p>Zanim założyłem WUYO, pracowałem m.in. jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.</p>
                             <p>Cenię sobie wolność i niezależność, dlatego pracuję sam, na swoim. Nie ma tu działu obsługi ani pośredników. Rozmawiasz z osobą, która robi Twój projekt, a cenę i termin znasz, zanim zaczniemy.</p>
                             <p>Logo i strony projektuję sam, drukuję u siebie, koszulki wgrzewam na własnej prasie. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>, i <Link href="/o-mnie" className="text-gold hover:underline">trochę więcej o mnie</Link>.</p>
                         </div>
