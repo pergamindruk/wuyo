@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { generateWithFallback } from '@/lib/gemini'
 import { RULES, VOICE, clean } from '@/lib/lab/ai/context'
+import { getAllPosts } from '@/lib/blog'
 
 export type SourceRow = { source: string; visitors: number; leads: number; downloads: number; contacts: number }
 
@@ -117,6 +118,19 @@ export async function getOwnStats(days = 30): Promise<OwnStats | null> {
     }
 }
 
+/** Krótki spis podstron, żeby AI nie radziło dodawać rzeczy, które już są. Aktualizuj przy większych zmianach stron. */
+const SITE_INVENTORY = `- / strona główna: usługi, realizacje, formularz kontaktu (#kontakt)
+- /strony-www: strony internetowe, sekcja Cennik z pakietami, FAQ, kontakt
+- /strony-internetowe-rzeszow: lokalna strona pod "strony internetowe Rzeszów cennik", cennik, FAQ, opieka strony
+- /logo, /grafik-rzeszow: logo i identyfikacja, ceny, kontakt
+- /druk, /druk-rzeszow: druk, ceny, kontakt
+- /odziez: koszulki i bluzy z nadrukiem, przycisk "Zamów wycenę" i szybka wycena przez WhatsApp
+- /cennik: zbiorczy cennik
+- /kalkulator: kalkulator wyceny
+- /realizacje, /o-mnie, /blog
+- wersja angielska /en (mały ruch, nie rozwijamy)
+`
+
 /** 3 konkretne ruchy marketingowe na podstawie liczb ze strony (podsumowanie przychodzi z serwera strony). */
 export async function getMarketingTips(summary: string): Promise<{ ok: true; text: string } | { ok: false; error: string }> {
     const supabase = await createClient()
@@ -129,6 +143,13 @@ Firma startuje w grudniu 2026, teraz buduje zaplecze. Klient: właściciel małe
 
 DANE STRONY wuyo.pl:
 ${summary.slice(0, 6000)}
+
+CO JUŻ JEST NA STRONIE (nie proponuj tego jako nowej rzeczy):
+${SITE_INVENTORY}
+WPISY NA BLOGU (slug | tytuł | data):
+${getAllPosts('pl').map((p) => `- ${p.slug} | ${p.title} | ${p.dateModified ?? p.date}`).join('\n')}
+
+Zasady przy ruchach: jeśli zapytanie z Google pasuje do istniejącego wpisu albo podstrony, proponuj poprawę tej strony (tytuł pod zapytanie, odpowiedź na górze, linki wewnętrzne), nie nowy tekst. Dwie strony na to samo zapytanie = napisz, którą wzmocnić i skąd do niej linkować. Nie proponuj cennika, formularza ani przycisku kontaktu tam, gdzie już są.
 
 ZADANIE: markdown, krótko. Zacznij od "## Co mówią liczby" (3 zdania, tylko z danych wyżej, bez zgadywania).
 Potem "## 3 ruchy na ten tydzień": każdy ruch = co zrobić, gdzie (konkretna podstrona, zapytanie z Google albo kanał z danych), ile czasu, czego się spodziewać.

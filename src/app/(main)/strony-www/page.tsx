@@ -352,6 +352,12 @@ export default function StronyWwwPage() {
                             </AnimatedSection>
                         ))}
                     </div>
+                    <p className="mt-8 text-center text-sm text-white/50">
+                        Szukasz wykonawcy na miejscu?{" "}
+                        <Link href="/strony-internetowe-rzeszow" className="text-gold font-bold hover:underline">Strony internetowe Rzeszów: pełny cennik i opieka</Link>
+                        {" · "}
+                        <Link href="/blog/ile-kosztuje-utrzymanie-strony-internetowej" className="text-gold font-bold hover:underline">ile kosztuje utrzymanie strony</Link>
+                    </p>
                 </div>
             </section>
 
