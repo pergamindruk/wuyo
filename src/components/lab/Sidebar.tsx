@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { playSound, setSoundEnabled, soundEnabled } from '@/lib/lab/sound'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck, Users, TrendingUp, Sticker, Wallet, Send, MapPinned, Wand2 } from 'lucide-react'
+import { LogOut, Bot, Menu, X, Inbox, Calendar, FileText, BarChart3, Hourglass, Shield, Radar, Kanban, Sun, Mail, FileSignature, SearchCheck, Users, TrendingUp, Sticker, Wallet, Send, MapPinned, Wand2, Volume2, VolumeX } from 'lucide-react'
 
 const navGroups = [
     // Kolejność = rytm dnia: najpierw sprzedaż, potem prowadzenie studia, na końcu treści.
@@ -45,6 +46,25 @@ const navGroups = [
         ],
     },
 ]
+
+/** Włącznik dźwięków panelu (zapamiętany w przeglądarce). */
+function SoundToggle() {
+    const [on, setOn] = useState(true)
+    useEffect(() => { setOn(soundEnabled()) }, [])
+    const toggle = () => {
+        const next = !on
+        setSoundEnabled(next)
+        setOn(next)
+        if (next) playSound('success')
+    }
+    return (
+        <button type="button" onClick={toggle} data-sound="off" aria-pressed={on}
+            className="mb-1 flex w-full items-center gap-2.5 rounded-md px-2 py-2 text-[13px] font-medium text-zinc-500 transition-colors hover:bg-white/[0.05] hover:text-white">
+            {on ? <Volume2 size={15} className="text-yellow-400" /> : <VolumeX size={15} />}
+            {on ? 'Dźwięki włączone' : 'Dźwięki wyłączone'}
+        </button>
+    )
+}
 
 export default function Sidebar({ userEmail }: { userEmail?: string }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -135,6 +155,7 @@ export default function Sidebar({ userEmail }: { userEmail?: string }) {
                 </nav>
 
                 <div className="border-t border-zinc-800/60 pt-4">
+                    <SoundToggle />
                     <form action="/auth/signout" method="post">
                         <button className="flex w-full items-center gap-2.5 px-2 py-2 text-[13px] font-medium text-zinc-600 hover:text-red-400 hover:bg-red-400/5 rounded-md transition-colors">
                             <LogOut size={15} />

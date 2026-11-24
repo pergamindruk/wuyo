@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPinned, Sticker } from 'lucide-react'
+import { SearchPill } from '@/components/lab/fx/SearchPill'
 import { getAlerts } from './actions'
 import { DashboardAlerts } from '@/components/lab/DashboardAlerts'
 import { TZ, warsawIsoDate, warsawMidnightMs, warsawParts } from '@/lib/lab/today/format'
@@ -65,19 +67,33 @@ export default async function TodayPage() {
     const todayActivities = weekActivities.filter((a) => new Date(a.created_at).getTime() >= midnight)
     const thing = pickOneThing({ systems, jobs, queue })
 
+    // Wykresiki pod liczbami: prawdziwe zdarzenia z ostatnich 7 dni (bez danych = płaska linia).
+    const days = Array.from({ length: 7 }, (_, i) => warsawIsoDate(i - 6))
+    const perDay = (kinds: string[]) => days.map((d) =>
+        weekActivities.filter((a) => kinds.includes(a.kind) && warsawIsoDate(0, new Date(a.created_at)) === d).length)
+    const postsPerDay = Array.from({ length: 7 }, (_, i) => warsawIsoDate(i - weekday)).map((d) =>
+        [...postKeys.keys()].filter((k) => k.startsWith(`${d}|`)).length)
+
     return (
-        <div className="mx-auto flex max-w-6xl flex-col gap-5">
+        <div className="lab-stagger mx-auto flex max-w-7xl flex-col gap-5 lg:gap-6">
             <DashboardAlerts alerts={alerts} />
 
-            <header className="flex flex-wrap items-end justify-between gap-3">
+            <header className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-zinc-500 sm:text-base">
                         {now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ })}
                     </p>
-                    <h1 className="mt-1 text-3xl font-bold leading-tight text-white sm:text-4xl">{greeting}, Mateusz</h1>
+                    <h1 className="mt-1 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl">{greeting}, Mateusz</h1>
                 </div>
-                <SystemsStrip systems={systems} />
+                <div className="flex flex-wrap items-center gap-3">
+                    <SearchPill />
+                    <Link href="/lab/doradca" className="lab-pill flex h-11 items-center gap-2 pl-1 pr-4 text-sm font-medium text-white">
+                        <Image src="/mateusz-machos.webp" alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover ring-2 ring-yellow-400/70" />
+                        Mateusz
+                    </Link>
+                </div>
             </header>
+            <SystemsStrip systems={systems} />
 
             {alerts.length > 0 && (
                 <div className="flex flex-wrap gap-2">
@@ -96,13 +112,13 @@ export default async function TodayPage() {
             )}
 
             <KpiRow items={[
-                { label: 'Maile do decyzji', value: mailsWaiting, hint: 'Harvey czeka na Ciebie', href: '/lab/maile', icon: KPI_ICONS.Mail, hot: mailsWaiting > 0 },
-                { label: 'Telefony na dziś', value: queue.length, hint: 'kolejka niżej', href: '#kolejka', icon: KPI_ICONS.Phone, hot: queue.length > 0 },
-                { label: 'Posty w tym tygodniu', value: weekPosts.length, hint: drafts ? `${drafts} szkiców do przejrzenia` : 'wszystko przejrzane', href: '/lab/calendar', icon: KPI_ICONS.CalendarDays, hot: drafts > 0 },
-                { label: 'Zlecenia w toku', value: activeJobs, hint: 'lejek', href: '/lab/lejek', icon: KPI_ICONS.Kanban },
+                { label: 'Maile do decyzji', value: mailsWaiting, hint: 'Harvey czeka na Ciebie · maile 7 dni', href: '/lab/maile', icon: KPI_ICONS.Mail, hot: mailsWaiting > 0, series: perDay(['mail']) },
+                { label: 'Telefony na dziś', value: queue.length, hint: 'kolejka niżej · rozmowy 7 dni', href: '#kolejka', icon: KPI_ICONS.Phone, hot: queue.length > 0, series: perDay(['telefon', 'rozmowa']) },
+                { label: 'Posty w tygodniu', value: weekPosts.length, hint: drafts ? `${drafts} szkiców do przejrzenia` : 'wszystko przejrzane', href: '/lab/calendar', icon: KPI_ICONS.CalendarDays, hot: drafts > 0, series: postsPerDay },
+                { label: 'Zlecenia w toku', value: activeJobs, hint: 'lejek · oferty i wpłaty 7 dni', href: '/lab/lejek', icon: KPI_ICONS.Kanban, hot: activeJobs > 0, series: perDay(['oferta', 'zaliczka', 'platnosc']) },
             ]} />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 lg:gap-6">
                 <div className="lg:col-span-3"><GoalBar goal={goal} /></div>
                 <div className="lg:col-span-2"><OneThingCard thing={thing} /></div>
             </div>
@@ -120,10 +136,10 @@ export default async function TodayPage() {
             {/* Narzędzia produkcyjne studia */}
             <Link
                 href="/lab/szukaj-firm"
-                className="group flex items-center justify-between gap-4 rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 transition hover:border-yellow-400/30"
+                className="lab-card group flex items-center justify-between gap-4 p-5"
             >
                 <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-400/20 bg-yellow-400/5 text-yellow-400">
+                    <div className="lab-chip h-12 w-12 shrink-0">
                         <MapPinned size={20} />
                     </div>
                     <div>
@@ -135,10 +151,10 @@ export default async function TodayPage() {
             </Link>
             <Link
                 href="/lab/stickers"
-                className="group flex items-center justify-between gap-4 rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 transition hover:border-yellow-400/30"
+                className="lab-card group flex items-center justify-between gap-4 p-5"
             >
                 <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-yellow-400/20 bg-yellow-400/5 text-yellow-400">
+                    <div className="lab-chip h-12 w-12 shrink-0">
                         <Sticker size={20} />
                     </div>
                     <div>

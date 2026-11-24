@@ -19,7 +19,7 @@ export async function getMonthGoal(supabase: Supa): Promise<MonthGoal> {
     const { start, end, daysLeft } = monthBounds()
     const [settings, payments, finances, jobs] = await Promise.all([
         supabase.from('lab_settings').select('data').eq('id', 1).maybeSingle(),
-        supabase.from('payments').select('amount_grosze, finance_id').gte('paid_at', start).lt('paid_at', end),
+        supabase.from('payments').select('amount_grosze, finance_id, paid_at').gte('paid_at', start).lt('paid_at', end),
         supabase.from('finances').select('id, amount, paid_at').gte('paid_at', start).lt('paid_at', end),
         supabase.from('jobs').select('price_grosze, deposit_grosze, stage').eq('outcome', 'w_toku').gte('stage', 2),
     ])
@@ -32,11 +32,25 @@ export async function getMonthGoal(supabase: Supa): Promise<MonthGoal> {
     const pipeline = (jobs.data ?? [])
         .filter((j) => j.stage <= 6)
         .reduce((s, j) => s + Math.max((j.price_grosze ?? 0) - (j.deposit_grosze ?? 0), 0), 0)
+
+    // Narastająco dzień po dniu (do dziś), pod wykres celu.
+    const { day: today } = warsawParts()
+    const perDay = new Array<number>(today).fill(0)
+    const add = (paidAt: string | null, grosze: number) => {
+        if (!paidAt) return
+        const d = warsawParts(new Date(paidAt)).day
+        if (d >= 1 && d <= today) perDay[d - 1] += grosze
+    }
+    for (const p of payments.data ?? []) add(p.paid_at, p.amount_grosze ?? 0)
+    for (const f of finances.data ?? []) if (!linked.has(f.id)) add(f.paid_at, Math.round(Number(f.amount ?? 0) * 100))
+    const cumulative = perDay.reduce<number[]>((acc, v) => [...acc, (acc.at(-1) ?? 0) + v], [])
+
     return {
         goalGrosze: data.monthlyGoalGrosze && data.monthlyGoalGrosze > 0 ? data.monthlyGoalGrosze : DEFAULT_MONTH_GOAL_GROSZE,
         earnedGrosze: fromPayments + fromFinances,
         pipelineGrosze: pipeline,
         daysLeft,
+        cumulative,
     }
 }
 

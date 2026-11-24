@@ -986,9 +986,9 @@ body {
 /* ── /lab: ciemny panel z miękką poświatą (inspiracja: dashboardy z kartami) ── */
 .lab-ui {
   background:
-    radial-gradient(1100px 600px at 100% -10%, rgba(255, 235, 82, 0.07), transparent 60%),
-    radial-gradient(900px 600px at -10% 110%, rgba(255, 150, 60, 0.05), transparent 60%),
-    #09090b;
+    radial-gradient(1100px 650px at 100% -10%, rgba(255, 214, 10, 0.09), transparent 60%),
+    radial-gradient(900px 600px at 30% 120%, rgba(255, 214, 10, 0.05), transparent 60%),
+    #0b0b0d;
 }
 @media print { .lab-ui { background: #fff; } }
 /* Karty: zaokrąglone, półprzezroczyste, z delikatną krawędzią światła u góry. */
@@ -1007,6 +1007,78 @@ body {
 }
 .lab-ui main .border-zinc-800 { border-color: rgba(255, 255, 255, 0.07); }
 .lab-ui main h1 { letter-spacing: -0.02em; }
+
+/* ── /lab v2 (24.11.2026, koncepcja z Gemini): karty 28 px, żółta poświata, animacje ── */
+.lab-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)), rgba(16, 16, 19, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 30px 70px -40px rgba(0, 0, 0, 0.95);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s, box-shadow 0.35s;
+}
+a.lab-card:hover, .lab-card.lab-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 214, 10, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 70px -36px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 214, 10, 0.08), 0 18px 50px -30px rgba(255, 214, 10, 0.35);
+}
+.lab-chip {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #ffe45c, #ffd60a 55%, #f5b800);
+  color: #111;
+  box-shadow: 0 10px 30px -10px rgba(255, 214, 10, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.lab-hero-yellow {
+  border-radius: 1.75rem;
+  color: #0b0b0d;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
+    linear-gradient(160deg, #fff1a6 0%, #ffe14d 35%, #ffd60a 70%, #f2b900 100%);
+  box-shadow: 0 0 0 1px rgba(255, 214, 10, 0.5), 0 30px 90px -30px rgba(255, 214, 10, 0.55);
+}
+.lab-pill {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 214, 10, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 24px -10px rgba(255, 214, 10, 0.6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes lab-rise { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes lab-draw { from { stroke-dashoffset: var(--len, 1200); } to { stroke-dashoffset: 0; } }
+  @keyframes lab-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lab-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes lab-glow { 0%, 100% { box-shadow: 0 0 0 1px rgba(255, 214, 10, 0.5), 0 30px 90px -30px rgba(255, 214, 10, 0.45); }
+                        50% { box-shadow: 0 0 0 1px rgba(255, 214, 10, 0.7), 0 30px 110px -24px rgba(255, 214, 10, 0.75); } }
+  @keyframes lab-shine { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(260%) skewX(-20deg); } }
+  @keyframes lab-ping { 0% { transform: scale(1); opacity: 0.7; } 80%, 100% { transform: scale(2.4); opacity: 0; } }
+
+  /* Karty wjeżdżają po kolei przy wejściu na stronę. */
+  .lab-stagger > * { animation: lab-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .lab-stagger > *:nth-child(2) { animation-delay: 0.05s; }
+  .lab-stagger > *:nth-child(3) { animation-delay: 0.1s; }
+  .lab-stagger > *:nth-child(4) { animation-delay: 0.15s; }
+  .lab-stagger > *:nth-child(5) { animation-delay: 0.2s; }
+  .lab-stagger > *:nth-child(6) { animation-delay: 0.25s; }
+  .lab-stagger > *:nth-child(7) { animation-delay: 0.3s; }
+  .lab-stagger > *:nth-child(n + 8) { animation-delay: 0.35s; }
+
+  .lab-draw { stroke-dasharray: var(--len, 1200); animation: lab-draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both; }
+  .lab-area { animation: lab-fade 1.2s ease 0.6s both; }
+  .lab-bar { transform-origin: left; animation: lab-grow 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both; }
+  .lab-hero-yellow.lab-pulse { animation: lab-glow 4s ease-in-out infinite; }
+  .lab-shine { position: relative; overflow: hidden; }
+  .lab-shine::after {
+    content: ''; position: absolute; inset: 0; width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    animation: lab-shine 3.6s ease-in-out 1.2s infinite;
+  }
+  .lab-ping { position: relative; }
+  .lab-ping::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: lab-ping 2s ease-out infinite; }
+  .lab-ui main button:active:not(:disabled), .lab-ui main a.lab-card:active { transform: scale(0.98); }
+}
 
 /* ── Oferta: zakładki z panelem (OfferTabs, ServiceIcon) ── */
 .offer-node {

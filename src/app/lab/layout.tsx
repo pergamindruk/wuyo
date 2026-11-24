@@ -4,6 +4,7 @@ import Sidebar from '@/components/lab/Sidebar'
 import { Toaster } from 'sonner'
 import CommandPalette from '@/components/lab/CommandPalette'
 import ShortcutsOverlay from '@/components/lab/ShortcutsOverlay'
+import { LabFx } from '@/components/lab/LabFx'
 
 export default async function LabLayout({
     children,
@@ -29,6 +30,7 @@ export default async function LabLayout({
             <CommandPalette />
             <ShortcutsOverlay />
             <Toaster position="bottom-right" theme="dark" richColors />
+            <LabFx />
         </div>
     )
 }

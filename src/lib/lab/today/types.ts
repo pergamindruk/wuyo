@@ -83,6 +83,8 @@ export interface MonthGoal {
     earnedGrosze: number          // wpłaty w bieżącym miesiącu
     pipelineGrosze: number        // wartość otwartych zleceń (stage 2–6, w_toku)
     daysLeft: number
+    /** Wpłaty narastająco od 1. dnia miesiąca do dziś (grosze), indeks 0 = 1. dzień. */
+    cumulative?: number[]
 }
 
 /** Jedno najważniejsze zadanie teraz (tryb MENTOR: jedna rzecz, nie lista). */
