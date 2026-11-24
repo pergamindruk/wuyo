@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildSignals, followUpStep, pickMoves, plural, rankMoves, type AssistantJob } from './pick'
-import { LINK_TOKEN, buildPrompt, parseDraft } from './draft'
+import { LINK_TOKEN, buildPrompt, parseDraft, tidyDraft } from './draft'
 import type { QueueItem, SystemsStatus } from '@/lib/lab/today/types'
 
 const NOW = new Date('2026-11-24T09:00:00Z')
@@ -126,5 +126,18 @@ describe('draft', () => {
         const d = parseDraft(JSON.stringify({ message: 'hej', offer: { title: 't', scope: ['a'] } }), false)
         expect(d?.offer).toBeNull()
         expect(d?.channel).toBe('sms')
+    })
+})
+
+describe('tidyDraft', () => {
+    it('czyści zakazane słowa i długie pauzy we wszystkich polach, także w wariantach', () => {
+        const d = tidyDraft({
+            channel: 'sms', subject: '', message: 'Strona — gotowa', call: '## Otwarcie\n- kompleksowa obsługa', nextStep: 'telefon',
+            variants: [{ name: 'Marka Start', price: '1 490 zł', forWhom: 'Dla firm, które potrzebują profesjonalnego wizerunku', recommended: true }],
+            offer: null,
+        })
+        expect(d.message).toBe('Strona, gotowa')
+        expect(d.call).not.toMatch(/kompleksow/i)
+        expect(d.variants[0].forWhom).toBe('Dla firm, które potrzebują wizerunku')
     })
 })

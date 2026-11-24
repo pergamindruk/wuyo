@@ -1,7 +1,7 @@
 // Szkic asystenta dla jednego ruchu: wiadomość, scenariusz telefonu, warianty i (dla oferty) tekst oferty.
 // Prompt i parser są tu, bez Supabase i bez wywołania AI, żeby dało się je testować.
 
-import { PRICING, RULES, VOICE } from '@/lib/lab/ai/context'
+import { PRICING, RULES, VOICE, clean } from '@/lib/lab/ai/context'
 import { SERVICES } from '@/lib/lab/today/constants'
 import { formatPLN } from '@/lib/lab/today/format'
 import { PLAYBOOK, START_NOTE } from './playbook'
@@ -103,6 +103,22 @@ Zwróć TYLKO JSON (bez markdownu wokół):
  "variants": [{"name": "pozycja z cennika", "price": "kwota z cennika", "forWhom": "1 zdanie", "recommended": false}, 3 sztuki, dokładnie jeden recommended: true],
  "nextStep": "jeden następny krok z dniem tygodnia",
  "offer": ${m.kind === 'oferta' ? '{"title": "...", "intro": "2-3 zdania o ich sytuacji, bez powitania", "scope": ["4-7 punktów"], "cta": "2 zdania: akceptacja przyciskiem pod ofertą albo odpowiedź na maila, potem umowa"}' : 'null'}}`
+}
+
+/**
+ * Sprzątanie każdego tekstu szkicu (długie pauzy, zakazane słowa: kompleksowy, dedykowany, profesjonalny…).
+ * Używane po wygenerowaniu i przy odczycie zapisanych szkiców, więc stare zapisy też wychodzą czyste.
+ */
+export function tidyDraft(d: Draft): Draft {
+    return {
+        ...d,
+        subject: clean(d.subject ?? ''),
+        message: clean(d.message ?? ''),
+        call: clean(d.call ?? ''),
+        nextStep: clean(d.nextStep ?? ''),
+        variants: (d.variants ?? []).map((v) => ({ ...v, name: clean(v.name ?? ''), price: clean(v.price ?? ''), forWhom: clean(v.forWhom ?? '') })),
+        offer: d.offer ? { title: clean(d.offer.title), intro: clean(d.offer.intro), scope: d.offer.scope.map(clean), cta: clean(d.offer.cta) } : null,
+    }
 }
 
 const str = (v: unknown, max = 4000) => (typeof v === 'string' ? v.trim().slice(0, max) : '')

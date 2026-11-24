@@ -6,7 +6,7 @@ import { getSystems } from '@/lib/lab/today/queries'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import type { QueueItem } from '@/lib/lab/today/types'
 import { SALES_KINDS, buildSignals, rankMoves, type AssistantJob, type Move, type Signal } from './pick'
-import type { Draft } from './draft'
+import { tidyDraft, type Draft } from './draft'
 
 type Supa = Awaited<ReturnType<typeof createClient>>
 
@@ -102,7 +102,7 @@ export async function loadDrafts(supabase: Supa, keys: string[]): Promise<Map<st
         const input = r.input_data as { key?: string; note?: string | null }
         if (!input.key || out.has(input.key)) continue
         try {
-            out.set(input.key, { draft: JSON.parse(r.output as string) as Draft, createdAt: r.created_at as string, note: input.note ?? null })
+            out.set(input.key, { draft: tidyDraft(JSON.parse(r.output as string) as Draft), createdAt: r.created_at as string, note: input.note ?? null })
         } catch {
             // uszkodzony zapis: pomijamy, asystent przygotuje nowy
         }

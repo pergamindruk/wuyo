@@ -3,11 +3,10 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { generateWithFallback } from '@/lib/gemini'
-import { clean } from '@/lib/lab/ai/context'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import { saveOffer } from '@/app/lab/oferty/actions'
 import type { OfferData } from '@/lib/lab/offer'
-import { buildPrompt, parseDraft, type Draft, type DraftOffer } from '@/lib/lab/asystent/draft'
+import { buildPrompt, parseDraft, tidyDraft, type Draft, type DraftOffer } from '@/lib/lab/asystent/draft'
 import { loadAssistant, loadCallNotes } from '@/lib/lab/asystent/load'
 import { followUpStep, type Move } from '@/lib/lab/asystent/pick'
 
@@ -29,16 +28,6 @@ async function findMove(supabase: Supa, key: string): Promise<Move | null> {
     return ranked.find((m) => m.key === key) ?? null
 }
 
-function tidy(d: Draft): Draft {
-    return {
-        ...d,
-        subject: clean(d.subject),
-        message: clean(d.message),
-        nextStep: clean(d.nextStep),
-        offer: d.offer ? { title: clean(d.offer.title), intro: clean(d.offer.intro), scope: d.offer.scope.map(clean), cta: clean(d.offer.cta) } : null,
-    }
-}
-
 /** Przygotowuje szkic (wiadomość, telefon, warianty, oferta) i zapisuje go w ai_generations (kind: asystent). */
 export async function prepareDraft(key: string, note?: string): Promise<R<Draft>> {
     const supabase = await authed()
@@ -53,7 +42,7 @@ export async function prepareDraft(key: string, note?: string): Promise<R<Draft>
         const raw = await generateWithFallback('content', buildPrompt(withNotes, note?.trim() || undefined))
         const parsed = parseDraft(raw, move.kind === 'oferta')
         if (!parsed) return { ok: false, error: 'AI zwróciło coś nieczytelnego. Spróbuj jeszcze raz.' }
-        const draft = tidy(parsed)
+        const draft = tidyDraft(parsed)
         await supabase.from('ai_generations').insert({
             type: 'quote',
             input_data: { kind: 'asystent', key, note: note?.trim() || null, moveKind: move.kind },
