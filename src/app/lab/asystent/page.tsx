@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { loadAssistant, loadDrafts } from '@/lib/lab/asystent/load'
 import { pickMoves, plural } from '@/lib/lab/asystent/pick'
 import { PLAYBOOK_POINTS, PLAYBOOK_SOURCES } from '@/lib/lab/asystent/playbook'
+import { BellRing, BookOpen, Sparkles, Target } from 'lucide-react'
+import { PageHeader, SectionTitle } from '@/components/lab/ui/PageHeader'
 import { SignalList } from '@/components/lab/asystent/SignalList'
 import { MoveCard } from '@/components/lab/asystent/MoveCard'
 
@@ -21,28 +23,26 @@ export default async function AssistantPage() {
     const left = ranked.filter((m) => !skipped.has(m.key)).length - moves.length
 
     return (
-        <div className="mx-auto flex max-w-6xl flex-col gap-8">
-            <header>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Sprzedaż</p>
-                <h1 className="mt-1 text-3xl font-bold text-white sm:text-4xl">Asystent</h1>
-                <p className="mt-1 max-w-2xl text-sm text-zinc-500">
-                    Codziennie wybiera 3 najlepsze ruchy i przygotowuje teksty: ofertę, wiadomość i scenariusz rozmowy.
-                    Ty tylko akceptujesz, poprawiasz albo pomijasz.
-                </p>
-            </header>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+            <PageHeader
+                icon={Sparkles}
+                eyebrow="Sprzedaż"
+                title="Asystent"
+                subtitle="Codziennie wybiera 3 najlepsze ruchy i przygotowuje teksty: ofertę, wiadomość i scenariusz rozmowy. Ty tylko akceptujesz, poprawiasz albo pomijasz."
+                actions={left > 0 ? <span className="lab-pill px-3 py-1.5 text-sm text-zinc-300">W kolejce jeszcze <b className="text-white">{left}</b></span> : undefined}
+            />
 
-            <section aria-labelledby="sygnaly" className="flex flex-col gap-3">
-                <h2 id="sygnaly" className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-400">Do sprawdzenia</h2>
+            <section aria-label="Do sprawdzenia" className="lab-card p-5 sm:p-6">
+                <SectionTitle icon={BellRing} title="Do sprawdzenia" />
                 <SignalList signals={signals} />
             </section>
 
-            <section id="ruchy" aria-labelledby="ruchy-tytul" className="flex scroll-mt-24 flex-col gap-4">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h2 id="ruchy-tytul" className="text-sm font-semibold uppercase tracking-[0.16em] text-zinc-400">
-                        Na dziś: {moves.length} {plural(moves.length, 'ruch', 'ruchy', 'ruchów')}
-                    </h2>
-                    {left > 0 && <p className="text-xs text-zinc-500">W kolejce jeszcze {left}. Kolejny wskoczy po akceptacji albo pominięciu.</p>}
-                </div>
+            <section id="ruchy" aria-label="Ruchy na dziś" className="flex scroll-mt-24 flex-col gap-4">
+                <SectionTitle
+                    icon={Target}
+                    title={`Na dziś: ${moves.length} ${plural(moves.length, 'ruch', 'ruchy', 'ruchów')}`}
+                    action={left > 0 ? <p className="text-xs text-zinc-500">Kolejny wskoczy po akceptacji albo pominięciu.</p> : undefined}
+                />
                 {moves.length === 0 ? (
                     <div className="lab-card p-8 text-center text-sm text-zinc-400">
                         Nic nie czeka. Dodaj firmy do kolejki telefonów albo zlecenia w Lejku, a asystent je podchwyci.
@@ -54,8 +54,11 @@ export default async function AssistantPage() {
                 )}
             </section>
 
-            <details className="lab-card p-5 text-sm text-zinc-400">
-                <summary className="cursor-pointer font-semibold text-zinc-200">Jak pisze asystent</summary>
+            <details className="lab-card p-5 text-sm text-zinc-400 sm:p-6">
+                <summary className="flex cursor-pointer items-center gap-2.5 font-bold text-white">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-400"><BookOpen size={16} aria-hidden /></span>
+                    Jak pisze asystent
+                </summary>
                 <ul className="mt-3 list-disc space-y-1 pl-5">
                     {PLAYBOOK_POINTS.map((p) => <li key={p}>{p}</li>)}
                 </ul>
