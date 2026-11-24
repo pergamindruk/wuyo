@@ -10,8 +10,6 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { OfferTabs, type OfferService } from "@/components/offer/OfferTabs";
 import { BlogTeaser } from "@/components/BlogTeaser";
-import { Odslona } from "@/components/Odslona";
-import { BriefIcon, DesignStepIcon, DoneIcon } from "@/components/CollabIcons";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { HeroClientEffects, ScrollIndicator, HeroAmbientOrbs } from "@/components/HeroClientEffects";
 import { HeroProjectTilesLoader as HeroProjectTiles } from "@/components/HeroProjectTilesLoader";
@@ -136,8 +134,8 @@ export default function Home() {
                     <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
                         <HeroText />
                         <p className="text-base md:text-lg text-white/70 max-w-xl mb-12 leading-relaxed font-medium">
-                            Projektuję i drukuję to, po czym ludzie oceniają Twoją firmę{" "}
-                            <span className="text-[#FFEB52] font-semibold whitespace-nowrap">w pierwsze trzy sekundy.</span>
+                            <span className="text-[#FFEB52] font-semibold">Jestem Mateusz z Rzeszowa.</span>{" "}
+                            Projektuję logo i strony, drukuję u siebie, a nadruki na koszulki wgrzewam sam na swojej prasie.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6">
                             <Link href="#oferta" className="btn-gold px-10 py-4 inline-flex items-center justify-center relative overflow-hidden group shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)]">
@@ -166,7 +164,7 @@ export default function Home() {
                 <div className="section-glow" />
 
                 <AnimatedSection className="text-center mb-20 relative z-10">
-                    <p className="eyebrow mb-4">Co zyska Twoja marka</p>
+                    <p className="eyebrow mb-4">Oferta</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white">
                         Logo, strony, druk i odzież.<br />W jednym miejscu
                     </h2>
@@ -233,53 +231,18 @@ export default function Home() {
 
                     {/* Right: Text Content */}
                     <AnimatedSection delay={0.2} className="max-w-2xl mx-auto lg:mx-0">
-                        <p className="eyebrow mb-4">Współpraca</p>
+                        <p className="eyebrow mb-4">O mnie</p>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
-                            Ty robisz swoje.<br />Ja ogarniam resztę.
+                            Cześć, jestem Mateusz
                         </h2>
-                        <div className="text-white/60 leading-relaxed mb-8 space-y-4 text-sm md:text-base">
-                            <p>Nie ma tu działu obsługi ani pośredników. Rozmawiasz z osobą, która robi Twój projekt. Cenę i termin znasz, zanim zaczniemy. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>.</p>
-                            <p>Ty znasz swoją branżę, ja znam się na wyglądzie firmy. Podzielmy się pracą: Ty obsługujesz klientów, ja robię tak, żeby było ich więcej.</p>
+                        <div className="text-white/60 leading-relaxed mb-10 space-y-4 text-sm md:text-base">
+                            <p>Zanim założyłem WUYO, pracowałem jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.</p>
+                            <p>Cenię sobie wolność i niezależność, dlatego pracuję sam, na swoim. Nie ma tu działu obsługi ani pośredników. Rozmawiasz z osobą, która robi Twój projekt, a cenę i termin znasz, zanim zaczniemy.</p>
+                            <p>Logo i strony projektuję sam, drukuję u siebie, koszulki wgrzewam na własnej prasie. Więcej o tym, jak pracuję jako <Link href="/grafik-rzeszow" className="text-gold hover:underline">grafik w Rzeszowie</Link>, i <Link href="/o-mnie" className="text-gold hover:underline">trochę więcej o mnie</Link>.</p>
                         </div>
 
-                        {/* Drzewko kroków: ikony rysują się po wejściu na ekran,
-                            a po ścieżce co chwilę spływa złoty błysk. */}
-                        <Odslona kierunek="brak" className="wsp-drzewo mt-8 mb-10 relative">
-                            <div className="wsp-sciezka absolute left-[26px] top-6 bottom-6 w-px bg-gradient-to-b from-gold/50 via-white/10 to-transparent" aria-hidden />
-
-                            <ul className="space-y-6">
-                                <li className="relative flex items-start gap-5">
-                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold backdrop-blur-md">
-                                        <BriefIcon />
-                                    </div>
-                                    <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">01 — Szybki brief</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gadamy 15 minut. Mówisz, gdzie jesteś i co chcesz osiągnąć. Ja szukam rozwiązania i wracam z konkretnym planem.</p>
-                                    </div>
-                                </li>
-                                <li className="relative flex items-start gap-5" style={{ ["--krok" as string]: 1 }}>
-                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold backdrop-blur-md">
-                                        <DesignStepIcon />
-                                    </div>
-                                    <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">02 — Projekt i realizacja</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Gdy zaakceptujesz plan, przejmuję stery. Projektuję, piszę kod albo drukuję, zależnie od zlecenia. Postępy widzisz na bieżąco.</p>
-                                    </div>
-                                </li>
-                                <li className="relative flex items-start gap-5" style={{ ["--krok" as string]: 2 }}>
-                                    <div className="wsp-ikona relative z-10 w-[52px] h-[52px] shrink-0 rounded-2xl bg-gold/10 border border-gold/40 shadow-[0_0_15px_rgba(255,235,82,0.3)] flex items-center justify-center text-gold backdrop-blur-md">
-                                        <DoneIcon />
-                                    </div>
-                                    <div className="pt-1.5">
-                                        <strong className="block text-white mb-1">03 — Gotowe. Działa.</strong>
-                                        <p className="text-white/60 text-sm leading-relaxed pr-4">Odbierasz stronę, logo albo materiały gotowe do użycia. Od pierwszego dnia robią robotę.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </Odslona>
-
                         <Link href="#kontakt" className="btn-gold inline-flex items-center justify-center gap-3 w-full md:w-auto px-10 py-4 shadow-[0_0_20px_rgba(255,235,82,0.4)] hover:shadow-[0_0_40px_rgba(255,235,82,0.6)] group">
-                            <span className="font-bold text-navy text-lg group-hover:scale-105 transition-transform">Przekaż mi stery</span>
+                            <span className="font-bold text-navy text-lg group-hover:scale-105 transition-transform">Napisz do mnie</span>
                             <ArrowRight size={20} className="text-navy group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </AnimatedSection>

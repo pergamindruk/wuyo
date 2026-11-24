@@ -43,9 +43,9 @@ export function TrustedBySection({ locale = "pl" }: { locale?: Locale }) {
             {/* ═══════ GWARANCJE ═══════ */}
             <div className="max-w-5xl mx-auto mb-20 relative z-10">
                 <AnimatedSection className="text-center mb-14">
-                    <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Gwarancja spokoju"}</p>
+                    <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Zasady"}</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                        {locale === "en" ? EN.h2 : "Twarde zasady, nie\u00a0obietnice"}
+                        {locale === "en" ? EN.h2 : "Na co si\u0119 umawiamy"}
                     </h2>
                     <p className="text-white/60 max-w-xl mx-auto">
                         {locale === "en" ? EN.lead : "Dopiero rozkręcam firmę, więc każdy projekt to moja wizytówka. Dlatego zasady masz czarno na białym."}

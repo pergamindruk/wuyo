@@ -22,40 +22,40 @@ const EN = {
 export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
     const stepsPl = [
         {
-            title: "Pogawędka",
+            title: "Rozmowa",
             icon: <MessageSquare size={24} />,
             ruch: "rozmowa",
-            desc: "Zaczynamy od luźnej gadki :) Poznaję Ciebie, Twoją firmę i to, co masz w głowie."
+            desc: "Piszesz albo dzwonisz. Mówisz, czym się zajmujesz i czego potrzebujesz. O resztę dopytam."
         },
         {
             title: "Wycena",
             icon: <Calculator size={24} />,
             ruch: "liczy",
-            desc: "Krótko i na temat. Dostajesz jasną cenę bez ukrytych kosztów i konkretną datę oddania."
+            desc: "Zanim zaczniemy, dostajesz cenę i datę oddania na piśmie. Bez ukrytych kosztów."
         },
         {
-            title: "Projektowanie",
+            title: "Projekt",
             icon: <Zap size={24} />,
             ruch: "iskra",
-            desc: "Analizuję temat i projektuję. Pilnuję, żeby wszystko było gotowe na czas."
+            desc: "Projektuję. Jeśli czegoś mi brakuje, od razu pytam."
         },
         {
-            title: "Twoje uwagi",
+            title: "Poprawki",
             icon: <Search size={24} />,
             ruch: "szuka",
-            desc: "Pokazuję Ci pierwsze efekty. Mówisz, co myślisz, a ja poprawiam, aż będzie petarda."
+            desc: "Pokazuję pierwszą wersję. Mówisz, co zmienić, a ja poprawiam do Twojej akceptacji."
         },
         {
-            title: "Przekazanie plików",
+            title: "Pliki",
             icon: <PackageCheck size={24} />,
             ruch: "paczka",
-            desc: "Dostajesz wszystko elegancko poukładane w folderach. Pliki, których użyjesz od razu."
+            desc: "Dostajesz pliki poukładane w folderach: osobno do druku, osobno do internetu."
         },
         {
-            title: "Wdrożenie",
+            title: "Start",
             icon: <Rocket size={24} />,
             ruch: "start",
-            desc: "Pomagam wrzucić wszystko do sieci i oddać do druku. Jestem z Tobą do samego końca."
+            desc: "Pomagam wrzucić stronę do sieci albo oddać projekt do druku. Nie zostajesz sam z plikami."
         }
     ];
     const steps = locale === "en"
@@ -71,10 +71,10 @@ export function ProcessSection({ locale = "pl" }: { locale?: Locale }) {
                 <div className="text-center mb-20">
                     <p className="eyebrow mb-4">{locale === "en" ? EN.eyebrow : "Jak pracuję"}</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                        {locale === "en" ? EN.h2 : "Proces, który oszczędza Twój czas"}
+                        {locale === "en" ? EN.h2 : "Jak wygląda współpraca"}
                     </h2>
                     <p className="text-white/60 max-w-2xl mx-auto">
-                        {locale === "en" ? EN.lead : "Od pierwszej rozmowy do gotowego projektu. Bez zbędnych formalności."}
+                        {locale === "en" ? EN.lead : "Od pierwszej wiadomości do gotowych plików. Sześć kroków."}
                     </p>
                 </div>
             </div>

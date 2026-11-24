@@ -88,7 +88,7 @@ export async function TestimonialsSection({ locale = "pl" }: { locale?: Locale }
             <div className="max-w-5xl mx-auto relative z-10">
 
                 <AnimatedSection className="mb-12">
-                    <p className="eyebrow mb-3">Efekty mówią same za siebie</p>
+                    <p className="eyebrow mb-3">Opinie</p>
                     <h2 className="text-3xl md:text-5xl font-bold text-white">
                         Co mówią klienci
                     </h2>

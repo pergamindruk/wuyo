@@ -172,7 +172,10 @@ export default function OmniePage() {
                                         Grafik i programista w jednym. Robię logo, strony internetowe i materiały drukowane dla firm, które chcą wyglądać poważnie i sprzedawać więcej.
                                     </p>
                                     <p>
-                                        Działam sam, bez agencji, asystentów i ping-ponga. Rozmawiasz bezpośrednio ze mną i to ja siedzę przy komputerze, kiedy tworzę Twój projekt.
+                                        Zanim założyłem WUYO, pracowałem jako metrolog, jeździłem autem dostawczym i pracowałem na lotnisku w Jasionce.
+                                    </p>
+                                    <p>
+                                        Cenię sobie wolność i niezależność, dlatego działam sam, bez agencji, asystentów i ping-ponga. Rozmawiasz bezpośrednio ze mną i to ja siedzę przy komputerze, kiedy tworzę Twój projekt.
                                     </p>
                                     <p>
                                         Mam własny sprzęt do druku, więc od projektu do gotowego wydruku wystarczy jeden telefon. Nie czekasz na zewnętrzną drukarnię.

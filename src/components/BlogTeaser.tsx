@@ -26,12 +26,12 @@ export function BlogTeaser({ locale = "pl" }: { locale?: Locale }) {
             <div className="section-glow" />
 
             <AnimatedSection className="text-center mb-16 relative z-10">
-                <p className="eyebrow mb-4">{en ? EN.eyebrow : "Wiedza bez ściemy"}</p>
+                <p className="eyebrow mb-4">{en ? EN.eyebrow : "Blog"}</p>
                 <h2 className="text-3xl md:text-5xl font-bold text-white">
-                    {en ? EN.h2a : "Najpierw wiedza,"}<br />{en ? EN.h2b : "potem przelew"}
+                    {en ? EN.h2a : "Poradniki o cenach,"}<br />{en ? EN.h2b : "druku i stronach"}
                 </h2>
                 <p className="text-white/60 mt-6 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                    {en ? EN.lead : "Krótkie artykuły o cenach, druku i stronach. Po lekturze rozpoznasz dobrą ofertę i nie dasz się naciągnąć."}
+                    {en ? EN.lead : "Piszę, ile co kosztuje i na co uważać. Po lekturze łatwiej ocenisz, czy oferta, którą dostałeś, jest uczciwa."}
                 </p>
             </AnimatedSection>
 
