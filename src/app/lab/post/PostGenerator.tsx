@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import {
-    CalendarPlus, Check, Copy, Download, ExternalLink, ImagePlus, Lightbulb, RefreshCw, Search, Send, Sparkles, Wand2,
+    CalendarPlus, Check, Copy, Download, ExternalLink, ImagePlus, Lightbulb, RefreshCw, Search, Send, Sparkles, Wand2, Youtube,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { warsawIsoDate } from '@/lib/lab/today/format'
@@ -17,7 +17,7 @@ import {
 } from './actions'
 
 const PILLAR_LABEL: Record<Pillar, string> = { ekspert: 'Ekspert', dowod: 'Dowód', zasieg: 'Zasięg', czlowiek: 'Człowiek' }
-const FORMAT_LABEL: Record<PostFormat, string> = { karuzela: 'Karuzela', rolka: 'Rolka', post: 'Post z grafiką' }
+const FORMAT_LABEL: Record<PostFormat, string> = { karuzela: 'Karuzela', rolka: 'Rolka / Shorts', post: 'Post z grafiką' }
 const CTA_LABEL: Record<CtaGoal, string> = { zapis: 'Zapis', komentarz: 'Komentarz', udostepnienie: 'Udostępnienie', wejscie: 'Wejście na wuyo.pl' }
 
 const W = 1080
@@ -342,6 +342,21 @@ export function PostGenerator() {
                             <section className={card}>
                                 <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold text-white">Scenariusz rolki</h3><CopyButton text={post.rolka} /></div>
                                 <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-zinc-300">{post.rolka}</pre>
+                                <p className="mt-3 text-xs text-zinc-500">Jedno nagranie 9:16: Instagram Reels, Facebook Reels i YouTube Shorts.</p>
+                            </section>
+                        )}
+                        {post.shorts && (
+                            <section className={card}>
+                                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-white"><Youtube size={16} className="text-red-500" /> YouTube Shorts</h3>
+                                {([['Tytuł', post.shorts.tytul], ['Opis', post.shorts.opis], ['Tagi', post.shorts.tagi.join(', ')]] as const).map(([k, v]) => (
+                                    <div key={k} className="mb-2 rounded-lg bg-zinc-950/60 p-3">
+                                        <div className="mb-1 flex items-center justify-between"><span className="text-[11px] uppercase tracking-wider text-zinc-500">{k}</span><CopyButton text={v} /></div>
+                                        <p className="whitespace-pre-wrap text-sm text-zinc-200">{v}</p>
+                                    </div>
+                                ))}
+                                <a href="https://studio.youtube.com" target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white">
+                                    <ExternalLink size={12} /> YouTube Studio (wgraj i zaplanuj)
+                                </a>
                             </section>
                         )}
                     </div>

@@ -11,7 +11,7 @@ import { getGoogleStats } from '@/lib/lab/google-stats'
 import { clean } from '@/lib/lab/ai/context'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import {
-    COVER_PHOTO_STYLE, COVER_RULES, CTA_GOALS, FORMATS, HOOK_WORKSHOP, PILLARS, SOCIAL_RULES,
+    COVER_PHOTO_STYLE, COVER_RULES, CTA_GOALS, FORMATS, HOOK_WORKSHOP, PILLARS, SHORTS_RULES, SOCIAL_RULES,
     type CtaGoal, type Pillar, type PostFormat,
 } from '@/lib/lab/social/playbook'
 
@@ -38,6 +38,8 @@ export type GeneratedPost = {
     instagram: string
     slajdy: { naglowek: string; tekst: string }[]
     rolka: string
+    /** Tylko przy rolce: to samo nagranie na YouTube Shorts. */
+    shorts: { tytul: string; opis: string; tagi: string[] } | null
     okladka: { haslo: string; akcent: string; scena: string }
     czemu_zapisze: string
     wpis: string
@@ -192,6 +194,7 @@ ${recent}
 ${HOOK_WORKSHOP}
 
 ${COVER_RULES}
+${input.format === 'rolka' ? `\n${SHORTS_RULES}\n` : ''}
 
 Zwróć TYLKO JSON (bez komentarzy):
 {"temat": "temat do kalendarza, zwykłe zdanie",
@@ -200,7 +203,8 @@ Zwróć TYLKO JSON (bez komentarzy):
  "instagram": "gotowy post na IG, zaczyna się od najlepszego hooka",
  "slajdy": [{"naglowek": "...", "tekst": "..."}],  // karuzela: 5-7 slajdów, slajd 1 = hasło okładki; inne formaty: []
  "rolka": "scenariusz z ujęciami, napisami na ekranie i [ZMIANA]; dla innych formatów pusty",
- "okladka": {"haslo": "...", "akcent": "...", "scena": "..."},
+ "okladka": {"haslo": "...", "akcent": "...", "scena": "..."},${input.format === 'rolka' ? `
+ "shorts": {"tytul": "...", "opis": "...", "tagi": ["...", "..."]},` : ''}
  "czemu_zapisze": "1 zdanie: dlaczego odbiorca zapisze albo udostępni",
  "alt": "opis grafiki po polsku, 1 zdanie"}`
 
@@ -218,6 +222,11 @@ Zwróć TYLKO JSON (bez komentarzy):
             instagram: clean(String(raw.instagram ?? '')),
             slajdy: (raw.slajdy ?? []).slice(0, 8).map((s) => ({ naglowek: clean(String(s.naglowek ?? '')), tekst: clean(String(s.tekst ?? '')) })),
             rolka: String(raw.rolka ?? '').trim(),
+            shorts: input.format === 'rolka' && raw.shorts?.tytul ? {
+                tytul: clean(String(raw.shorts.tytul)).slice(0, 100),
+                opis: clean(String(raw.shorts.opis ?? '')),
+                tagi: (raw.shorts.tagi ?? []).map((t) => String(t).trim()).filter(Boolean).slice(0, 10),
+            } : null,
             okladka: { haslo, akcent: String(okl.akcent ?? '').toUpperCase(), scena: String(okl.scena ?? '') },
             czemu_zapisze: clean(String(raw.czemu_zapisze ?? '')),
             wpis: wpis?.slug ?? '',
@@ -292,7 +301,8 @@ function notes(post: GeneratedPost): string {
         `Okładka: ${post.okladka.haslo} (żółte: ${post.okladka.akcent})`,
         post.czemu_zapisze && `Dlaczego zapisze: ${post.czemu_zapisze}`,
         post.slajdy.length > 0 && `Slajdy:\n${post.slajdy.map((s, i) => `${i + 1}. ${s.naglowek}: ${s.tekst}`).join('\n')}`,
-        post.rolka && `Rolka:\n${post.rolka}`,
+        post.rolka && `Rolka (IG Reels + FB Reels + YouTube Shorts):\n${post.rolka}`,
+        post.shorts && `YouTube Shorts:\nTytuł: ${post.shorts.tytul}\nOpis: ${post.shorts.opis}\nTagi: ${post.shorts.tagi.join(', ')}`,
     ]
     return out.filter(Boolean).join('\n')
 }

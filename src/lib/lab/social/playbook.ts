@@ -19,7 +19,7 @@ export type CtaGoal = 'zapis' | 'komentarz' | 'udostepnienie' | 'wejscie'
 
 export const FORMATS: Record<PostFormat, string> = {
     karuzela: 'KARUZELA 5-7 slajdów: slajd 1 = okładka z hasłem; środkowe = jedna wskazówka na slajd (nagłówek do 8 słów + jedno zdanie "jak to zastosować"); ostatni = podsumowanie + CTA. Mało znane, praktyczne rady, nic oczywistego.',
-    rolka: 'ROLKA 30 s, max 85 słów, do nagrania telefonem w pracowni: hook w 1-3 s (napis na ekranie, ciche odtwarzanie), problem, w którym widz się rozpozna, krótka scena z pracy, wniosek, CTA. Co 5-7 s [ZMIANA] (nowy kadr, zbliżenie, napis). Bezpośrednie spojrzenie w obiektyw, prawdziwe biurko.',
+    rolka: 'ROLKA / SHORTS pion 9:16, 30-45 s, max 100 słów, do nagrania telefonem w pracowni. Jedno nagranie idzie na Instagram Reels, Facebook Reels i YouTube Shorts. Hook w 1-3 s (napis na ekranie, ciche odtwarzanie), problem, w którym widz się rozpozna, krótka scena z pracy, wniosek, CTA. Co 5-7 s [ZMIANA] (nowy kadr, zbliżenie, napis). Bezpośrednie spojrzenie w obiektyw, prawdziwe biurko. Napisy na ekranie przez cały film. Bez muzyki z prawami autorskimi.',
     post: 'POST Z GRAFIKĄ: jedna myśl, okładka jako jedyna grafika, tekst rozwija hasło i kończy się pytaniem albo prośbą o zapis.',
 }
 
@@ -48,6 +48,11 @@ export const HOOK_WORKSHOP = `WARSZTAT (zrób w głowie po kolei, zanim napiszes
 2. Dopisz 4 hooki z formatów, które teraz niosą się w niszy: "niepopularna opinia", "przed i po", "proces krok po kroku", "jedno mocne zdanie do kamery", "rachunek: ile tracisz".
 3. Wybierz 3 najmocniejsze i każdemu przypisz inny haczyk: luka ciekawości, strach przed stratą, konkretna liczba z treści, myśl odbiorcy w 1. osobie, ostrzeżenie. Pierwszy = najlepszy.
 4. Sprawdź: czy właściciel firmy zatrzyma kciuk? Czy post spełnia obietnicę hooka? Czy ktoś by to zapisał albo wysłał dalej i dlaczego?`
+
+export const SHORTS_RULES = `YOUTUBE SHORTS (tylko dla rolki):
+- "tytul": do 70 znaków, pytanie albo obietnica jak hook, z frazą, którą ludzie wpisują (np. "Ile kosztuje logo dla firmy?"). Bez clickbaitu, bez wielkich liter i emoji.
+- "opis": 2-3 zdania o czym jest film + link do wpisu na wuyo.pl (jeśli jest) + 3 hashtagi, pierwszy #Shorts.
+- "tagi": 5-8 fraz po polsku (np. "logo dla firmy", "grafik Rzeszów").`
 
 export const COVER_RULES = `OKŁADKA (pierwsza grafika, styl najlepszych miniatur z YouTube):
 - "haslo": 2-4 słowa WIELKIMI LITERAMI, max 22 znaki. Okładka + pierwsze zdanie posta = jedna historia: hasło dokłada stawkę, zaskoczenie albo myśl odbiorcy, nie streszcza posta.
