@@ -7,6 +7,9 @@ import { formatPLN } from '@/lib/lab/today/format'
 import { PLAYBOOK, START_NOTE } from './playbook'
 import { followUpStep, type Move } from './pick'
 
+/** Wersja promptu. Podnieś ją przy zmianie promptu, a starsze zapisane szkice przygotują się od nowa. */
+export const DRAFT_VERSION = 2
+
 /** Znacznik w wiadomości, w który przy akceptacji wchodzi link do oferty. */
 export const LINK_TOKEN = '{LINK}'
 
@@ -62,7 +65,9 @@ function task(m: Move): string {
         case 'oferta':
             return `ZADANIE: firma chce oferty i czeka ${m.daysWaiting} dni. Przygotuj ofertę i ${channel === 'mail' ? 'maila' : 'SMS/WhatsApp'}, z którym ją wyślesz.
 - "message": krótko przeproś za czekanie (bez tłumaczenia się), 1 zdanie o ich sytuacji, link do oferty jako ${LINK_TOKEN} (dokładnie ten znacznik), polecany wariant i jeden następny krok z dniem tygodnia.
-- "offer": tekst oferty na polecany wariant (cenę wstawi system, Ty jej NIE podajesz w offer).
+- "offer": tekst oferty na polecany wariant (cenę wstawi system, Ty jej NIE podajesz w offer). Oferta to dokument, nie list:
+  "intro" BEZ powitania i bez imienia na początku ("Panie Dawidzie", "Dzień dobry" są zakazane), bez terminu startu.
+  Zacznij od sytuacji klienta z danych wyżej (branża, czego brakuje: np. strony albo logo), potem co to im da.
 - "call": scenariusz telefonu, gdy po 2-3 dniach nie odpisze.`
         case 'zalegly':
         case 'przypomnienie': {
@@ -102,13 +107,22 @@ Zwróć TYLKO JSON (bez markdownu wokół):
  "message": "...", "call": "markdown: ## Otwarcie, ## Pytania, ## Gdy powie..., ## Następny krok",
  "variants": [{"name": "pozycja z cennika", "price": "kwota z cennika", "forWhom": "1 zdanie", "recommended": false}, 3 sztuki, dokładnie jeden recommended: true],
  "nextStep": "jeden następny krok z dniem tygodnia",
- "offer": ${m.kind === 'oferta' ? '{"title": "...", "intro": "2-3 zdania o ich sytuacji, bez powitania", "scope": ["4-7 punktów"], "cta": "2 zdania: akceptacja przyciskiem pod ofertą albo odpowiedź na maila, potem umowa"}' : 'null'}}`
+ "offer": ${m.kind === 'oferta' ? '{"title": "...", "intro": "2-3 zdania o sytuacji klienta, bez powitania i imienia, bez terminu startu", "scope": ["4-7 punktów"], "cta": "2 zdania: akceptacja przyciskiem pod ofertą albo odpowiedź na maila, potem umowa"}' : 'null'}}`
 }
 
 /**
  * Sprzątanie każdego tekstu szkicu (długie pauzy, zakazane słowa: kompleksowy, dedykowany, profesjonalny…).
  * Używane po wygenerowaniu i przy odczycie zapisanych szkiców, więc stare zapisy też wychodzą czyste.
  */
+const GREETING = /^\s*(dzień dobry|witam|witaj|cześć|hej|szanown\p{L}*(\s+pan\p{L}*)?(\s+\p{Lu}\p{L}*)?|pan(ie|i)\s+\p{Lu}\p{L}*)\s*[,!.]?\s*/iu
+
+/** Wstęp oferty to dokument, nie list: zdejmuje powitanie z początku i wielką literą zaczyna resztę. */
+export function stripGreeting(text: string): string {
+    const rest = text.replace(GREETING, '')
+    if (rest === text) return text
+    return rest.charAt(0).toLocaleUpperCase('pl-PL') + rest.slice(1)
+}
+
 export function tidyDraft(d: Draft): Draft {
     return {
         ...d,
@@ -117,7 +131,7 @@ export function tidyDraft(d: Draft): Draft {
         call: clean(d.call ?? ''),
         nextStep: clean(d.nextStep ?? ''),
         variants: (d.variants ?? []).map((v) => ({ ...v, name: clean(v.name ?? ''), price: clean(v.price ?? ''), forWhom: clean(v.forWhom ?? '') })),
-        offer: d.offer ? { title: clean(d.offer.title), intro: clean(d.offer.intro), scope: d.offer.scope.map(clean), cta: clean(d.offer.cta) } : null,
+        offer: d.offer ? { title: clean(d.offer.title), intro: stripGreeting(clean(d.offer.intro)), scope: d.offer.scope.map(clean), cta: clean(d.offer.cta) } : null,
     }
 }
 

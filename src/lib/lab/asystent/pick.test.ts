@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { buildSignals, followUpStep, pickMoves, plural, rankMoves, type AssistantJob } from './pick'
-import { LINK_TOKEN, buildPrompt, parseDraft, tidyDraft } from './draft'
+import { LINK_TOKEN, buildPrompt, parseDraft, stripGreeting, tidyDraft } from './draft'
 import type { QueueItem, SystemsStatus } from '@/lib/lab/today/types'
 
 const NOW = new Date('2026-11-24T09:00:00Z')
@@ -139,5 +139,27 @@ describe('tidyDraft', () => {
         expect(d.message).toBe('Strona, gotowa')
         expect(d.call).not.toMatch(/kompleksow/i)
         expect(d.variants[0].forWhom).toBe('Dla firm, które potrzebują wizerunku')
+    })
+})
+
+describe('wstęp oferty', () => {
+    it('stripGreeting zdejmuje powitanie i imię z początku', () => {
+        expect(stripGreeting('Panie Dawidzie, przygotowałem propozycję.')).toBe('Przygotowałem propozycję.')
+        expect(stripGreeting('Dzień dobry! Firma budowlana bez strony traci zlecenia.')).toBe('Firma budowlana bez strony traci zlecenia.')
+        expect(stripGreeting('Szanowni Państwo, salon nie ma strony.')).toBe('Salon nie ma strony.')
+        expect(stripGreeting('Pan Dawid prowadzi firmę budowlaną.')).toBe('Pan Dawid prowadzi firmę budowlaną.')
+    })
+    it('tidyDraft czyści wstęp oferty z powitania', () => {
+        const d = tidyDraft({
+            channel: 'sms', subject: '', message: 'x', call: '', nextStep: '', variants: [],
+            offer: { title: 'Strona', intro: 'Panie Dawidzie, firma bez strony.', scope: ['a'], cta: 'b' },
+        })
+        expect(d.offer?.intro).toBe('Firma bez strony.')
+    })
+    it('prompt mówi wprost, że styczeń dotyczy studia, nie klienta', () => {
+        const move = rankMoves({ jobs: [job({})], queue: [], now: NOW })[0]
+        const p = buildPrompt(move)
+        expect(p).toContain('dotyczy STUDIA WUYO, nie klienta')
+        expect(p).toContain('BEZ powitania i bez imienia')
     })
 })

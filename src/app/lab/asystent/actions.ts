@@ -6,7 +6,7 @@ import { generateWithFallback } from '@/lib/gemini'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import { saveOffer } from '@/app/lab/oferty/actions'
 import type { OfferData } from '@/lib/lab/offer'
-import { buildPrompt, parseDraft, tidyDraft, type Draft, type DraftOffer } from '@/lib/lab/asystent/draft'
+import { DRAFT_VERSION, buildPrompt, parseDraft, tidyDraft, type Draft, type DraftOffer } from '@/lib/lab/asystent/draft'
 import { loadAssistant, loadCallNotes } from '@/lib/lab/asystent/load'
 import { followUpStep, type Move } from '@/lib/lab/asystent/pick'
 
@@ -45,7 +45,7 @@ export async function prepareDraft(key: string, note?: string): Promise<R<Draft>
         const draft = tidyDraft(parsed)
         await supabase.from('ai_generations').insert({
             type: 'quote',
-            input_data: { kind: 'asystent', key, note: note?.trim() || null, moveKind: move.kind },
+            input_data: { kind: 'asystent', key, note: note?.trim() || null, moveKind: move.kind, v: DRAFT_VERSION },
             output: JSON.stringify(draft),
         })
         return { ok: true, data: draft }

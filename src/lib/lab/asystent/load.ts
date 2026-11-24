@@ -6,7 +6,7 @@ import { getSystems } from '@/lib/lab/today/queries'
 import { warsawIsoDate } from '@/lib/lab/today/format'
 import type { QueueItem } from '@/lib/lab/today/types'
 import { SALES_KINDS, buildSignals, rankMoves, type AssistantJob, type Move, type Signal } from './pick'
-import { tidyDraft, type Draft } from './draft'
+import { DRAFT_VERSION, tidyDraft, type Draft } from './draft'
 
 type Supa = Awaited<ReturnType<typeof createClient>>
 
@@ -99,8 +99,8 @@ export async function loadDrafts(supabase: Supa, keys: string[]): Promise<Map<st
         .eq('input_data->>kind', 'asystent').in('input_data->>key', keys)
         .order('created_at', { ascending: false }).limit(50)
     for (const r of data ?? []) {
-        const input = r.input_data as { key?: string; note?: string | null }
-        if (!input.key || out.has(input.key)) continue
+        const input = r.input_data as { key?: string; note?: string | null; v?: number }
+        if (!input.key || out.has(input.key) || (input.v ?? 1) !== DRAFT_VERSION) continue
         try {
             out.set(input.key, { draft: tidyDraft(JSON.parse(r.output as string) as Draft), createdAt: r.created_at as string, note: input.note ?? null })
         } catch {

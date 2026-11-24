@@ -17,8 +17,10 @@ export const PLAYBOOK = `METODA ROZMOWY (tak dziś sprzedają najlepsze agencje;
 8. Żadnych darmowych projektów "na próbę", żadnych rabatów w pierwszym zdaniu, żadnego naciskania.`
 
 /** Sytuacja studia (firma w rejestracji). Zmień tu, gdy firma ruszy. */
-export const START_NOTE = `TERMIN: firma jest w trakcie rejestracji. Realizacja rusza po rejestracji (plan: styczeń 2027).
-Proponuj rezerwację terminu. Zaliczki NIE bierzesz teraz, zaliczka dopiero po rejestracji. Nie podawaj konkretnej daty startu.`
+export const START_NOTE = `TERMIN (dotyczy STUDIA WUYO, nie klienta): studio Mateusza jest w trakcie rejestracji firmy, realizacja zleceń rusza po rejestracji (plan: styczeń 2027).
+Nigdy nie pisz, że to KLIENT startuje w styczniu ani że klient zakłada firmę, chyba że wynika to wprost z notatek.
+W wiadomości i w rozmowie proponuj rezerwację terminu; zaliczki teraz NIE bierzesz, dopiero po rejestracji. Nie podawaj konkretnej daty startu.
+W tekście oferty (offer) nie pisz o terminie startu ani rejestracji, to jest w wiadomości.`
 
 /** Źródła metody, pokazywane w panelu („Jak pisze asystent”). */
 export const PLAYBOOK_SOURCES = [
