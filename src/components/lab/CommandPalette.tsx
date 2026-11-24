@@ -9,7 +9,7 @@ import {
     BarChart3, Bot, Briefcase, Building2, Calendar, Clock, CornerDownLeft, FileText,
     Filter, Home, Inbox, Hourglass, LogOut, Phone, Plus, Radar, Search, Shield,
     User,
-    SearchCheck,
+    SearchCheck, Sparkles,
 } from 'lucide-react'
 import { searchLab, type SearchResult } from '@/app/lab/search/actions'
 import { telHref } from '@/lib/lab/today/format'
@@ -52,6 +52,7 @@ const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: s
     { id: 'p-doradca', label: 'Doradca: koszty, terminy, pamięć', href: '/lab/doradca', icon: FileText },
     { id: 'p-legal-docs', label: 'Umowy i dokumenty dla klienta', href: '/lab/finances#dokumenty', icon: FileText },
     { id: 'p-ai', label: 'AI Studio', href: '/lab/ai-studio', icon: Bot },
+    { id: 'p-post', label: 'Generator postów (research + okładka)', href: '/lab/post', icon: Sparkles },
     { id: 'p-calendar', label: 'Posty i kalendarz', href: '/lab/calendar', icon: Calendar },
     { id: 'p-analytics', label: 'Analityka', href: '/lab/analytics', icon: BarChart3 },
     { id: 'p-seo', label: 'SEO-radca', href: '/lab/seo', icon: SearchCheck },
