@@ -4,6 +4,7 @@
 // stan zapisu (useTransition) i zegar sprawdzający porę dnia po stronie przeglądarki.
 
 import { useEffect, useRef, useState, useTransition } from 'react'
+import { Check, FileSignature, Moon, Phone, Wallet } from 'lucide-react'
 import type { Activity } from '@/lib/lab/today/types'
 import { saveDayNote } from '@/app/lab/dzis/evening-actions'
 
@@ -57,23 +58,34 @@ export function EveningCard({ todayActivities }: { todayActivities: Activity[] }
         })
     }
 
+    const counters = [
+        { label: 'Telefony', value: phones, icon: Phone },
+        { label: 'Oferty', value: offers, icon: FileSignature },
+        { label: 'Wpłaty', value: payments, icon: Wallet },
+    ]
+
     return (
-        <section
-            className={`bg-zinc-900 rounded-xl p-5 min-w-0 border ${
-                evening ? 'border-yellow-400/40' : 'border-zinc-800'
-            }`}
-        >
-            <h2 className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-3">
+        <section className={`lab-card flex min-w-0 flex-col p-5 sm:p-6 ${evening ? 'ring-1 ring-yellow-400/40' : ''}`}>
+            {evening && <span className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-yellow-400/15 blur-2xl" />}
+            <h2 className="mb-4 flex items-center gap-2.5 text-base font-bold text-white">
+                <span className={`flex h-8 w-8 items-center justify-center rounded-xl ${evening ? 'lab-chip' : 'bg-yellow-400/10 text-yellow-400'}`}>
+                    <Moon size={16} strokeWidth={1.8} />
+                </span>
                 Co dziś zrobiłeś dla WUYO?
             </h2>
 
-            <p className="text-sm text-zinc-300 tabular-nums mb-4">
-                Telefony: {phones} · Oferty: {offers} · Wpłaty: {payments}
-            </p>
+            <div className="mb-4 grid grid-cols-3 gap-2">
+                {counters.map(({ label, value, icon: Icon }) => (
+                    <div key={label} className="rounded-2xl bg-white/[0.03] px-3 py-2.5">
+                        <p className="flex items-center gap-1.5 text-[11px] text-zinc-500"><Icon size={12} /> {label}</p>
+                        <p className="mt-1 font-heading text-xl font-bold leading-none text-white tabular-nums">{value}</p>
+                    </div>
+                ))}
+            </div>
 
             {lastNote && (
-                <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3 mb-4">
-                    <div className="flex items-center justify-between gap-3 mb-1">
+                <div className="mb-4 rounded-2xl bg-white/[0.04] p-3.5">
+                    <div className="mb-1 flex items-center justify-between gap-3">
                         <span className="text-[11px] text-zinc-500 tabular-nums">
                             {timeFormatter.format(new Date(lastNote.created_at))}
                         </span>
@@ -85,7 +97,7 @@ export function EveningCard({ todayActivities }: { todayActivities: Activity[] }
                             Dopisz
                         </button>
                     </div>
-                    <p className="text-sm text-zinc-200 whitespace-pre-wrap break-words">{lastNote.note}</p>
+                    <p className="whitespace-pre-wrap break-words text-sm text-zinc-200">{lastNote.note}</p>
                 </div>
             )}
 
@@ -100,18 +112,20 @@ export function EveningCard({ todayActivities }: { todayActivities: Activity[] }
                     setSaved(false)
                 }}
                 placeholder="Jedno zdanie: co zrobiłem, co jutro."
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400 focus:outline-none disabled:opacity-50"
+                className="w-full resize-none rounded-xl p-3 text-sm text-white placeholder:text-zinc-600 disabled:opacity-50"
             />
 
-            {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+            {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
 
-            <div className="flex items-center justify-between gap-3 mt-3">
-                <span className="text-xs text-emerald-400 min-h-4">{saved && !error ? 'Zapisane' : ''}</span>
+            <div className="mt-auto flex items-center justify-between gap-3 pt-3">
+                <span className="flex min-h-4 items-center gap-1 text-xs text-emerald-400">
+                    {saved && !error ? <><Check size={13} /> Zapisane</> : ''}
+                </span>
                 <button
                     type="button"
                     onClick={handleSubmit}
                     disabled={isPending}
-                    className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50"
+                    className="inline-flex min-h-10 items-center gap-2 rounded-full bg-yellow-400 px-5 text-sm font-bold text-zinc-950 disabled:opacity-50"
                 >
                     {isPending ? 'Zapisuję…' : 'Zapisz dzień'}
                 </button>

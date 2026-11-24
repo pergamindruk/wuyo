@@ -1,6 +1,9 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { CheckCircle2, ClipboardList, FileSignature, Kanban, Send } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { PageHeader, StatCard } from '@/components/lab/ui/PageHeader'
+import { CountUp } from '@/components/lab/fx/CountUp'
 import { SERVICES } from '@/lib/lab/today/constants'
 import { parseOffer, type OfferData } from '@/lib/lab/offer'
 import { OfferStudio, type StudioJob } from './OfferStudio'
@@ -51,19 +54,36 @@ export default async function OffersPage() {
         }
     })
 
+    const withBrief = list.filter((j) => j.brief).length
+    const sent = list.filter((j) => j.offerSentAt && !j.acceptedAt).length
+    const accepted = list.filter((j) => j.acceptedAt).length
+
     return (
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
-            <header>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Krok 1 i 2 z 7</p>
-                <h1 className="mt-1 text-3xl font-bold text-white">Brief i oferta</h1>
-                <p className="mt-1 text-sm text-zinc-500">Wyślij klientowi link do briefu, przygotuj ofertę z jego odpowiedzi, klient akceptuje ją jednym kliknięciem.</p>
-            </header>
+            <PageHeader
+                icon={FileSignature}
+                eyebrow="Krok 1 i 2 z 7"
+                title="Brief i oferta"
+                subtitle="Wyślij klientowi link do briefu, przygotuj ofertę z jego odpowiedzi, klient akceptuje ją jednym kliknięciem."
+            />
             {list.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-white/10 p-10 text-center text-sm text-zinc-500">
-                    Brak zleceń w toku. Dodaj klienta w <Link href="/lab/crm" className="text-yellow-400 hover:underline">CRM</Link> przyciskiem „Do lejka” albo w <Link href="/lab/lejek" className="text-yellow-400 hover:underline">Lejku</Link>.
+                <div className="lab-card flex flex-col items-center gap-3 px-6 py-14 text-center">
+                    <span className="lab-chip h-12 w-12"><FileSignature size={20} strokeWidth={1.8} /></span>
+                    <p className="max-w-md text-sm text-zinc-400">
+                        Brak zleceń w toku. Dodaj klienta w <Link href="/lab/crm" className="text-yellow-400 hover:underline">Zapytaniach</Link> przyciskiem „Do lejka” albo w <Link href="/lab/lejek" className="text-yellow-400 hover:underline">Lejku</Link>.
+                    </p>
+                    <Link href="/lab/lejek?nowe=1" className="mt-1 inline-flex items-center gap-2 bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950"><Kanban size={16} strokeWidth={1.8} /> Nowe zlecenie</Link>
                 </div>
             ) : (
-                <OfferStudio jobs={list} />
+                <>
+                    <div className="lab-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
+                        <StatCard icon={Kanban} label="Zlecenia przed umową" value={<CountUp value={list.length} />} />
+                        <StatCard icon={ClipboardList} label="Brief wypełniony" value={<CountUp value={withBrief} />} />
+                        <StatCard icon={Send} label="Oferta czeka" value={<CountUp value={sent} />} hot={sent > 0} />
+                        <StatCard icon={CheckCircle2} label="Oferta przyjęta" value={<CountUp value={accepted} />} />
+                    </div>
+                    <OfferStudio jobs={list} />
+                </>
             )}
         </div>
     )

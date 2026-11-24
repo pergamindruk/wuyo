@@ -1,15 +1,15 @@
 'use client'
 // "use client": globalne skróty klawiszowe, fokus, stan wyszukiwarki i localStorage
-// — wyłącznie interaktywna wyspa, nie da się tego zrobić w RSC.
+// to wyłącznie interaktywna wyspa, nie da się tego zrobić w RSC.
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { ComponentType, KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-    BarChart3, Bot, Briefcase, Building2, Calendar, Clock, CornerDownLeft, FileText,
-    Filter, Home, Inbox, Hourglass, LogOut, Phone, Plus, Radar, Search, Shield,
-    User,
-    SearchCheck, Sparkles,
+    BarChart3, Bot, Briefcase, Building2, Calendar, Clock, CornerDownLeft, FileSignature, FileText,
+    FolderOpen, Inbox, Hourglass, Kanban, LogOut, Mail, Phone, Plus, Radar, Search, Shield,
+    User, Wallet, Wand2,
+    SearchCheck, Sun,
 } from 'lucide-react'
 import { searchLab, type SearchResult } from '@/app/lab/search/actions'
 import { telHref } from '@/lib/lab/today/format'
@@ -40,19 +40,19 @@ const RECENT_KEY = 'wuyo.lab.palette.recent'
 const RECENT_MAX = 5
 
 const PAGES: { id: string; label: string; href: string; icon: IconType; keys?: string[] }[] = [
-    { id: 'p-today', label: 'Dziś', href: '/lab', icon: Home, keys: ['g', 'd'] },
-    { id: 'p-funnel', label: 'Lejek', href: '/lab/lejek', icon: Filter, keys: ['g', 'l'] },
-    { id: 'p-offers', label: 'Brief i oferta', href: '/lab/oferty', icon: FileText },
+    { id: 'p-today', label: 'Dziś', href: '/lab', icon: Sun, keys: ['g', 'd'] },
+    { id: 'p-funnel', label: 'Lejek', href: '/lab/lejek', icon: Kanban, keys: ['g', 'l'] },
+    { id: 'p-offers', label: 'Brief i oferta', href: '/lab/oferty', icon: FileSignature },
     { id: 'p-centrum', label: 'Centrum Dowodzenia', href: '/lab/centrum', icon: Radar, keys: ['g', 'c'] },
-    { id: 'p-pliki', label: 'Raporty i pliki', href: '/lab/centrum/pliki', icon: Radar, keys: ['g', 'r'] },
-    { id: 'p-maile', label: 'Maile do zatwierdzenia', href: '/lab/maile', icon: Inbox, keys: ['g', 'm'] },
+    { id: 'p-pliki', label: 'Raporty i pliki', href: '/lab/centrum/pliki', icon: FolderOpen, keys: ['g', 'r'] },
+    { id: 'p-maile', label: 'Maile do zatwierdzenia', href: '/lab/maile', icon: Mail, keys: ['g', 'm'] },
     { id: 'p-crm', label: 'Zapytania (CRM)', href: '/lab/crm', icon: Inbox, keys: ['g', 'k'] },
     { id: 'p-projects', label: 'Portal klienta', href: '/lab/projects', icon: Hourglass },
     { id: 'p-finances', label: 'Finanse i dokumenty', href: '/lab/finances', icon: FileText },
-    { id: 'p-doradca', label: 'Doradca: koszty, terminy, pamięć', href: '/lab/doradca', icon: FileText },
+    { id: 'p-doradca', label: 'Doradca: koszty, terminy, pamięć', href: '/lab/doradca', icon: Wallet },
     { id: 'p-legal-docs', label: 'Umowy i dokumenty dla klienta', href: '/lab/finances#dokumenty', icon: FileText },
     { id: 'p-ai', label: 'AI Studio', href: '/lab/ai-studio', icon: Bot },
-    { id: 'p-post', label: 'Generator postów (research + okładka)', href: '/lab/post', icon: Sparkles },
+    { id: 'p-post', label: 'Generator postów (research + okładka)', href: '/lab/post', icon: Wand2 },
     { id: 'p-calendar', label: 'Posty i kalendarz', href: '/lab/calendar', icon: Calendar },
     { id: 'p-analytics', label: 'Analityka', href: '/lab/analytics', icon: BarChart3 },
     { id: 'p-seo', label: 'SEO-radca', href: '/lab/seo', icon: SearchCheck },
@@ -114,7 +114,7 @@ function writeRecent(entry: RecentEntry): void {
         const next = [entry, ...readRecent().filter((e) => e.id !== entry.id)].slice(0, RECENT_MAX)
         window.localStorage.setItem(RECENT_KEY, JSON.stringify(next))
     } catch {
-        // localStorage niedostępny — pomijamy
+        // localStorage niedostępny, pomijamy
     }
 }
 
@@ -323,7 +323,7 @@ export default function CommandPalette() {
                     type="button"
                     onClick={openPalette}
                     aria-label="Szukaj w panelu"
-                    className="fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 text-yellow-400 shadow-lg shadow-black/50 active:scale-95 md:hidden"
+                    className="fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-zinc-950 shadow-[0_12px_30px_-10px_rgba(255,214,10,.8)] active:scale-95 md:hidden"
                 >
                     <Search className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -331,7 +331,7 @@ export default function CommandPalette() {
 
             {open && (
                 <div
-                    className="fixed inset-0 z-[100] flex items-start justify-center bg-black/60 px-4 pt-[12vh] backdrop-blur-sm"
+                    className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 pt-[10vh] backdrop-blur-sm"
                     onMouseDown={(e) => {
                         if (e.target === e.currentTarget) closePalette()
                     }}
@@ -341,10 +341,10 @@ export default function CommandPalette() {
                         aria-modal="true"
                         aria-label="Paleta poleceń"
                         onKeyDown={onKeyDown}
-                        className="w-full max-w-xl overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/95 shadow-2xl shadow-black/60"
+                        className="lab-card w-full max-w-2xl !bg-[#111114]/95 shadow-[0_40px_120px_-30px_rgba(0,0,0,.95),0_0_0_1px_rgba(255,214,10,.12)]"
                     >
-                        <div className="flex items-center gap-3 border-b border-zinc-800 px-4">
-                            <Search className="h-4 w-4 shrink-0 text-zinc-500" aria-hidden="true" />
+                        <div className="flex items-center gap-3 border-b border-white/[0.06] px-5">
+                            <Search className="h-5 w-5 shrink-0 text-yellow-400" aria-hidden="true" />
                             <input
                                 ref={inputRef}
                                 value={query}
@@ -367,20 +367,20 @@ export default function CommandPalette() {
                                 placeholder="Szukaj stron, akcji, firm, klientów…"
                                 autoComplete="off"
                                 spellCheck={false}
-                                className="h-14 flex-1 bg-transparent text-sm text-zinc-50 placeholder:text-zinc-500 focus:outline-none"
+                                className="h-16 min-w-0 flex-1 bg-transparent text-lg text-zinc-50 placeholder:text-zinc-500 focus:outline-none"
                             />
-                            <kbd className="rounded border border-zinc-700 px-1.5 py-0.5 text-[10px] text-zinc-500">Esc</kbd>
+                            <kbd className="rounded-lg bg-white/[0.06] px-2 py-1 font-mono text-[10px] text-zinc-400">Esc</kbd>
                         </div>
 
                         <div
                             id={listId}
                             role="listbox"
                             aria-label="Wyniki"
-                            className="max-h-[50vh] overflow-y-auto p-2"
+                            className="max-h-[55vh] overflow-y-auto p-2.5"
                         >
                             {groups.map((g) => (
                                 <div key={g.name} role="group" aria-label={g.name} className="mb-1">
-                                    <div aria-hidden="true" className="px-3 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+                                    <div aria-hidden="true" className="px-3 pb-1.5 pt-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">
                                         {g.name}
                                     </div>
                                     {g.entries.map(({ item, index }) => {
@@ -394,11 +394,20 @@ export default function CommandPalette() {
                                                 aria-selected={isActive}
                                                 onMouseMove={() => setActive(index)}
                                                 onClick={() => choose(item)}
-                                                className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm ${
-                                                    isActive ? 'bg-zinc-800 text-zinc-50' : 'text-zinc-300'
+                                                className={`relative flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-2 text-sm transition-colors ${
+                                                    isActive ? 'bg-yellow-400/[0.08] text-white ring-1 ring-yellow-400/30' : 'text-zinc-300'
                                                 }`}
                                             >
-                                                <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-yellow-400' : 'text-zinc-500'}`} />
+                                                {isActive && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(255,214,10,.8)]" />}
+                                                <span
+                                                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                                                        isActive
+                                                            ? 'bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-500 text-zinc-950 shadow-[0_8px_20px_-8px_rgba(255,214,10,.8)]'
+                                                            : 'bg-white/[0.05] text-zinc-400'
+                                                    }`}
+                                                >
+                                                    <Icon className="h-4 w-4" />
+                                                </span>
                                                 <span className="min-w-0 flex-1 truncate">
                                                     <Highlight text={item.label} query={q} />
                                                     {item.hint && (
@@ -408,14 +417,14 @@ export default function CommandPalette() {
                                                 {item.keys && (
                                                     <span className="flex shrink-0 gap-1" aria-hidden="true">
                                                         {item.keys.map((k) => (
-                                                            <kbd key={k} className="rounded border border-zinc-700 bg-zinc-900 px-1.5 py-0.5 text-[10px] uppercase text-zinc-400">
+                                                            <kbd key={k} className="rounded-md bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] uppercase text-zinc-400">
                                                                 {k}
                                                             </kbd>
                                                         ))}
                                                     </span>
                                                 )}
                                                 {isActive && !item.keys && (
-                                                    <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-zinc-500" aria-hidden="true" />
+                                                    <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-yellow-400" aria-hidden="true" />
                                                 )}
                                             </div>
                                         )
@@ -424,11 +433,16 @@ export default function CommandPalette() {
                             ))}
 
                             {items.length === 0 && !loading && (
-                                <p className="px-3 py-8 text-center text-sm text-zinc-500">Nic nie znaleziono.</p>
+                                <div className="flex flex-col items-center px-3 py-10 text-center">
+                                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400">
+                                        <Search className="h-5 w-5" aria-hidden="true" />
+                                    </span>
+                                    <p className="mt-3 text-sm text-zinc-400">Nic nie znaleziono. Spróbuj innego słowa.</p>
+                                </div>
                             )}
                         </div>
 
-                        <div className="flex items-center justify-between border-t border-zinc-800 px-4 py-2 text-[11px] text-zinc-500">
+                        <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-2.5 text-[11px] text-zinc-500">
                             <span aria-live="polite">{loading ? 'Szukam…' : `Wyniki: ${items.length}`}</span>
                             <span className="hidden gap-3 sm:flex">
                                 <span>↑↓ wybierz</span>

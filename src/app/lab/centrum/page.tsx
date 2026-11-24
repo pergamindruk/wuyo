@@ -1,11 +1,15 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import type { LucideIcon } from 'lucide-react'
 import {
-    Activity, AlertTriangle, Building2, CheckCircle2, Clock, FileText, Flame, Globe,
-    Mail, MailCheck, Moon, Phone, Send, Sparkles, WifiOff,
+    Activity, AlertTriangle, ArrowRight, Building2, CheckCircle2, Clock, FileText, Flame, FolderOpen, Globe,
+    Mail, MailCheck, Moon, Phone, Radar, Send, Sparkles, WifiOff,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AutoRefresh } from './AutoRefresh'
+import { PageHeader, SectionTitle } from '@/components/lab/ui/PageHeader'
+import { CountUp } from '@/components/lab/fx/CountUp'
+import { AreaChart } from '@/components/lab/fx/AreaChart'
 import type { CentrumData, Pair } from './types'
 
 export const dynamic = 'force-dynamic'
@@ -30,46 +34,50 @@ function telHref(phone: string): string {
 
 /* ───────────── małe klocki UI ───────────── */
 
-function Card({ title, icon, children, className = '' }: {
+function Card({ title, icon, children, className = '', action }: {
     title: string
-    icon?: React.ReactNode
+    icon?: LucideIcon
     children: React.ReactNode
     className?: string
+    action?: React.ReactNode
 }) {
     return (
-        <section className={`bg-zinc-900 border border-zinc-800 rounded-xl p-5 min-w-0 ${className}`}>
-            <h2 className="flex items-center gap-2 font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">
-                {icon}
-                {title}
-            </h2>
+        <section className={`lab-card min-w-0 p-5 sm:p-6 ${className}`}>
+            <SectionTitle icon={icon} title={title} action={action} />
             {children}
         </section>
     )
 }
 
-function Kpi({ label, value, hint, icon, tone = 'default' }: {
+function Kpi({ label, value, hint, icon: Icon, tone = 'default', href }: {
     label: string
-    value: number | string
+    value: number
     hint?: string
-    icon: React.ReactNode
+    icon: LucideIcon
     tone?: 'default' | 'good' | 'warn' | 'bad'
+    href?: string
 }) {
     const toneCls = {
         default: 'text-white',
-        good: 'text-emerald-400',
-        warn: 'text-yellow-400',
-        bad: 'text-red-400',
+        good: 'text-emerald-300',
+        warn: 'text-yellow-300',
+        bad: 'text-red-300',
     }[tone]
-    return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 min-w-0">
-            <div className="flex items-center gap-2 text-zinc-500 text-[11px] mb-2">
-                {icon}
-                <span className="truncate">{label}</span>
-            </div>
-            <p className={`text-3xl font-bold tabular-nums leading-none ${toneCls}`}>{value}</p>
-            {hint && <p className="text-[11px] text-zinc-500 mt-2">{hint}</p>}
-        </div>
+    const hot = tone === 'warn'
+    const inner = (
+        <>
+            {hot && <span className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-yellow-400/15 blur-2xl" />}
+            <span className={`h-10 w-10 shrink-0 ${hot ? 'lab-chip' : 'flex items-center justify-center rounded-2xl bg-white/[0.06] text-zinc-300'}`}>
+                <Icon size={18} strokeWidth={1.8} />
+            </span>
+            <p className="mt-3 truncate text-xs font-medium text-zinc-400">{label}</p>
+            <p className={`mt-1 font-heading text-3xl font-bold leading-none tabular-nums ${toneCls}`}><CountUp value={value} /></p>
+            {hint && <p className="mt-2 text-[11px] text-zinc-500 transition-colors group-hover:text-zinc-300">{hint}</p>}
+        </>
     )
+    return href
+        ? <Link href={href} className="lab-card group min-w-0 p-4">{inner}</Link>
+        : <div className="lab-card lab-hover min-w-0 p-4">{inner}</div>
 }
 
 function Bars({ rows, color = 'bg-yellow-400', empty }: {
@@ -77,17 +85,17 @@ function Bars({ rows, color = 'bg-yellow-400', empty }: {
     color?: string
     empty: string
 }) {
-    if (rows.length === 0) return <p className="text-sm text-zinc-600">{empty}</p>
+    if (rows.length === 0) return <p className="text-sm text-zinc-500">{empty}</p>
     const max = Math.max(...rows.map(([, v]) => v), 1)
     return (
-        <ul className="flex flex-col gap-2.5">
+        <ul className="flex flex-col gap-3">
             {rows.map(([label, value]) => (
-                <li key={label} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 items-center">
-                    <span className="text-xs text-zinc-300 truncate">{label}</span>
-                    <span className="text-xs text-zinc-400 tabular-nums">{value}</span>
-                    <span className="col-span-2 h-2 rounded-full bg-zinc-800 overflow-hidden">
+                <li key={label} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5">
+                    <span className="truncate text-xs text-zinc-300">{label}</span>
+                    <span className="text-xs font-semibold tabular-nums text-zinc-400">{value}</span>
+                    <span className="col-span-2 h-2 overflow-hidden rounded-full bg-white/[0.06]">
                         <span
-                            className={`block h-full rounded-full ${color}`}
+                            className={`lab-bar block h-full rounded-full ${color}`}
                             style={{ width: `${Math.max((value / max) * 100, 2)}%` }}
                         />
                     </span>
@@ -100,24 +108,24 @@ function Bars({ rows, color = 'bg-yellow-400', empty }: {
 function Funnel({ steps }: { steps: { label: string; value: number }[] }) {
     const max = Math.max(steps[0]?.value ?? 1, 1)
     return (
-        <ol className="flex flex-col gap-2">
+        <ol className="flex flex-col gap-3">
             {steps.map((s, i) => {
                 const prev = i > 0 ? steps[i - 1].value : null
                 const conv = prev ? Math.round((s.value / prev) * 100) : null
                 return (
                     <li key={s.label} className="flex items-center gap-3">
-                        <span className="w-6 text-[10px] text-zinc-600 tabular-nums">{i + 1}.</span>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex justify-between text-xs mb-1 gap-2">
-                                <span className="text-zinc-300 truncate">{s.label}</span>
-                                <span className="text-zinc-400 tabular-nums shrink-0">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[11px] font-semibold tabular-nums text-zinc-400">{i + 1}</span>
+                        <div className="min-w-0 flex-1">
+                            <div className="mb-1.5 flex justify-between gap-2 text-xs">
+                                <span className="truncate text-zinc-300">{s.label}</span>
+                                <span className="shrink-0 font-semibold tabular-nums text-white">
                                     {s.value}
-                                    {conv !== null && <span className="text-zinc-600"> · {conv}%</span>}
+                                    {conv !== null && <span className="font-normal text-zinc-500"> · {conv}%</span>}
                                 </span>
                             </div>
-                            <div className="h-6 rounded-md bg-zinc-800 overflow-hidden">
+                            <div className="h-3 overflow-hidden rounded-full bg-white/[0.06]">
                                 <div
-                                    className="h-full rounded-md bg-gradient-to-r from-yellow-500 to-yellow-300"
+                                    className="lab-bar h-full rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 shadow-[0_0_16px_-2px_rgba(255,214,10,0.6)]"
                                     style={{ width: `${s.value > 0 ? Math.max((s.value / max) * 100, 1.5) : 0}%` }}
                                 />
                             </div>
@@ -130,20 +138,15 @@ function Funnel({ steps }: { steps: { label: string; value: number }[] }) {
 }
 
 function Spark({ rows, empty }: { rows: Pair[]; empty: string }) {
-    if (rows.length === 0) return <p className="text-sm text-zinc-600">{empty}</p>
-    const max = Math.max(...rows.map(([, v]) => v), 1)
+    if (rows.length === 0) return <p className="text-sm text-zinc-500">{empty}</p>
+    const last = rows[rows.length - 1]
     return (
         <div>
-            <div className="flex items-end gap-1 h-24">
-                {rows.map(([d, v]) => (
-                    <div key={d} className="flex-1 flex flex-col justify-end h-full" title={`${d}: ${v}`}>
-                        <div className="bg-yellow-400/80 rounded-t" style={{ height: `${(v / max) * 100}%` }} />
-                    </div>
-                ))}
-            </div>
-            <div className="flex justify-between text-[10px] text-zinc-600 mt-1">
+            <AreaChart id="centrum-wyslane" values={rows.map(([, v]) => v)} height={140}
+                label={`${last[0]} · ${last[1]}`} className="h-32" />
+            <div className="mt-2 flex justify-between text-[10px] text-zinc-500">
                 <span>{rows[0][0]}</span>
-                <span>{rows[rows.length - 1][0]}</span>
+                <span>{last[0]}</span>
             </div>
         </div>
     )
@@ -151,15 +154,17 @@ function Spark({ rows, empty }: { rows: Pair[]; empty: string }) {
 
 function StatusPill({ ok, label }: { ok: boolean; label: string }) {
     return (
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] border ${
-            ok ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5'
-                : 'border-red-500/30 text-red-400 bg-red-500/5'}`}
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+            ok ? 'bg-emerald-400/15 text-emerald-300' : 'bg-red-400/15 text-red-300'}`}
         >
-            <span className={`w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${ok ? 'animate-pulse bg-emerald-400' : 'bg-red-400'}`} />
             {label}
         </span>
     )
 }
+
+const MORE = 'inline-flex items-center gap-1 text-xs font-medium text-yellow-400/80 transition hover:text-yellow-300'
+const ROW = 'rounded-2xl bg-white/[0.03] px-4 py-3 transition hover:bg-white/[0.06]'
 
 /* ───────────── strona ───────────── */
 
@@ -176,11 +181,14 @@ export default async function CentrumPage() {
 
     if (!row) {
         return (
-            <div className="max-w-3xl">
-                <h1 className="text-2xl font-bold text-white">Centrum Dowodzenia</h1>
-                <p className="text-zinc-500 mt-2 text-sm">
-                    Brak danych. Uruchom na komputerze studia: <code>python -I sync_centrum.py</code>
-                </p>
+            <div className="mx-auto flex max-w-7xl flex-col gap-6">
+                <PageHeader icon={Radar} title="Centrum Dowodzenia" subtitle="Co robi komputer studia: Harvey, audyt stron, nocna zmiana." />
+                <div className="lab-card flex flex-col items-center gap-3 p-10 text-center">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><WifiOff size={22} strokeWidth={1.8} /></span>
+                    <p className="text-sm text-zinc-400">
+                        Brak danych. Uruchom na komputerze studia: <code className="rounded-lg bg-white/[0.06] px-2 py-0.5 text-yellow-300">python -I sync_centrum.py</code>
+                    </p>
+                </div>
             </div>
         )
     }
@@ -216,220 +224,210 @@ export default async function CentrumPage() {
     const rano = d.nocna.rano.split('\n').filter((l) => l.startsWith('- '))
 
     return (
-        <div className="flex flex-col gap-6 max-w-7xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
             <AutoRefresh seconds={300} />
 
             {/* ── Nagłówek ── */}
-            <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <div>
-                    <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-500/80 mb-2">
-                        Komputer studia · na żywo
-                    </p>
-                    <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">Centrum Dowodzenia</h1>
-                    <p className="text-zinc-500 text-sm mt-1">
-                        Ostatnia synchronizacja: {agoLabel(syncMin)}
-                    </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                    <Link href="/lab/centrum/pliki"
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] border border-yellow-400/40 text-yellow-300 bg-yellow-400/5 hover:bg-yellow-400/10">
-                        <FileText size={12} /> Raporty i pliki
+            <PageHeader
+                icon={Radar}
+                eyebrow="Komputer studia · na żywo"
+                title="Centrum Dowodzenia"
+                subtitle={`Ostatnia synchronizacja: ${agoLabel(syncMin)}`}
+                actions={
+                    <Link href="/lab/centrum/pliki" className="lab-pill inline-flex h-10 items-center gap-2 px-4 text-sm font-medium text-white">
+                        <FolderOpen size={16} strokeWidth={1.8} className="text-yellow-400" /> Raporty i pliki
                     </Link>
-                    <StatusPill ok={online} label={online ? 'Komputer online' : 'Brak sygnału z komputera'} />
-                    <StatusPill ok={harveyOk} label={harveyOk ? 'Harvey pracuje' : 'Harvey wyłączony'} />
-                    <StatusPill
-                        ok={d.nocna.ostatnia !== null}
-                        label={`Nocna zmiana: ${d.nocna.ostatnia ?? 'jeszcze nie było'}`}
-                    />
-                </div>
-            </header>
+                }
+            />
+            <div className="-mt-2 flex flex-wrap items-center gap-2">
+                <StatusPill ok={online} label={online ? 'Komputer online' : 'Brak sygnału z komputera'} />
+                <StatusPill ok={harveyOk} label={harveyOk ? 'Harvey pracuje' : 'Harvey wyłączony'} />
+                <StatusPill
+                    ok={d.nocna.ostatnia !== null}
+                    label={`Nocna zmiana: ${d.nocna.ostatnia ?? 'jeszcze nie było'}`}
+                />
+            </div>
 
             {!online && (
-                <div className="flex items-start gap-3 rounded-lg border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-300">
-                    <WifiOff size={18} className="shrink-0 mt-0.5" />
-                    Dane mają ponad 45 minut. Komputer jest wyłączony, uśpiony albo nie działa synchronizacja.
+                <div className="lab-card flex items-start gap-3 border-red-400/30 p-4 text-sm text-red-300">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-400/15"><WifiOff size={18} strokeWidth={1.8} /></span>
+                    <p className="pt-1.5">Dane mają ponad 45 minut. Komputer jest wyłączony, uśpiony albo nie działa synchronizacja.</p>
                 </div>
             )}
 
             {/* ── KPI ── */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-                <Kpi label="Firmy w bazie" value={h.firmy} icon={<Building2 size={14} />} />
+            <div className="lab-stagger grid grid-cols-2 gap-3 lg:grid-cols-4 xl:grid-cols-7">
+                <Kpi label="Firmy w bazie" value={h.firmy} icon={Building2} />
                 <Kpi label="Bez strony" value={h.bez_strony} hint={`${h.bez_strony_z_tel} z telefonem`}
-                    icon={<Globe size={14} />} tone="warn" />
+                    icon={Globe} tone="warn" />
                 <Kpi label="Strona nie działa" value={a?.nie_dziala ?? 0} hint="gotowy temat rozmowy"
-                    icon={<AlertTriangle size={14} />} tone="bad" />
+                    icon={AlertTriangle} tone="bad" />
                 <Kpi label="Adresy zweryfikowane" value={h.z_mailem_zweryfikowanym} hint={`z ${h.prospekty} znalezionych`}
-                    icon={<MailCheck size={14} />} />
-                <Link href="/lab/centrum/pliki" className="contents">
-                    <Kpi label="Do zatwierdzenia" value={doZatwierdzenia} hint="Outbox Harveya · czytaj maile →"
-                        icon={<Mail size={14} />} tone={doZatwierdzenia > 0 ? 'warn' : 'default'} />
-                </Link>
-                <Kpi label="Wysłane" value={wyslane} icon={<Send size={14} />} />
-                <Kpi label="Odpowiedzi" value={h.rozmowy} icon={<Sparkles size={14} />}
+                    icon={MailCheck} />
+                <Kpi label="Do zatwierdzenia" value={doZatwierdzenia} hint="Outbox Harveya · czytaj maile →"
+                    icon={Mail} tone={doZatwierdzenia > 0 ? 'warn' : 'default'} href="/lab/centrum/pliki" />
+                <Kpi label="Wysłane" value={wyslane} icon={Send} />
+                <Kpi label="Odpowiedzi" value={h.rozmowy} icon={Sparkles}
                     tone={h.rozmowy > 0 ? 'good' : 'default'} />
             </div>
 
             {/* ── Lejek + rozgrzewka ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Card title="Lejek sprzedaży" icon={<Activity size={12} />} className="lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+                <Card title="Lejek sprzedaży" icon={Activity} className="lg:col-span-2">
                     <Funnel steps={funnel} />
                 </Card>
-                <Card title="Rozgrzewka skrzynki" icon={<Flame size={12} />}>
+                <Card title="Rozgrzewka skrzynki" icon={Flame}>
                     {warmLeft > 0 ? (
                         <>
-                            <p className="text-4xl font-bold text-yellow-400 tabular-nums">{warmLeft}</p>
-                            <p className="text-sm text-zinc-400 mt-1">
+                            <p className="font-heading text-5xl font-bold tabular-nums text-yellow-400"><CountUp value={warmLeft} /></p>
+                            <p className="mt-1 text-sm text-zinc-400">
                                 {warmLeft === 1 ? 'dzień' : 'dni'} do pierwszych zimnych maili
                             </p>
                         </>
                     ) : (
                         <>
-                            <p className="flex items-center gap-2 text-lg font-bold text-emerald-400">
-                                <CheckCircle2 size={20} /> Skrzynka gotowa
+                            <p className="flex items-center gap-2 text-lg font-bold text-emerald-300">
+                                <CheckCircle2 size={20} strokeWidth={1.8} /> Skrzynka gotowa
                             </p>
-                            <p className="text-sm text-zinc-400 mt-1">Limit rośnie do {warm.max_daily} maili dziennie.</p>
+                            <p className="mt-1 text-sm text-zinc-400">Limit rośnie do {warm.max_daily} maili dziennie.</p>
                         </>
                     )}
-                    <div className="h-2 rounded-full bg-zinc-800 mt-4 overflow-hidden">
-                        <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${warmPct}%` }} />
+                    <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-white/[0.06]">
+                        <div className="lab-bar h-full rounded-full bg-yellow-400 shadow-[0_0_16px_-2px_rgba(255,214,10,0.7)]" style={{ width: `${warmPct}%` }} />
                     </div>
-                    <p className="text-[11px] text-zinc-600 mt-2">
-                        Start {warm.start_date ?? '—'} · {warm.min_days} dni bez zimnych maili
+                    <p className="mt-2 text-[11px] text-zinc-500">
+                        Start {warm.start_date ?? 'brak'} · {warm.min_days} dni bez zimnych maili
                     </p>
                 </Card>
             </div>
 
             {/* ── Wykresy ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Card title="Firmy wg branży" icon={<Building2 size={12} />}>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+                <Card title="Firmy wg branży" icon={Building2}>
                     <Bars rows={h.per_branza} empty="Brak firm w bazie." />
                 </Card>
-                <Card title="Najczęstsze błędy na stronach" icon={<AlertTriangle size={12} />}>
+                <Card title="Najczęstsze błędy na stronach" icon={AlertTriangle}>
                     <Bars rows={a?.problemy.slice(0, 8) ?? []} color="bg-red-400/80"
                         empty="Audyt jeszcze się nie odbył." />
                     {a && (
-                        <p className="text-[11px] text-zinc-600 mt-3">
+                        <p className="mt-4 text-[11px] text-zinc-500">
                             {a.sprawdzone} stron sprawdzonych · {a.bez_problemow} bez uwag · {a.data}
                         </p>
                     )}
                 </Card>
-                <Card title="Wysłane maile dziennie" icon={<Send size={12} />}>
+                <Card title="Wysłane maile dziennie" icon={Send}>
                     <Spark rows={h.wyslane_per_dzien}
                         empty={warmLeft > 0 ? `Wysyłka ruszy za ${warmLeft} dni.` : 'Jeszcze nic nie wysłano.'} />
                 </Card>
             </div>
 
             {/* ── Leady ── */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                <Card title="Najsłabsze strony — dzwoń lub pisz" icon={<Globe size={12} />}>
-                    <Link href="/lab/centrum/pliki?p=raporty%2Faudyt-stron.csv" className="block -mt-2 mb-3 text-[11px] text-yellow-400/80 hover:text-yellow-400">
-                        Cały ranking audytu →
-                    </Link>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-6">
+                <Card title="Najsłabsze strony: dzwoń lub pisz" icon={Globe}
+                    action={<Link href="/lab/centrum/pliki?p=raporty%2Faudyt-stron.csv" className={MORE}>Cały ranking <ArrowRight size={14} /></Link>}>
                     {a && a.najslabsze.length > 0 ? (
-                        <ul className="divide-y divide-zinc-800">
+                        <ul className="flex flex-col gap-2">
                             {a.najslabsze.map((s) => (
-                                <li key={s.strona} className="py-2.5 flex gap-3">
-                                    <span className={`shrink-0 w-8 h-8 rounded-md grid place-items-center text-xs font-bold tabular-nums ${
-                                        s.punkty >= 10 ? 'bg-red-500/15 text-red-400' : 'bg-yellow-500/10 text-yellow-400'}`}
+                                <li key={s.strona} className={`flex gap-3 ${ROW}`}>
+                                    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl text-xs font-bold tabular-nums ${
+                                        s.punkty >= 10 ? 'bg-red-400/15 text-red-300' : 'bg-yellow-400/15 text-yellow-300'}`}
                                     >
                                         {s.punkty}
                                     </span>
                                     <div className="min-w-0">
-                                        <p className="text-sm text-white truncate">{s.nazwa}</p>
+                                        <p className="truncate text-sm font-semibold text-white">{s.nazwa}</p>
                                         <a href={s.strona} target="_blank" rel="noopener noreferrer"
-                                            className="text-[11px] text-zinc-500 hover:text-yellow-400 break-all">
+                                            className="break-all text-[11px] text-zinc-500 hover:text-yellow-400">
                                             {s.strona}
                                         </a>
-                                        <p className="text-[11px] text-zinc-400 mt-0.5">{s.problemy.join(' · ')}</p>
+                                        <p className="mt-0.5 text-[11px] text-zinc-400">{s.problemy.join(' · ')}</p>
                                     </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="text-sm text-zinc-600">Brak danych z audytu.</p>}
+                    ) : <p className="text-sm text-zinc-500">Brak danych z audytu.</p>}
                 </Card>
 
-                <Card title={`Firmy bez strony z telefonem · ${h.bez_strony_z_tel}`} icon={<Phone size={12} />}>
+                <Card title={`Firmy bez strony z telefonem · ${h.bez_strony_z_tel}`} icon={Phone}
+                    action={<Link href="/lab/centrum/pliki?p=raporty%2Ffirmy-bez-strony.csv" className={MORE}>Pełna lista <ArrowRight size={14} /></Link>}>
                     {d.bez_strony_top.length > 0 ? (
-                        <ul className="divide-y divide-zinc-800">
+                        <ul className="flex flex-col gap-2">
                             {d.bez_strony_top.map((f) => (
-                                <li key={f.nazwa + f.telefon} className="py-2.5 flex items-center justify-between gap-3">
+                                <li key={f.nazwa + f.telefon} className={`flex items-center justify-between gap-3 ${ROW}`}>
                                     <div className="min-w-0">
-                                        <p className="text-sm text-white truncate">{f.nazwa}</p>
+                                        <p className="truncate text-sm font-semibold text-white">{f.nazwa}</p>
                                         <p className="text-[11px] text-zinc-500">{f.branza}</p>
                                     </div>
                                     <a href={telHref(f.telefon)}
-                                        className="shrink-0 inline-flex items-center gap-1.5 rounded-md border border-zinc-700 hover:border-yellow-400/50 px-2.5 py-1.5 text-xs text-zinc-200 tabular-nums">
-                                        <Phone size={12} /> {f.telefon}
+                                        className="lab-pill inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium tabular-nums text-zinc-100">
+                                        <Phone size={13} strokeWidth={1.8} className="text-yellow-400" /> {f.telefon}
                                     </a>
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="text-sm text-zinc-600">Brak firm bez strony z numerem telefonu.</p>}
-                    <Link href="/lab/centrum/pliki?p=raporty%2Ffirmy-bez-strony.csv" className="inline-block text-[11px] text-yellow-400/80 hover:text-yellow-400 mt-3">
-                        Pełna lista firm bez strony →
-                    </Link>
+                    ) : <p className="text-sm text-zinc-500">Brak firm bez strony z numerem telefonu.</p>}
                 </Card>
             </div>
 
             {/* ── CEIDG + nocna zmiana + blog ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Card title={`Nowe firmy z CEIDG · ${d.ceidg.ile}`} icon={<Sparkles size={12} />}>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+                <Card title={`Nowe firmy z CEIDG · ${d.ceidg.ile}`} icon={Sparkles}>
                     {d.ceidg.firmy.length > 0 ? (
                         <ul className="flex flex-col gap-2">
                             {d.ceidg.firmy.map((f) => (
-                                <li key={f.nazwa + f.adres} className="text-sm">
-                                    <p className="text-white truncate">{f.nazwa}</p>
-                                    <p className="text-[11px] text-zinc-500 truncate">
+                                <li key={f.nazwa + f.adres} className={`text-sm ${ROW}`}>
+                                    <p className="truncate font-semibold text-white">{f.nazwa}</p>
+                                    <p className="truncate text-[11px] text-zinc-500">
                                         {f.adres}{f.telefon && ` · ${f.telefon}`}
                                     </p>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-sm text-zinc-500">
-                            Czeka na token CEIDG. Po wklejeniu do <code>lead-generator/.env</code> nowe firmy
+                        <p className="text-sm text-zinc-400">
+                            Czeka na token CEIDG. Po wklejeniu do <code className="rounded bg-white/[0.06] px-1.5 text-yellow-300">lead-generator/.env</code> nowe firmy
                             pojawią się tu po najbliższej nocy.
                         </p>
                     )}
                 </Card>
 
-                <Card title="Raport nocnej zmiany" icon={<Moon size={12} />}>
+                <Card title="Raport nocnej zmiany" icon={Moon}>
                     {rano.length > 0 ? (
                         <ul className="flex flex-col gap-2">
                             {rano.map((l) => (
-                                <li key={l} className="flex gap-2 text-xs text-zinc-300">
-                                    <span className="text-yellow-400">•</span>
-                                    <span className="break-words min-w-0">{l.slice(2)}</span>
+                                <li key={l} className="flex gap-2.5 text-xs text-zinc-300">
+                                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
+                                    <span className="min-w-0 break-words">{l.slice(2)}</span>
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="text-sm text-zinc-600">Nocna zmiana jeszcze nie działała.</p>}
-                    <div className="flex items-center justify-between gap-2 mt-3">
-                        <p className="flex items-center gap-1.5 text-[11px] text-zinc-600">
-                            <Clock size={11} /> Codziennie o 2:30
+                    ) : <p className="text-sm text-zinc-500">Nocna zmiana jeszcze nie działała.</p>}
+                    <div className="mt-4 flex items-center justify-between gap-2">
+                        <p className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+                            <Clock size={12} /> Codziennie o 2:30
                         </p>
                         {d.nocna.ostatnia && (
-                            <Link href={`/lab/centrum/pliki?p=raporty%2Flog-${d.nocna.ostatnia}.txt`}
-                                className="text-[11px] text-yellow-400/80 hover:text-yellow-400">
-                                Pełny log →
+                            <Link href={`/lab/centrum/pliki?p=raporty%2Flog-${d.nocna.ostatnia}.txt`} className={MORE}>
+                                Pełny log <ArrowRight size={14} />
                             </Link>
                         )}
                     </div>
                 </Card>
 
-                <Card title={`Szkice bloga · ${d.blog.length}`} icon={<FileText size={12} />}>
+                <Card title={`Szkice bloga · ${d.blog.length}`} icon={FileText}
+                    action={<Link href="/lab/calendar" className={MORE}>Kalendarz <ArrowRight size={14} /></Link>}>
                     {d.blog.length > 0 ? (
-                        <ul className="flex flex-col gap-3">
+                        <ul className="flex flex-col gap-2">
                             {d.blog.map((b) => (
-                                <li key={b.slug}>
+                                <li key={b.slug} className={ROW}>
                                     <Link href={`/lab/centrum/pliki?p=drafty-bloga%2F${b.slug}.mdx`}
-                                        className="text-sm text-white leading-snug hover:text-yellow-400">
+                                        className="text-sm font-semibold leading-snug text-white hover:text-yellow-400">
                                         {b.tytul}
                                     </Link>
-                                    <p className="text-[11px] text-zinc-500 mt-0.5">
+                                    <p className="mt-0.5 text-[11px] text-zinc-500">
                                         {b.data} · drafty-bloga/{b.slug}.mdx
                                         {b.posty && (
-                                            <Link href={`/lab/centrum/pliki?p=raporty%2Fposty-${b.slug}.md`} className="text-emerald-400 hover:underline">
+                                            <Link href={`/lab/centrum/pliki?p=raporty%2Fposty-${b.slug}.md`} className="text-emerald-300 hover:underline">
                                                 {' '}· 3 posty gotowe
                                             </Link>
                                         )}
@@ -437,10 +435,7 @@ export default async function CentrumPage() {
                                 </li>
                             ))}
                         </ul>
-                    ) : <p className="text-sm text-zinc-600">Brak szkiców.</p>}
-                    <Link href="/lab/calendar" className="inline-block text-[11px] text-yellow-400/80 hover:text-yellow-400 mt-3">
-                        Kalendarz postów →
-                    </Link>
+                    ) : <p className="text-sm text-zinc-500">Brak szkiców.</p>}
                 </Card>
             </div>
         </div>

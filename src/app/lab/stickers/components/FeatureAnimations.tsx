@@ -118,10 +118,10 @@ export default function FeatureAnimations() {
     return (
         <section className="fa">
             <style>{CSS}</style>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500">Jak to działa</h2>
+            <h2 className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500">Jak to działa</h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
                 {items.map((it, i) => (
-                    <div key={it.title} className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-4">
+                    <div key={it.title} className="lab-card lab-hover p-4">
                         <div className="mb-3 rounded-2xl bg-zinc-950/60 p-2">
                             <svg viewBox="0 0 120 84" aria-hidden="true">{it.svg}</svg>
                         </div>

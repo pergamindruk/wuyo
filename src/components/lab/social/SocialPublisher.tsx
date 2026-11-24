@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { CalendarClock, ImagePlus, Loader2, RefreshCw, Send, Wifi, WifiOff, X } from 'lucide-react'
+import { ArrowRight, CalendarClock, ImagePlus, Loader2, RefreshCw, Send, Users, Wifi, WifiOff, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -204,29 +204,32 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
     const counterTone = tooLong ? 'text-red-400' : content.length > limit * 0.9 ? 'text-yellow-400' : 'text-zinc-500'
 
     return (
-        <section className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 sm:p-6">
+        <section className="lab-card p-5 sm:p-6">
             <header className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                    <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-400">Publikacja social</p>
-                    <h2 className="mt-1 text-lg font-bold text-white">Nowy post</h2>
+                <div className="flex items-center gap-3">
+                    <span className="lab-chip h-11 w-11 shrink-0"><Send size={20} strokeWidth={1.8} /></span>
+                    <div>
+                        <p className="text-xs font-medium text-zinc-500">Publikacja social</p>
+                        <h2 className="text-lg font-bold leading-tight text-white">Nowy post</h2>
+                    </div>
                 </div>
                 <div className="flex items-center gap-2">
                     {postiz && (
                         <span
                             title={postiz.error ?? undefined}
-                            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] ${postiz.online ? 'border-emerald-400/30 text-emerald-300' : 'border-zinc-700 text-zinc-400'}`}
+                            className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${postiz.online ? 'bg-emerald-400/15 text-emerald-300' : 'bg-white/[0.06] text-zinc-300'}`}
                         >
                             {postiz.online ? <Wifi size={12} /> : <WifiOff size={12} />}
                             {!postiz.configured ? 'Postiz niepodpięty' : postiz.online ? 'Postiz online' : 'Postiz śpi'}
                         </span>
                     )}
                     {compact && (
-                        <Link href="/lab/publikuj" className="text-xs font-medium text-zinc-500 hover:text-yellow-400">Historia →</Link>
+                        <Link href="/lab/publikuj" className="flex items-center gap-1 text-xs font-medium text-zinc-500 transition hover:text-yellow-400">Historia <ArrowRight size={13} /></Link>
                     )}
                 </div>
             </header>
 
-            <div className={`mt-4 grid gap-5 ${compact ? 'lg:grid-cols-2' : 'lg:grid-cols-5'}`}>
+            <div className={`mt-5 grid gap-5 ${compact ? 'lg:grid-cols-2' : 'lg:grid-cols-5'}`}>
                 {/* Treść i obrazy */}
                 <div className={`flex flex-col gap-3 ${compact ? '' : 'lg:col-span-3'}`}>
                     <div className="relative">
@@ -237,9 +240,9 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                             onChange={(e) => setContent(e.target.value)}
                             rows={compact ? 5 : 9}
                             placeholder="Co dziś wrzucamy?"
-                            className="w-full resize-y rounded-2xl border border-white/10 bg-black/30 p-4 pb-8 text-sm leading-relaxed text-zinc-100 placeholder:text-zinc-600 focus:border-yellow-400/50 focus:outline-none"
+                            className="w-full resize-y p-4 pb-9 text-sm leading-relaxed text-zinc-100 placeholder:text-zinc-600"
                         />
-                        <span className={`pointer-events-none absolute bottom-3 right-4 text-[11px] tabular-nums ${counterTone}`}>
+                        <span className={`pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/40 px-2 py-0.5 text-[11px] tabular-nums ${counterTone}`}>
                             {content.length.toLocaleString('pl-PL')} / {limit.toLocaleString('pl-PL')}
                         </span>
                     </div>
@@ -259,9 +262,9 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                             setDragOver(false)
                             void addFiles(e.dataTransfer.files)
                         }}
-                        className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border border-dashed px-4 py-5 text-center transition ${dragOver ? 'border-yellow-400 bg-yellow-400/5' : 'border-white/15 hover:border-yellow-400/40'}`}
+                        className={`flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed px-4 py-5 text-center transition ${dragOver ? 'border-yellow-400 bg-yellow-400/[0.06]' : 'border-white/10 bg-white/[0.02] hover:border-yellow-400/40 hover:bg-white/[0.04]'}`}
                     >
-                        <ImagePlus size={20} className="text-yellow-400" />
+                        <span className="mb-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400/10 text-yellow-400"><ImagePlus size={19} strokeWidth={1.8} /></span>
                         <p className="text-xs text-zinc-300">Przeciągnij obrazy albo kliknij</p>
                         <p className="text-[11px] text-zinc-600">JPG, PNG, WEBP · do {MAX_MB} MB · max {MAX_IMAGES}</p>
                         <input
@@ -280,7 +283,7 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                     {images.length > 0 && (
                         <ul className="flex gap-2 overflow-x-auto pb-1">
                             {images.map((img) => (
-                                <li key={img.key} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-white/10">
+                                <li key={img.key} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/10">
                                     {/* eslint-disable-next-line @next/next/no-img-element -- podgląd blob: albo obraz z bucketu */}
                                     <img src={img.preview} alt={img.name} className={`h-full w-full object-cover ${img.url ? '' : 'opacity-40'}`} />
                                     {!img.url && !img.error && <Loader2 size={18} className="absolute inset-0 m-auto animate-spin text-yellow-400" />}
@@ -303,19 +306,23 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                 <div className={`flex flex-col gap-4 ${compact ? '' : 'lg:col-span-2'}`}>
                     <div>
                         <div className="mb-2 flex items-center justify-between">
-                            <p className="text-xs font-semibold text-zinc-300">Konta</p>
-                            <button type="button" onClick={() => void loadChannels()} className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-white" aria-label="Odśwież konta">
+                            <p className="flex items-center gap-2 text-sm font-bold text-white">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-yellow-400/10 text-yellow-400"><Users size={14} strokeWidth={1.8} /></span>
+                                Konta
+                                {chosen.length > 0 && <span className="rounded-full bg-yellow-400/15 px-2 py-0.5 text-[11px] font-semibold text-yellow-300">{chosen.length}</span>}
+                            </p>
+                            <button type="button" onClick={() => void loadChannels()} className="flex items-center gap-1 rounded-full px-2 py-1 text-[11px] text-zinc-500 transition hover:bg-white/[0.06] hover:text-white" aria-label="Odśwież konta">
                                 <RefreshCw size={11} className={loadingChannels ? 'animate-spin' : ''} /> odśwież
                             </button>
                         </div>
                         <div className="flex max-h-72 flex-col gap-3 overflow-y-auto pr-1">
                             {grouped.map(([brand, list]) => (
-                                <fieldset key={brand} className="rounded-2xl border border-white/[0.06] bg-black/20 p-3">
+                                <fieldset key={brand} className="rounded-2xl bg-white/[0.03] p-3 ring-1 ring-white/[0.05]">
                                     <legend className="sr-only">{brand}</legend>
                                     <div className="mb-1.5 flex items-center justify-between">
                                         <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">{brand}</span>
                                         {list.some((c) => !c.disabled) && (
-                                            <button type="button" onClick={() => toggleBrand(list)} className="text-[11px] text-zinc-500 hover:text-yellow-400">
+                                            <button type="button" onClick={() => toggleBrand(list)} className="rounded-full px-2 py-0.5 text-[11px] text-zinc-500 transition hover:bg-white/[0.06] hover:text-yellow-400">
                                                 {list.filter((c) => !c.disabled).every((c) => selected.has(c.id)) ? 'odznacz' : 'wszystkie'}
                                             </button>
                                         )}
@@ -328,7 +335,7 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                                                 <li key={c.id}>
                                                     <label
                                                         title={c.disabledReason}
-                                                        className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm ${c.disabled ? 'cursor-not-allowed opacity-40' : 'cursor-pointer hover:bg-white/5'}`}
+                                                        className={`flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm transition ${c.disabled ? 'cursor-not-allowed opacity-40' : selected.has(c.id) ? 'cursor-pointer bg-yellow-400/[0.07]' : 'cursor-pointer hover:bg-white/5'}`}
                                                     >
                                                         <input
                                                             type="checkbox"
@@ -352,7 +359,7 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                         </div>
                     </div>
 
-                    <div className="flex rounded-full border border-white/10 bg-black/30 p-1 text-xs font-semibold" role="radiogroup" aria-label="Kiedy publikować">
+                    <div className="flex rounded-full border border-white/10 bg-white/[0.03] p-1 text-xs font-semibold" role="radiogroup" aria-label="Kiedy publikować">
                         {([['now', 'Opublikuj teraz', Send], ['schedule', 'Zaplanuj datę', CalendarClock]] as const).map(([m, label, Icon]) => (
                             <button
                                 key={m}
@@ -375,7 +382,7 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                                 value={when}
                                 min={localInputValue(new Date())}
                                 onChange={(e) => setWhen(e.target.value)}
-                                className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-zinc-100 [color-scheme:dark] focus:border-yellow-400/50 focus:outline-none"
+                                className="px-3 py-2 text-sm text-zinc-100 [color-scheme:dark]"
                             />
                             {postiz && !postiz.online && (
                                 <span className="text-[11px] text-zinc-500">Postiz śpi: post trafi do kolejki i wyjdzie przy porannym przebiegu (9:00) po terminie.</span>
@@ -387,9 +394,9 @@ export function SocialPublisher({ compact = false, initialContent = '', initialI
                         type="button"
                         onClick={() => void submit()}
                         disabled={Boolean(blocker) || sending}
-                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 text-sm font-bold text-zinc-950 transition-colors hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex min-h-12 items-center justify-center gap-2 bg-yellow-400 px-6 text-sm font-bold text-zinc-950 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                        {sending ? <Loader2 size={16} className="animate-spin" /> : mode === 'now' ? <Send size={16} /> : <CalendarClock size={16} />}
+                        {sending ? <Loader2 size={16} className="animate-spin" /> : mode === 'now' ? <Send size={16} strokeWidth={1.8} /> : <CalendarClock size={16} strokeWidth={1.8} />}
                         {sending ? 'Wysyłam…' : mode === 'now' ? `Opublikuj (${chosen.length})` : `Zaplanuj (${chosen.length})`}
                     </button>
                     {blocker && content && <p className="-mt-2 text-center text-[11px] text-zinc-500">{blocker}</p>}

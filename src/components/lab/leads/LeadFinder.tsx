@@ -2,7 +2,8 @@
 
 // "use client": formularz, czekanie na Apify (do kilku minut), filtr i eksport CSV dzieją się w przeglądarce.
 import { useMemo, useState } from 'react'
-import { Download, ExternalLink, Globe, Loader2, MapPin, Phone, Search, Star } from 'lucide-react'
+import { Building2, Download, ExternalLink, Globe, Loader2, MapPin, MapPinned, Phone, Search, Star } from 'lucide-react'
+import { SectionTitle } from '@/components/lab/ui/PageHeader'
 import { toast } from 'sonner'
 import type { LeadPlace } from '@/lib/apify'
 
@@ -71,11 +72,13 @@ export function LeadFinder() {
         URL.revokeObjectURL(a.href)
     }
 
-    const input = 'rounded-xl border border-white/10 bg-black/30 px-3 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-yellow-400/50 focus:outline-none'
+    // Pole: zaokrąglenie i żółty fokus z lab-input (globals.css).
+    const input = 'lab-input px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600'
 
     return (
-        <div className="flex flex-col gap-5">
-            <form onSubmit={search} className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 sm:p-6">
+        <div className="flex flex-col gap-6">
+            <form onSubmit={search} className="lab-card p-5 sm:p-6">
+                <SectionTitle icon={Search} title="Czego szukasz" />
                 <div className="grid gap-3 sm:grid-cols-[2fr_1.3fr_auto]">
                     <label className="flex flex-col gap-1 text-xs text-zinc-400">
                         Branża / fraza
@@ -98,7 +101,7 @@ export function LeadFinder() {
                 <div className="mt-3 flex flex-wrap gap-1.5">
                     {QUICK.map((q) => (
                         <button key={q} type="button" onClick={() => setQuery(q)}
-                            className={`rounded-full border px-2.5 py-1 text-[11px] transition ${query === q ? 'border-yellow-400/50 text-yellow-300' : 'border-white/10 text-zinc-400 hover:text-white'}`}>
+                            className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${query === q ? 'bg-yellow-400/15 text-yellow-300 ring-1 ring-yellow-400/40' : 'bg-white/[0.06] text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
                             {q}
                         </button>
                     ))}
@@ -108,41 +111,58 @@ export function LeadFinder() {
                     <label className="flex cursor-pointer items-center gap-3 text-sm text-zinc-200">
                         <button
                             type="button" role="switch" aria-checked={noWebsite} onClick={() => setNoWebsite((v) => !v)}
-                            className={`relative h-6 w-11 rounded-full transition ${noWebsite ? 'bg-yellow-400' : 'bg-zinc-700'}`}
+                            className={`relative h-6 w-11 rounded-full transition ${noWebsite ? 'bg-yellow-400 shadow-[0_0_16px_-4px_rgba(255,214,10,0.8)]' : 'bg-white/10'}`}
                         >
                             <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-zinc-950 transition-all ${noWebsite ? 'left-[22px]' : 'left-0.5'}`} />
                         </button>
                         Tylko firmy bez strony WWW
                     </label>
                     <button type="submit" disabled={loading || query.trim().length < 2}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-yellow-400 px-5 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-40">
-                        {loading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                        className="inline-flex min-h-11 items-center gap-2 bg-yellow-400 px-6 text-sm font-bold text-zinc-950 disabled:opacity-40">
+                        {loading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} strokeWidth={2} />}
                         {loading ? 'Szukam… (do 2–3 min)' : 'Szukaj'}
                     </button>
                 </div>
-                <p className="mt-3 text-[11px] text-zinc-600">Każde wyszukiwanie zużywa kredyty Apify (płatne za wynik). Limit 50 na raz.</p>
+                <p className="mt-3 text-[11px] text-zinc-500">Każde wyszukiwanie zużywa kredyty Apify (płatne za wynik). Limit 50 na raz.</p>
             </form>
 
+            {!results && !loading && (
+                <div className="lab-card flex flex-col items-center gap-3 px-6 py-12 text-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><MapPinned size={20} strokeWidth={1.8} /></span>
+                    <p className="text-sm text-zinc-400">Wpisz branżę albo kliknij jedną z podpowiedzi i naciśnij Szukaj.</p>
+                </div>
+            )}
+
             {results && (
-                <section className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5 sm:p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h2 className="text-lg font-bold text-white">
-                            {shown.length} {shown.length === 1 ? 'firma' : 'firm'}
-                            {lastQuery && <span className="ml-2 text-sm font-normal text-zinc-500">{lastQuery.query} · {lastQuery.location}</span>}
-                        </h2>
-                        <button type="button" onClick={exportCsv} disabled={!shown.length}
-                            className="inline-flex items-center gap-2 rounded-xl border border-yellow-400/40 px-4 py-2 text-xs font-semibold text-yellow-300 hover:bg-yellow-400/10 disabled:opacity-40">
-                            <Download size={14} /> Eksportuj do CSV
-                        </button>
-                    </div>
+                <section className="lab-card p-5 sm:p-6">
+                    <SectionTitle
+                        icon={Building2}
+                        title={`${shown.length} ${shown.length === 1 ? 'firma' : 'firm'}`}
+                        action={
+                            <button type="button" onClick={exportCsv} disabled={!shown.length}
+                                className="inline-flex items-center gap-2 bg-zinc-800 px-4 py-2 text-xs font-semibold text-zinc-200 disabled:opacity-40">
+                                <Download size={14} className="text-yellow-400" /> Eksportuj do CSV
+                            </button>
+                        }
+                    />
+                    {lastQuery && (
+                        <div className="-mt-1 flex flex-wrap gap-1.5">
+                            <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">{lastQuery.query}</span>
+                            <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">{lastQuery.location}</span>
+                            {noWebsite && <span className="rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">bez strony WWW</span>}
+                        </div>
+                    )}
 
                     {shown.length === 0 ? (
-                        <p className="mt-4 text-sm text-zinc-500">Brak wyników. Spróbuj innej frazy albo wyłącz filtr „bez WWW”.</p>
+                        <div className="mt-4 flex flex-col items-center gap-3 py-8 text-center">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><Search size={20} strokeWidth={1.8} /></span>
+                            <p className="text-sm text-zinc-500">Brak wyników. Spróbuj innej frazy albo wyłącz filtr „bez WWW”.</p>
+                        </div>
                     ) : (
                         <div className="mt-4 overflow-x-auto">
                             <table className="w-full min-w-[760px] text-left text-sm">
                                 <thead>
-                                    <tr className="border-b border-white/10 text-[11px] uppercase tracking-wider text-zinc-500">
+                                    <tr>
                                         <th className="py-2 pr-3 font-semibold">Nazwa</th>
                                         <th className="py-2 pr-3 font-semibold">Kategoria</th>
                                         <th className="py-2 pr-3 font-semibold">Telefon</th>
@@ -175,7 +195,7 @@ export function LeadFinder() {
                                                         <Globe size={12} className="shrink-0 text-zinc-500" />
                                                         <span className="truncate">{r.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span>
                                                     </a>
-                                                ) : <span className="rounded-full bg-yellow-400/10 px-2 py-0.5 text-[11px] font-semibold text-yellow-300">brak strony</span>}
+                                                ) : <span className="whitespace-nowrap rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">brak strony</span>}
                                             </td>
                                             <td className="whitespace-nowrap py-2.5 pr-3 text-zinc-300">
                                                 {r.rating !== null ? (

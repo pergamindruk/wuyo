@@ -39,34 +39,36 @@ export function CsvTable({ rows }: { rows: string[][] }) {
     const needle = q.trim().toLowerCase()
     const shown = needle ? body.filter((r) => r.some((c) => c.toLowerCase().includes(needle))) : body
 
-    if (!head) return <p className="text-sm text-zinc-600">Plik jest pusty.</p>
+    if (!head) return <p className="text-sm text-zinc-500">Plik jest pusty.</p>
 
     return (
-        <div className="flex flex-col gap-3 min-w-0">
-            <label className="flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm max-w-sm">
-                <Search size={14} className="text-zinc-500 shrink-0" />
-                <input
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    placeholder="Szukaj w tabeli…"
-                    className="bg-transparent outline-none text-zinc-200 placeholder:text-zinc-600 w-full"
-                />
-            </label>
-            <p className="text-[11px] text-zinc-500">
-                {shown.length === body.length ? `${body.length} wierszy` : `${shown.length} z ${body.length} wierszy`}
-            </p>
-            <div className="overflow-x-auto rounded-lg border border-zinc-800">
+        <div className="flex min-w-0 flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+                <div className="relative w-full max-w-sm">
+                    <Search size={16} strokeWidth={1.8} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+                    <input
+                        value={q}
+                        onChange={(e) => setQ(e.target.value)}
+                        placeholder="Szukaj w tabeli…"
+                        className="lab-input w-full py-2 pl-10 pr-3 text-sm text-zinc-200 placeholder:text-zinc-600"
+                    />
+                </div>
+                <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">
+                    {shown.length === body.length ? `${body.length} wierszy` : `${shown.length} z ${body.length} wierszy`}
+                </span>
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-white/[0.02]" data-lab-plain>
                 <table className="w-full text-xs">
-                    <thead className="bg-zinc-950 text-zinc-500 text-left">
+                    <thead className="bg-white/[0.03] text-left text-zinc-500">
                         <tr>
                             {head.map((h, i) => (
                                 <th key={i} className="px-3 py-2 font-medium whitespace-nowrap">{h}</th>
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-800">
+                    <tbody className="divide-y divide-white/[0.05]">
                         {shown.map((r, i) => (
-                            <tr key={i} className="hover:bg-zinc-800/40 align-top">
+                            <tr key={i} className="align-top">
                                 {head.map((_, j) => (
                                     <td key={j} className="px-3 py-2 text-zinc-300">
                                         <Cell value={r[j] ?? ''} />

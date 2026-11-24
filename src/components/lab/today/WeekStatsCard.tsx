@@ -1,3 +1,5 @@
+import { BarChart3, PhoneCall } from 'lucide-react'
+import { CountUp } from '@/components/lab/fx/CountUp'
 import type { Activity } from '@/lib/lab/today/types'
 
 // Cele tygodnia. Zmieniaj tylko tutaj.
@@ -29,13 +31,15 @@ function Stat({ label, value, goal }: { label: string; value: number; goal: numb
     const reached = value >= goal
     const width = Math.min((value / goal) * 100, 100)
     return (
-        <div className="min-w-0">
-            <p className="text-[11px] text-zinc-500 truncate">{label}</p>
-            <p className="text-3xl font-bold tabular-nums leading-none text-white mt-2">{value}</p>
-            <p className="text-[11px] text-zinc-600 tabular-nums mt-1">cel {goal}</p>
-            <div className="h-1.5 rounded-full bg-zinc-800 overflow-hidden mt-2">
+        <div className="min-w-0 rounded-2xl bg-white/[0.03] p-3">
+            <p className="truncate text-[11px] font-medium text-zinc-400">{label}</p>
+            <p className="mt-1.5 font-heading text-2xl font-bold leading-none text-white tabular-nums">
+                <CountUp value={value} />
+                <span className="ml-1 text-xs font-medium text-zinc-500">/ {goal}</span>
+            </p>
+            <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                 <div
-                    className={`h-full rounded-full ${reached ? 'bg-emerald-400' : 'bg-yellow-400'}`}
+                    className={`lab-bar h-full rounded-full ${reached ? 'bg-emerald-400' : 'bg-gradient-to-r from-yellow-500 to-yellow-300'}`}
                     style={{ width: `${width}%` }}
                 />
             </div>
@@ -70,53 +74,69 @@ export function WeekStatsCard({ activities }: { activities: Activity[] }) {
     const maxDay = Math.max(...days.map(d => d.count), 1)
 
     return (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 min-w-0">
-            <h2 className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">
-                Ten tydzień
-            </h2>
+        <section className="lab-card flex min-w-0 flex-col p-5 sm:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="flex items-center gap-2.5 text-base font-bold text-white">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-400"><BarChart3 size={16} strokeWidth={1.8} /></span>
+                    Ten tydzień
+                </h2>
+                {telefony > 0 && (
+                    <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">7 dni</span>
+                )}
+            </div>
 
             {telefony === 0 ? (
-                <p className="text-sm text-zinc-500">
-                    Jeszcze zero telefonów w tym tygodniu. Pierwszy zawsze najtrudniejszy.
-                </p>
+                <div className="flex flex-col items-center py-4 text-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><PhoneCall size={20} strokeWidth={1.8} /></span>
+                    <p className="mt-3 text-sm text-zinc-400">
+                        Jeszcze zero telefonów w tym tygodniu. Pierwszy zawsze najtrudniejszy.
+                    </p>
+                </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 gap-2.5">
                         <Stat label="Telefony" value={telefony} goal={WEEK_GOALS.telefony} />
                         <Stat label="Rozmowy" value={rozmowy} goal={WEEK_GOALS.rozmowy} />
                         <Stat label="Oferty" value={oferty} goal={WEEK_GOALS.oferty} />
                         <Stat label="Zaliczki" value={zaliczki} goal={WEEK_GOALS.zaliczki} />
                     </div>
 
-                    <p className="text-xs text-zinc-400 mt-5 tabular-nums">
-                        Telefon → rozmowa {percent(rozmowy, telefony)}%
-                        <span className="text-zinc-600"> · </span>
-                        Rozmowa → oferta {percent(oferty, rozmowy)}%
-                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2 tabular-nums">
+                        <span className="rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">
+                            Telefon → rozmowa {percent(rozmowy, telefony)}%
+                        </span>
+                        <span className="rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">
+                            Rozmowa → oferta {percent(oferty, rozmowy)}%
+                        </span>
+                    </div>
                 </>
             )}
 
-            <div className="mt-6">
-                <div className="flex items-end gap-1.5 h-24">
-                    {days.map(d => (
+            <div className="mt-auto pt-5">
+                <div className="flex h-24 items-end gap-1.5">
+                    {days.map((d, i) => (
                         <div
                             key={d.key}
-                            className="flex-1 flex flex-col justify-end items-center h-full min-w-0"
+                            className="flex h-full min-w-0 flex-1 flex-col items-center justify-end"
                             title={`${d.weekday}: ${d.count} tel.`}
                         >
-                            <span className="text-[10px] text-zinc-500 tabular-nums mb-1">
+                            <span className="mb-1 text-[10px] text-zinc-500 tabular-nums">
                                 {d.count > 0 ? d.count : ''}
                             </span>
                             <div
-                                className="w-full bg-yellow-400/80 rounded-t"
+                                className={`w-full rounded-t-lg rounded-b-sm ${
+                                    i === days.length - 1
+                                        ? 'bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-[0_0_18px_-4px_rgba(255,214,10,.7)]'
+                                        : 'bg-gradient-to-t from-yellow-400/25 to-yellow-400/60'
+                                }`}
                                 style={{ height: `${d.count > 0 ? Math.max((d.count / maxDay) * 100, 4) : 0}%` }}
                             />
                         </div>
                     ))}
                 </div>
-                <div className="flex gap-1.5 mt-1.5">
-                    {days.map(d => (
-                        <span key={d.key} className="flex-1 text-center text-[10px] text-zinc-600">
+                <div className="mt-1.5 flex gap-1.5">
+                    {days.map((d, i) => (
+                        <span key={d.key} className={`flex-1 text-center text-[10px] ${i === days.length - 1 ? 'font-semibold text-yellow-300' : 'text-zinc-600'}`}>
                             {d.weekday}
                         </span>
                     ))}

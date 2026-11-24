@@ -3,8 +3,9 @@ import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
-    ArrowLeft, FileSpreadsheet, FileText, Mail, MessageSquare, ScrollText,
+    ArrowLeft, FileSpreadsheet, FileText, FolderOpen, Mail, MessageSquare, ScrollText,
 } from 'lucide-react'
+import { PageHeader } from '@/components/lab/ui/PageHeader'
 import { createClient } from '@/lib/supabase/server'
 import {
     extractPosts, formatSize, formatWhen, groupFiles, MAIL_STATUS_LABEL, parseCsv, parseJson,
@@ -31,10 +32,11 @@ function FileList({ files, current }: { files: FileListItem[]; current: string |
         <nav className="flex flex-col gap-5">
             {groupFiles(files).map(([group, items]) => (
                 <div key={group}>
-                    <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-2 px-2">
-                        {group} <span className="text-zinc-700">· {items.length}</span>
+                    <p className="mb-2 flex items-center justify-between px-2 text-xs font-semibold text-zinc-400">
+                        {group}
+                        <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-semibold text-zinc-400">{items.length}</span>
                     </p>
-                    <ul className="flex flex-col gap-0.5">
+                    <ul className="flex flex-col gap-1">
                         {items.map((f) => {
                             const Icon = ICON[f.typ]
                             const active = f.sciezka === current
@@ -42,14 +44,14 @@ function FileList({ files, current }: { files: FileListItem[]; current: string |
                                 <li key={f.sciezka}>
                                     <Link
                                         href={`/lab/centrum/pliki?p=${encodeURIComponent(f.sciezka)}`}
-                                        className={`flex items-start gap-2 rounded-md px-2 py-1.5 text-xs transition-colors ${
-                                            active ? 'bg-yellow-400/10 text-yellow-300'
-                                                : 'text-zinc-300 hover:bg-zinc-800/60 hover:text-white'}`}
+                                        className={`flex items-start gap-2.5 rounded-2xl px-3 py-2 text-xs transition ${
+                                            active ? 'bg-yellow-400/10 text-yellow-300 ring-1 ring-yellow-400/30'
+                                                : 'text-zinc-300 hover:bg-white/[0.06] hover:text-white'}`}
                                     >
-                                        <Icon size={13} className="shrink-0 mt-0.5 opacity-70" />
+                                        <Icon size={16} strokeWidth={1.8} className={`mt-0.5 shrink-0 ${active ? 'text-yellow-400' : 'opacity-60'}`} />
                                         <span className="min-w-0">
-                                            <span className="block break-words">{f.nazwa}</span>
-                                            <span className="block text-[10px] text-zinc-600">{formatWhen(f.zmieniono)}</span>
+                                            <span className="block break-words font-medium">{f.nazwa}</span>
+                                            <span className="block text-[10px] text-zinc-500">{formatWhen(f.zmieniono)}</span>
                                         </span>
                                     </Link>
                                 </li>
@@ -77,7 +79,7 @@ function BlogDraftView({ text }: { text: string }) {
     return (
         <div className="flex flex-col gap-5">
             {meta.length > 0 && (
-                <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-xs">
+                <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 rounded-2xl bg-white/[0.03] p-4 text-xs">
                     {meta.map(([k, v]) => (
                         <div key={k} className="contents">
                             <dt className="text-zinc-500">{k}</dt>
@@ -117,15 +119,17 @@ function MailView({ text }: { text: string }) {
                 <dt className="text-zinc-500">Do</dt><dd className="text-zinc-200 break-all">{m.do}</dd>
                 {m.firma && <><dt className="text-zinc-500">Firma</dt><dd className="text-zinc-200">{m.firma}</dd></>}
                 <dt className="text-zinc-500">Status</dt>
-                <dd className={m.status === 'pending_review' ? 'text-yellow-400' : 'text-zinc-200'}>
-                    {MAIL_STATUS_LABEL[m.status] ?? m.status}
+                <dd>
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${m.status === 'pending_review' ? 'bg-yellow-400/15 text-yellow-300' : 'bg-white/[0.06] text-zinc-300'}`}>
+                        {MAIL_STATUS_LABEL[m.status] ?? m.status}
+                    </span>
                 </dd>
                 {m.krok !== null && <><dt className="text-zinc-500">Krok</dt><dd className="text-zinc-200">mail {m.krok}</dd></>}
                 {m.wyslano && <><dt className="text-zinc-500">Wysłano</dt><dd className="text-zinc-200">{formatWhen(m.wyslano)}</dd></>}
                 {m.blad && <><dt className="text-zinc-500">Błąd</dt><dd className="text-red-400">{m.blad}</dd></>}
             </dl>
-            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-5">
-                <p className="text-sm font-semibold text-white mb-3">{m.temat || '(bez tematu)'}</p>
+            <div className="rounded-2xl bg-white/[0.03] p-5">
+                <p className="mb-3 text-sm font-semibold text-white">{m.temat || '(bez tematu)'}</p>
                 <p className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed">{m.tresc}</p>
             </div>
             {m.status === 'pending_review' && (
@@ -145,15 +149,15 @@ function ConversationView({ text }: { text: string }) {
     return (
         <div className="flex flex-col gap-4">
             <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-xs">
-                <dt className="text-zinc-500">Firma</dt><dd className="text-zinc-200">{c.firma || '—'}</dd>
-                <dt className="text-zinc-500">E-mail</dt><dd className="text-zinc-200 break-all">{c.email || '—'}</dd>
-                <dt className="text-zinc-500">Ocena</dt><dd className="text-yellow-400">{c.intencja ?? 'brak'}</dd>
-                <dt className="text-zinc-500">Etap</dt><dd className="text-zinc-200">{c.etap ?? '—'}</dd>
+                <dt className="text-zinc-500">Firma</dt><dd className="text-zinc-200">{c.firma || 'brak'}</dd>
+                <dt className="text-zinc-500">E-mail</dt><dd className="text-zinc-200 break-all">{c.email || 'brak'}</dd>
+                <dt className="text-zinc-500">Ocena</dt><dd><span className="rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">{c.intencja ?? 'brak'}</span></dd>
+                <dt className="text-zinc-500">Etap</dt><dd className="text-zinc-200">{c.etap ?? 'brak'}</dd>
             </dl>
             {thread ? (
                 <ol className="flex flex-col gap-3">
                     {thread.map((msg, i) => (
-                        <li key={i} className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+                        <li key={i} className="rounded-2xl bg-white/[0.03] p-4">
                             <p className="text-[11px] text-zinc-500 mb-2">{msg.who}{msg.at && ` · ${formatWhen(msg.at)}`}</p>
                             <p className="text-sm text-zinc-300 whitespace-pre-wrap">{msg.text}</p>
                         </li>
@@ -181,16 +185,20 @@ function FileView({ file }: { file: FileFull }) {
             )
     }
     const isFile = file.typ !== 'mail' && file.typ !== 'rozmowa'
+    const FileIcon = ICON[file.typ] ?? FileText
     return (
-        <article className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 md:p-6 min-w-0">
-            <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5 pb-4 border-b border-zinc-800">
-                <div className="min-w-0">
-                    <p className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-1">{file.grupa}</p>
-                    <h2 className="text-lg font-bold text-white break-words">{file.nazwa}</h2>
+        <article className="lab-card min-w-0 p-5 sm:p-6">
+            <header className="mb-5 flex flex-col gap-3 border-b border-white/[0.07] pb-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex min-w-0 items-start gap-3">
+                    <span className="lab-chip h-10 w-10 shrink-0"><FileIcon size={18} strokeWidth={1.8} /></span>
+                    <div className="min-w-0">
+                    <p className="mb-0.5 text-xs font-medium text-zinc-500">{file.grupa}</p>
+                    <h2 className="break-words text-lg font-bold text-white">{file.nazwa}</h2>
                     <p className="text-[11px] text-zinc-500 mt-1">
                         {isFile && <>{file.sciezka} · {formatSize(file.rozmiar)} · </>}
                         zmieniono {formatWhen(file.zmieniono)}
                     </p>
+                    </div>
                 </div>
                 {isFile && (
                     <div className="flex gap-2 shrink-0">
@@ -226,35 +234,42 @@ export default async function CentrumFilesPage({ searchParams }: { searchParams:
     }
 
     return (
-        <div className="flex flex-col gap-6 max-w-7xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
             <AutoRefresh seconds={300} />
-            <header>
-                <Link href="/lab/centrum" className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-yellow-400 mb-3">
-                    <ArrowLeft size={12} /> Centrum Dowodzenia
-                </Link>
-                <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">Raporty i pliki</h1>
-                <p className="text-zinc-500 text-sm mt-1">
-                    Wszystko z komputera studia: raporty, listy firm, posty, szkice i maile Harveya. Odświeża się co 30 min.
-                </p>
-            </header>
+            <PageHeader
+                icon={FolderOpen}
+                title="Raporty i pliki"
+                subtitle="Wszystko z komputera studia: raporty, listy firm, posty, szkice i maile Harveya. Odświeża się co 30 min."
+                actions={
+                    <Link href="/lab/centrum" className="inline-flex items-center gap-2 rounded-full bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-200">
+                        <ArrowLeft size={16} strokeWidth={1.8} /> Centrum Dowodzenia
+                    </Link>
+                }
+            />
 
             {files.length === 0 ? (
-                <p className="text-sm text-zinc-500">
-                    Brak plików. Uruchom na komputerze studia: <code>python -I sync_centrum.py</code>
-                </p>
+                <div className="lab-card flex flex-col items-center gap-3 p-10 text-center">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><FolderOpen size={22} strokeWidth={1.8} /></span>
+                    <p className="text-sm text-zinc-400">
+                        Brak plików. Uruchom na komputerze studia: <code className="rounded-lg bg-white/[0.06] px-2 py-0.5 text-yellow-300">python -I sync_centrum.py</code>
+                    </p>
+                </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-6 items-start">
-                    <details className="lg:hidden bg-zinc-900 border border-zinc-800 rounded-xl" open={!p}>
-                        <summary className="cursor-pointer px-4 py-3 text-sm text-zinc-200">
+                <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+                    <details className="lab-card lg:hidden" open={!p}>
+                        <summary className="cursor-pointer px-5 py-4 text-sm font-medium text-zinc-200">
                             Wszystkie pliki ({files.length})
                         </summary>
                         <div className="px-2 pb-4"><FileList files={files} current={file?.sciezka ?? null} /></div>
                     </details>
-                    <aside className="hidden lg:block sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-1">
+                    <aside className="lab-card sticky top-6 hidden max-h-[calc(100vh-3rem)] overflow-y-auto p-3 lg:block">
                         <FileList files={files} current={file?.sciezka ?? null} />
                     </aside>
                     {file ? <FileView file={file} /> : (
-                        <p className="text-sm text-zinc-500">Tego pliku już nie ma. Wybierz inny z listy.</p>
+                        <div className="lab-card flex flex-col items-center gap-3 p-10 text-center">
+                            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><FileText size={22} strokeWidth={1.8} /></span>
+                            <p className="text-sm text-zinc-400">Tego pliku już nie ma. Wybierz inny z listy.</p>
+                        </div>
                     )}
                 </div>
             )}

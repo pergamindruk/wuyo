@@ -2,7 +2,8 @@
 
 // "use client": formularz, podgląd dokumentu, PDF i przełączanie statusu płatności działają w przeglądarce.
 import { useEffect, useState } from 'react'
-import { FileText, Save, Printer, Info, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X, Pencil } from 'lucide-react'
+import { FileText, Save, Printer, Info, Download, Trash2, AlertTriangle, Check, Clock, History, ChevronDown, ChevronUp, Eye, X, Pencil, Receipt, FileSignature, Gauge, ClipboardList, Plus } from 'lucide-react'
+import { PageHeader, SectionTitle } from '@/components/lab/ui/PageHeader'
 import { createDocument, getEwidencja, deleteEwidencja, updatePaymentStatus, updateMarkdownContent } from './actions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -28,8 +29,8 @@ async function savePdf(elementId: string, filename: string) {
 
 // Dzisiejsza data w Polsce (toISOString daje UTC, po północy byłby wczorajszy dzień).
 const today = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Warsaw' })
-const field = 'w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
-const label = 'text-[11px] font-semibold uppercase tracking-wider text-zinc-400'
+const field = 'lab-input w-full px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 disabled:opacity-50'
+const label = 'text-xs font-medium text-zinc-400'
 
 export default function FinancesLab() {
     const [view, setView] = useState<'rachunki' | 'dokumenty'>('rachunki')
@@ -104,45 +105,48 @@ export default function FinancesLab() {
         return daysSince > 14 ? 'Przeterminowana' : item.paymentStatus || 'Wystawiona'
     }
     const paymentStatusConfig: Record<string, { bg: string; text: string; border: string }> = {
-        Wystawiona: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20' },
-        Zaplacona: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
-        Przeterminowana: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
+        Wystawiona: { bg: 'bg-yellow-400/15', text: 'text-yellow-300', border: 'border-transparent' },
+        Zaplacona: { bg: 'bg-emerald-400/15', text: 'text-emerald-300', border: 'border-transparent' },
+        Przeterminowana: { bg: 'bg-red-400/15', text: 'text-red-300', border: 'border-transparent' },
     }
 
     return (
         <div className="mx-auto flex max-w-7xl flex-col gap-6 print:block">
-            <header className="flex flex-wrap items-end justify-between gap-3 print:hidden">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Finanse i dokumenty</p>
-                    <h1 className="mt-1 text-3xl font-bold text-white">{view === 'rachunki' ? 'Rachunki' : 'Dokumenty dla klienta'}</h1>
-                    <p className="mt-1 text-sm text-zinc-500">
-                        {view === 'rachunki' ? `Działalność nierejestrowana · sprzedawca: ${SELLER.join(', ')}` : 'Umowa, protokół odbioru, odstąpienie, RODO, powierzenie, regulamin. Dane klienta wpisują się ze zlecenia.'}
-                    </p>
-                </div>
-                <div className="flex rounded-full border border-white/10 bg-white/[0.03] p-1">
-                    {(['rachunki', 'dokumenty'] as const).map((v) => (
-                        <button key={v} onClick={() => { setView(v); history.replaceState(null, '', v === 'dokumenty' ? '#dokumenty' : '#') }}
-                            className={`rounded-full px-4 py-1.5 text-xs font-semibold ${view === v ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
-                            {v === 'rachunki' ? 'Rachunki' : 'Umowy i dokumenty'}
-                        </button>
-                    ))}
-                </div>
-            </header>
+            <div className="print:hidden">
+                <PageHeader
+                    icon={FileText}
+                    eyebrow="Finanse i dokumenty"
+                    title={view === 'rachunki' ? 'Rachunki' : 'Dokumenty dla klienta'}
+                    subtitle={view === 'rachunki' ? `Działalność nierejestrowana · sprzedawca: ${SELLER.join(', ')}` : 'Umowa, protokół odbioru, odstąpienie, RODO, powierzenie, regulamin. Dane klienta wpisują się ze zlecenia.'}
+                    actions={
+                        <div className="lab-pill flex p-1">
+                            {(['rachunki', 'dokumenty'] as const).map((v) => (
+                                <button key={v} onClick={() => { setView(v); history.replaceState(null, '', v === 'dokumenty' ? '#dokumenty' : '#') }}
+                                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition ${view === v ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
+                                    {v === 'rachunki' ? <><Receipt size={14} strokeWidth={1.8} /> Rachunki</> : <><FileSignature size={14} strokeWidth={1.8} /> Umowy i dokumenty</>}
+                                </button>
+                            ))}
+                        </div>
+                    }
+                />
+            </div>
 
             {view === 'dokumenty' ? <ClientDocuments /> : <>
 
             {/* Limit kwartalny + ewidencja */}
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-5 print:hidden">
-                <section className="rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-6 xl:col-span-2">
-                    <p className="text-xs text-zinc-400">Limit działalności nierejestrowanej · {quarterLabel}</p>
-                    <p className="mt-3 text-4xl font-bold text-white">{running.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł</p>
-                    <p className="text-sm text-zinc-500">z {QUARTER_LIMIT.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł na kwartał</p>
-                    <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/10">
-                        <div className={`h-full rounded-full ${pct >= 100 ? 'bg-red-500' : pct >= 80 ? 'bg-orange-400' : 'bg-yellow-400'}`} style={{ width: `${pct}%` }} />
+                <section className="lab-card p-5 sm:p-6 xl:col-span-2">
+                    {pct >= 80 && <span className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-yellow-400/15 blur-2xl" />}
+                    <SectionTitle icon={Gauge} title={`Limit · ${quarterLabel}`} />
+                    <p className="text-xs text-zinc-400">Działalność nierejestrowana</p>
+                    <p className="mt-2 font-heading text-4xl font-bold leading-none text-white">{running.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł</p>
+                    <p className="mt-1 text-sm text-zinc-500">z {QUARTER_LIMIT.toLocaleString('pl-PL', { minimumFractionDigits: 2 })} zł na kwartał · {Math.round(pct)}%</p>
+                    <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                        <div className={`lab-bar h-full rounded-full ${pct >= 100 ? 'bg-red-500' : pct >= 80 ? 'bg-orange-400' : 'bg-yellow-400 shadow-[0_0_16px_-2px_rgba(255,214,10,0.7)]'}`} style={{ width: `${pct}%` }} />
                     </div>
-                    {pct >= 80 && pct < 100 && <p className="mt-3 flex items-center gap-1 text-xs font-semibold text-orange-400"><Info size={14} /> Zbliżasz się do limitu w tym kwartale.</p>}
+                    {pct >= 80 && pct < 100 && <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-orange-400"><Info size={16} strokeWidth={1.8} /> Zbliżasz się do limitu w tym kwartale.</p>}
                     {pct >= 100 && (
-                        <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+                        <p className="mt-3 rounded-2xl bg-red-400/10 p-3 text-xs text-red-300">
                             <AlertTriangle size={14} className="mr-1 inline" /> Limit przekroczony. Masz 7 dni od przekroczenia na rejestrację działalności w CEIDG.
                         </p>
                     )}
@@ -152,13 +156,16 @@ export default function FinancesLab() {
                     </p>
                 </section>
 
-                <section className="overflow-x-auto rounded-3xl border border-white/[0.07] bg-white/[0.02] p-5 xl:col-span-3">
-                    <p className="mb-3 text-xs font-semibold text-zinc-400">Ewidencja sprzedaży · {quarterLabel}</p>
+                <section className="lab-card overflow-x-auto p-5 sm:p-6 xl:col-span-3">
+                    <SectionTitle icon={ClipboardList} title={`Ewidencja sprzedaży · ${quarterLabel}`} />
                     {rows.length === 0 ? (
-                        <p className="text-xs italic text-zinc-600">Brak dokumentów w tym kwartale.</p>
+                        <div className="flex flex-col items-center gap-2 py-6 text-center">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.06] text-zinc-500"><ClipboardList size={20} strokeWidth={1.8} /></span>
+                            <p className="text-sm text-zinc-500">Brak dokumentów w tym kwartale. Wystaw pierwszy rachunek niżej.</p>
+                        </div>
                     ) : (
                         <table className="w-full text-left text-xs text-zinc-300">
-                            <thead className="border-b border-white/10 text-zinc-500">
+                            <thead className="border-b border-white/[0.07] text-zinc-500">
                                 <tr>
                                     <th className="py-2 font-normal">Lp.</th><th className="py-2 font-normal">Data</th><th className="py-2 font-normal">Nabywca</th>
                                     <th className="py-2 font-normal">Kwota</th><th className="py-2 font-normal">Status</th><th className="py-2 font-normal">Narastająco</th><th />
@@ -175,7 +182,7 @@ export default function FinancesLab() {
                                             <td className="max-w-[140px] truncate py-2.5 pr-2" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
                                             <td className="py-2.5 font-semibold text-white">{e.amount.toFixed(2)} zł</td>
                                             <td className="py-2.5">
-                                                <button onClick={() => handlePaymentToggle(e.id, st)} className={`${c.bg} ${c.text} ${c.border} inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold`}>
+                                                <button onClick={() => handlePaymentToggle(e.id, st)} className={`${c.bg} ${c.text} ${c.border} inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold`}>
                                                     {st === 'Zaplacona' ? <Check size={10} /> : st === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
                                                     {st === 'Zaplacona' ? 'Zapłacony' : st === 'Przeterminowana' ? 'Po terminie' : 'Wystawiony'}
                                                 </button>
@@ -194,9 +201,9 @@ export default function FinancesLab() {
             </div>
 
             <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-5 print:block">
-                <form onSubmit={handleGenerate} className="flex flex-col gap-4 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-6 lg:col-span-2 print:hidden">
-                    <h2 className="text-lg font-bold text-white">Nowy dokument</h2>
-                    <div className="flex gap-1 rounded-full border border-white/10 bg-black/30 p-1">
+                <form onSubmit={handleGenerate} className="lab-card flex flex-col gap-4 p-5 sm:p-6 lg:col-span-2 print:hidden">
+                    <SectionTitle icon={Plus} title="Nowy dokument" />
+                    <div className="-mt-2 flex gap-1 rounded-full bg-white/[0.04] p-1">
                         {(['dn', 'dzielo', 'protokol'] as const).map((k) => (
                             <button key={k} type="button" onClick={() => setKind(k)}
                                 className={`flex-1 rounded-full px-3 py-1.5 text-xs font-semibold ${kind === k ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
@@ -234,7 +241,8 @@ export default function FinancesLab() {
                     )}
                     <label className="flex flex-col gap-1.5"><span className={label}>Uwagi (opcjonalnie)</span>
                         <textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className={`${field} resize-none`} /></label>
-                    <button disabled={loading} className="mt-1 rounded-full bg-yellow-400 py-3 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                    <button disabled={loading} className="mt-1 flex items-center justify-center gap-2 rounded-full bg-yellow-400 py-3 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
+                        <FileText size={16} strokeWidth={1.8} />
                         {loading ? 'Zapisuję…' : `Wystaw: ${KIND_LABEL[kind].toLowerCase()}`}
                     </button>
                     {error && <p className="text-sm text-red-400">{error}</p>}
@@ -255,9 +263,9 @@ export default function FinancesLab() {
                             <ReceiptDocument data={doc} id="printable-document" />
                         </div>
                     ) : (
-                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-white/10 text-center text-zinc-500 print:hidden">
-                            <FileText size={48} className="opacity-30" />
-                            <p className="max-w-sm text-sm">Wypełnij formularz. Tu pojawi się gotowy dokument A4 do pobrania jako PDF albo wydruku.</p>
+                        <div className="lab-card flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center print:hidden">
+                            <span className="lab-chip h-16 w-16"><FileText size={26} strokeWidth={1.8} /></span>
+                            <p className="max-w-sm text-sm text-zinc-400">Wypełnij formularz. Tu pojawi się gotowy dokument A4 do pobrania jako PDF albo wydruku.</p>
                         </div>
                     )}
                 </div>
@@ -298,7 +306,7 @@ function DocumentModal({ item, onClose, onSaved }: { item: any; onClose: () => v
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:p-0">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm print:hidden" onClick={onClose} />
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:overflow-visible">
+            <div className="relative bg-white rounded-[1.75rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:overflow-visible">
 
                 {/* Toolbar */}
                 <div className="sticky top-0 z-10 bg-white border-b border-zinc-200 px-6 py-3 flex items-center justify-between print:hidden">
@@ -403,57 +411,59 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                 }}
             />
         )}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl print:hidden">
+        <div className="lab-card print:hidden">
             <button
                 onClick={() => setIsOpen(v => !v)}
-                className="w-full flex items-center justify-between p-6 text-left"
+                className="flex w-full items-center justify-between p-5 text-left sm:p-6"
             >
-                <div className="flex items-center gap-3">
-                    <History size={20} className="text-yellow-400" />
+                <div className="flex items-center gap-4">
+                    <span className="lab-chip h-11 w-11 shrink-0"><History size={20} strokeWidth={1.8} /></span>
                     <div>
-                        <h2 className="text-lg font-bold text-white">Historia wszystkich transakcji</h2>
+                        <h2 className="text-base font-bold text-white">Historia wszystkich transakcji</h2>
                         <p className="text-xs text-zinc-500">{ewidencja.length} wpisów · łącznie: {grandTotal.toFixed(2)} zł</p>
                     </div>
                 </div>
-                {isOpen ? <ChevronUp size={18} className="text-zinc-500" /> : <ChevronDown size={18} className="text-zinc-500" />}
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400">
+                    {isOpen ? <ChevronUp size={18} strokeWidth={1.8} /> : <ChevronDown size={18} strokeWidth={1.8} />}
+                </span>
             </button>
 
             {isOpen && (
-                <div className="px-6 pb-6 flex flex-col gap-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-zinc-800">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold">Rok:</span>
+                <div className="flex flex-col gap-6 px-5 pb-6 sm:px-6">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] pt-4">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="mr-1 text-xs font-medium text-zinc-500">Rok:</span>
                             {['all', ...years].map(y => (
                                 <button
                                     key={y}
                                     onClick={() => setFilterYear(y)}
-                                    className={`px-3 py-1 text-xs rounded border transition-colors ${filterYear === y ? 'bg-yellow-400 text-black border-yellow-400' : 'border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500'}`}
+                                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${filterYear === y ? 'bg-yellow-400 text-black' : 'bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:text-white'}`}
                                 >
                                     {y === 'all' ? 'Wszystkie' : y}
                                 </button>
                             ))}
                         </div>
                         <div className="flex items-center gap-6 text-xs">
-                            <span className="text-zinc-500">Wpłynęło: <span className="text-green-400 font-bold font-mono">{paidTotal.toFixed(2)} zł</span></span>
-                            <span className="text-zinc-500">Łącznie: <span className="text-white font-bold font-mono">{grandTotal.toFixed(2)} zł</span></span>
+                            <span className="rounded-full bg-emerald-400/15 px-2.5 py-1 font-semibold text-emerald-300">Wpłynęło: <span className="tabular-nums">{paidTotal.toFixed(2)} zł</span></span>
+                            <span className="rounded-full bg-white/[0.06] px-2.5 py-1 font-semibold text-zinc-300">Łącznie: <span className="tabular-nums text-white">{grandTotal.toFixed(2)} zł</span></span>
                         </div>
                     </div>
 
                     {Object.keys(grouped).length === 0 ? (
-                        <p className="text-zinc-600 text-sm italic text-center py-4">Brak transakcji.</p>
+                        <p className="py-4 text-center text-sm text-zinc-500">Brak transakcji.</p>
                     ) : (
                         Object.entries(grouped).map(([key, items]) => {
                             const [year, month] = key.split('-').map(Number)
                             const monthTotal = items.reduce((s, e) => s + e.amount, 0)
                             return (
                                 <div key={key}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{monthNames[month]} {year}</h3>
-                                        <span className="text-xs text-zinc-500 font-mono">{monthTotal.toFixed(2)} zł</span>
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <h3 className="text-sm font-bold text-white">{monthNames[month]} {year}</h3>
+                                        <span className="text-xs font-semibold tabular-nums text-zinc-400">{monthTotal.toFixed(2)} zł</span>
                                     </div>
-                                    <div className="overflow-x-auto rounded-xl border border-zinc-800">
+                                    <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-white/[0.02]" data-lab-plain>
                                         <table className="w-full text-left text-xs text-zinc-300">
-                                            <thead className="text-zinc-500 border-b border-zinc-800 bg-zinc-950">
+                                            <thead className="border-b border-white/[0.07] bg-white/[0.03] text-zinc-500">
                                                 <tr>
                                                     <th className="font-normal py-2 px-3">Data</th>
                                                     <th className="font-normal py-2 px-3">Klient</th>
@@ -464,23 +474,23 @@ function TransactionHistory({ ewidencja, getDisplayStatus, paymentStatusConfig, 
                                                     <th className="font-normal py-2 px-3 w-16"></th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-zinc-800/50">
+                                            <tbody className="divide-y divide-white/[0.05]">
                                                 {items.map((e: any) => {
                                                     const displayStatus = getDisplayStatus(e)
                                                     const pCfg = paymentStatusConfig[displayStatus] || paymentStatusConfig.Wystawiona
                                                     return (
-                                                        <tr key={e.id} className="hover:bg-zinc-800/30 transition-colors group">
+                                                        <tr key={e.id} className="group">
                                                             <td className="py-2.5 px-3 whitespace-nowrap">{e.date}</td>
                                                             <td className="py-2.5 px-3 max-w-[140px] truncate" title={e.clientInfo}>{e.clientInfo?.split(',')[0]}</td>
                                                             <td className="py-2.5 px-3 max-w-[200px] truncate text-zinc-400" title={e.description}>{e.description}</td>
                                                             <td className="py-2.5 px-3 text-zinc-500 whitespace-nowrap">
                                                                 {e.documentType?.includes('Faktura') ? 'Faktura' : e.documentType?.includes('Umowa') ? 'Umowa' : e.documentType?.includes('Protokół') ? 'Protokół' : 'Rachunek'}
                                                             </td>
-                                                            <td className="py-2.5 px-3 font-bold text-green-400 whitespace-nowrap font-mono">+{e.amount.toFixed(2)} zł</td>
+                                                            <td className="whitespace-nowrap px-3 py-2.5 font-bold tabular-nums text-emerald-300">+{e.amount.toFixed(2)} zł</td>
                                                             <td className="py-2.5 px-3">
                                                                 <button
                                                                     onClick={() => handlePaymentToggle(e.id, displayStatus)}
-                                                                    className={`${pCfg.bg} ${pCfg.text} ${pCfg.border} border px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
+                                                                    className={`${pCfg.bg} ${pCfg.text} ${pCfg.border} inline-flex cursor-pointer items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-opacity hover:opacity-80`}
                                                                 >
                                                                     {displayStatus === 'Zaplacona' ? <Check size={10} /> : displayStatus === 'Przeterminowana' ? <AlertTriangle size={10} /> : <Clock size={10} />}
                                                                     {displayStatus}

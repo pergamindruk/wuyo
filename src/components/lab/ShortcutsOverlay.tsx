@@ -1,6 +1,6 @@
 'use client'
 // "use client": nasłuch globalnych skrótów (sekwencje g + litera, ?) i modal z fokusem
-// — wymaga zdarzeń przeglądarki, więc nie może być komponentem serwerowym.
+// wymaga zdarzeń przeglądarki, więc nie może być komponentem serwerowym.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
@@ -61,7 +61,7 @@ export default function ShortcutsOverlay() {
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                // paleta przejmuje fokus — zamykamy tę nakładkę
+                // paleta przejmuje fokus, zamykamy tę nakładkę
                 if (openRef.current) hide()
                 return
             }
@@ -110,7 +110,7 @@ export default function ShortcutsOverlay() {
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
             onMouseDown={(e) => {
                 if (e.target === e.currentTarget) hide()
             }}
@@ -120,11 +120,11 @@ export default function ShortcutsOverlay() {
                 aria-modal="true"
                 aria-labelledby="shortcuts-title"
                 onKeyDown={onKeyDown}
-                className="w-full max-w-md overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/95 shadow-2xl shadow-black/60"
+                className="lab-card w-full max-w-md !bg-[#111114]/95 shadow-[0_40px_120px_-30px_rgba(0,0,0,.95),0_0_0_1px_rgba(255,214,10,.12)]"
             >
-                <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
-                    <h2 id="shortcuts-title" className="flex items-center gap-2 text-sm font-semibold text-zinc-50">
-                        <Keyboard className="h-4 w-4 text-yellow-400" aria-hidden="true" />
+                <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
+                    <h2 id="shortcuts-title" className="flex items-center gap-3 font-heading text-base font-bold text-zinc-50">
+                        <span className="lab-chip h-9 w-9"><Keyboard className="h-[18px] w-[18px]" aria-hidden="true" /></span>
                         Skróty klawiszowe
                     </h2>
                     <button
@@ -132,20 +132,20 @@ export default function ShortcutsOverlay() {
                         type="button"
                         onClick={hide}
                         aria-label="Zamknij"
-                        className="rounded-md p-1 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400 transition hover:bg-white/[0.1] hover:text-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
                     >
                         <X className="h-4 w-4" />
                     </button>
                 </div>
-                <ul className="divide-y divide-zinc-800/60 px-5 py-2">
+                <ul className="flex max-h-[60vh] flex-col gap-1.5 overflow-y-auto px-4 py-3">
                     {SHORTCUTS.map((s) => (
-                        <li key={s.label} className="flex items-center justify-between py-2.5 text-sm text-zinc-300">
+                        <li key={s.label} className="flex items-center justify-between gap-3 rounded-2xl bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-300 transition hover:bg-white/[0.06]">
                             <span>{s.label}</span>
                             <span className="flex gap-1">
                                 {s.keys.map((k, i) => (
                                     <kbd
                                         key={`${k}-${i}`}
-                                        className="min-w-[1.5rem] rounded border border-zinc-700 bg-zinc-950 px-1.5 py-0.5 text-center text-xs text-zinc-300"
+                                        className="min-w-[1.6rem] rounded-lg bg-white/[0.07] px-1.5 py-0.5 text-center font-mono text-xs text-yellow-300 ring-1 ring-white/[0.06]"
                                     >
                                         {k}
                                     </kbd>
@@ -154,7 +154,7 @@ export default function ShortcutsOverlay() {
                         </li>
                     ))}
                 </ul>
-                <p className="border-t border-zinc-800 px-5 py-3 text-[11px] text-zinc-500">
+                <p className="border-t border-white/[0.06] px-5 py-3 text-[11px] text-zinc-500">
                     Sekwencje „g” + litera: druga litera w ciągu 1 s. Nie działają w polach tekstowych.
                 </p>
             </div>

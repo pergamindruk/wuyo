@@ -54,7 +54,9 @@ const PRESETS_KEY = 'wuyo-stickers-presets'
 /** Vercel przyjmuje do 4,5 MB w zapytaniu. */
 const BODY_WARN = 4.2 * 1024 * 1024
 
-const card = 'rounded-3xl border border-white/[0.07] bg-gradient-to-b from-white/[0.045] to-white/[0.015] p-5'
+const card = 'lab-card p-5 sm:p-6'
+/** Numer kroku w nagłówku karty: mały żółty kafelek. */
+const stepNo = 'mr-2.5 inline-flex h-7 w-7 items-center justify-center rounded-xl bg-yellow-400/10 align-middle text-sm font-bold text-yellow-400'
 const input = 'w-full rounded-xl border border-white/10 bg-zinc-950/60 px-3 py-2 text-sm text-white outline-none transition focus:border-yellow-400/60'
 const btnPrimary = 'inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-[0_0_24px_-8px_rgba(255,235,82,0.7)] transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-50'
 const btnGhost = 'inline-flex items-center justify-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-white/[0.06] hover:text-white disabled:opacity-40'
@@ -471,7 +473,7 @@ export default function StickerStudio() {
                 {/* 1. Grafika */}
                 <section className={card}>
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                        <h2 className="text-base font-semibold text-white"><span className="mr-2 text-yellow-400">1.</span>Nowa naklejka</h2>
+                        <h2 className="flex items-center text-base font-bold text-white"><span className={stepNo}>1</span>Nowa naklejka</h2>
                         <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
                             {(['ai', 'series', 'upload'] as const).map((t) => (
                                 <button key={t} onClick={() => setTab(t)} className={`rounded-full px-3 py-1.5 font-medium transition ${tab === t ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
@@ -552,7 +554,7 @@ export default function StickerStudio() {
                 {/* 2. Projekty */}
                 <section className={card}>
                     <div className="mb-3 flex items-center justify-between gap-2">
-                        <h2 className="text-base font-semibold text-white"><span className="mr-2 text-yellow-400">2.</span>Naklejki na arkuszu</h2>
+                        <h2 className="flex items-center text-base font-bold text-white"><span className={stepNo}>2</span>Naklejki na arkuszu</h2>
                         {designs.length > 0 && (
                             <button onClick={() => { if (window.confirm('Usunąć wszystkie naklejki z arkusza?')) setDesigns([]) }} className={btnGhost}><Trash2 size={13} /> Wyczyść</button>
                         )}
@@ -616,7 +618,7 @@ export default function StickerStudio() {
 
                 {/* 3. Cięcie i druk */}
                 <section className={card}>
-                    <h2 className="mb-4 text-base font-semibold text-white"><span className="mr-2 text-yellow-400">3.</span>Cięcie, druk, laminat</h2>
+                    <h2 className="mb-4 flex items-center text-base font-bold text-white"><span className={stepNo}>3</span>Cięcie, druk, laminat</h2>
                     <div className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
                         <Slider label="Obwódka (offset cięcia)" unit="mm" min={0.5} max={8} step={0.5} value={settings.offsetMm} onChange={(v) => set('offsetMm', v)}
                             hint="Odległość linii cięcia od grafiki." />
@@ -676,7 +678,7 @@ export default function StickerStudio() {
             <aside className="flex min-w-0 flex-col gap-4 xl:sticky xl:top-0 xl:self-start">
                 <section className={card}>
                     <div className="mb-3 flex items-center justify-between gap-2">
-                        <h2 className="text-base font-semibold text-white"><span className="mr-2 text-yellow-400">4.</span>Arkusz A4</h2>
+                        <h2 className="flex items-center text-base font-bold text-white"><span className={stepNo}>4</span>Arkusz A4</h2>
                         <div className="flex items-center gap-3">
                             <Toggle checked={showCut} onChange={setShowCut} label="Linie cięcia" small />
                             <button onClick={() => setSheetZoom(true)} className={btnGhost} title="Powiększ arkusz"><Maximize2 size={13} /> Lupa</button>

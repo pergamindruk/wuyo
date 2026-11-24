@@ -8,8 +8,11 @@ import remarkGfm from 'remark-gfm'
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import {
-    Camera, Check, ChevronLeft, ChevronRight, Clock, Copy, ExternalLink, Globe, Images, Palette, Plus, RefreshCw, Sparkles, Trash2, Upload, X,
+    Calendar, CalendarCheck, Camera, Check, ChevronLeft, ChevronRight, Clock, Copy, ExternalLink, FilePen, Globe, Images, ListChecks, NotebookText,
+    Palette, Plus, RefreshCw, Send, Sparkles, Trash2, Upload, X,
 } from 'lucide-react'
+import { PageHeader, SectionTitle, StatCard } from '@/components/lab/ui/PageHeader'
+import { CountUp } from '@/components/lab/fx/CountUp'
 import type { CalendarEvent } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -114,7 +117,11 @@ async function toJpeg(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('jpg'))), 'image/jpeg', 0.9))
 }
 
-const card = 'rounded-3xl border border-white/[0.06] bg-gradient-to-b from-white/[0.045] to-white/[0.015] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]'
+const card = 'lab-card'
+/** Lżejszy kafelek w szufladzie posta (karta w karcie). */
+const tile = 'rounded-2xl bg-white/[0.03] ring-1 ring-white/[0.05]'
+/** Pole formularza w panelach (wygląd z .lab-ui, tu tylko odstępy). */
+const field = 'px-4 py-2.5 text-sm text-white placeholder:text-zinc-600'
 
 export default function CalendarLab() {
     const [events, setEvents] = useState<CalendarEvent[]>([])
@@ -149,46 +156,51 @@ export default function CalendarLab() {
 
     return (
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
-            <header className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Posty</p>
-                    <h1 className="mt-1 text-3xl font-bold text-white">
-                        {days[0].getMonth() === days[6].getMonth()
-                            ? `${format(days[0], 'd')}–${format(days[6], 'd MMMM', { locale: pl })}`
-                            : `${format(days[0], 'd MMM', { locale: pl })} – ${format(days[6], 'd MMM', { locale: pl })}`}
-                    </h1>
-                    <p className="mt-1 text-sm text-zinc-500">
-                        {weekPosts.length ? `${weekPosts.length} ${plural(weekPosts.length, 'post', 'posty', 'postów')} · szkice ${count('Szkic')} · w kolejce ${count('Zaplanowane')}${count('Canva') ? ` · w Canvie ${count('Canva')}` : ''} · opublikowane ${count('Opublikowane')}` : 'Pusty tydzień'}
-                    </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
+            <PageHeader
+                icon={Calendar}
+                eyebrow="Plan postów"
+                title={days[0].getMonth() === days[6].getMonth()
+                    ? `${format(days[0], 'd')}–${format(days[6], 'd MMMM', { locale: pl })}`
+                    : `${format(days[0], 'd MMM', { locale: pl })} – ${format(days[6], 'd MMM', { locale: pl })}`}
+                subtitle={weekPosts.length
+                    ? `${weekPosts.length} ${plural(weekPosts.length, 'post', 'posty', 'postów')} w tym tygodniu${count('Canva') ? ` · w Canvie ${count('Canva')}` : ''}`
+                    : 'Pusty tydzień. Zaplanuj go jednym kliknięciem albo dodaj post ręcznie.'}
+                actions={<>
                     <div className="flex items-center rounded-full border border-white/10 bg-white/[0.03] p-1">
-                        <button onClick={() => setWeekStart(addWeeks(weekStart, -1))} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Poprzedni tydzień"><ChevronLeft size={16} /></button>
-                        <button onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))} className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:bg-white/10">Ten tydzień</button>
-                        <button onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Następny tydzień"><ChevronRight size={16} /></button>
+                        <button type="button" onClick={() => setWeekStart(addWeeks(weekStart, -1))} className="rounded-full p-2 text-zinc-400 transition hover:bg-white/10 hover:text-white" aria-label="Poprzedni tydzień"><ChevronLeft size={16} strokeWidth={1.8} /></button>
+                        <button type="button" onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))} className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:bg-white/10">Ten tydzień</button>
+                        <button type="button" onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="rounded-full p-2 text-zinc-400 transition hover:bg-white/10 hover:text-white" aria-label="Następny tydzień"><ChevronRight size={16} strokeWidth={1.8} /></button>
                     </div>
-                    <button onClick={() => setPanel(panel === 'add' ? 'none' : 'add')} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-semibold text-zinc-200 hover:border-white/20">
-                        <Plus size={14} /> Dodaj post
+                    <button type="button" data-sound="pop" onClick={() => setPanel(panel === 'add' ? 'none' : 'add')} className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold transition ${panel === 'add' ? 'border-yellow-400/50 bg-yellow-400/10 text-yellow-300' : 'border-white/10 bg-white/[0.03] text-zinc-200 hover:border-white/20'}`}>
+                        <Plus size={14} strokeWidth={1.8} /> Dodaj post
                     </button>
-                    <button onClick={() => setPanel(panel === 'plan' ? 'none' : 'plan')} className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 shadow-[0_0_30px_-8px_rgba(255,235,82,0.7)] hover:bg-yellow-300">
-                        <Sparkles size={14} /> Zaplanuj tydzień
+                    <button type="button" data-sound="pop" onClick={() => setPanel(panel === 'plan' ? 'none' : 'plan')} className="flex items-center gap-1.5 bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950">
+                        <Sparkles size={14} strokeWidth={1.8} /> Zaplanuj tydzień
                     </button>
-                </div>
-            </header>
+                </>}
+            />
+
+            <div className="lab-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <StatCard icon={Calendar} label="Posty w tygodniu" value={<CountUp value={weekPosts.length} />} hot={weekPosts.length > 0} />
+                <StatCard icon={FilePen} label="Szkice" value={<CountUp value={count('Szkic')} />} hint="nie wychodzą nigdzie" />
+                <StatCard icon={ListChecks} label="W kolejce" value={<CountUp value={count('Zaplanowane')} />} hint="wyjdą ok. 10:00" />
+                <StatCard icon={CalendarCheck} label="Opublikowane" value={<CountUp value={count('Opublikowane')} />} />
+            </div>
 
             {panel === 'plan' && <PlanWeekPanel onDone={(first) => { setPanel('none'); if (first) setWeekStart(startOfWeek(new Date(`${first}T12:00:00`), { weekStartsOn: 1 })); load() }} />}
             {panel === 'add' && <AddPostPanel defaultDate={format(days[0], 'yyyy-MM-dd')} onDone={() => { setPanel('none'); load() }} />}
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
+            <div className="lab-stagger grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
                 {days.map((day) => {
                     const ds = format(day, 'yyyy-MM-dd')
                     const dayPosts = weekPosts.filter((p) => p.date === ds)
                     const today = isSameDay(day, new Date())
                     return (
-                        <div key={ds} className={`${card} flex min-h-[9rem] flex-col gap-2 p-2.5 ${today ? 'ring-1 ring-yellow-400/40' : ''} ${dayPosts.length ? '' : 'opacity-60'}`}>
-                            <div className="flex items-baseline justify-between px-1">
-                                <span className={`text-[11px] font-bold uppercase tracking-wider ${today ? 'text-yellow-400' : 'text-zinc-500'}`}>{format(day, 'EEE', { locale: pl })}</span>
-                                <span className={`text-lg font-bold ${today ? 'text-yellow-400' : 'text-zinc-300'}`}>{format(day, 'd')}</span>
+                        <div key={ds} className={`${card} flex min-h-[10rem] flex-col gap-2 !rounded-[1.5rem] p-2.5 ${today ? '!border-yellow-400/40' : ''} ${dayPosts.length || today ? '' : 'opacity-60'}`}>
+                            {today && <span className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-yellow-400/15 blur-2xl" />}
+                            <div className="flex items-center justify-between px-1.5 pt-1">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${today ? 'text-yellow-400' : 'text-zinc-500'}`}>{format(day, 'EEE', { locale: pl })}</span>
+                                <span className={`flex h-8 w-8 items-center justify-center rounded-full font-heading text-base font-bold ${today ? 'lab-chip !rounded-full' : 'text-zinc-300'}`}>{format(day, 'd')}</span>
                             </div>
                             {dayPosts.map((p) => <PostTile key={p.key} post={p} onOpen={() => setOpenKey(p.key)} />)}
                         </div>
@@ -196,12 +208,19 @@ export default function CalendarLab() {
                 })}
             </div>
 
-            {loading && <p className="text-sm text-zinc-500">Wczytuję…</p>}
+            {loading && (
+                <p className="flex items-center gap-2 text-sm text-zinc-500">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-yellow-400/25 border-t-yellow-400" /> Wczytuję…
+                </p>
+            )}
 
-            <p className="text-xs text-zinc-600">
-                Szkic nie wychodzi nigdzie. „W kolejce” = publikacja automatyczna w dniu posta ok. 10:00.{' '}
-                <Link href="/lab/ai-studio?tab=post" className="text-zinc-400 hover:text-yellow-400">Jeden post na szybko: AI Studio</Link>
-            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-white/[0.03] px-4 py-3 text-xs text-zinc-500">
+                {(['Szkic', 'Zaplanowane', 'Canva', 'Postiz', 'Opublikowane'] as const).map((s) => (
+                    <span key={s} className="flex items-center gap-1.5"><span className={`h-2 w-2 rounded-full ${STATUS_STYLE[s]}`} />{STATUS_LABEL[s]}</span>
+                ))}
+                <span className="basis-full sm:basis-auto">Szkic nie wychodzi nigdzie. „W kolejce” = publikacja automatyczna w dniu posta ok. 10:00.</span>
+                <Link href="/lab/ai-studio?tab=post" className="flex items-center gap-1 text-zinc-400 hover:text-yellow-400 sm:ml-auto"><Sparkles size={12} /> Jeden post na szybko: AI Studio</Link>
+            </div>
 
             {open && <PostDrawer post={open} onClose={() => setOpenKey(null)} onChanged={load} onTopicChange={(t) => setOpenKey(`${open.date}|${t}`)} />}
         </div>
@@ -211,17 +230,17 @@ export default function CalendarLab() {
 function PostTile({ post, onOpen }: { post: Post; onOpen: () => void }) {
     const st = postStatus(post)
     return (
-        <button onClick={onOpen} className="group flex flex-col gap-2 rounded-2xl border border-white/[0.06] bg-black/30 p-2 text-left transition hover:border-yellow-400/40 hover:bg-black/50">
+        <button type="button" data-sound="pop" onClick={onOpen} className="group flex flex-col gap-2 rounded-2xl bg-white/[0.03] p-2 text-left ring-1 ring-white/[0.05] transition hover:-translate-y-0.5 hover:bg-white/[0.06] hover:ring-yellow-400/40">
             {post.images[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase albo dowolnego adresu
-                <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl border border-white/10 object-cover" />
+                <img src={post.images[0]} alt="" className="aspect-[4/5] w-full rounded-xl object-cover ring-1 ring-white/10" />
             ) : null}
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+            <div className="flex items-center gap-1.5 px-0.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[st]}`} />
                 {post.format}
                 {post.images.length > 1 && <span className="ml-auto flex items-center gap-0.5"><Images size={10} />{post.images.length}</span>}
             </div>
-            <p className="line-clamp-3 text-xs font-medium leading-snug text-zinc-200 group-hover:text-white">{post.topic}</p>
+            <p className="line-clamp-3 px-0.5 pb-0.5 text-xs font-medium leading-snug text-zinc-200 group-hover:text-white">{post.topic}</p>
         </button>
     )
 }
@@ -244,17 +263,18 @@ function PlanWeekPanel({ onDone }: { onDone: (firstDate?: string) => void }) {
         }
     }
     return (
-        <section className={`${card} flex flex-col gap-3 p-5`}>
-            <p className="text-sm text-zinc-300">3 posty na najbliższy tydzień (porada, kulisy, wiedza), każdy na FB i IG. Bez cen i ofert. Trafiają jako szkice.</p>
-            <p className="text-xs text-zinc-500">Pełny tydzień z grafikami robi też automat w czwartki o 18:00.</p>
+        <section className={`${card} flex flex-col gap-3 p-5 sm:p-6`}>
+            <SectionTitle icon={Sparkles} title="Zaplanuj tydzień z AI" />
+            <p className="-mt-2 text-sm text-zinc-300">3 posty na najbliższy tydzień (porada, kulisy, wiedza), każdy na FB i IG. Bez cen i ofert. Trafiają jako szkice.</p>
+            <p className="flex items-center gap-1.5 text-xs text-zinc-500"><Clock size={12} /> Pełny tydzień z grafikami robi też automat w czwartki o 18:00.</p>
             <div className="flex flex-col gap-2 sm:flex-row">
                 <input value={hint} onChange={(e) => setHint(e.target.value)} placeholder="Opcjonalnie: o czym w tym tygodniu?"
-                    className="flex-1 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none" />
-                <button onClick={run} disabled={busy} className="rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
-                    {busy ? 'Piszę… (ok. 30 s)' : 'Zaplanuj'}
+                    className={`flex-1 ${field}`} />
+                <button type="button" onClick={run} disabled={busy} className="flex items-center justify-center gap-1.5 bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 disabled:opacity-50">
+                    <Sparkles size={15} strokeWidth={1.8} /> {busy ? 'Piszę… (ok. 30 s)' : 'Zaplanuj'}
                 </button>
             </div>
-            {err && <p className="text-sm text-red-400">{err}</p>}
+            {err && <p className="rounded-2xl bg-red-400/10 px-4 py-3 text-sm text-red-300">{err}</p>}
         </section>
     )
 }
@@ -274,10 +294,10 @@ function AddPostPanel({ defaultDate, onDone }: { defaultDate: string; onDone: ()
         setBusy(false)
         onDone()
     }
-    const field = 'rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm text-white focus:border-yellow-400/60 focus:outline-none'
     return (
-        <form onSubmit={submit} className={`${card} grid grid-cols-1 gap-3 p-5 md:grid-cols-[auto_1fr_auto_auto_auto] md:items-center`}>
-            <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className={field} />
+        <form onSubmit={submit} className={`${card} grid grid-cols-1 gap-3 p-5 sm:p-6 md:grid-cols-[auto_1fr_auto_auto_auto] md:items-center`}>
+            <div className="-mb-4 md:col-span-5"><SectionTitle icon={Plus} title="Nowy post (FB + IG)" /></div>
+            <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className={`${field} [color-scheme:dark]`} />
             <input required value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Temat posta, np. jak dobrać papier do wizytówek" className={field} />
             <select value={fmt} onChange={(e) => setFmt(e.target.value)} className={field}>
                 <option>Post z grafiką</option><option>Karuzela</option><option>Rolka</option>
@@ -285,8 +305,8 @@ function AddPostPanel({ defaultDate, onDone }: { defaultDate: string; onDone: ()
             <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-300">
                 <input type="checkbox" checked={ai} onChange={(e) => setAi(e.target.checked)} className="h-4 w-4 accent-yellow-400" /> AI napisze tekst
             </label>
-            <button disabled={busy} className="rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
-                {busy ? 'Zapisuję…' : 'Dodaj (FB + IG)'}
+            <button disabled={busy} className="flex items-center justify-center gap-1.5 bg-yellow-400 px-5 py-2.5 text-sm font-bold text-zinc-950 disabled:opacity-50">
+                <Plus size={15} strokeWidth={1.8} /> {busy ? 'Zapisuję…' : 'Dodaj (FB + IG)'}
             </button>
         </form>
     )
@@ -416,19 +436,24 @@ ${original.notes}` : text.trim())
     const published = versions.every((v) => v.status === 'Opublikowane')
 
     return (
-        <div className="fixed inset-0 z-[80] flex justify-end bg-black/70" onClick={onClose}>
+        <div className="fixed inset-0 z-[80] flex justify-end bg-black/70 p-2 backdrop-blur-sm sm:p-3" onClick={onClose}>
             <aside onClick={(e) => e.stopPropagation()}
-                className="flex h-full w-full max-w-xl flex-col gap-5 overflow-y-auto border-l border-white/10 bg-[#0d0d0f] p-5 shadow-2xl sm:p-6">
+                className="lab-card flex h-full w-full max-w-xl flex-col gap-5 !overflow-y-auto rounded-[1.75rem] !bg-[#0e0e11] p-5 sm:p-6">
+                <span className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-yellow-400/10 blur-3xl" />
                 <div className="flex items-start justify-between gap-3">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-yellow-400/80">
-                            {format(new Date(`${post.date}T12:00:00`), 'EEEE d MMMM', { locale: pl })} · {post.format}
-                        </p>
-                        <h2 className="mt-1 text-xl font-bold leading-snug text-white">{post.topic}</h2>
+                    <div className="flex min-w-0 items-start gap-3">
+                        <span className="lab-chip h-11 w-11 shrink-0"><Calendar size={20} strokeWidth={1.8} /></span>
+                        <div className="min-w-0">
+                            <p className="flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-400">
+                                <span className="capitalize">{format(new Date(`${post.date}T12:00:00`), 'EEEE d MMMM', { locale: pl })}</span>
+                                <span className="rounded-full bg-white/[0.06] px-2.5 py-0.5 text-[11px] font-semibold text-zinc-300">{post.format}</span>
+                            </p>
+                            <h2 className="mt-1 text-xl font-bold leading-snug text-white">{post.topic}</h2>
+                        </div>
                     </div>
                     <div className="flex shrink-0 gap-1">
-                        <button onClick={remove} disabled={busy} className="rounded-full p-2 text-zinc-500 hover:bg-red-500/10 hover:text-red-400" aria-label="Usuń post"><Trash2 size={16} /></button>
-                        <button onClick={onClose} className="rounded-full p-2 text-zinc-400 hover:bg-white/10 hover:text-white" aria-label="Zamknij"><X size={18} /></button>
+                        <button type="button" onClick={remove} disabled={busy} className="rounded-full p-2 text-zinc-500 transition hover:bg-red-400/10 hover:text-red-300" aria-label="Usuń post"><Trash2 size={16} strokeWidth={1.8} /></button>
+                        <button type="button" data-sound="off" onClick={onClose} className="rounded-full p-2 text-zinc-400 transition hover:bg-white/10 hover:text-white" aria-label="Zamknij"><X size={18} strokeWidth={1.8} /></button>
                     </div>
                 </div>
 
@@ -439,11 +464,11 @@ ${original.notes}` : text.trim())
                                 <div key={u} className="relative shrink-0">
                                     <a href={u} target="_blank" rel="noreferrer">
                                         {/* eslint-disable-next-line @next/next/no-img-element -- grafiki z bucketu Supabase */}
-                                        <img src={u} alt={`Grafika ${i + 1}`} className={`h-40 w-32 rounded-xl border border-white/15 object-cover ${u === imgUrl ? 'ring-2 ring-yellow-400' : 'opacity-80 hover:opacity-100'}`} />
+                                        <img src={u} alt={`Grafika ${i + 1}`} className={`h-40 w-32 rounded-2xl object-cover transition ${u === imgUrl ? 'ring-2 ring-yellow-400 shadow-[0_10px_30px_-10px_rgba(255,214,10,0.55)]' : 'opacity-80 ring-1 ring-white/10 hover:opacity-100'}`} />
                                     </a>
                                     {post.images.length > 1 && <span className="absolute left-1.5 top-1.5 rounded-full bg-black/70 px-1.5 text-[10px] font-bold text-white">{i + 1}</span>}
                                     {u !== imgUrl && (
-                                        <button onClick={() => pickImage(u)} className="absolute bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/80 px-2 py-0.5 text-[10px] text-zinc-200 hover:text-yellow-400">użyj tej</button>
+                                        <button type="button" onClick={() => pickImage(u)} className="absolute bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-black/80 px-2.5 py-0.5 text-[10px] font-semibold text-zinc-200 backdrop-blur hover:text-yellow-400">użyj tej</button>
                                     )}
                                 </div>
                             ))}
@@ -463,26 +488,26 @@ ${original.notes}` : text.trim())
                             </button>
                             <button onClick={() => fileRef.current?.click()} disabled={busy}
                                 className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-white/25 disabled:opacity-50">
-                                <Upload size={13} /> Wgraj poprawioną
+                                <Upload size={13} strokeWidth={1.8} /> Wgraj poprawioną
                             </button>
                             <button onClick={() => setRegenOpen(!regenOpen)} disabled={busy}
                                 className="flex items-center gap-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/[0.06] px-3 py-1.5 text-xs font-semibold text-yellow-300 hover:border-yellow-400/60 disabled:opacity-50">
-                                <RefreshCw size={13} /> Nowa propozycja (Gemini)
+                                <RefreshCw size={13} strokeWidth={1.8} /> Nowa propozycja (Gemini)
                             </button>
                             <input ref={fileRef} type="file" accept="image/*" className="hidden"
                                 onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) uploadEdited(f) }} />
                         </div>
                         {regenOpen && (
-                            <div className={`${card} flex flex-col gap-2 p-4`}>
+                            <div className={`${tile} flex flex-col gap-2 p-4`}>
                                 <input value={hint} onChange={(e) => setHint(e.target.value)} placeholder="Opcjonalnie: co zmienić? np. krócej, bardziej z życia, inny przykład"
-                                    className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none" />
+                                    className="px-4 py-2 text-sm text-white placeholder:text-zinc-600" />
                                 <div className="flex flex-wrap items-center gap-3">
                                     <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-300">
                                         <input type="checkbox" checked={newTopic} onChange={(e) => setNewTopic(e.target.checked)} className="h-4 w-4 accent-yellow-400" /> Może zmienić temat
                                     </label>
                                     <button onClick={regenerate} disabled={busy}
-                                        className="ml-auto rounded-full bg-yellow-400 px-4 py-1.5 text-xs font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
-                                        {busy ? 'Piszę… (ok. 20 s)' : 'Wygeneruj FB + IG'}
+                                        className="ml-auto flex items-center gap-1.5 bg-yellow-400 px-4 py-1.5 text-xs font-bold text-zinc-950 disabled:opacity-50">
+                                        <Sparkles size={13} strokeWidth={1.8} /> {busy ? 'Piszę… (ok. 20 s)' : 'Wygeneruj FB + IG'}
                                     </button>
                                 </div>
                                 <p className="text-[11px] text-zinc-500">Nadpisuje tekst obu wersji (opublikowanych nie rusza). Notatki i grafiki zostają.</p>
@@ -492,10 +517,10 @@ ${original.notes}` : text.trim())
                 )}
 
                 <div className="flex flex-col gap-3">
-                    <div className="flex gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1 self-start">
+                    <div className="flex gap-1 self-start rounded-full border border-white/10 bg-white/[0.03] p-1">
                         {versions.map((v) => (
                             <button key={v.id} onClick={() => setTab(v.id)}
-                                className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold ${v.id === ev.id ? 'bg-white text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
+                                className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition ${v.id === ev.id ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}`}>
                                 {v.platform.toLowerCase() === 'instagram' ? <Camera size={13} /> : <Globe size={13} />}
                                 {v.platform}
                                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLE[v.status] ?? 'bg-zinc-500'}`} />
@@ -504,21 +529,21 @@ ${original.notes}` : text.trim())
                     </div>
 
                     <textarea value={text} onChange={(e) => setText(e.target.value)} rows={10}
-                        className="w-full resize-y rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-relaxed text-zinc-100 focus:border-yellow-400/50 focus:outline-none" />
+                        className="w-full resize-y p-4 text-sm leading-relaxed text-zinc-100" />
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="text-zinc-500">{text.length} znaków</span>
+                        <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">{text.length} znaków</span>
                         <button onClick={() => { navigator.clipboard?.writeText(text); setMsg({ ok: true, text: 'Skopiowane.' }) }}
-                            className="ml-auto flex items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 text-zinc-300 hover:border-white/25"><Copy size={12} /> Kopiuj</button>
-                        {dirty && <button onClick={save} disabled={busy} className="flex items-center gap-1 rounded-full bg-white px-3 py-1.5 font-semibold text-zinc-950 disabled:opacity-50"><Check size={12} /> Zapisz zmiany</button>}
+                            className="ml-auto flex items-center gap-1 bg-zinc-800 px-3 py-1.5 text-zinc-300 hover:text-white"><Copy size={12} strokeWidth={1.8} /> Kopiuj</button>
+                        {dirty && <button onClick={save} disabled={busy} className="flex items-center gap-1 bg-yellow-400 px-3 py-1.5 font-bold text-zinc-950 disabled:opacity-50"><Check size={12} /> Zapisz zmiany</button>}
                     </div>
                 </div>
 
-                <div className={`${card} flex flex-col gap-3 p-4`}>
+                <div className={`${tile} flex flex-col gap-3 p-4`}>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="text-xs text-zinc-400">Status {ev.platform}:</span>
                         {(['Szkic', 'Zaplanowane', 'Canva', 'Opublikowane'] as const).map((s) => (
                             <button key={s} onClick={() => setStatus(s)} disabled={busy || ev.status === s}
-                                className={`rounded-full px-3 py-1 text-xs font-semibold ${ev.status === s ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}>
+                                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${ev.status === s ? 'bg-white/10 text-white ring-1 ring-white/15' : 'text-zinc-500 hover:bg-white/[0.06] hover:text-white'}`}>
                                 <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${STATUS_STYLE[s]}`} />{STATUS_LABEL[s]}
                             </button>
                         ))}
@@ -530,16 +555,16 @@ ${original.notes}` : text.trim())
                     )}
                     {ev.status !== 'Opublikowane' && (isIg || isFb) && (
                         <button onClick={openPublisher} disabled={busy}
-                            className="self-start rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50">
-                            {busy ? 'Chwila…' : 'Publikuj w panelu (wybór kont)'}
+                            className="flex items-center gap-1.5 self-start bg-yellow-400 px-4 py-2 text-xs font-bold text-zinc-950 disabled:opacity-50">
+                            <Send size={13} strokeWidth={1.8} /> {busy ? 'Chwila…' : 'Publikuj w panelu (wybór kont)'}
                         </button>
                     )}
-                    {msg && <p className={`text-xs ${msg.ok ? 'text-emerald-400' : 'text-red-400'}`}>{msg.text}</p>}
+                    {msg && <p className={`rounded-xl px-3 py-2 text-xs ${msg.ok ? 'bg-emerald-400/10 text-emerald-300' : 'bg-red-400/10 text-red-300'}`}>{msg.text}</p>}
                 </div>
 
                 {post.notes && (
-                    <details className={`${card} p-4`} open={post.format.toLowerCase().includes('rolka')}>
-                        <summary className="cursor-pointer text-xs font-semibold text-zinc-300">Notatki: scenariusz, slajdy, dlaczego ten post</summary>
+                    <details className={`${tile} p-4`} open={post.format.toLowerCase().includes('rolka')}>
+                        <summary className="flex cursor-pointer items-center gap-2 text-xs font-semibold text-zinc-300"><NotebookText size={14} strokeWidth={1.8} className="text-yellow-400" /> Notatki: scenariusz, slajdy, dlaczego ten post</summary>
                         <div className="prose prose-sm prose-invert mt-3 max-w-none break-words text-zinc-300 prose-a:text-yellow-400 prose-p:my-1.5">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.notes}</ReactMarkdown>
                         </div>

@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { Check, Copy, Download } from 'lucide-react'
 
 const btn =
-    'inline-flex items-center gap-1.5 rounded-md border border-zinc-700 hover:border-yellow-400/50 ' +
-    'px-2.5 py-1.5 text-xs text-zinc-200 transition-colors'
+    'inline-flex items-center gap-1.5 rounded-full bg-white/[0.06] hover:bg-white/10 hover:text-white ' +
+    'px-3.5 py-2 text-xs font-medium text-zinc-200 transition-colors'
 
 export function CopyButton({ text, label = 'Kopiuj' }: { text: string; label?: string }) {
     const [done, setDone] = useState(false)
@@ -24,7 +24,7 @@ export function CopyButton({ text, label = 'Kopiuj' }: { text: string; label?: s
                 }
             }}
         >
-            {done ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+            {done ? <Check size={14} strokeWidth={1.8} className="text-emerald-400" /> : <Copy size={14} strokeWidth={1.8} className="text-yellow-400" />}
             {done ? 'Skopiowane' : label}
         </button>
     )
@@ -46,7 +46,7 @@ export function DownloadButton({ text, filename }: { text: string; filename: str
                 URL.revokeObjectURL(url)
             }}
         >
-            <Download size={12} /> Pobierz
+            <Download size={14} strokeWidth={1.8} className="text-yellow-400" /> Pobierz
         </button>
     )
 }

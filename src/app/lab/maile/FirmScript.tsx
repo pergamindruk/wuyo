@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Copy, RefreshCw } from 'lucide-react'
+import { ChevronDown, Copy, RefreshCw, ScrollText } from 'lucide-react'
 import { prepareFirmScript } from './actions'
 
 const PROSE = 'prose prose-invert prose-sm max-w-none prose-p:my-1 prose-li:my-0.5 prose-ul:my-1 prose-headings:text-white ' +
@@ -32,27 +32,28 @@ export function FirmScript({ firm, initial }: { firm: string; initial: string | 
     }, [])
 
     return (
-        <details className="group rounded-lg border border-zinc-800 bg-zinc-900/40">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-xs font-semibold text-yellow-400">
-                <span>Scenariusz: telefon i odpowiedzi na maila</span>
-                <span className="text-zinc-500 group-open:hidden">
-                    {pending && !text ? 'przygotowuję…' : 'pokaż'}
+        <details className="group rounded-2xl bg-yellow-400/[0.05] ring-1 ring-yellow-400/15">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-xs font-semibold text-yellow-300">
+                <span className="flex items-center gap-2"><ScrollText size={16} strokeWidth={1.8} /> Scenariusz: telefon i odpowiedzi na maila</span>
+                <span className="flex items-center gap-1 text-zinc-500">
+                    <span className="group-open:hidden">{pending && !text ? 'przygotowuję…' : 'pokaż'}</span>
+                    <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
                 </span>
             </summary>
-            <div className="border-t border-zinc-800 px-3 py-3">
+            <div className="border-t border-white/[0.06] px-4 py-4">
                 {text ? <div className={PROSE}><ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown></div>
                     : <p className="text-xs text-zinc-500">{pending ? 'Przygotowuję scenariusz…' : 'Brak scenariusza.'}</p>}
-                {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+                {error && <p className="mt-2 rounded-2xl bg-red-400/10 px-3 py-2 text-xs text-red-300">{error}</p>}
                 <div className="mt-3 flex gap-2">
                     {text && (
                         <button type="button" onClick={() => navigator.clipboard?.writeText(text)}
-                            className="inline-flex items-center gap-1 rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:border-zinc-500">
-                            <Copy size={11} /> Kopiuj
+                            className="inline-flex items-center gap-1.5 bg-zinc-800 px-3.5 py-1.5 text-[11px] font-semibold text-zinc-300">
+                            <Copy size={12} /> Kopiuj
                         </button>
                     )}
                     <button type="button" disabled={pending} onClick={() => run(true)}
-                        className="inline-flex items-center gap-1 rounded-md border border-zinc-700 px-2 py-1 text-[11px] text-zinc-300 hover:border-zinc-500 disabled:opacity-50">
-                        <RefreshCw size={11} className={pending ? 'animate-spin' : ''} /> {text ? 'Napisz od nowa' : 'Przygotuj'}
+                        className="inline-flex items-center gap-1.5 bg-zinc-800 px-3.5 py-1.5 text-[11px] font-semibold text-zinc-300 disabled:opacity-50">
+                        <RefreshCw size={12} className={pending ? 'animate-spin' : ''} /> {text ? 'Napisz od nowa' : 'Przygotuj'}
                     </button>
                 </div>
             </div>

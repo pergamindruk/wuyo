@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Coins, Compass, Kanban, Phone, Route, Target, Timer, TrendingUp, Trophy, Wallet, XCircle } from 'lucide-react'
+import { PageHeader, SectionTitle, StatCard } from '@/components/lab/ui/PageHeader'
+import { CountUp } from '@/components/lab/fx/CountUp'
 import { createClient } from '@/lib/supabase/server'
 import { getMonthGoal } from '@/lib/lab/today/queries'
 import { formatPLN } from '@/lib/lab/today/format'
@@ -30,62 +32,69 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
 
     return (
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
-            <header className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Sprzedaż</p>
-                    <h1 className="mt-1 text-3xl font-bold text-white">Ostatnie {period} dni</h1>
-                    <p className="mt-1 text-sm text-zinc-500">Liczone z lejka, wpłat, zapytań i kolejki telefonów. Bez zgadywania.</p>
-                </div>
-                <nav className="flex gap-1 rounded-full border border-zinc-800 p-1" aria-label="Okres">
-                    {PERIODS.map((p) => (
-                        <Link
-                            key={p}
-                            href={`/lab/sprzedaz?okres=${p}`}
-                            className={`rounded-full px-4 py-1.5 text-sm ${p === period ? 'bg-yellow-400 font-semibold text-zinc-950' : 'text-zinc-400 hover:text-white'}`}
-                        >
-                            {p === 365 ? 'Rok' : `${p} dni`}
-                        </Link>
-                    ))}
-                </nav>
-            </header>
+            <PageHeader
+                icon={TrendingUp}
+                eyebrow="Sprzedaż"
+                title={period === 365 ? 'Ostatni rok' : `Ostatnie ${period} dni`}
+                subtitle="Liczone z lejka, wpłat, zapytań i kolejki telefonów. Bez zgadywania."
+                actions={
+                    <nav className="lab-pill flex gap-1 p-1" aria-label="Okres">
+                        {PERIODS.map((p) => (
+                            <Link
+                                key={p}
+                                href={`/lab/sprzedaz?okres=${p}`}
+                                className={`rounded-full px-4 py-1.5 text-sm transition-colors ${p === period ? 'bg-yellow-400 font-semibold text-zinc-950' : 'text-zinc-400 hover:text-white'}`}
+                            >
+                                {p === 365 ? 'Rok' : `${p} dni`}
+                            </Link>
+                        ))}
+                    </nav>
+                }
+            />
 
             {s.malaProba && (
-                <p className="flex items-start gap-2 rounded-2xl border border-yellow-400/25 bg-yellow-400/[0.05] px-4 py-3 text-sm text-zinc-300">
-                    <AlertTriangle size={16} className="mt-0.5 shrink-0 text-yellow-400" />
+                <p className="flex items-start gap-3 rounded-2xl bg-yellow-400/[0.07] px-4 py-3 text-sm text-zinc-300 ring-1 ring-yellow-400/25">
+                    <AlertTriangle size={18} strokeWidth={1.8} className="mt-0.5 shrink-0 text-yellow-400" />
                     Mało danych: {s.won + s.lost} zamkniętych zleceń w tym okresie. Procenty pokażą prawdę dopiero przy około 10.
                 </p>
             )}
 
             <section className={statCard}>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <p className="text-sm font-semibold text-white">Cel miesiąca</p>
-                    <p className="text-sm text-zinc-400">
-                        <b className="text-white">{formatPLN(goal.earnedGrosze)}</b> z {formatPLN(goal.goalGrosze)} · zostało {goal.daysLeft} dni
-                    </p>
+                <SectionTitle
+                    icon={Target}
+                    title="Cel miesiąca"
+                    action={<span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-300">zostało {goal.daysLeft} dni</span>}
+                />
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <p className="font-heading text-4xl font-bold leading-none text-white"><CountUp value={goal.earnedGrosze} format="pln" /></p>
+                    <p className="text-sm text-zinc-400">z {formatPLN(goal.goalGrosze)} · {Math.round(goalPct * 100)}%</p>
                 </div>
-                <div className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-800">
-                    <div className="h-full rounded-full bg-yellow-400" style={{ width: `${Math.max(2, goalPct * 100)}%` }} />
+                <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div className="lab-bar h-full rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 shadow-[0_0_18px_rgba(255,214,10,0.55)]" style={{ width: `${Math.max(2, goalPct * 100)}%` }} />
                 </div>
-                <p className="mt-2 text-xs text-zinc-500">W otwartych zleceniach (etapy 2–6) czeka jeszcze {formatPLN(goal.pipelineGrosze)}.</p>
+                <p className="mt-3 text-xs text-zinc-500">W otwartych zleceniach (etapy 2–6) czeka jeszcze {formatPLN(goal.pipelineGrosze)}.</p>
             </section>
 
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                <Tile label="Wpłaty w okresie" value={formatPLN(s.paidGrosze)} />
-                <Tile label="Wygrane / przegrane" value={`${s.won} / ${s.lost}`} sub={`skuteczność ${pct(s.winRate)}`} />
-                <Tile label="Średnie zlecenie" value={s.avgDealGrosze === null ? '–' : formatPLN(s.avgDealGrosze)} sub="netto, zakończone" />
-                <Tile label="Od wpisania do końca" value={s.avgDaysToClose === null ? '–' : `${s.avgDaysToClose} dni`} sub="średnio" />
+            <div className="lab-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <StatCard icon={Wallet} label="Wpłaty w okresie" value={<CountUp value={s.paidGrosze} format="pln" />} hot={s.paidGrosze > 0} />
+                <Tile icon={Trophy} label="Wygrane / przegrane" value={`${s.won} / ${s.lost}`} sub={`skuteczność ${pct(s.winRate)}`} />
+                <Tile icon={Coins} label="Średnie zlecenie" value={s.avgDealGrosze === null ? '–' : formatPLN(s.avgDealGrosze)} sub="netto, zakończone" />
+                <Tile icon={Timer} label="Od wpisania do końca" value={s.avgDaysToClose === null ? '–' : `${s.avgDaysToClose} dni`} sub="średnio" />
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
                 <List
+                    icon={Route}
                     title={`Droga klienta (${period} dni)`}
                     rows={s.funnel.map((f) => ({ k: f.label, v: String(f.count), w: funnelMax(f) }))}
                 />
                 <List
+                    icon={Kanban}
                     title="Lejek teraz (otwarte zlecenia)"
                     rows={s.stages.map((x) => ({ k: `${x.stage}. ${x.label}`, v: `${x.count}${x.valueGrosze ? ` · ${formatPLN(x.valueGrosze)}` : ''}`, w: stageMax(x) }))}
                 />
                 <List
+                    icon={Phone}
                     title="Telefony"
                     rows={[
                         { k: 'Wykonane', v: String(s.calls.telefony), w: 1 },
@@ -94,10 +103,12 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
                     ]}
                 />
                 <List
+                    icon={Compass}
                     title="Skąd przychodzą zlecenia"
                     rows={s.sources.map((x) => ({ k: x.source, v: `${x.jobs} (wygr. ${x.won}${x.valueGrosze ? `, ${formatPLN(x.valueGrosze)}` : ''})`, w: srcMax(x) }))}
                 />
                 <List
+                    icon={XCircle}
                     title="Dlaczego przegrane"
                     empty="Brak przegranych w tym okresie."
                     rows={s.lostReasons.map((r) => ({ k: r.reason, v: String(r.count), w: lostMax(r) }))}

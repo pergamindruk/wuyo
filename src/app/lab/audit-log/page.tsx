@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { Shield, RefreshCw } from "lucide-react";
+import { AlertTriangle, History, Shield, RefreshCw } from "lucide-react";
+import { PageHeader, SectionTitle } from "@/components/lab/ui/PageHeader";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -20,18 +21,25 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 const ACTION_COLORS: Record<string, string> = {
-    login: "text-blue-400",
-    lead_status_change: "text-yellow-400",
-    lead_delete: "text-red-400",
-    project_create: "text-green-400",
-    project_update: "text-blue-400",
-    project_delete: "text-red-400",
-    finance_add: "text-green-400",
-    finance_delete: "text-red-400",
-    post_publish: "text-purple-400",
-    post_schedule: "text-purple-400",
-    calendar_event_add: "text-cyan-400",
-    calendar_event_delete: "text-red-400",
+    login: "bg-white/[0.06] text-zinc-300",
+    lead_status_change: "bg-yellow-400/15 text-yellow-300",
+    lead_delete: "bg-red-400/15 text-red-300",
+    project_create: "bg-emerald-400/15 text-emerald-300",
+    project_update: "bg-yellow-400/15 text-yellow-300",
+    project_delete: "bg-red-400/15 text-red-300",
+    finance_add: "bg-emerald-400/15 text-emerald-300",
+    finance_delete: "bg-red-400/15 text-red-300",
+    post_publish: "bg-emerald-400/15 text-emerald-300",
+    post_schedule: "bg-yellow-400/15 text-yellow-300",
+    calendar_event_add: "bg-emerald-400/15 text-emerald-300",
+    calendar_event_delete: "bg-red-400/15 text-red-300",
+};
+
+/** Kolor kropki przy wierszu, zgodny z pigułką akcji. */
+const DOT: Record<string, string> = {
+    "bg-yellow-400/15 text-yellow-300": "bg-yellow-400",
+    "bg-red-400/15 text-red-300": "bg-red-400",
+    "bg-emerald-400/15 text-emerald-300": "bg-emerald-400",
 };
 
 function formatDate(iso: string) {
@@ -67,25 +75,31 @@ export default async function AuditLogPage() {
     }
 
     return (
-        <div className="p-6 md:p-10 max-w-5xl">
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                    <Shield size={22} className="text-gold" />
-                    <h1 className="text-xl font-bold text-white">Audit Log</h1>
-                </div>
-                <Link href="/lab/audit-log" className="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm transition-colors">
-                    <RefreshCw size={13} /> Odśwież
-                </Link>
-            </div>
+        <div className="mx-auto flex max-w-5xl flex-col gap-6">
+            <PageHeader
+                icon={Shield}
+                title="Dziennik zmian"
+                subtitle="Ostatnie 200 akcji w panelu: logowania, zmiany leadów, projekty, finanse i posty."
+                actions={
+                    <Link href="/lab/audit-log" className="inline-flex items-center gap-2 rounded-full bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-200">
+                        <RefreshCw size={16} strokeWidth={1.8} /> Odśwież
+                    </Link>
+                }
+            />
 
             {error && (
-                <div className="mb-6 p-5 rounded-xl border border-red-500/30 bg-red-500/5">
-                    <p className="text-red-400 text-sm font-medium mb-2">Błąd ładowania logów</p>
-                    <p className="text-red-400/70 text-xs">{error}</p>
+                <div className="lab-card border-red-400/30 p-5 sm:p-6">
+                    <div className="flex items-center gap-3">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-400/15 text-red-300"><AlertTriangle size={18} strokeWidth={1.8} /></span>
+                        <div>
+                            <p className="text-sm font-semibold text-red-300">Błąd ładowania logów</p>
+                            <p className="text-xs text-red-300/70">{error}</p>
+                        </div>
+                    </div>
                     {error.includes("audit_log") && (
                         <details className="mt-4">
-                            <summary className="text-white/50 text-xs cursor-pointer hover:text-white/70">Pokaż SQL do uruchomienia w Supabase</summary>
-                            <pre className="mt-3 p-3 rounded-lg bg-white/5 text-xs text-white/60 overflow-auto leading-relaxed">{`CREATE TABLE IF NOT EXISTS audit_log (
+                            <summary className="cursor-pointer text-xs font-medium text-zinc-400 hover:text-yellow-300">Pokaż SQL do uruchomienia w Supabase</summary>
+                            <pre className="mt-3 overflow-auto rounded-2xl bg-black/30 p-4 text-xs leading-relaxed text-zinc-400">{`CREATE TABLE IF NOT EXISTS audit_log (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   action text NOT NULL,
   details jsonb DEFAULT '{}',
@@ -110,37 +124,43 @@ CREATE POLICY "auth_insert" ON audit_log
             )}
 
             {!error && logs.length === 0 && (
-                <div className="text-center py-20 text-white/30">
-                    <Shield size={36} className="mx-auto mb-4 opacity-30" />
-                    <p className="font-medium">Brak zdarzeń w logu</p>
-                    <p className="text-xs mt-1">Zdarzenia pojawią się po wykonaniu akcji w panelu</p>
+                <div className="lab-card flex flex-col items-center gap-3 p-12 text-center">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-500"><Shield size={22} strokeWidth={1.8} /></span>
+                    <p className="font-semibold text-white">Brak zdarzeń w logu</p>
+                    <p className="text-sm text-zinc-500">Zdarzenia pojawią się po wykonaniu akcji w panelu.</p>
                 </div>
             )}
 
             {logs.length > 0 && (
-                <div className="space-y-1">
-                    {logs.map((log) => (
-                        <div
-                            key={log.id}
-                            className="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors group"
-                        >
-                            <div className="shrink-0 w-1.5 h-1.5 rounded-full bg-current mt-2 opacity-60" style={{ color: ACTION_COLORS[log.action]?.replace("text-", "") }} />
-                            <div className="flex-1 min-w-0">
-                                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                                    <span className={`font-semibold text-sm ${ACTION_COLORS[log.action] ?? "text-white/70"}`}>
-                                        {ACTION_LABELS[log.action] ?? log.action}
-                                    </span>
-                                    <span className="text-white/25 text-xs">{formatDate(log.created_at)}</span>
-                                </div>
-                                {log.details && Object.keys(log.details).length > 0 && (
-                                    <p className="text-white/35 text-xs mt-1 font-mono truncate">
-                                        {JSON.stringify(log.details)}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <section className="lab-card p-5 sm:p-6">
+                    <SectionTitle icon={History} title={`Ostatnie zdarzenia · ${logs.length}`} />
+                    <ul className="flex flex-col gap-2">
+                        {logs.map((log) => {
+                            const color = ACTION_COLORS[log.action] ?? "bg-white/[0.06] text-zinc-300";
+                            return (
+                                <li
+                                    key={log.id}
+                                    className="flex items-start gap-3 rounded-2xl bg-white/[0.03] px-4 py-3 transition hover:bg-white/[0.06]"
+                                >
+                                    <span className={`mt-2 h-2 w-2 shrink-0 rounded-full ${DOT[color] ?? "bg-zinc-500"}`} />
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${color}`}>
+                                                {ACTION_LABELS[log.action] ?? log.action}
+                                            </span>
+                                            <span className="text-xs tabular-nums text-zinc-500">{formatDate(log.created_at)}</span>
+                                        </div>
+                                        {log.details && Object.keys(log.details).length > 0 && (
+                                            <p className="mt-1.5 truncate font-mono text-xs text-zinc-500">
+                                                {JSON.stringify(log.details)}
+                                            </p>
+                                        )}
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
             )}
         </div>
     );

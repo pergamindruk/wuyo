@@ -4,13 +4,13 @@
 // Lista i liczby renderują się na serwerze w page.tsx.
 
 import { useState, useTransition } from 'react'
-import { Check, RotateCcw, Trash2, Undo2 } from 'lucide-react'
+import { Check, Plus, RotateCcw, Trash2, Undo2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { addCost, addDeadline, addFact, addTask, deleteCost, deleteDeadline, deleteFact, deleteTask, retryTask, setDeadlineDone, toggleGrant } from './actions'
 
-const input = 'rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
-const button = 'rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50'
-const iconBtn = 'rounded-lg p-1.5 text-zinc-500 hover:bg-white/[0.06] hover:text-white disabled:opacity-40'
+const input = 'lab-input px-3 py-2 text-sm text-white placeholder:text-zinc-600'
+const button = 'inline-flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-yellow-300 disabled:opacity-50'
+const iconBtn = 'rounded-full p-2 text-zinc-500 hover:bg-white/[0.06] hover:text-white disabled:opacity-40'
 
 type Result = { ok: true } | { ok: false; error: string }
 
@@ -47,7 +47,7 @@ export function CostForm({ defaultDate }: { defaultDate: string }) {
                 <input type="checkbox" checked={f.zDotacji} onChange={(e) => setF({ ...f, zDotacji: e.target.checked })} className="accent-yellow-400" />
                 z dotacji
             </label>
-            <button type="submit" disabled={pending} className={button}>Dodaj</button>
+            <button type="submit" disabled={pending} className={button}><Plus size={16} strokeWidth={1.8} /> Dodaj</button>
         </form>
     )
 }
@@ -60,7 +60,7 @@ export function CostRowActions({ id, zDotacji }: { id: string; zDotacji: boolean
                 type="button"
                 disabled={pending}
                 onClick={() => run(() => toggleGrant(id, !zDotacji))}
-                className={`rounded-full border px-2.5 py-0.5 text-xs ${zDotacji ? 'border-yellow-400/40 bg-yellow-400/10 text-yellow-300' : 'border-zinc-800 text-zinc-500 hover:text-zinc-300'}`}
+                className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${zDotacji ? 'bg-yellow-400/15 text-yellow-300' : 'bg-white/[0.06] text-zinc-400 hover:text-zinc-200'}`}
                 title="Zakup opłacony z dotacji nie idzie w koszty podatkowe"
             >
                 {zDotacji ? 'z dotacji' : 'zwykły'}
@@ -74,7 +74,7 @@ export function CostRowActions({ id, zDotacji }: { id: string; zDotacji: boolean
                 className={iconBtn}
                 aria-label="Usuń koszt"
             >
-                <Trash2 size={15} />
+                <Trash2 size={16} strokeWidth={1.8} />
             </button>
         </span>
     )
@@ -94,7 +94,7 @@ export function DeadlineForm({ defaultDate }: { defaultDate: string }) {
         >
             <input type="date" required value={data} onChange={(e) => setData(e.target.value)} className={input} aria-label="Data" />
             <input required placeholder="Czego pilnować" value={tytul} onChange={(e) => setTytul(e.target.value)} className={`${input} min-w-40 flex-1`} aria-label="Termin" />
-            <button type="submit" disabled={pending} className={button}>Dodaj</button>
+            <button type="submit" disabled={pending} className={button}><Plus size={16} strokeWidth={1.8} /> Dodaj</button>
         </form>
     )
 }
@@ -104,7 +104,7 @@ export function DeadlineRowActions({ id, zrobione }: { id: string; zrobione: boo
     return (
         <span className="flex shrink-0 items-center gap-1">
             <button type="button" disabled={pending} onClick={() => run(() => setDeadlineDone(id, !zrobione))} className={iconBtn} aria-label={zrobione ? 'Przywróć' : 'Oznacz jako zrobione'}>
-                {zrobione ? <Undo2 size={15} /> : <Check size={15} />}
+                {zrobione ? <Undo2 size={16} strokeWidth={1.8} /> : <Check size={16} strokeWidth={1.8} />}
             </button>
             <button
                 type="button"
@@ -115,7 +115,7 @@ export function DeadlineRowActions({ id, zrobione }: { id: string; zrobione: boo
                 className={iconBtn}
                 aria-label="Usuń termin"
             >
-                <Trash2 size={15} />
+                <Trash2 size={16} strokeWidth={1.8} />
             </button>
         </span>
     )
@@ -151,7 +151,7 @@ export function TaskForm() {
                     Nie wcześniej niż
                     <input type="date" value={termin} onChange={(e) => setTermin(e.target.value)} className={input} aria-label="Najwcześniejszy dzień" />
                 </label>
-                <button type="submit" disabled={pending} className={button}>Dodaj zadanie</button>
+                <button type="submit" disabled={pending} className={button}><Plus size={16} strokeWidth={1.8} /> Dodaj zadanie</button>
             </div>
         </form>
     )
@@ -163,7 +163,7 @@ export function TaskRowActions({ id, status }: { id: string; status: string }) {
         <span className="flex shrink-0 items-center gap-1">
             {(status === 'blad' || status === 'w_toku') && (
                 <button type="button" disabled={pending} onClick={() => run(() => retryTask(id))} className={iconBtn} aria-label="Spróbuj jeszcze raz">
-                    <RotateCcw size={15} />
+                    <RotateCcw size={16} strokeWidth={1.8} />
                 </button>
             )}
             <button
@@ -175,7 +175,7 @@ export function TaskRowActions({ id, status }: { id: string; status: string }) {
                 className={iconBtn}
                 aria-label="Usuń zadanie"
             >
-                <Trash2 size={15} />
+                <Trash2 size={16} strokeWidth={1.8} />
             </button>
         </span>
     )
@@ -193,7 +193,7 @@ export function FactForm() {
             }}
         >
             <input required placeholder="Np. Umowa z PUP podpisana 1.12.2026" value={tresc} onChange={(e) => setTresc(e.target.value)} className={`${input} min-w-0 flex-1`} aria-label="Nowe ustalenie" />
-            <button type="submit" disabled={pending} className={button}>Dodaj</button>
+            <button type="submit" disabled={pending} className={button}><Plus size={16} strokeWidth={1.8} /> Dodaj</button>
         </form>
     )
 }
@@ -210,7 +210,7 @@ export function FactRowActions({ id }: { id: string }) {
             className={`${iconBtn} shrink-0`}
             aria-label="Usuń ustalenie"
         >
-            <Trash2 size={15} />
+            <Trash2 size={16} strokeWidth={1.8} />
         </button>
     )
 }

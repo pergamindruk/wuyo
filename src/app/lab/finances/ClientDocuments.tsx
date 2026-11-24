@@ -4,12 +4,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Copy, Download, ExternalLink, FileSignature, Printer } from 'lucide-react'
+import { Copy, Download, ExternalLink, FileSignature, Pencil, Printer } from 'lucide-react'
+import { SectionTitle } from '@/components/lab/ui/PageHeader'
 import { DOCS_MASTER_URL, LEGAL_TEMPLATES, WYKONAWCA_DANE, fillTemplate, type LegalFields } from '@/lib/lab/legal-templates'
 import { getDocJobs, type DocJob } from './actions'
 
-const field = 'w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-yellow-400/60 focus:outline-none'
-const label = 'text-[11px] font-semibold uppercase tracking-wider text-zinc-400'
+const field = 'lab-input w-full px-3 py-2 text-sm text-white placeholder:text-zinc-600'
+const label = 'text-xs font-medium text-zinc-400'
 const pln = (g: number) => (g / 100).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł'
 const todayPl = () => {
     const d = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Warsaw' })
@@ -58,24 +59,26 @@ export function ClientDocuments() {
     return (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr] print:block">
             <aside className="flex flex-col gap-4 print:hidden">
-                <div className="flex flex-col gap-1.5 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-3">
+                <div className="lab-card flex flex-col gap-1.5 p-3">
+                    <div className="px-2 pt-2"><SectionTitle icon={FileSignature} title="Wzory dokumentów" /></div>
                     {LEGAL_TEMPLATES.map((t, i) => (
                         <button key={t.slug} onClick={() => setSlug(t.slug)}
-                            className={`rounded-2xl px-3 py-2.5 text-left transition ${t.slug === slug ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-300 hover:bg-white/[0.05]'}`}>
+                            className={`rounded-2xl px-4 py-3 text-left transition ${t.slug === slug ? 'bg-yellow-400 text-zinc-950 shadow-[0_10px_30px_-12px_rgba(255,214,10,0.8)]' : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'}`}>
                             <span className="text-[11px] font-bold opacity-60">{i + 1}.</span> <span className="text-sm font-semibold">{t.title}</span>
                             <span className={`mt-0.5 block text-[11px] ${t.slug === slug ? 'text-zinc-800' : 'text-zinc-500'}`}>{t.when}</span>
                         </button>
                     ))}
                     <a href={DOCS_MASTER_URL} target="_blank" rel="noopener noreferrer"
                         className="mt-1 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-xs text-zinc-400 hover:text-yellow-400">
-                        <ExternalLink size={13} /> Analiza prawna i wzory w Claude Docs
+                        <ExternalLink size={14} strokeWidth={1.8} /> Analiza prawna i wzory w Claude Docs
                     </a>
                 </div>
 
-                <div className="flex flex-col gap-3 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-4">
+                <div className="lab-card flex flex-col gap-3 p-5">
+                    <SectionTitle icon={Pencil} title="Dane do dokumentu" />
                     <label className="flex flex-col gap-1.5"><span className={label}>Zlecenie z lejka</span>
                         <select value={jobId} onChange={(e) => pickJob(e.target.value)} className={field}>
-                            <option value="">— bez zlecenia, wpiszę ręcznie —</option>
+                            <option value="">bez zlecenia, wpiszę ręcznie</option>
                             {jobs.map((j) => <option key={j.id} value={j.id}>{j.client || 'Bez nazwy'} · {j.title}</option>)}
                         </select>
                     </label>
@@ -92,13 +95,13 @@ export function ClientDocuments() {
             </aside>
 
             <div className="flex flex-col gap-3">
-                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-yellow-400/25 bg-yellow-400/[0.06] px-4 py-3 print:hidden">
-                    <p className="flex items-center gap-2 text-xs text-zinc-200"><FileSignature size={15} className="shrink-0 text-yellow-400" /> <span><b>Podpis:</b> {tpl.sign}</span></p>
+                <div className="lab-card flex flex-wrap items-center justify-between gap-3 border-yellow-400/25 px-4 py-3 print:hidden">
+                    <p className="flex items-center gap-2.5 text-xs text-zinc-200"><span className="lab-chip h-8 w-8 shrink-0"><FileSignature size={16} strokeWidth={1.8} /></span> <span><b>Podpis:</b> {tpl.sign}</span></p>
                     <div className="flex gap-2">
                         <button onClick={() => { navigator.clipboard?.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500) }}
-                            className="flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-white/30"><Copy size={12} /> {copied ? 'Skopiowane' : 'Kopiuj tekst'}</button>
-                        <button onClick={() => window.print()} className="flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:border-white/30"><Printer size={12} /> Drukuj</button>
-                        <button onClick={pdf} className="flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-bold text-zinc-950 hover:bg-yellow-300"><Download size={12} /> PDF</button>
+                            className="flex items-center gap-1.5 rounded-full bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-zinc-200"><Copy size={14} strokeWidth={1.8} /> {copied ? 'Skopiowane' : 'Kopiuj tekst'}</button>
+                        <button onClick={() => window.print()} className="flex items-center gap-1.5 rounded-full bg-zinc-800 px-3.5 py-2 text-xs font-semibold text-zinc-200"><Printer size={14} strokeWidth={1.8} /> Drukuj</button>
+                        <button onClick={pdf} className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-3.5 py-2 text-xs font-bold text-zinc-950 hover:bg-yellow-300"><Download size={14} strokeWidth={1.8} /> PDF</button>
                     </div>
                 </div>
                 <div className="overflow-hidden rounded-3xl bg-white shadow-2xl print:rounded-none print:shadow-none">

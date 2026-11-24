@@ -122,48 +122,57 @@ export default async function TodayPage() {
                 <div className="lg:col-span-3"><GoalBar goal={goal} /></div>
                 <div className="lg:col-span-2"><OneThingCard thing={thing} /></div>
             </div>
-            {systems.dyrygent && <ConductorCard raport={systems.dyrygent} />}
-            <div id="kolejka" className="scroll-mt-6"><CallQueue initialItems={queue} /></div>
+            {/* Dół ekranu jak w koncepcji: kolejka telefonów szeroko, obok Dyrygent; niżej posty. */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+                <div className={`min-w-0 ${systems.dyrygent ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
+                    <CallQueue initialItems={queue} />
+                </div>
+                {systems.dyrygent && (
+                    <div className="min-w-0"><ConductorCard raport={systems.dyrygent} /></div>
+                )}
+            </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <SocialPublisher compact />
+
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
                 <FollowUpsCard jobs={jobs} renewals={renewals} subscriptions={subscriptions} />
                 <WeekStatsCard activities={weekActivities} />
                 <EveningCard todayActivities={todayActivities} />
             </div>
 
-            <SocialPublisher compact />
-
             {/* Narzędzia produkcyjne studia */}
-            <Link
-                href="/lab/szukaj-firm"
-                className="lab-card group flex items-center justify-between gap-4 p-5"
-            >
-                <div className="flex items-center gap-4">
-                    <div className="lab-chip h-12 w-12 shrink-0">
-                        <MapPinned size={20} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
+                <Link
+                    href="/lab/szukaj-firm"
+                    className="lab-card group flex items-center justify-between gap-4 p-5"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="lab-chip h-12 w-12 shrink-0">
+                            <MapPinned size={20} />
+                        </div>
+                        <div>
+                            <p className="text-sm font-semibold text-white">Szukaj firm (Google Maps)</p>
+                            <p className="text-xs text-zinc-500">Lokalne firmy po branży i mieście, filtr „bez strony WWW”, eksport do CSV</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-sm font-semibold text-white">Szukaj firm (Google Maps)</p>
-                        <p className="text-xs text-zinc-500">Lokalne firmy po branży i mieście, filtr „bez strony WWW”, eksport do CSV</p>
+                    <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
+                </Link>
+                <Link
+                    href="/lab/stickers"
+                    className="lab-card group flex items-center justify-between gap-4 p-5"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="lab-chip h-12 w-12 shrink-0">
+                            <Sticker size={20} />
+                        </div>
+                        <div>
+                            <p className="text-sm font-semibold text-white">Sticker Studio A4</p>
+                            <p className="text-xs text-zinc-500">Naklejki: Gemini lub plik → obwódka → arkusz 300 DPI + DXF do Cameo 5</p>
+                        </div>
                     </div>
-                </div>
-                <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
-            </Link>
-            <Link
-                href="/lab/stickers"
-                className="lab-card group flex items-center justify-between gap-4 p-5"
-            >
-                <div className="flex items-center gap-4">
-                    <div className="lab-chip h-12 w-12 shrink-0">
-                        <Sticker size={20} />
-                    </div>
-                    <div>
-                        <p className="text-sm font-semibold text-white">Sticker Studio A4</p>
-                        <p className="text-xs text-zinc-500">Naklejki: Gemini lub plik → obwódka → arkusz 300 DPI + DXF do Cameo 5</p>
-                    </div>
-                </div>
-                <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
-            </Link>
+                    <span className="text-xs font-medium text-zinc-500 transition group-hover:text-yellow-400">Otwórz →</span>
+                </Link>
+            </div>
         </div>
     )
 }

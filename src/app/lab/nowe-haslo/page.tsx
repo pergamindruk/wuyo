@@ -5,6 +5,8 @@
 // zapisała w ciasteczkach tej przeglądarki.
 
 import { useState } from 'react'
+import Image from 'next/image'
+import { AlertTriangle, KeyRound, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -84,7 +86,7 @@ export default function NoweHasloPage() {
         const wycieki = await ileWyciekow(haslo)
         if (wycieki && wycieki > 0) {
             setBlad(
-                `To hasło jest w bazach wykradzionych haseł — znalezione ${wycieki.toLocaleString('pl-PL')} razy. Wybierz inne.`
+                `To hasło jest w bazach wykradzionych haseł, znalezione ${wycieki.toLocaleString('pl-PL')} razy. Wybierz inne.`
             )
             setStatus(null)
             setZapisuje(false)
@@ -105,20 +107,32 @@ export default function NoweHasloPage() {
         router.push('/lab')
     }
 
+    const pole = 'lab-input px-4 py-3 text-white placeholder:text-zinc-600'
+    const podpowiedzOk = haslo.length > 0 && brakujace.length === 0 && zgodne
+
     return (
-        <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-4">
-            <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+        // Strona bez menu: nie jest w .lab-ui z layoutu, więc owijamy sami.
+        <div className="lab-ui relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4 text-zinc-50">
+            <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-[60%] rounded-full bg-yellow-400/[0.09] blur-3xl" />
+            <div className="lab-card w-full max-w-md p-8 sm:p-10">
+                <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-yellow-400/15 blur-3xl" />
                 <div className="mb-8 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-yellow-400 flex items-center justify-center text-zinc-950 font-bold text-2xl mx-auto mb-4">
-                        W
-                    </div>
-                    <h1 className="text-2xl font-bold text-white mb-2">Nowe hasło</h1>
-                    <p className="text-zinc-400 text-sm">Ustaw hasło do panelu WUYO Lab</p>
+                    <Image
+                        src="/favicon-wuyo.png"
+                        alt="WUYO"
+                        width={56}
+                        height={56}
+                        priority
+                        className="mx-auto mb-5 h-14 w-14 rounded-2xl shadow-[0_12px_36px_-10px_rgba(255,214,10,.7)]"
+                    />
+                    <h1 className="mb-2 font-heading text-3xl font-bold tracking-tight text-white">Nowe hasło</h1>
+                    <p className="text-sm text-zinc-400">Ustaw hasło do panelu WUYO Lab</p>
                 </div>
 
                 {blad && (
-                    <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
-                        {blad}
+                    <div className="mb-5 flex items-start gap-2.5 rounded-2xl bg-red-400/10 px-4 py-3 text-sm text-red-300 ring-1 ring-red-400/20">
+                        <AlertTriangle size={18} className="mt-px shrink-0" />
+                        <span>{blad}</span>
                     </div>
                 )}
 
@@ -132,7 +146,7 @@ export default function NoweHasloPage() {
                             required
                             value={haslo}
                             onChange={(e) => setHaslo(e.target.value)}
-                            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"
+                            className={pole}
                             placeholder="••••••••••••"
                         />
                     </div>
@@ -146,25 +160,33 @@ export default function NoweHasloPage() {
                             required
                             value={powtorzone}
                             onChange={(e) => setPowtorzone(e.target.value)}
-                            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-all"
+                            className={pole}
                             placeholder="••••••••••••"
                         />
                     </div>
 
-                    <p className="text-xs text-zinc-400" aria-live="polite">
-                        {haslo.length === 0
-                            ? `Minimum ${MIN_ZNAKOW} znaków, mała i wielka litera, cyfra i znak specjalny.`
-                            : brakujace.length > 0
-                                ? `Brakuje: ${brakujace.join(', ')}.`
-                                : zgodne
-                                    ? 'Hasło spełnia wymagania.'
-                                    : 'Hasła się różnią.'}
+                    <p
+                        className={`flex items-start gap-2 rounded-2xl px-3.5 py-2.5 text-xs ${
+                            podpowiedzOk ? 'bg-emerald-400/10 text-emerald-300' : 'bg-white/[0.04] text-zinc-400'
+                        }`}
+                        aria-live="polite"
+                    >
+                        {podpowiedzOk ? <ShieldCheck size={15} className="shrink-0" /> : <KeyRound size={15} className="shrink-0" />}
+                        <span>
+                            {haslo.length === 0
+                                ? `Minimum ${MIN_ZNAKOW} znaków, mała i wielka litera, cyfra i znak specjalny.`
+                                : brakujace.length > 0
+                                    ? `Brakuje: ${brakujace.join(', ')}.`
+                                    : zgodne
+                                        ? 'Hasło spełnia wymagania.'
+                                        : 'Hasła się różnią.'}
+                        </span>
                     </p>
 
                     <button
                         type="submit"
                         disabled={!mozeZapisac}
-                        className="bg-yellow-400 text-zinc-950 font-bold rounded-lg px-4 py-2.5 transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="lab-btn flex min-h-12 w-full items-center justify-center font-bold disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         {zapisuje ? (status ?? 'Zapisuję…') : 'Ustaw hasło i wejdź'}
                     </button>

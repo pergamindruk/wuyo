@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { getProjects, createProject, updateProjectStatus, deleteProject, getProjectFiles, deleteProjectFile, type ProjectFile } from './actions'
-import { Plus, Link as LinkIcon, Play, Trash2, Copy, ChevronDown, ChevronUp, MessageSquare, Check, Download, Paperclip } from 'lucide-react'
+import { Plus, Link as LinkIcon, Hourglass, Trash2, Copy, ChevronDown, ChevronUp, MessageSquare, Check, Download, Paperclip } from 'lucide-react'
+import { PageHeader, SectionTitle } from '@/components/lab/ui/PageHeader'
 
 type UpdateEntry = { date: string; status: string; progress: number; note?: string }
 
@@ -67,90 +68,93 @@ export default function ProjectsLab() {
     }
 
     return (
-        <div className="flex flex-col gap-8">
-            {/* Header */}
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center text-zinc-950">
-                    <Play size={24} />
-                </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-white">Strefy Klienta (Portal)</h1>
-                    <p className="text-zinc-400 text-sm">Generuj magiczne linki i pokazuj klientom postep prac.</p>
-                </div>
-            </div>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+            <PageHeader
+                icon={Hourglass}
+                title="Portal Klienta"
+                subtitle="Twórz linki dla klientów i pokazuj im postęp prac."
+            />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Create Form */}
-                <div className="lg:col-span-1 bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl h-fit">
-                    <h2 className="text-lg font-bold text-white mb-4">Utworz nowa strefe</h2>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {/* Formularz nowej strefy */}
+                <div className="lab-card h-fit p-5 sm:p-6 lg:col-span-1">
+                    <SectionTitle icon={Plus} title="Utwórz nową strefę" />
                     <form onSubmit={handleCreate} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <label className="text-sm text-zinc-400">Nazwa projektu</label>
-                            <input required value={name} onChange={e => setName(e.target.value)} placeholder="np. Sklep E-Commerce z meblami" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
+                            <input required value={name} onChange={e => setName(e.target.value)} placeholder="np. Sklep E-Commerce z meblami" className="lab-input w-full p-2.5 text-sm text-white" />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-sm text-zinc-400">Nazwa klienta</label>
-                            <input required value={client} onChange={e => setClient(e.target.value)} placeholder="np. Jan Kowalski / Meble-Pol" className="bg-zinc-950 border border-zinc-700 text-white text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 w-full p-2.5" />
+                            <input required value={client} onChange={e => setClient(e.target.value)} placeholder="np. Jan Kowalski / Meble-Pol" className="lab-input w-full p-2.5 text-sm text-white" />
                         </div>
-                        <button className="bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 mt-4">
-                            <Plus size={18} /> Utworz Przestrzen
+                        <button className="mt-2 flex items-center justify-center gap-2 rounded-full bg-yellow-400 py-2.5 font-bold text-zinc-950">
+                            <Plus size={18} strokeWidth={1.8} /> Utwórz strefę
                         </button>
                     </form>
                 </div>
 
-                {/* Projects List */}
-                <div className="lg:col-span-2 flex flex-col gap-4">
+                {/* Lista projektów */}
+                <div className="lab-stagger flex flex-col gap-4 lg:col-span-2">
                     {loading ? (
-                        <div className="flex justify-center py-12">
-                            <div className="w-6 h-6 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin" />
+                        <div className="lab-card flex justify-center py-12">
+                            <div className="h-6 w-6 animate-spin rounded-full border-2 border-yellow-400/30 border-t-yellow-400" />
                         </div>
                     ) : projects.length === 0 ? (
-                        <p className="text-zinc-500 text-center py-12">Brak aktywnych projektow w bazie.</p>
+                        <div className="lab-card flex flex-col items-center gap-3 p-10 text-center">
+                            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400"><Hourglass size={22} strokeWidth={1.8} /></span>
+                            <p className="text-sm text-zinc-400">Brak aktywnych projektów. Utwórz pierwszą strefę w formularzu obok.</p>
+                        </div>
                     ) : projects.map((p) => {
                         const updates: UpdateEntry[] = Array.isArray(p.updates) ? p.updates : []
                         const isExpanded = expandedTimeline[p.id]
                         const hasNote = showNote[p.id]
 
                         return (
-                            <div key={p.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col gap-4">
-                                {/* Project header */}
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <h3 className="text-xl font-bold text-white">{p.name}</h3>
-                                        <p className="text-sm text-zinc-400">Odbiorca: {p.client}</p>
-                                    </div>
-                                    <div className="flex flex-col items-end gap-2">
-                                        <button onClick={() => handleDelete(p.id, p.name)} className="text-zinc-600 hover:text-red-500 transition-colors p-1">
-                                            <Trash2 size={16} />
-                                        </button>
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-yellow-400 font-bold text-lg leading-none">{p.progress}%</span>
-                                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">{p.status}</span>
+                            <div key={p.id} className="lab-card flex flex-col gap-4 p-5 sm:p-6">
+                                {/* Nagłówek projektu */}
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex min-w-0 items-center gap-4">
+                                        <span className={`h-12 w-12 shrink-0 ${p.progress === 100 ? 'flex items-center justify-center rounded-2xl bg-emerald-400/15 text-emerald-300' : 'lab-chip'}`}>
+                                            {p.progress === 100 ? <Check size={20} strokeWidth={1.8} /> : <Hourglass size={20} strokeWidth={1.8} />}
+                                        </span>
+                                        <div className="min-w-0">
+                                            <h3 className="truncate text-xl font-bold text-white">{p.name}</h3>
+                                            <p className="text-sm text-zinc-400">Odbiorca: {p.client}</p>
                                         </div>
                                     </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex flex-col items-end gap-1">
+                                            <span className="font-heading text-3xl font-bold leading-none text-white">{p.progress}%</span>
+                                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${p.progress === 100 ? 'bg-emerald-400/15 text-emerald-300' : 'bg-yellow-400/15 text-yellow-300'}`}>{p.status}</span>
+                                        </div>
+                                        <button onClick={() => handleDelete(p.id, p.name)} className="rounded-full p-2 text-zinc-600 transition-colors hover:bg-red-400/10 hover:text-red-400" title="Usuń strefę">
+                                            <Trash2 size={16} strokeWidth={1.8} />
+                                        </button>
+                                    </div>
                                 </div>
 
-                                {/* Progress bar */}
-                                <div className="w-full bg-zinc-800 rounded-full h-2.5">
-                                    <div className="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style={{ width: `${p.progress}%` }} />
+                                {/* Pasek postępu */}
+                                <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+                                    <div className={`lab-bar h-2.5 rounded-full transition-all duration-500 ${p.progress === 100 ? 'bg-emerald-400' : 'bg-yellow-400 shadow-[0_0_16px_-2px_rgba(255,214,10,0.7)]'}`} style={{ width: `${p.progress}%` }} />
                                 </div>
 
-                                {/* Note input (optional) */}
+                                {/* Notatka (opcjonalna) */}
                                 {hasNote && (
                                     <div className="flex items-center gap-2">
-                                        <MessageSquare size={14} className="text-zinc-500 shrink-0" />
+                                        <MessageSquare size={16} strokeWidth={1.8} className="shrink-0 text-zinc-500" />
                                         <input
                                             value={noteInputs[p.id] || ''}
                                             onChange={e => setNoteInputs(prev => ({ ...prev, [p.id]: e.target.value }))}
                                             placeholder="Notatka do zmiany statusu (opcjonalnie)..."
-                                            className="flex-1 bg-zinc-950 border border-zinc-700 text-white text-xs rounded-lg px-3 py-2 focus:border-yellow-400/50 focus:outline-none"
+                                            className="lab-input flex-1 px-3 py-2 text-xs text-white"
                                         />
                                     </div>
                                 )}
 
-                                {/* Phase buttons + actions */}
-                                <div className="flex flex-wrap justify-between items-center gap-3 pt-4 border-t border-zinc-800/50">
-                                    <div className="flex items-center gap-2">
+                                {/* Etapy + akcje */}
+                                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] pt-4">
+                                    <div className="flex flex-wrap items-center gap-1.5">
                                         {['Brief', 'Koncept', 'Poprawki', 'W druku', 'Final'].map((label, i) => {
                                             const progressMap = [10, 40, 75, 90, 100]
                                             const isActive = p.progress === progressMap[i]
@@ -159,9 +163,9 @@ export default function ProjectsLab() {
                                                 <button
                                                     key={label}
                                                     onClick={() => handleUpdate(p.id, i)}
-                                                    className={`px-3 py-1 text-xs rounded border transition-colors ${isActive
-                                                        ? isFinal ? 'bg-green-500 text-black border-green-500' : 'bg-yellow-400 text-black border-yellow-400'
-                                                        : 'border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500'}`}
+                                                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${isActive
+                                                        ? isFinal ? 'bg-emerald-400 text-black' : 'bg-yellow-400 text-black'
+                                                        : 'bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:text-white'}`}
                                                 >
                                                     {label}
                                                 </button>
@@ -169,63 +173,63 @@ export default function ProjectsLab() {
                                         })}
                                         <button
                                             onClick={() => setShowNote(prev => ({ ...prev, [p.id]: !prev[p.id] }))}
-                                            className={`p-1.5 rounded border transition-colors ${hasNote ? 'border-yellow-400/30 text-yellow-400' : 'border-zinc-700 text-zinc-500 hover:text-white'}`}
-                                            title="Dodaj notatke"
+                                            className={`rounded-full p-2 transition-colors ${hasNote ? 'bg-yellow-400/15 text-yellow-300' : 'bg-white/[0.04] text-zinc-500 hover:text-white'}`}
+                                            title="Dodaj notatkę"
                                         >
-                                            <MessageSquare size={12} />
+                                            <MessageSquare size={14} strokeWidth={1.8} />
                                         </button>
                                     </div>
 
-                                    <div className="flex items-center gap-3">
-                                        <button onClick={() => handleCopyUrl(p.id)} className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors">
-                                            {copiedId === p.id ? <><Check size={14} className="text-green-400" /> Skopiowano</> : <><Copy size={14} /> Kopiuj URL</>}
+                                    <div className="flex items-center gap-2">
+                                        <button onClick={() => handleCopyUrl(p.id)} className="flex items-center gap-1.5 rounded-full bg-zinc-800 px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:text-white">
+                                            {copiedId === p.id ? <><Check size={14} strokeWidth={1.8} className="text-emerald-400" /> Skopiowano</> : <><Copy size={14} strokeWidth={1.8} /> Kopiuj link</>}
                                         </button>
-                                        <a href={`/c/${p.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-yellow-400 hover:text-yellow-300 font-medium bg-yellow-400/10 px-3 py-1.5 rounded-lg border border-yellow-400/20">
-                                            <LinkIcon size={14} /> Podgląd
+                                        <a href={`/c/${p.id}`} target="_blank" rel="noopener noreferrer" className="lab-pill flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-yellow-300">
+                                            <LinkIcon size={14} strokeWidth={1.8} /> Podgląd
                                         </a>
                                     </div>
                                 </div>
 
                                 {/* Pliki od klienta (prywatny bucket, link ważny 1 h) */}
                                 {(files[p.id]?.length ?? 0) > 0 && (
-                                    <div className="border-t border-zinc-800/30 pt-3">
-                                        <p className="mb-2 flex items-center gap-2 text-xs text-zinc-400"><Paperclip size={13} /> Pliki od klienta ({files[p.id].length})</p>
-                                        <ul className="flex flex-col gap-1">
+                                    <div className="border-t border-white/[0.07] pt-4">
+                                        <p className="mb-2 flex items-center gap-2 text-xs font-medium text-zinc-400"><Paperclip size={14} strokeWidth={1.8} className="text-yellow-400" /> Pliki od klienta ({files[p.id].length})</p>
+                                        <ul className="flex flex-col gap-1.5">
                                             {files[p.id].map((f) => (
-                                                <li key={f.path} className="group flex items-center gap-3 rounded-lg px-2 py-1.5 text-xs hover:bg-white/[0.04]">
+                                                <li key={f.path} className="group flex items-center gap-3 rounded-2xl bg-white/[0.03] px-4 py-2.5 text-xs transition hover:bg-white/[0.06]">
                                                     <span className="min-w-0 flex-1 truncate text-zinc-200">{f.name}</span>
                                                     <span className="text-zinc-500">{f.size < 1048576 ? `${Math.max(1, Math.round(f.size / 1024))} KB` : `${(f.size / 1048576).toFixed(1)} MB`}</span>
-                                                    {f.url && <a href={f.url} className="text-yellow-400 hover:text-yellow-300" title="Pobierz"><Download size={14} /></a>}
+                                                    {f.url && <a href={f.url} className="text-yellow-400 hover:text-yellow-300" title="Pobierz"><Download size={16} strokeWidth={1.8} /></a>}
                                                     <button onClick={async () => { if (confirm(`Usunąć plik ${f.name}?`)) { await deleteProjectFile(f.path); setFiles(await getProjectFiles([p.id]).then((x) => ({ ...files, ...x }))) } }}
-                                                        className="text-zinc-600 opacity-0 hover:text-red-400 group-hover:opacity-100" title="Usuń"><Trash2 size={13} /></button>
+                                                        className="text-zinc-600 opacity-0 hover:text-red-400 group-hover:opacity-100" title="Usuń"><Trash2 size={14} strokeWidth={1.8} /></button>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
                                 )}
 
-                                {/* Timeline */}
+                                {/* Historia zmian */}
                                 {updates.length > 0 && (
-                                    <div className="border-t border-zinc-800/30 pt-3">
+                                    <div className="border-t border-white/[0.07] pt-3">
                                         <button
                                             onClick={() => setExpandedTimeline(prev => ({ ...prev, [p.id]: !prev[p.id] }))}
-                                            className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors w-full"
+                                            className="flex w-full items-center gap-2 text-xs font-medium text-zinc-500 transition-colors hover:text-zinc-300"
                                         >
-                                            {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                            {isExpanded ? <ChevronUp size={16} strokeWidth={1.8} /> : <ChevronDown size={16} strokeWidth={1.8} />}
                                             Historia zmian ({updates.length})
                                         </button>
 
                                         {isExpanded && (
-                                            <div className="mt-3 space-y-2 pl-2 border-l border-zinc-800">
+                                            <div className="mt-3 space-y-1 border-l border-yellow-400/20 pl-2">
                                                 {[...updates].reverse().map((u, i) => (
-                                                    <div key={i} className="flex items-start gap-3 pl-3 py-1">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-400/60 mt-1.5 shrink-0" />
+                                                    <div key={i} className="flex items-start gap-3 py-1 pl-3">
+                                                        <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(255,214,10,0.7)]" />
                                                         <div className="min-w-0">
-                                                            <div className="flex items-center gap-2">
+                                                            <div className="flex flex-wrap items-center gap-2">
                                                                 <span className="text-[11px] text-zinc-500">{formatDate(u.date)}</span>
-                                                                <span className="text-[10px] font-bold text-yellow-400/70">{u.status} ({u.progress}%)</span>
+                                                                <span className="rounded-full bg-yellow-400/15 px-2 py-0.5 text-[10px] font-semibold text-yellow-300">{u.status} ({u.progress}%)</span>
                                                             </div>
-                                                            {u.note && <p className="text-xs text-zinc-400 mt-0.5">{u.note}</p>}
+                                                            {u.note && <p className="mt-0.5 text-xs text-zinc-400">{u.note}</p>}
                                                         </div>
                                                     </div>
                                                 ))}

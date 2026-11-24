@@ -4,14 +4,15 @@
 // (usługa ustawia cenę, wybór klienta przełącza pola nowego klienta) i wysyłka akcji.
 
 import { useState, useTransition } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Kanban, Plus, X } from 'lucide-react'
 import { createJob } from '@/app/lab/lejek/actions'
 import { SERVICES } from '@/lib/lab/today/constants'
 import type { ClientOption } from './types'
 import { groszeToZlInput } from './view'
 
-const input = 'w-full bg-zinc-950 border border-zinc-800 focus:border-yellow-400/60 outline-none rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600'
-const label = 'block font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-1.5'
+// Pola: zaokrąglenie i żółty fokus dokłada lab-input (globals.css).
+const input = 'lab-input w-full px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-600'
+const label = 'mb-1.5 block text-xs font-medium text-zinc-400'
 
 export function NewJobForm({ clients, initialOpen = false }: { clients: ClientOption[]; initialOpen?: boolean }) {
     const [open, setOpen] = useState(initialOpen)
@@ -48,22 +49,26 @@ export function NewJobForm({ clients, initialOpen = false }: { clients: ClientOp
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-semibold px-4 py-2 rounded-lg transition-colors text-xs"
+                data-sound="pop"
+                className="inline-flex min-h-11 items-center gap-2 bg-yellow-400 px-5 text-sm font-bold text-zinc-950"
             >
-                <Plus size={14} /> Nowe zlecenie
+                <Plus size={16} strokeWidth={2} /> Nowe zlecenie
             </button>
 
             {open && (
-                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 p-0 sm:p-4" onClick={() => setOpen(false)}>
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4" onClick={() => setOpen(false)}>
                     <form
                         onSubmit={onSubmit}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-t-2xl sm:rounded-2xl p-5 flex flex-col gap-4"
+                        className="lab-card flex max-h-[92vh] w-full flex-col gap-4 !overflow-y-auto rounded-[1.75rem] p-5 backdrop-blur-xl sm:max-w-lg sm:p-6"
                     >
-                        <div className="flex items-center justify-between">
-                            <h2 className="font-heading text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Nowe zlecenie</h2>
-                            <button type="button" onClick={() => setOpen(false)} aria-label="Zamknij" className="text-zinc-500 hover:text-white">
-                                <X size={16} />
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="flex items-center gap-3 text-lg font-bold text-white">
+                                <span className="lab-chip h-10 w-10"><Kanban size={18} strokeWidth={1.8} /></span>
+                                Nowe zlecenie
+                            </h2>
+                            <button type="button" onClick={() => setOpen(false)} aria-label="Zamknij" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] text-zinc-400 transition hover:bg-white/10 hover:text-white">
+                                <X size={18} />
                             </button>
                         </div>
 
@@ -135,13 +140,14 @@ export function NewJobForm({ clients, initialOpen = false }: { clients: ClientOp
                             </div>
                         </div>
 
-                        {error && <p className="text-xs text-red-400">{error}</p>}
+                        {error && <p className="rounded-2xl bg-red-400/10 px-4 py-2.5 text-xs font-medium text-red-300">{error}</p>}
 
                         <button
                             type="submit"
                             disabled={pending}
-                            className="bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-zinc-950 font-semibold px-4 py-2.5 rounded-lg transition-colors text-sm"
+                            className="inline-flex items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-zinc-950 disabled:opacity-50"
                         >
+                            <Plus size={16} strokeWidth={2} />
                             {pending ? 'Zapisuję…' : 'Dodaj zlecenie'}
                         </button>
                     </form>

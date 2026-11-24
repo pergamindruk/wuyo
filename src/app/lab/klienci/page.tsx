@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Search } from 'lucide-react'
+import { ChevronRight, Kanban, Search, Users, Wallet } from 'lucide-react'
+import { PageHeader, StatCard } from '@/components/lab/ui/PageHeader'
+import { CountUp } from '@/components/lab/fx/CountUp'
 import { createClient } from '@/lib/supabase/server'
 import { formatPLN } from '@/lib/lab/today/format'
 import { stageLabel } from '@/lib/lab/client-timeline'
@@ -50,48 +52,71 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
         return { ...c, open, count: list.length, paid: paidBy.get(c.id) ?? 0, last }
     }).sort((a, b) => (a.last < b.last ? 1 : -1))
 
+    // Liczby do kafelków: tylko z danych, które strona już ma.
+    const openCount = rows.filter((r) => r.open).length
+    const paidTotal = rows.reduce((s, r) => s + r.paid, 0)
+
     return (
-        <div className="mx-auto flex max-w-6xl flex-col gap-6">
-            <header className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400/80">Sprzedaż</p>
-                    <h1 className="mt-1 text-3xl font-bold text-white">Klienci</h1>
-                    <p className="mt-1 text-sm text-zinc-500">Każdy, kto trafił do lejka: z zapytania, z telefonu albo dodany ręcznie.</p>
-                </div>
-                <form className="flex w-full max-w-sm items-center gap-2 rounded-full border border-zinc-800 bg-zinc-950 px-4 sm:w-auto" role="search">
-                    <Search size={15} className="text-zinc-500" />
-                    <input name="q" defaultValue={q} placeholder="Szukaj: nazwa, telefon, mail" aria-label="Szukaj klienta" className="min-h-11 w-full bg-transparent text-sm text-white placeholder:text-zinc-600 focus:outline-none" />
-                </form>
-            </header>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+            <PageHeader
+                icon={Users}
+                eyebrow="Sprzedaż"
+                title="Klienci"
+                subtitle="Każdy, kto trafił do lejka: z zapytania, z telefonu albo dodany ręcznie."
+                actions={
+                    <form className="lab-pill flex w-full max-w-sm items-center gap-2 px-4 sm:w-72" role="search">
+                        <Search size={16} strokeWidth={1.8} className="shrink-0 text-zinc-500" />
+                        <input name="q" defaultValue={q} placeholder="Szukaj: nazwa, telefon, mail" aria-label="Szukaj klienta" className="min-h-11 w-full !border-0 !bg-transparent text-sm text-white placeholder:text-zinc-600 !shadow-none focus:outline-none" />
+                    </form>
+                }
+            />
+
+            <div className="lab-stagger grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <StatCard icon={Users} label={q ? 'Pasuje do wyszukiwania' : 'Klienci'} value={<CountUp value={rows.length} />} />
+                <StatCard icon={Kanban} label="Z otwartym zleceniem" value={<CountUp value={openCount} />} hot={openCount > 0} />
+                <StatCard icon={Wallet} label="Wpłacili łącznie" value={<CountUp value={paidTotal} format="pln" />} />
+            </div>
 
             {rows.length === 0 ? (
-                <p className="rounded-3xl border border-zinc-800 py-16 text-center text-zinc-500">
-                    {q ? 'Nic nie pasuje.' : 'Brak klientów. Pojawią się, gdy ktoś trafi do lejka.'}
-                </p>
+                <div className="lab-card flex flex-col items-center gap-3 px-6 py-16 text-center">
+                    <span className="lab-chip h-12 w-12"><Users size={20} strokeWidth={1.8} /></span>
+                    <p className="text-sm text-zinc-400">{q ? 'Nic nie pasuje. Spróbuj innej nazwy albo numeru.' : 'Brak klientów. Pojawią się, gdy ktoś trafi do lejka.'}</p>
+                    <Link href={q ? '/lab/klienci' : '/lab/lejek'} className="bg-yellow-400 px-5 py-2.5 text-sm font-bold">{q ? 'Pokaż wszystkich' : 'Otwórz lejek'}</Link>
+                </div>
             ) : (
-                <ul className="flex flex-col gap-2">
-                    {rows.map((r) => (
-                        <li key={r.id}>
-                            <Link href={`/lab/klienci/${r.id}`} className="grid gap-2 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 transition-colors hover:border-yellow-400/40 sm:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_auto] sm:items-center">
-                                <span className="min-w-0">
-                                    <span className="block truncate font-semibold text-white">{r.company || r.name}</span>
-                                    <span className="block truncate text-xs text-zinc-500">{[r.company && r.name !== r.company ? r.name : null, r.phone, r.source].filter(Boolean).join(' · ')}</span>
-                                </span>
-                                <span className="text-sm">
-                                    {r.open ? (
-                                        <span className="text-zinc-300">
-                                            {r.open.stage}. {stageLabel(r.open.stage)}
-                                            {r.open.next_contact_at && <span className="text-zinc-500"> · kontakt {r.open.next_contact_at}</span>}
+                <div className="lab-card p-3 sm:p-4">
+                    <ul className="lab-stagger flex flex-col gap-1.5">
+                        {rows.map((r) => (
+                            <li key={r.id}>
+                                <Link href={`/lab/klienci/${r.id}`} className="group grid gap-2 rounded-2xl bg-white/[0.03] px-4 py-3 transition hover:bg-white/[0.06] sm:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_auto] sm:items-center">
+                                    <span className="flex min-w-0 items-center gap-3">
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm font-bold text-zinc-300 transition group-hover:bg-yellow-400 group-hover:text-zinc-950">
+                                            {(r.company || r.name).trim().charAt(0).toUpperCase()}
                                         </span>
-                                    ) : (
-                                        <span className="text-zinc-600">{r.count ? `${r.count} zakończone/przegrane` : 'bez zlecenia'}</span>
-                                    )}
-                                </span>
-                                <span className="text-right text-sm font-semibold text-white">{r.paid ? formatPLN(r.paid) : <span className="font-normal text-zinc-600">0 zł</span>}</span>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+                                        <span className="min-w-0">
+                                            <span className="block truncate font-semibold text-white">{r.company || r.name}</span>
+                                            <span className="block truncate text-xs text-zinc-500">{[r.company && r.name !== r.company ? r.name : null, r.phone, r.source].filter(Boolean).join(' · ')}</span>
+                                        </span>
+                                    </span>
+                                    <span className="text-sm">
+                                        {r.open ? (
+                                            <span className="inline-flex flex-wrap items-center gap-2">
+                                                <span className="rounded-full bg-yellow-400/15 px-2.5 py-1 text-[11px] font-semibold text-yellow-300">{r.open.stage}. {stageLabel(r.open.stage)}</span>
+                                                {r.open.next_contact_at && <span className="text-xs text-zinc-500">kontakt {r.open.next_contact_at}</span>}
+                                            </span>
+                                        ) : (
+                                            <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-zinc-400">{r.count ? `${r.count} zakończone/przegrane` : 'bez zlecenia'}</span>
+                                        )}
+                                    </span>
+                                    <span className="flex items-center justify-end gap-2 text-right text-sm font-semibold text-white">
+                                        {r.paid ? formatPLN(r.paid) : <span className="font-normal text-zinc-600">0 zł</span>}
+                                        <ChevronRight size={16} className="text-zinc-600 transition group-hover:translate-x-0.5 group-hover:text-yellow-400" />
+                                    </span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </div>
     )
