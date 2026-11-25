@@ -122,7 +122,7 @@ export function PortfolioShowcase({ locale = "pl" }: { locale?: Locale }) {
                     </div>
                     <Link
                         href={route("portfolio", locale)}
-                        className="inline-flex items-center gap-2 text-gold font-bold text-sm hover:gap-3 transition-all shrink-0"
+                        className="inline-flex items-center gap-2 py-3 text-gold font-bold text-sm hover:gap-3 transition-all shrink-0"
                     >
                         {t.wszystkie} ({projects.length}) <ArrowRight size={16} aria-hidden />
                     </Link>

@@ -48,21 +48,21 @@ const T = {
         szybko: "Wolisz na szybko?", typBriefu: "Typ briefu",
         mailLabel: "Napisz maila", telLabel: "Zadzwoń", kopiuj: "Kopiuj", skopiowano: "Skopiowano",
         tabs: [["Wiadomość", "Szybki kontakt"], ["Logo / Branding", "Identyfikacja marki"], ["Strona WWW", "Sklep, landing, wizytówka"]],
-        quickLabel: "O co chodzi? 🎤", quickSub: "Opisz, czego potrzebujesz, zapytaj o cenę albo napisz, kiedy możemy pogadać przez telefon.",
+        quickLabel: "O co chodzi?", quickSub: "Opisz, czego potrzebujesz, zapytaj o cenę albo napisz, kiedy możemy pogadać przez telefon.",
         quickPh: "Hej Wuyo! Potrzebuję logo, mam otwarcie sklepu za 3 tygodnie... albo: zadzwoń do mnie na xxx-xxx-xxx",
         brandInfo: "Wypełnij tyle, ile wiesz. Nie znasz wszystkich odpowiedzi? Zostaw puste pola, dogadamy to na żywo.",
-        nameL: "Nazwa marki 👶", nameS: "Jak ma się nazywać firma?", namePh: "np. Złoty Piec, Studio Marta...",
-        indL: "Branża i Oferta 🔧", indS: "Czym się zajmujesz?", indPh: "np. Fryzjer, sklep online, agencja...",
-        audL: "Grupa docelowa 👥", audS: "Kto będzie Twoim klientem? (możesz zaznaczyć kilka)",
-        inspL: "Inspiracje 👀", inspS: "Wklej linki do marek lub stron, które Ci się podobają", inspPh: "np. https://przykladowamarka.pl — lubię ich czystość i ciemne kolory...",
+        nameL: "Nazwa marki", nameS: "Jak ma się nazywać firma?", namePh: "np. Złoty Piec, Studio Marta...",
+        indL: "Branża i Oferta", indS: "Czym się zajmujesz?", indPh: "np. Fryzjer, sklep online, agencja...",
+        audL: "Grupa docelowa", audS: "Kto będzie Twoim klientem? (możesz zaznaczyć kilka)",
+        inspL: "Inspiracje", inspS: "Wklej linki do marek lub stron, które Ci się podobają", inspPh: "np. https://przykladowamarka.pl, lubię ich czystość i ciemne kolory...",
         webInfo: "Wypełnij tyle, ile wiesz. Im więcej szczegółów, tym dokładniejsza wycena. O resztę dopytam przy pierwszym kontakcie.",
-        typeL: "Typ strony 🏗️", typeS: "Co konkretnie chcesz zbudować?", typeChoose: "-- Wybierz rodzaj --",
+        typeL: "Typ strony", typeS: "Co konkretnie chcesz zbudować?", typeChoose: "-- Wybierz rodzaj --",
         types: ["Wizytówka (jedna strona)", "Strona sprzedażowa (pod jeden produkt lub ofertę)", "Strona wielostronicowa", "Sklep internetowy"],
-        brL: "Branding 🎨", brS: "Masz już logo i kolory?", brChoose: "-- Wybierz --",
+        brL: "Branding", brS: "Masz już logo i kolory?", brChoose: "-- Wybierz --",
         brs: ["Tak, mam pełny branding (logo + wytyczne)", "Mam tylko logo, bez wytycznych", "Nie, budujemy wszystko od zera"],
-        winspL: "Inspiracje 🔗", winspS: "Podrzuć linki do stron, które wyglądają tak, jak chcesz",
+        winspL: "Inspiracje", winspS: "Podrzuć linki do stron, które wyglądają tak, jak chcesz",
         winspPh: "np. https://apple.com (czysto i nowocześnie) lub https://sklep.pl (chcę podobny układ kart)...",
-        daneH: "Twoje dane kontaktowe 📬", daneS: "Gdzie wysłać odpowiedź i wycenę?",
+        daneH: "Twoje dane kontaktowe", daneS: "Gdzie wysłać odpowiedź i wycenę?",
         imie: "Imię *", imiePh: "Jak mam się do Ciebie zwracać?", emailPh: "Na jaki adres mam odpisać?",
         cos: "Coś jeszcze? Termin? (opcjonalne)", cosPh: "Szczegóły, termin realizacji, specjalne życzenia...",
         rodo: "Administratorem danych jest Wuyo. Dane z formularza wykorzystam, żeby odpisać i przygotować wycenę.",
@@ -80,21 +80,21 @@ const T = {
         szybko: "Prefer something quicker?", typBriefu: "Brief type",
         mailLabel: "Email me", telLabel: "Call", kopiuj: "Copy", skopiowano: "Copied",
         tabs: [["Message", "Quick contact"], ["Logo / Branding", "Brand identity"], ["Website", "Shop, landing page, one-pager"]],
-        quickLabel: "What do you need? 🎤", quickSub: "Describe what you need, ask about the price, or tell me when we can talk on the phone.",
+        quickLabel: "What do you need?", quickSub: "Describe what you need, ask about the price, or tell me when we can talk on the phone.",
         quickPh: "Hi WUYO! I need a logo, my shop opens in 3 weeks... or: call me on xxx-xxx-xxx",
         brandInfo: "Fill in what you know. Don't have all the answers? No problem, leave fields empty and we'll sort it out together.",
-        nameL: "Brand name 👶", nameS: "What is the business called?", namePh: "e.g. Golden Oven, Studio Marta...",
-        indL: "Industry and offer 🔧", indS: "What do you do?", indPh: "e.g. hairdresser, online shop, agency...",
-        audL: "Target audience 👥", audS: "Who are your customers? (pick as many as you like)",
-        inspL: "Inspiration 👀", inspS: "Paste links to brands or websites you like", inspPh: "e.g. https://examplebrand.com — I like how clean and dark it is...",
+        nameL: "Brand name", nameS: "What is the business called?", namePh: "e.g. Golden Oven, Studio Marta...",
+        indL: "Industry and offer", indS: "What do you do?", indPh: "e.g. hairdresser, online shop, agency...",
+        audL: "Target audience", audS: "Who are your customers? (pick as many as you like)",
+        inspL: "Inspiration", inspS: "Paste links to brands or websites you like", inspPh: "e.g. https://examplebrand.com, I like how clean and dark it is...",
         webInfo: "Fill in what you know. The more detail, the more accurate the quote. I'll ask about the rest when we talk.",
-        typeL: "Type of website 🏗️", typeS: "What exactly do you want to build?", typeChoose: "-- Choose type --",
+        typeL: "Type of website", typeS: "What exactly do you want to build?", typeChoose: "-- Choose type --",
         types: ["One-page site", "Sales page (for one product or offer)", "Multi-page website", "Online shop"],
-        brL: "Branding 🎨", brS: "Do you already have a logo and colours?", brChoose: "-- Choose --",
+        brL: "Branding", brS: "Do you already have a logo and colours?", brChoose: "-- Choose --",
         brs: ["Yes, full branding (logo + guidelines)", "Only a logo, no guidelines", "No, we build everything from scratch"],
-        winspL: "Inspiration 🔗", winspS: "Share links to websites that look the way you want yours to",
+        winspL: "Inspiration", winspS: "Share links to websites that look the way you want yours to",
         winspPh: "e.g. https://apple.com (clean and modern) or https://shop.com (I want similar product cards)...",
-        daneH: "Your contact details 📬", daneS: "Where should I send my reply and quote?",
+        daneH: "Your contact details", daneS: "Where should I send my reply and quote?",
         imie: "Name *", imiePh: "What should I call you?", emailPh: "Where should I reply?",
         cos: "Anything else? A deadline? (optional)", cosPh: "Details, deadline, special requests...",
         rodo: "WUYO is the data controller. I will use the details from this form to reply and prepare a quote.",
@@ -337,9 +337,9 @@ export function ContactBrief() {
                         </a>
                     </div>
                     {locale === "pl" && <p className="text-white/50 text-xs text-center">
-                        💬 Możesz też skorzystać z{" "}
+                        Możesz też skorzystać z{" "}
                         <span className="text-gold/80 font-semibold">chatbota AI</span>{" "}
-                        w prawym dolnym rogu strony &mdash; odpowie od ręki!
+                        w prawym dolnym rogu strony. Odpowie od ręki!
                     </p>}
                 </div>
 
@@ -364,7 +364,7 @@ export function ContactBrief() {
                             >
                                 <span className={`transition-colors ${path === tab.id ? "text-navy-dark" : ""}`} aria-hidden="true">{tab.icon}</span>
                                 <span className="font-bold text-xs md:text-sm leading-tight">{tab.label}</span>
-                                <span className={`text-[10px] hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/50"}`}>{tab.sub}</span>
+                                <span className={`text-xs hidden md:block ${path === tab.id ? "text-navy-dark/70" : "text-white/50"}`}>{tab.sub}</span>
                             </button>
                         ))}
                         {/* Jeden wspólny pasek zamiast osobnego w każdej zakładce.
@@ -388,8 +388,10 @@ export function ContactBrief() {
                             className="panel-briefu mb-10 pb-10 border-b border-white/10 space-y-8"
                         >
                                 {path === "quick" && (
-                                    <BriefField label={t.quickLabel} sub={t.quickSub}>
+                                    <BriefField label={t.quickLabel} sub={t.quickSub} htmlFor="brief-message">
                                         <textarea
+                                            id="brief-message"
+                                            aria-describedby={fieldErrors.message ? "brief-message-opis error-message" : "brief-message-opis"}
                                             rows={5}
                                             className={`brief-input resize-none w-full ${fieldErrors.message ? "border-red-500/60" : ""}`}
                                             placeholder={t.quickPh}
@@ -407,11 +409,11 @@ export function ContactBrief() {
                                             <span>{t.brandInfo}</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <BriefField label={t.nameL} sub={t.nameS}>
-                                                <input className="brief-input w-full" placeholder={t.namePh} value={data.companyName ?? ""} onChange={(e) => setData((d) => ({ ...d, companyName: e.target.value }))} />
+                                            <BriefField label={t.nameL} sub={t.nameS} htmlFor="brief-company">
+                                                <input id="brief-company" aria-describedby="brief-company-opis" className="brief-input w-full" placeholder={t.namePh} value={data.companyName ?? ""} onChange={(e) => setData((d) => ({ ...d, companyName: e.target.value }))} />
                                             </BriefField>
-                                            <BriefField label={t.indL} sub={t.indS}>
-                                                <input className="brief-input w-full" placeholder={t.indPh} value={data.industry ?? ""} onChange={(e) => setData((d) => ({ ...d, industry: e.target.value }))} />
+                                            <BriefField label={t.indL} sub={t.indS} htmlFor="brief-industry">
+                                                <input id="brief-industry" aria-describedby="brief-industry-opis" className="brief-input w-full" placeholder={t.indPh} value={data.industry ?? ""} onChange={(e) => setData((d) => ({ ...d, industry: e.target.value }))} />
                                             </BriefField>
                                         </div>
                                         <BriefField label={t.audL} sub={t.audS}>
@@ -424,8 +426,8 @@ export function ContactBrief() {
                                                 ))}
                                             </div>
                                         </BriefField>
-                                        <BriefField label={t.inspL} sub={t.inspS}>
-                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder={t.inspPh} value={data.inspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, inspiration: e.target.value }))} />
+                                        <BriefField label={t.inspL} sub={t.inspS} htmlFor="brief-inspiration">
+                                            <textarea id="brief-inspiration" aria-describedby="brief-inspiration-opis" rows={3} className="brief-input resize-none w-full" placeholder={t.inspPh} value={data.inspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, inspiration: e.target.value }))} />
                                         </BriefField>
                                     </>
                                 )}
@@ -437,8 +439,8 @@ export function ContactBrief() {
                                             <span>{t.webInfo}</span>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <BriefField label={t.typeL} sub={t.typeS}>
-                                                <select className="brief-input w-full bg-navy" value={data.siteType ?? ""} onChange={(e) => setData((d) => ({ ...d, siteType: e.target.value }))}>
+                                            <BriefField label={t.typeL} sub={t.typeS} htmlFor="brief-site-type">
+                                                <select id="brief-site-type" aria-describedby="brief-site-type-opis" className="brief-input w-full bg-navy" value={data.siteType ?? ""} onChange={(e) => setData((d) => ({ ...d, siteType: e.target.value }))}>
                                                     <option value="" disabled>{t.typeChoose}</option>
                                                     <option value="wizytowka">{t.types[0]}</option>
                                                     <option value="landing">{t.types[1]}</option>
@@ -446,8 +448,8 @@ export function ContactBrief() {
                                                     <option value="sklep">{t.types[3]}</option>
                                                 </select>
                                             </BriefField>
-                                            <BriefField label={t.brL} sub={t.brS}>
-                                                <select className="brief-input w-full bg-navy" value={data.hasBranding ?? ""} onChange={(e) => setData((d) => ({ ...d, hasBranding: e.target.value }))}>
+                                            <BriefField label={t.brL} sub={t.brS} htmlFor="brief-branding">
+                                                <select id="brief-branding" aria-describedby="brief-branding-opis" className="brief-input w-full bg-navy" value={data.hasBranding ?? ""} onChange={(e) => setData((d) => ({ ...d, hasBranding: e.target.value }))}>
                                                     <option value="" disabled>{t.brChoose}</option>
                                                     <option value="tak_pelny">{t.brs[0]}</option>
                                                     <option value="tak_czesc">{t.brs[1]}</option>
@@ -455,8 +457,8 @@ export function ContactBrief() {
                                                 </select>
                                             </BriefField>
                                         </div>
-                                        <BriefField label={t.winspL} sub={t.winspS}>
-                                            <textarea rows={3} className="brief-input resize-none w-full" placeholder={t.winspPh} value={data.webInspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, webInspiration: e.target.value }))} />
+                                        <BriefField label={t.winspL} sub={t.winspS} htmlFor="brief-web-inspiration">
+                                            <textarea id="brief-web-inspiration" aria-describedby="brief-web-inspiration-opis" rows={3} className="brief-input resize-none w-full" placeholder={t.winspPh} value={data.webInspiration ?? ""} onChange={(e) => setData((d) => ({ ...d, webInspiration: e.target.value }))} />
                                         </BriefField>
                                     </>
                                 )}
@@ -507,8 +509,8 @@ export function ContactBrief() {
 
 
                             <div>
-                                <label className="brief-label">{t.cos}</label>
-                                <textarea rows={2} className="brief-input w-full resize-none" placeholder={t.cosPh} value={data.note ?? ""} onChange={(e) => setData((d) => ({ ...d, note: e.target.value }))} />
+                                <label htmlFor="contact-note" className="brief-label">{t.cos}</label>
+                                <textarea id="contact-note" rows={2} className="brief-input w-full resize-none" placeholder={t.cosPh} value={data.note ?? ""} onChange={(e) => setData((d) => ({ ...d, note: e.target.value }))} />
                             </div>
 
                             <label className="flex items-start gap-3 text-sm text-white/60 cursor-pointer">
@@ -516,7 +518,7 @@ export function ContactBrief() {
                                     type="checkbox"
                                     checked={marketingConsent}
                                     onChange={(e) => setMarketingConsent(e.target.checked)}
-                                    className="mt-1 accent-[#ffeb52]"
+                                    className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-[#ffeb52]"
                                 />
                                 <span>{BRIEF_MARKETING_CONSENT[locale]} {t.zgodaOpc}</span>
                             </label>
@@ -525,7 +527,7 @@ export function ContactBrief() {
                             <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row items-start md:items-center gap-5 justify-between">
                                 <div className="flex-1">
                                     {error ? (
-                                        <p className="text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">⚠️ {error}</p>
+                                        <p className="text-red-400 text-sm bg-red-400/10 px-4 py-2 rounded-lg border border-red-400/20">{error}</p>
                                     ) : (
                                         <p className="text-white/50 text-xs">
                                             {t.rodo}{" "}
@@ -550,12 +552,16 @@ export function ContactBrief() {
 }
 
 /* ─── Helper: Field wrapper ─── */
-function BriefField({ label, sub, children }: { label: string; sub: string; children: React.ReactNode }) {
+// `htmlFor` wiąże nagłówek z polem, żeby czytnik ekranu czytał nazwę pola zamiast „pole edycji”.
+// Bez `htmlFor` (np. grupa przycisków) nagłówek zostaje zwykłym tekstem.
+function BriefField({ label, sub, htmlFor, children }: { label: string; sub: string; htmlFor?: string; children: React.ReactNode }) {
     return (
         <div className="space-y-2">
             <div>
-                <p className="font-bold text-white text-base">{label}</p>
-                <p className="text-white/60 text-sm">{sub}</p>
+                {htmlFor
+                    ? <label htmlFor={htmlFor} className="block font-bold text-white text-base">{label}</label>
+                    : <p className="font-bold text-white text-base">{label}</p>}
+                <p id={htmlFor ? `${htmlFor}-opis` : undefined} className="text-white/60 text-sm">{sub}</p>
             </div>
             {children}
         </div>

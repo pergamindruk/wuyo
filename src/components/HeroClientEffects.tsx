@@ -93,7 +93,7 @@ export function HeroBackgroundText() {
 export function ScrollIndicator({ locale = "pl" }: { locale?: Locale }) {
     return (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/50 pointer-events-none select-none scroll-indicator-bounce">
-            <span className="text-[10px] uppercase tracking-[0.2em]">{locale === "en" ? "Explore" : "Odkryj"}</span>
+            <span className="text-xs uppercase tracking-[0.2em]">{locale === "en" ? "Explore" : "Odkryj"}</span>
             <ChevronDown size={20} />
         </div>
     );

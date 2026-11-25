@@ -109,8 +109,9 @@ export function CookieConsent() {
         >
                     {/* Tło nieprzezroczyste, nie przyszybione — baner ląduje na samej górze hero
                         i przy 95% krycia złoty przycisk pod nim przebijał przez tekst. */}
-                    <div className="rounded-3xl border border-white/10 bg-navy-dark p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
-                        <div className="mb-2 flex items-center gap-2.5">
+                    <div className="rounded-3xl border border-white/10 bg-navy-dark p-3.5 sm:p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.85)]">
+                        {/* Na telefonie w widoku banera nagłówek schowany (aria-labelledby i tak go czyta): baner ma zasłaniać jak najmniej hero. */}
+                        <div className={`mb-2 items-center gap-2.5 ${widok === "baner" ? "hidden sm:flex" : "flex"}`}>
                             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold">
                                 <Cookie size={15} aria-hidden />
                             </span>
@@ -121,31 +122,39 @@ export function CookieConsent() {
 
                         {widok === "baner" ? (
                             <>
-                                <p id="zgody-opis" className="mb-3 text-xs leading-relaxed text-white/60">
+                                <p id="zgody-opis" className="mb-3 text-xs leading-relaxed text-white/70">
                                     {t.opis}
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     <button
                                         type="button"
                                         onClick={() => zdecyduj({ analytics: true, marketing: true })}
-                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-bold text-navy-dark transition-colors hover:bg-gold-light"
+                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full bg-gold px-4 py-2.5 text-sm font-bold text-navy-dark transition-colors hover:bg-gold-light"
                                     >
                                         {t.akceptuje}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => zdecyduj({ analytics: false, marketing: false })}
-                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
+                                        className="flex-1 cursor-pointer whitespace-nowrap rounded-full border border-white/15 px-4 py-2.5 text-sm font-semibold text-white/80 transition-colors hover:border-white/30 hover:text-white"
                                     >
                                         {t.niezbedne}
                                     </button>
+                                </div>
+                                <div className="mt-1 flex items-center justify-center gap-4">
                                     <button
                                         type="button"
                                         onClick={() => setWidok("ustawienia")}
-                                        className="cursor-pointer whitespace-nowrap rounded-full px-2 py-2 text-xs font-semibold text-white/50 transition-colors hover:text-white"
+                                        className="cursor-pointer px-2 py-2 text-xs font-semibold text-white/60 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
                                     >
                                         {t.wybor}
                                     </button>
+                                    <Link
+                                        href={route("privacy", locale)}
+                                        className="px-2 py-2 text-xs text-white/60 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                                    >
+                                        {t.prywatnosc}
+                                    </Link>
                                 </div>
                             </>
                         ) : (
@@ -184,12 +193,12 @@ export function CookieConsent() {
                             </>
                         )}
 
-                        <Link
+                        {widok === "ustawienia" && <Link
                             href={route("privacy", locale)}
-                            className="mt-2 block text-center text-[11px] text-white/50 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
+                            className="mt-2 block py-2 text-center text-xs text-white/60 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/60"
                         >
                             {t.prywatnosc}
-                        </Link>
+                        </Link>}
                 </div>
         </div>
     );

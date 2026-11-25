@@ -114,7 +114,7 @@ export default function Home() {
             />
 
             {/* ═══════════════════════ HERO ═══════════════════════ */}
-            <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden">
+            <section className="relative md:min-h-[90vh] lg:min-h-screen overflow-hidden">
                 {/* Olive-green top glow — per Figma */}
                 <div
                     className="absolute inset-x-0 top-0 pointer-events-none z-0"
@@ -128,7 +128,7 @@ export default function Home() {
                 <HeroAmbientOrbs />
                 <HeroWebThreads />
 
-                <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-20">
+                <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 md:min-h-[90vh] lg:min-h-screen grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center pt-32 md:pt-44 lg:pt-52 pb-28 md:pb-20">
 
                     {/* LEFT — tekst + CTA */}
                     <AnimatedSection className="text-left min-w-0" animateOnMount={true} hero={true}>
@@ -156,7 +156,7 @@ export default function Home() {
             </section>
 
             {/* ═══════════════════════ OFERTA ═══════════════════════ */}
-            <section id="oferta" className="relative py-28 px-6 md:px-12">
+            <section id="oferta" className="relative pt-12 pb-28 md:py-28 px-6 md:px-12">
                 <div className="section-glow" />
 
                 <AnimatedSection className="text-center mb-20 relative z-10">

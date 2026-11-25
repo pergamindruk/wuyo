@@ -292,7 +292,7 @@ export default function ChatBot() {
             {/* Floating Trigger Button */}
             <motion.button
                 onClick={() => setIsOpen((v) => !v)}
-                className="fixed right-4 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden pr-4 pl-1.5 py-1.5 gap-3 group"
+                className="fixed right-4 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden p-1.5 sm:pr-4 gap-0 sm:gap-3 group"
                 style={{
                     // Podnosi się nad pasek kontaktu, gdy ten jest widoczny na telefonie.
                     bottom: "calc(var(--chat-bottom) + var(--mobile-bar-h, 0px))",
@@ -350,10 +350,11 @@ export default function ChatBot() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
                             transition={{ duration: 0.15 }}
-                            className="font-semibold text-white tracking-wide flex flex-col items-start leading-tight"
+                            // Na telefonie sam awatar: napis zasłaniał treść. Zostaje dla czytnika ekranu i jako nazwa przycisku.
+                            className="sr-only sm:not-sr-only font-semibold text-white tracking-wide sm:flex flex-col items-start leading-tight"
                         >
                             <span className="text-sm">Porozmawiajmy</span>
-                            <span className="text-[10px] text-green-400 font-normal">Jestem online</span>
+                            <span className="text-xs text-green-400 font-normal">Jestem online</span>
                         </motion.span>
                     )}
                 </AnimatePresence>

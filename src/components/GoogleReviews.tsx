@@ -91,7 +91,7 @@ export function GoogleReviews({ data, locale = "pl" }: { data: GoogleReviewsData
                                 href={mapsUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-gold text-sm font-bold hover:gap-2.5 transition-all sm:ml-2"
+                                className="inline-flex items-center gap-1.5 py-2 text-gold text-sm font-bold hover:gap-2.5 transition-all sm:ml-2"
                             >
                                 {t.zobacz} <ExternalLink size={13} aria-hidden="true" />
                             </a>

@@ -104,8 +104,8 @@ export function Footer({ locale = "pl" }: { locale?: Locale }) {
                     </div>
 
                     <div className="flex gap-6">
-                        <Link href={r("privacy")} className="hover:text-white/60 transition-colors">{t.prywatnosc}</Link>
-                        <ConsentSettingsLink className="cursor-pointer hover:text-white/60 transition-colors" label={locale === "en" ? "Cookie settings" : "Ustawienia ciasteczek"} />
+                        <Link href={r("privacy")} className="py-2 hover:text-white/60 transition-colors">{t.prywatnosc}</Link>
+                        <ConsentSettingsLink className="cursor-pointer py-2 hover:text-white/60 transition-colors" label={locale === "en" ? "Cookie settings" : "Ustawienia ciasteczek"} />
                     </div>
                 </div>
             </div>
