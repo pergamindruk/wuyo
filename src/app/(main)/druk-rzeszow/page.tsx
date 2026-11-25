@@ -226,7 +226,7 @@ export default function DrukRzeszowPage() {
                             </div>
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Opinie klientów</p>
-                                <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">★ Google Maps →</a>
+                                <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">Google Maps →</a>
                                 <p className="text-white/60 text-xs mt-1">sprawdź co mówią klienci</p>
                             </div>
                         </div>

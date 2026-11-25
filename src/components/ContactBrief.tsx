@@ -289,7 +289,7 @@ export function ContactBrief() {
                     <div className="flex items-center gap-3 rounded-2xl border border-gold/30 bg-gold/5 px-5 py-4">
                         <Mail size={22} className="text-gold shrink-0" aria-hidden="true" />
                         <div className="min-w-0 flex-1">
-                            <p className="text-white/50 text-[11px] uppercase tracking-widest">{t.mailLabel}</p>
+                            <p className="text-white/50 text-xs uppercase tracking-widest">{t.mailLabel}</p>
                             <a href={`mailto:${EMAIL}`} className="block text-white font-bold text-lg hover:text-gold transition-colors truncate">{EMAIL}</a>
                         </div>
                         <button
@@ -307,7 +307,7 @@ export function ContactBrief() {
                     >
                         <Phone size={22} className="text-gold shrink-0" aria-hidden="true" />
                         <div>
-                            <p className="text-white/50 text-[11px] uppercase tracking-widest">{t.telLabel}</p>
+                            <p className="text-white/50 text-xs uppercase tracking-widest">{t.telLabel}</p>
                             <p className="text-white font-bold text-lg">+48 725 182 053</p>
                         </div>
                     </a>

@@ -153,7 +153,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
             {/* Variant pills — ilość */}
             <div>
-                <p className="text-white/50 text-[10px] uppercase tracking-widest mb-2">Ilość</p>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Ilość</p>
                 <div className="flex flex-wrap gap-2">
                     {product.variants.map((v) => {
                         const isSelected = selectedVariant?.qty === v.qty;
@@ -176,7 +176,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
             {/* Projekt toggle */}
             <div>
-                <p className="text-white/50 text-[10px] uppercase tracking-widest mb-2">Projekt</p>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Projekt</p>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setWithDesign(false)}
@@ -198,7 +198,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
                     >
                         Zamawiam z projektem
                         {withDesign !== true && (
-                            <span className="block text-[10px] text-white/50 font-normal">+{designFee} zł</span>
+                            <span className="block text-xs text-white/50 font-normal">+{designFee} zł</span>
                         )}
                     </button>
                 </div>

@@ -125,7 +125,7 @@ export default function WebDesignRzeszowPage() {
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
                                         <p className={`text-2xl font-bold ${pkg.highlight ? "text-gold" : "text-white/80"}`}>{pkg.price}</p>
-                                        <p className="text-white/50 text-xs mt-1">⏱ {pkg.time}</p>
+                                        <p className="text-white/50 text-xs mt-1">{pkg.time}</p>
                                     </div>
                                     <p className="text-white/55 text-sm mb-5 leading-relaxed">{pkg.desc}</p>
                                     <ul className="space-y-2 flex-1">

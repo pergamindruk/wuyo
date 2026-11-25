@@ -132,7 +132,7 @@ export default function AboutPage() {
                             <AnimatedSection key={eq.name} delay={i * 0.08}>
                                 <div className="glass-card p-6 h-full">
                                     <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mb-4">{eq.icon}</div>
-                                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-widest mb-2 block">{eq.tag}</span>
+                                    <span className="text-xs font-bold text-gold/60 uppercase tracking-widest mb-2 block">{eq.tag}</span>
                                     <h3 className="font-bold text-white mb-2 text-sm">{eq.name}</h3>
                                     <p className="text-white/45 text-xs leading-relaxed">{eq.desc}</p>
                                 </div>
@@ -160,7 +160,7 @@ export default function AboutPage() {
                         {facts.map((fact, i) => (
                             <AnimatedSection key={fact.label} delay={i * 0.06}>
                                 <div className="glass-card px-6 py-5 flex flex-col gap-1">
-                                    <span className="text-white/50 text-[11px] uppercase tracking-widest font-semibold">{fact.label}</span>
+                                    <span className="text-white/50 text-xs uppercase tracking-widest font-semibold">{fact.label}</span>
                                     <span className="text-white font-bold text-base">{fact.value}</span>
                                 </div>
                             </AnimatedSection>

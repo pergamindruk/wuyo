@@ -67,7 +67,7 @@ export function DownloadForm({ slug, consentText }: Props) {
                 {stan === "wysylam" ? "Wysyłam…" : "Wyślij mi plik"}
             </button>
             {stan === "blad" && <p className="text-red-400 text-sm" role="alert">{blad}</p>}
-            <p className="text-white/40 text-[11px] leading-relaxed">
+            <p className="text-white/60 text-xs leading-relaxed">
                 Adres wykorzystam, żeby wysłać Ci plik. Maile z poradami i ofertami dostaniesz tylko, jeśli zaznaczysz zgodę wyżej. Więcej w <Link href="/polityka-prywatnosci" className="underline hover:text-white">polityce prywatności</Link>.
             </p>
         </form>

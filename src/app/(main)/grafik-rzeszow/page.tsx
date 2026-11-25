@@ -355,7 +355,7 @@ export default function GrafikRzeszowPage() {
                                     WhatsApp
                                 </a>
                                 <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
-                                    ★ Opinie na Google
+                                    Opinie na Google
                                 </a>
                                 <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 rounded-full font-bold text-center border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors text-sm">
                                     Portfolio – Instagram →

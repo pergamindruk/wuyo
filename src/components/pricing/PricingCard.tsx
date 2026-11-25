@@ -23,12 +23,12 @@ export function PricingCard({ card, locale = "pl" }: { card: PricingCardData; lo
             }`}
         >
             {badge && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-navy text-[11px] font-bold px-4 py-1 rounded-full tracking-wide whitespace-nowrap">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-navy text-xs font-bold px-4 py-1 rounded-full tracking-wide whitespace-nowrap">
                     {badge}
                 </span>
             )}
 
-            <p className="text-[10px] uppercase tracking-widest text-white/60 mb-5">{eyebrow}</p>
+            <p className="text-xs uppercase tracking-widest text-white/60 mb-5">{eyebrow}</p>
 
             <h4 className={`text-2xl font-bold mb-2 ${highlighted ? "text-gold" : "text-white"}`}>{name}</h4>
             <p className="text-white/50 text-sm leading-relaxed mb-6">{tagline}</p>

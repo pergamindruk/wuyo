@@ -254,7 +254,7 @@ export default function DrukPage() {
                     <AnimatedSection>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center text-sm text-white/60">
                             <a href="https://share.google/2xca9wmLz1mI5NvIX" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
-                                ★ Opinie na Google Maps
+                                Opinie na Google Maps
                             </a>
                             <span className="hidden sm:block">·</span>
                             <a href="https://www.instagram.com/wuyo.pl/" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">

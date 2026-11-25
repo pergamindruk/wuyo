@@ -237,7 +237,7 @@ export default function StronyInternetowerRzeszowPage() {
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
                                         <p className={`text-2xl font-bold ${pkg.highlight ? "text-gold" : "text-white/80"}`}>{pkg.price}</p>
-                                        <p className="text-white/50 text-xs mt-1">⏱ {pkg.time}</p>
+                                        <p className="text-white/50 text-xs mt-1">{pkg.time}</p>
                                     </div>
                                     <p className="text-white/55 text-sm mb-5 leading-relaxed">{pkg.desc}</p>
                                     <ul className="space-y-2 flex-1">
@@ -322,7 +322,7 @@ export default function StronyInternetowerRzeszowPage() {
                             <h3 className="font-bold text-white mb-2">Dlaczego tania strona z szablonu wychodzi drożej</h3>
                             <p className="text-white/60 text-sm leading-relaxed">
                                 Strona z kreatora za kilkaset złotych kusi. Koszty wychodzą później. Szablon ma w sobie kod do funkcji, których nie używasz, więc strona ładuje się wolno na telefonie. Klient z wyników Google nie czeka, tylko wraca i klika konkurencję. Do tego każda zmiana poza szablonem to osobne zlecenie albo przenosiny na nową stronę. Za rok płacisz drugi raz. Co sprawdzić przed zaliczką, opisałem w tekście{" "}
-                                <Link href="/blog/tania-strona-internetowa-na-co-uwazac" className="text-gold hover:underline">tania strona internetowa — na co uważać</Link>.
+                                <Link href="/blog/tania-strona-internetowa-na-co-uwazac" className="text-gold hover:underline">tania strona internetowa: na co uważać</Link>.
                             </p>
                         </div>
                     </AnimatedSection>
@@ -349,9 +349,9 @@ export default function StronyInternetowerRzeszowPage() {
                     </AnimatedSection>
                     <div className="grid md:grid-cols-3 gap-4">
                         {[
-                            { icon: <Zap size={20} className="text-gold" />, title: "Next.js: ładuje się w < 1s", desc: <span>Każda dodatkowa sekunda ładowania to -7% konwersji. Sprawdź swoją aktualną stronę w <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">PageSpeed Insights</a> — jeśli wynik to mniej niż 90, czas coś zmienić.</span> },
-                            { icon: <Shield size={20} className="text-gold" />, title: "Next.js: nic do zhakowania", desc: <span>Nie ma bazy danych wystawionej na świat. <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">Next.js</a> generuje statyczne pliki — nie ma czego hakować ani aktualizować co tydzień.</span> },
-                            { icon: <PenLine size={20} className="text-gold" />, title: "WordPress: sam zmieniasz treść", desc: "Wpisy, realizacje, oferta albo sklep WooCommerce — edytujesz w panelu. Aktualizacje i kopie zapasowe robię ja w ramach opieki." },
+                            { icon: <Zap size={20} className="text-gold" />, title: "Next.js: ładuje się w < 1s", desc: <span>Każda dodatkowa sekunda ładowania to -7% konwersji. Sprawdź swoją aktualną stronę w <a href="https://pagespeed.web.dev" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">PageSpeed Insights</a>. Jeśli wynik jest niższy niż 90, czas coś zmienić.</span> },
+                            { icon: <Shield size={20} className="text-gold" />, title: "Next.js: nic do zhakowania", desc: <span>Nie ma bazy danych wystawionej na świat. <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-gold/70 hover:text-gold underline decoration-dotted">Next.js</a> generuje statyczne pliki, więc nie ma czego hakować ani aktualizować co tydzień.</span> },
+                            { icon: <PenLine size={20} className="text-gold" />, title: "WordPress: sam zmieniasz treść", desc: "Wpisy, realizacje, oferta albo sklep WooCommerce edytujesz w panelu. Aktualizacje i kopie zapasowe robię ja w ramach opieki." },
                         ].map((item, i) => (
                             <AnimatedSection key={i} delay={i * 0.08}>
                                 <div className="glass-card p-6">

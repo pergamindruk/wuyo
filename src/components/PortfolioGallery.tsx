@@ -213,7 +213,7 @@ export function PortfolioGallery({
 
                                 {/* Category chip */}
                                 <div className="absolute top-4 right-4 z-20 opacity-0 -translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-250">
-                                    <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-white/80 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+                                    <span className="text-xs uppercase tracking-[0.15em] font-bold text-white/80 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
                                         {categoryLabel(project.category, locale)}
                                     </span>
                                 </div>

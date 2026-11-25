@@ -86,11 +86,11 @@ export const mdxComponents = {
     PriceCard: ({ title, price, desc, tag }: { title: string; price: string; desc: string; tag?: string }) => (
         <div className="glass-card p-6 space-y-2 my-2">
             <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                     <p className="font-bold text-white text-sm">{title}</p>
                     <p className="text-gold font-bold text-xl mt-1">{price}</p>
                 </div>
-                {tag && <span className="eyebrow text-[10px] shrink-0 mt-1">{tag}</span>}
+                {tag && <span className="eyebrow text-xs mt-1 max-w-[50%] text-right whitespace-normal">{tag}</span>}
             </div>
             <p className="text-white/60 text-xs leading-relaxed">{desc}</p>
         </div>

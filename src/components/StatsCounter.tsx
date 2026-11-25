@@ -116,7 +116,7 @@ export function StatsCounter({ locale = "pl" }: { locale?: Locale }) {
                         >
                             <AnimatedNumber {...stat.value} locale={locale} />
                         </span>
-                        <span className="text-white/50 text-[9px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.25em] sm:whitespace-nowrap text-center">
+                        <span className="text-white/50 text-xs uppercase tracking-[0.12em] sm:tracking-[0.25em] sm:whitespace-nowrap text-center">
                             {LABELS[locale][i]}
                         </span>
                     </div>

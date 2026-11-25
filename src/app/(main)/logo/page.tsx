@@ -437,7 +437,7 @@ export default function LogoPage() {
                                         </li>
                                     ))}
                                 </ul>
-                                <p className="text-white/45 text-xs mt-5 leading-relaxed">
+                                <p className="text-white/60 text-xs mt-5 leading-relaxed">
                                     Nie ma złych odpowiedzi. Więcej o tym, jak napisać brief, przeczytasz w{" "}
                                     <Link href="/blog/jak-napisac-brief-dla-projektanta" className="text-gold hover:underline">poradniku o briefie</Link>.
                                 </p>

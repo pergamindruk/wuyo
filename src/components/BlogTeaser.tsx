@@ -55,9 +55,9 @@ export function BlogTeaser({ locale = "pl" }: { locale?: Locale }) {
                             )}
                             <div className="p-6 flex flex-col flex-1">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <span className="eyebrow text-[10px]">{post.category}</span>
+                                    <span className="eyebrow text-xs">{post.category}</span>
                                     <span className="text-white/20" aria-hidden="true">·</span>
-                                    <span className="text-white/60 text-[11px] flex items-center gap-1">
+                                    <span className="text-white/60 text-xs flex items-center gap-1">
                                         <Clock size={11} aria-hidden="true" /> {post.readTime}
                                     </span>
                                 </div>

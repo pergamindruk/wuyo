@@ -84,7 +84,7 @@ export function BusinessPackages() {
                                     </ul>
                                     <div className="mt-auto">
                                         <p className="text-3xl font-bold text-gold">{pln(p.priceGrosze)}</p>
-                                        <p className="text-white/45 text-xs mt-1">cena końcowa</p>
+                                        <p className="text-white/60 text-xs mt-1">cena końcowa</p>
                                         <a href={whatsapp(p.name)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-4 px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 text-sm">
                                             Napisz na WhatsApp <ArrowRight size={16} />
                                         </a>

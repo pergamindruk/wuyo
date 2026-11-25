@@ -150,7 +150,7 @@ export default function PrintingRzeszowPage() {
                             </div>
                             <div>
                                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Client reviews</p>
-                                <a href={GOOGLE_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">★ Google Maps →</a>
+                                <a href={GOOGLE_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-gold transition-colors text-sm">Google Maps →</a>
                                 <p className="text-white/60 text-xs mt-1">see what clients say</p>
                             </div>
                         </div>
