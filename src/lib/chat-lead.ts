@@ -123,7 +123,7 @@ export async function saveChatLead(input: {
             <p style="margin-top: 24px; color: #aaa; font-size: 14px;">Jeśli klient pisał dalej, pełna rozmowa jest w panelu: <a href="https://wuyo.pl/lab/crm" style="color: #FFD700;">Zapytania</a> (kolumna Detale).</p>
           </div>
         `,
-    }, "lead-powiadomienie");
+    }, "lead-powiadomienie", name);
 }
 
 /**

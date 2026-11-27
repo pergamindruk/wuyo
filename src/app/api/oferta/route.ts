@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
             to: TO_MATEUSZ,
             subject: `✅ Oferta zaakceptowana: ${job.offer.title}`,
             html: `<p><b>${escapeHtml(name)}</b> zaakceptował(a) ofertę <b>${escapeHtml(job.offer.title)}</b> (${escapeHtml(job.clientCompany || job.clientName)}).</p><p>Następny krok: umowa i zaliczka 50%. Panel: https://wuyo.pl/lab/oferty</p>`,
-        }, 'oferta-akceptacja')
+        }, 'oferta-akceptacja', name)
     } catch {
         // Akceptacja jest zapisana w bazie i widać ją w panelu; brak maila nie może cofnąć jej klientowi.
     }

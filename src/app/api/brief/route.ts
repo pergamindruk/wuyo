@@ -308,7 +308,7 @@ export async function POST(req: NextRequest) {
             replyTo: data.email,
             subject: `📋 Nowy Brief: ${pathNames[data.path] ?? data.path} — ${data.name}`,
             html: buildHtml(data, consent),
-        }, "brief-powiadomienie");
+        }, "brief-powiadomienie", data.name);
 
         // Powiadomienie już doszło, więc zgłoszenie jest przyjęte. Błąd potwierdzenia
         // dla klienta nie może zwrócić 500 — klient wysłałby brief drugi raz.

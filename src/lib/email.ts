@@ -34,11 +34,12 @@ type SendPayload = Parameters<typeof resend.emails.send>[0];
  * Teraz każda nieudana wysyłka jest logowana i rzucana dalej, żeby trasa API
  * zwróciła 500 zamiast udawać, że zapytanie doszło.
  */
-export async function sendEmail(payload: SendPayload, context: string): Promise<void> {
+export async function sendEmail(payload: SendPayload, context: string, imie?: string | null): Promise<void> {
     // Powiadomienie o kliencie idzie też na Telegram, równolegle z mailem.
     // Wysyła się nawet wtedy, gdy mail padnie. Błąd Telegrama nic nie psuje.
-    const telegram = NA_TELEGRAM.has(context) && payload.to === TO_MATEUSZ
-        ? powiadomWlasciciela(`${payload.subject}\n\n${htmlNaTekst(String(payload.html ?? payload.text ?? ""))}`)
+    const etykieta = NA_TELEGRAM[context];
+    const telegram = etykieta && payload.to === TO_MATEUSZ
+        ? powiadomWlasciciela(telegramTekst(etykieta, imie))
         : Promise.resolve();
     try {
         await wyslijMaila(payload, context);
@@ -47,37 +48,26 @@ export async function sendEmail(payload: SendPayload, context: string): Promise<
     }
 }
 
-/** Powiadomienia o klientach, które mają też przyjść na Telegram. */
-const NA_TELEGRAM = new Set([
-    "lead-powiadomienie",
-    "brief-powiadomienie",
-    "brief-klienta",
-    "audyt-powiadomienie",
-    "oferta-akceptacja",
-    "zamowienie-powiadomienie",
-    "strefa-pliki",
-    "pobierz-powiadomienie",
-]);
+/**
+ * Powiadomienia o klientach, które przychodzą też na Telegram.
+ * Telegram ma siedzibę poza UE, więc idzie tam tylko rodzaj zdarzenia i imię.
+ * E-mail, telefon, treść zapytania i rozmowy zostają w mailu i w /lab.
+ */
+const NA_TELEGRAM: Record<string, string> = {
+    "lead-powiadomienie": "🔥 Nowy lead z czatu",
+    "brief-powiadomienie": "📋 Nowy brief",
+    "brief-klienta": "📋 Klient wypełnił brief",
+    "audyt-powiadomienie": "🔍 Nowe zgłoszenie do audytu",
+    "oferta-akceptacja": "✅ Klient zaakceptował ofertę",
+    "zamowienie-powiadomienie": "🛒 Nowe zamówienie druku",
+    "strefa-pliki": "📎 Klient wrzucił pliki",
+    "pobierz-powiadomienie": "⬇️ Ktoś pobrał plik",
+};
 
-/** Treść maila jako zwykły tekst do Telegrama. */
-export function htmlNaTekst(html: string): string {
-    return html
-        .replace(/<(style|script)[\s\S]*?<\/\1>/gi, "")
-        .replace(/<a [^>]*href="mailto:([^"]+)"[^>]*>[\s\S]*?<\/a>/gi, (_, m: string) => decodeURIComponent(m))
-        .replace(/<br\s*\/?>|<\/(p|div|tr|h[1-6]|li|table)>/gi, "\n")
-        .replace(/<\/td>/gi, " ")
-        .replace(/<[^>]+>/g, "")
-        .replace(/&nbsp;/g, " ")
-        .replace(/&amp;/g, "&")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"')
-        .replace(/&#0?39;/g, "'")
-        .split("\n")
-        .map((l) => l.replace(/[ \t]+/g, " ").trim())
-        .filter(Boolean)
-        .join("\n")
-        .slice(0, 3000);
+/** Treść powiadomienia na Telegram: etykieta + imię (jeśli jest), nic więcej. */
+export function telegramTekst(etykieta: string, imie?: string | null): string {
+    const czysteImie = (imie ?? "").replace(/\s+/g, " ").trim().slice(0, 60);
+    return `${etykieta}${czysteImie ? `: ${czysteImie}` : ""}\nSzczegóły w mailu i w panelu /lab.`;
 }
 
 async function wyslijMaila(payload: SendPayload, context: string): Promise<void> {

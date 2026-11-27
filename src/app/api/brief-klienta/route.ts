@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             html: `<p>Klient wypełnił brief do zlecenia <b>${escapeHtml(job.title || job.service)}</b>.</p>`
                 + qa.map((x) => `<p><b>${escapeHtml(x.q)}</b><br>${escapeHtml(x.a).replace(/\n/g, '<br>')}</p>`).join('')
                 + '<p>Oferta: https://wuyo.pl/lab/oferty</p>',
-        }, 'brief-klienta')
+        }, 'brief-klienta', job.clientName)
     } catch {
         // Odpowiedzi są w bazie i w panelu; brak maila nie może kazać klientowi wysyłać drugi raz.
     }

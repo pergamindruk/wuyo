@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
                     to: TO_MATEUSZ,
                     subject: `📎 Pliki od klienta: ${p?.client ?? projectId}`,
                     html: `<p>${escapeHtml(p?.client ?? '')} wrzucił(a) pliki do projektu <b>${escapeHtml(p?.name ?? projectId)}</b>:</p><ul>${names.map((n) => `<li>${n}</li>`).join('')}</ul><p>Pobierz: https://wuyo.pl/lab/projects</p>`,
-                }, 'strefa-pliki')
+                }, 'strefa-pliki', p?.client)
             } catch {
                 // Pliki są już w buckecie i widać je w panelu; brak maila nie jest błędem dla klienta.
             }

@@ -302,7 +302,7 @@ export async function POST(req: NextRequest) {
             replyTo: data.email,
             subject: `🛒 Nowe zamówienie druku — ${data.name}`,
             html: buildOrderHtml(data),
-        }, "zamowienie-powiadomienie");
+        }, "zamowienie-powiadomienie", data.name);
 
         // Powiadomienie doszło, więc zamówienie jest przyjęte. Błąd potwierdzenia
         // dla klienta nie może zwrócić 500, bo klient wysłałby koszyk drugi raz.
