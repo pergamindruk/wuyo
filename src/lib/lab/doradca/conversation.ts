@@ -18,6 +18,9 @@ export type Akcja =
     | { rodzaj: 'koszt'; data: string; kwotaGrosze: number; opis: string; sprzedawca: string | null; zDotacji: boolean }
     | { rodzaj: 'notatka'; tresc: string }
     | { rodzaj: 'zadanie'; tresc: string; termin: string | null }
+    | { rodzaj: 'rozmowa'; firma: string; tresc: string; oddzwonic: string | null; status: StatusRozmowy | null }
+export type StatusRozmowy = 'oddzwonic' | 'nie_odebral' | 'nie_chce' | 'chce_oferte'
+const STATUSY_ROZMOWY = new Set<string>(['oddzwonic', 'nie_odebral', 'nie_chce', 'chce_oferte'])
 export type Wzor = { slug: string; zlecenie: number | null }
 
 /** Kwota z groszy do tekstu „240,50 zł”. */
@@ -35,6 +38,8 @@ export function naGrosze(tekst: string): number | null {
 
 export function opisAkcji(a: Akcja): string {
     if (a.rodzaj === 'notatka') return `notatka: ${a.tresc}`
+    if (a.rodzaj === 'rozmowa')
+        return `rozmowa z ${a.firma}: ${a.tresc}${a.oddzwonic ? `, oddzwonić ${a.oddzwonic}` : ''}${a.status ? ` [${a.status.replace('_', ' ')}]` : ''}`
     if (a.rodzaj === 'zadanie') return `zadanie dla komputera${a.termin ? ` (od ${a.termin})` : ''}: ${a.tresc}`
     return `koszt ${zl(a.kwotaGrosze)}, ${a.data}, ${a.opis}${a.sprzedawca ? `, ${a.sprzedawca}` : ''}${a.zDotacji ? ' (z dotacji)' : ''}`
 }
@@ -117,6 +122,15 @@ Gdy prosi o zapisanie notatki do firmy:
 - System sam zapyta Mateusza o potwierdzenie i zapisze dopiero po „tak”. Ty nie pisz „zapisałem”, tylko krótko powiedz, co odczytałeś, i dodaj uwagę podatkową, jeśli jest ważna (zakup z dotacji nie idzie w koszty).
 - Zdjęcie, które nie jest paragonem ani fakturą: opisz, co widzisz, i odpowiedz na pytanie z podpisu.
 
+NOTATKI Z ROZMÓW Z KLIENTAMI
+Gdy Mateusz opowiada o rozmowie z klientem albo firmą (często głosówką zaraz po telefonie), dopisz na końcu linię:
+[ROZMOWA] nazwa firmy albo klienta | co ustalono, krótko i konkretnie (potrzeba, budżet, obiekcje, następny krok) | RRRR-MM-DD oddzwonienia albo myślnik | status albo myślnik
+- Status tylko z listy: oddzwonic, nie_odebral, nie_chce, chce_oferte. Gdy nie wynika z rozmowy, myślnik.
+- Datę oddzwonienia przelicz z „w piątek”, „za tydzień” na RRRR-MM-DD od dzisiejszej daty.
+- Nie zgaduj nazwy firmy. Gdy jej nie ma, zapytaj i nie dopisuj linii.
+- W odpowiedzi jednym zdaniem zapytaj, na którym etapie jest klient (brief, wycena, oferta, umowa, zaliczka), jeśli nie wynika to z rozmowy, i podpowiedz następny krok.
+- System zapisze notatkę w /lab (Klienci i kolejka telefonów) dopiero po „tak”.
+
 WZORY DOKUMENTÓW
 Gdy Mateusz prosi o dokument dla klienta, dopisz na końcu linię, a system wyśle plik:
 [WZOR] slug | numer zlecenia z listy poniżej (np. Z2) albo myślnik
@@ -131,6 +145,7 @@ Gdy prosi o taką pracę albo planuje ją na konkretny dzień, dopisz na końcu 
 - Opis pisz tak, żeby wykonawca nie musiał dopytywać: co, dla kogo, w jakim formacie, gdzie zapisać, jakie ograniczenia.
 - Komputer UMIE: research w sieci z raportem, szkice postów, maili, ofert i wpisów bloga, analiza plików i raportów w projekcie WUYO, porównania ofert, plan działań, poprawki tekstów w szkicach.
 - Komputer NIE UMIE i nie zrobi: wysłać maila ani wiadomości, opublikować posta lub wpisu, wdrożyć strony, zapłacić, kupić, uruchomić programów, logować się na konta. Gdy Mateusz tego chce, powiedz, że komputer przygotuje szkic, a wysyła on sam.
+- Wyjątki z komendami: szkic bloga z nocnej zmiany publikuje komenda /publikuj (albo /popraw uwagi), a maile Harveya zatwierdza /maile, /wyslij, /odrzuc. Gdy Mateusz o to prosi, podaj mu komendę.
 - Co tylko ty możesz zrobić od razu (odpowiedź, research w rozmowie), rób od razu. Zadanie dla komputera ma sens przy dłuższej pracy na plikach albo zaplanowanej na później.
 - System zapyta Mateusza o potwierdzenie, zanim zadanie trafi do kolejki.
 
@@ -197,7 +212,7 @@ export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
     const zostaje: string[] = []
     for (const linia of surowa.split('\n')) {
         const l = linia.trim()
-        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM|KOSZT|NOTATKA|WZ[OÓ]R|ZADANIE)\]\s*(.*)$/i.exec(l)
+        const znacznik = /^\[(ZAPAMI[EĘ]TAJ|TERMIN|US[LŁ]YSZA[LŁ]EM|KOSZT|NOTATKA|WZ[OÓ]R|ZADANIE|ROZMOWA)\]\s*(.*)$/i.exec(l)
         if (!znacznik) {
             zostaje.push(linia)
             continue
@@ -213,6 +228,17 @@ export function rozbierzOdpowiedz(surowa: string): Odpowiedz {
             const koszt = rozbierzKoszt(reszta)
             if (koszt) wynik.akcje.push(koszt)
         } else if (rodzaj === 'NOTATKA') wynik.akcje.push({ rodzaj: 'notatka', tresc: reszta.slice(0, 1000) })
+        else if (rodzaj === 'ROZMOWA') {
+            const [firma = '', tresc = '', kiedy = '-', status = '-'] = reszta.split('|').map((x) => x.trim())
+            if (firma && tresc && (kiedy === '-' || poprawnaData(kiedy)))
+                wynik.akcje.push({
+                    rodzaj: 'rozmowa',
+                    firma: firma.slice(0, 200),
+                    tresc: tresc.slice(0, 2000),
+                    oddzwonic: kiedy === '-' ? null : kiedy,
+                    status: STATUSY_ROZMOWY.has(status.toLowerCase()) ? (status.toLowerCase() as StatusRozmowy) : null,
+                })
+        }
         else if (rodzaj === 'ZADANIE') {
             const i = reszta.indexOf('|')
             const kiedy = i >= 0 ? reszta.slice(0, i).trim() : '-'

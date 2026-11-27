@@ -31,6 +31,20 @@ export async function sendMessage(chatId: string | number, text: string): Promis
     }
 }
 
+/**
+ * Wiadomość do właściciela (TELEGRAM_CHAT_ID) z innych miejsc niż rozmowa, np. nowy lead.
+ * Nigdy nie rzuca: brak konfiguracji albo błąd Telegrama tylko trafia do logów.
+ */
+export async function powiadomWlasciciela(text: string): Promise<void> {
+    const chat = process.env.TELEGRAM_CHAT_ID
+    if (!chat || !process.env.TELEGRAM_BOT_TOKEN) return
+    try {
+        await sendMessage(chat, text)
+    } catch (e) {
+        console.error('Telegram: powiadomienie', e instanceof Error ? e.message : e)
+    }
+}
+
 /** Wysyła tekst jako plik (np. wypełniony wzór umowy). */
 export async function sendDocument(chatId: string | number, filename: string, content: string, caption?: string): Promise<void> {
     const form = new FormData()

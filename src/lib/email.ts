@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { powiadomWlasciciela } from "@/lib/lab/doradca/telegram";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -34,6 +35,52 @@ type SendPayload = Parameters<typeof resend.emails.send>[0];
  * zwróciła 500 zamiast udawać, że zapytanie doszło.
  */
 export async function sendEmail(payload: SendPayload, context: string): Promise<void> {
+    // Powiadomienie o kliencie idzie też na Telegram, równolegle z mailem.
+    // Wysyła się nawet wtedy, gdy mail padnie. Błąd Telegrama nic nie psuje.
+    const telegram = NA_TELEGRAM.has(context) && payload.to === TO_MATEUSZ
+        ? powiadomWlasciciela(`${payload.subject}\n\n${htmlNaTekst(String(payload.html ?? payload.text ?? ""))}`)
+        : Promise.resolve();
+    try {
+        await wyslijMaila(payload, context);
+    } finally {
+        await telegram;
+    }
+}
+
+/** Powiadomienia o klientach, które mają też przyjść na Telegram. */
+const NA_TELEGRAM = new Set([
+    "lead-powiadomienie",
+    "brief-powiadomienie",
+    "brief-klienta",
+    "audyt-powiadomienie",
+    "oferta-akceptacja",
+    "zamowienie-powiadomienie",
+    "strefa-pliki",
+    "pobierz-powiadomienie",
+]);
+
+/** Treść maila jako zwykły tekst do Telegrama. */
+export function htmlNaTekst(html: string): string {
+    return html
+        .replace(/<(style|script)[\s\S]*?<\/\1>/gi, "")
+        .replace(/<a [^>]*href="mailto:([^"]+)"[^>]*>[\s\S]*?<\/a>/gi, (_, m: string) => decodeURIComponent(m))
+        .replace(/<br\s*\/?>|<\/(p|div|tr|h[1-6]|li|table)>/gi, "\n")
+        .replace(/<\/td>/gi, " ")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#0?39;/g, "'")
+        .split("\n")
+        .map((l) => l.replace(/[ \t]+/g, " ").trim())
+        .filter(Boolean)
+        .join("\n")
+        .slice(0, 3000);
+}
+
+async function wyslijMaila(payload: SendPayload, context: string): Promise<void> {
     const { data, error } = await resend.emails.send(payload);
 
     if (!error) {

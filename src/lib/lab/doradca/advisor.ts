@@ -154,10 +154,45 @@ async function zapiszPamiec(db: SupabaseClient, fakty: string[], terminy: { data
     if (terminy.length) await db.from('doradca_terminy').upsert(terminy, { onConflict: 'data,tytul', ignoreDuplicates: true })
 }
 
+type RozmowaAkcja = Extract<Akcja, { rodzaj: 'rozmowa' }>
+
+/**
+ * Notatka z rozmowy: szuka klienta w /lab (Klienci, potem kolejka telefonów) po nazwie,
+ * zapisuje notatkę, wpis w aktywności, status w kolejce i termin oddzwonienia.
+ * Zwraca błąd głównego zapisu (notatki) i to, do kogo ją przypięto.
+ */
+async function zapiszRozmowe(db: SupabaseClient, a: RozmowaAkcja): Promise<{ error: { message: string } | null; przypieto: string }> {
+    const wzor = `%${a.firma.replace(/[%_\\]/g, (m) => `\\${m}`)}%`
+    const poFirmie = await db.from('clients').select('id, company, name').ilike('company', wzor).limit(1)
+    const klient = poFirmie.data?.[0] ?? (await db.from('clients').select('id, company, name').ilike('name', wzor).limit(1)).data?.[0]
+    const wKolejce = (await db.from('call_queue').select('id, name').ilike('name', wzor).limit(1)).data?.[0]
+
+    const notatka = await db.from('call_notes').insert({ client_id: klient?.id ?? null, queue_id: wKolejce?.id ?? null, tresc: `${a.firma}: ${a.tresc}` })
+    if (notatka.error) return { error: notatka.error, przypieto: '' }
+
+    await db.from('activity_log').insert({ kind: 'rozmowa', queue_id: wKolejce?.id ?? null, outcome: a.status, note: `${a.firma}: ${a.tresc}`.slice(0, 1000) })
+    if (wKolejce && (a.status || a.oddzwonic)) {
+        await db
+            .from('call_queue')
+            .update({ status: a.status ?? 'oddzwonic', ...(a.oddzwonic ? { next_at: `${a.oddzwonic}T08:00:00+01:00` } : {}) })
+            .eq('id', wKolejce.id)
+    }
+    if (a.oddzwonic) await db.from('doradca_terminy').upsert({ data: a.oddzwonic, tytul: `Oddzwonić: ${a.firma}`.slice(0, 200) }, { onConflict: 'data,tytul', ignoreDuplicates: true })
+
+    const gdzie = [klient && `Klienci (${klient.company || klient.name})`, wKolejce && `kolejka telefonów (${wKolejce.name})`].filter(Boolean).join(' i ')
+    return { error: null, przypieto: gdzie ? ` Przypięte do: ${gdzie}.` : ' Nie znalazłem tej firmy w panelu, notatka leży bez przypięcia.' }
+}
+
 /** Wykonuje zapisy, na które Mateusz odpowiedział „tak”. Zwraca opis tego, co się udało i co nie. */
 async function wykonajAkcje(db: SupabaseClient, akcje: Akcja[]): Promise<string> {
     const linie: string[] = []
     for (const a of akcje) {
+        if (a.rodzaj === 'rozmowa') {
+            const r = await zapiszRozmowe(db, a)
+            linie.push(r.error ? `Nie udało się zapisać: ${opisAkcji(a)}` : `Zapisane: ${opisAkcji(a)}.${r.przypieto}`)
+            if (r.error) console.error('Doradca: zapis rozmowy', r.error.message)
+            continue
+        }
         const wynik =
             a.rodzaj === 'koszt'
                 ? await db.from('koszty').insert({ data: a.data, kwota_grosze: a.kwotaGrosze, opis: a.opis, sprzedawca: a.sprzedawca, z_dotacji: a.zDotacji })
@@ -210,12 +245,94 @@ async function wyslijWzory(chatId: number, wzory: Wzor[], zlecenia: Zlecenie[], 
     }
 }
 
+/** Krótki kod maila z Outboxa Harveya do komend (/mail, /wyslij, /odrzuc). */
+const kodMaila = (id: string) => id.replace(/[^a-z0-9]/gi, '').slice(0, 6).toLowerCase()
+
+/**
+ * Maile Harveya do decyzji. Telegram zapisuje tylko decyzję (jak /lab/maile),
+ * wysyła dalej Harvey na komputerze przy najbliższym syncu.
+ */
+async function komendaMaile(db: SupabaseClient, chatId: number, cmd: string, tekst: string): Promise<boolean> {
+    const { data, error } = await db
+        .from('harvey_outbox')
+        .select('id, firma, do_email, temat, tresc, krok, decyzja')
+        .eq('status', 'pending_review')
+        .order('zaplanowano', { ascending: true, nullsFirst: false })
+        .limit(200)
+    if (error) {
+        await sendMessage(chatId, 'Nie mogę odczytać maili z panelu. Spróbuj za chwilę.')
+        return true
+    }
+    const maile = data ?? []
+    const argumenty = tekst.trim().split(/\s+/).slice(1).map((x) => x.toLowerCase())
+
+    if (cmd === '/maile') {
+        const czeka = maile.filter((m) => !m.decyzja)
+        if (!czeka.length) {
+            await sendMessage(chatId, 'Żaden mail Harveya nie czeka na decyzję.')
+            return true
+        }
+        const lista = czeka.slice(0, 15).map((m) => `${kodMaila(m.id)}  ${m.firma || m.do_email}${m.krok > 1 ? ` (przypomnienie ${m.krok - 1})` : ''}\n   ${m.temat || '(bez tematu)'}`)
+        await sendMessage(
+            chatId,
+            `Maile do decyzji: ${czeka.length}${czeka.length > 15 ? ' (pokazuję 15)' : ''}\n\n${lista.join('\n')}\n\n/mail kod pokaże treść\n/wyslij kod kod… albo /wyslij wszystkie\n/odrzuc kod kod…\nHarvey wyśle przy najbliższym syncu na komputerze.`,
+        )
+        return true
+    }
+
+    if (cmd === '/mail') {
+        const m = maile.find((x) => kodMaila(x.id) === argumenty[0])
+        await sendMessage(chatId, m ? `Do: ${m.do_email} (${m.firma || 'bez nazwy'})\nTemat: ${m.temat}\n\n${m.tresc}\n\n/wyslij ${kodMaila(m.id)} albo /odrzuc ${kodMaila(m.id)}` : 'Nie ma takiego maila do decyzji. Lista: /maile')
+        return true
+    }
+
+    const decyzja = cmd === '/wyslij' ? 'approve' : 'reject'
+    const wybrane = cmd === '/wyslij' && argumenty[0] === 'wszystkie' ? maile.filter((m) => !m.decyzja) : maile.filter((m) => argumenty.includes(kodMaila(m.id)))
+    if (!wybrane.length) {
+        await sendMessage(chatId, `Podaj kody z listy, np. ${cmd} ${maile[0] ? kodMaila(maile[0].id) : 'ab12cd'}. Lista: /maile`)
+        return true
+    }
+    const { error: blad } = await db
+        .from('harvey_outbox')
+        .update({ decyzja, decyzja_at: new Date().toISOString() })
+        .in('id', wybrane.map((m) => m.id))
+        .eq('status', 'pending_review')
+    await sendMessage(
+        chatId,
+        blad
+            ? 'Nie udało się zapisać decyzji. Spróbuj jeszcze raz.'
+            : `${decyzja === 'approve' ? 'Do wysyłki' : 'Odrzucone'}: ${wybrane.length}\n${wybrane.map((m) => `- ${m.firma || m.do_email}`).join('\n')}\nHarvey dostanie to przy najbliższym syncu.`,
+    )
+    return true
+}
+
+/**
+ * Szkic bloga z nocnej zmiany: /publikuj albo /popraw uwagi.
+ * Trafia jako zadanie dla komputera; wykonawca rozpoznaje znacznik [PUBLIKUJ_BLOG]
+ * i odpala osobną procedurę publikacji (sprawdzenie, EN, test, push, IndexNow).
+ */
+async function komendaBlog(db: SupabaseClient, chatId: number, cmd: string, tekst: string): Promise<boolean> {
+    const uwagi = tekst.trim().split(/\s+/).slice(1).join(' ').trim()
+    if (cmd === '/popraw' && !uwagi) {
+        await sendMessage(chatId, 'Napisz, co poprawić, np. „/popraw krócej o cenach, dodaj przykład z Bieszczad”.')
+        return true
+    }
+    const { error } = await db.from('doradca_zadania').insert({ tresc: `[PUBLIKUJ_BLOG]${uwagi ? ` UWAGI: ${uwagi.slice(0, 2000)}` : ''}`, termin: null })
+    await sendMessage(
+        chatId,
+        error
+            ? 'Nie udało się dodać zadania. Spróbuj jeszcze raz.'
+            : `Komputer ${uwagi ? 'poprawi szkic według uwag, sprawdzi go i opublikuje' : 'sprawdzi szkic i go opublikuje'} (PL i EN). Zrobi to po włączeniu, sprawdza co 15 minut. Link przyślę.`,
+    )
+    return true
+}
+
 async function komenda(db: SupabaseClient, chatId: number, tekst: string): Promise<boolean> {
     const cmd = tekst.trim().split(/\s+/)[0].toLowerCase().replace(/@.*$/, '')
     if (cmd === '/start' || cmd === '/pomoc') {
         await sendMessage(
             chatId,
-            'Jestem Twoim doradcą do prowadzenia WUYO. Pisz albo nagrywaj pytania o firmę, podatki, ZUS, dotację, umowy.\n\nCo jeszcze umiem:\n- zapisać koszt: napisz „toner 240 zł” albo wyślij zdjęcie paragonu, zapytam o potwierdzenie\n- zapisać notatkę: „zanotuj, że…”\n- wysłać wzór: „daj umowę dla zlecenia…”\n- zlecić pracę komputerowi: „jutro przygotuj 3 posty o wizytówkach”, zrobi ją po włączeniu PC\n- powiedzieć, co ze zleceniami i wpłatami\n\n/pamiec pokazuje, co o Tobie zapamiętałem\n/terminy pokazuje pilnowane terminy\n/koszty pokazuje koszty z tego miesiąca\n/zadania pokazuje zadania dla komputera\n\nCodziennie o 8 rano wyślę jedną rzecz na dziś. Nie wysyłaj tu numerów kont, PESEL-u ani haseł.',
+            'Jestem Twoim doradcą do prowadzenia WUYO. Pisz albo nagrywaj pytania o firmę, podatki, ZUS, dotację, umowy.\n\nCo jeszcze umiem:\n- zapisać koszt: napisz „toner 240 zł” albo wyślij zdjęcie paragonu, zapytam o potwierdzenie\n- zapisać notatkę: „zanotuj, że…”\n- wysłać wzór: „daj umowę dla zlecenia…”\n- zlecić pracę komputerowi: „jutro przygotuj 3 posty o wizytówkach”, zrobi ją po włączeniu PC\n- powiedzieć, co ze zleceniami i wpłatami\n- zapisać rozmowę z klientem: nagraj po telefonie, co ustaliliście, przypnę ją w /lab\n\n/maile pokazuje maile Harveya do decyzji (/wyslij, /odrzuc)\n/publikuj publikuje najnowszy szkic bloga, /popraw uwagi poprawia go przed publikacją\n/pamiec pokazuje, co o Tobie zapamiętałem\n/terminy pokazuje pilnowane terminy\n/koszty pokazuje koszty z tego miesiąca\n/zadania pokazuje zadania dla komputera\n\nCodziennie o 8 rano wyślę jedną rzecz na dziś. Nie wysyłaj tu numerów kont, PESEL-u ani haseł.',
         )
         return true
     }
@@ -239,6 +356,8 @@ async function komenda(db: SupabaseClient, chatId: number, tekst: string): Promi
         )
         return true
     }
+    if (cmd === '/maile' || cmd === '/mail' || cmd === '/wyslij' || cmd === '/odrzuc') return komendaMaile(db, chatId, cmd, tekst)
+    if (cmd === '/publikuj' || cmd === '/popraw') return komendaBlog(db, chatId, cmd, tekst)
     if (cmd === '/koszty') {
         const { data: dzis } = czasWarszawa()
         const { data } = await db.from('koszty').select('data, kwota_grosze, opis, z_dotacji').gte('data', `${dzis.slice(0, 7)}-01`).order('data')

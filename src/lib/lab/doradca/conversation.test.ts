@@ -75,6 +75,17 @@ describe('zapis do panelu', () => {
         ])
         expect(opisAkcji(odp.akcje[0])).toBe('zadanie dla komputera (od 2026-11-20): Przygotuj 3 posty | o wizytówkach')
     })
+    it('notatka z rozmowy: data, status, odrzuca braki', () => {
+        const odp = rozbierzOdpowiedz(
+            'Zapisz to.\n[ROZMOWA] Auto-Serwis Kowalski | chce stronę, budżet 2 tys. | 2026-12-04 | oddzwonic\n[ROZMOWA] Fryzjer Ola | nie ma czasu | - | dziwny\n[ROZMOWA] | bez firmy | - | -\n[ROZMOWA] Firma X | coś | jutro | -',
+        )
+        expect(odp.tekst).toBe('Zapisz to.')
+        expect(odp.akcje).toEqual([
+            { rodzaj: 'rozmowa', firma: 'Auto-Serwis Kowalski', tresc: 'chce stronę, budżet 2 tys.', oddzwonic: '2026-12-04', status: 'oddzwonic' },
+            { rodzaj: 'rozmowa', firma: 'Fryzjer Ola', tresc: 'nie ma czasu', oddzwonic: null, status: null },
+        ])
+        expect(opisAkcji(odp.akcje[0])).toBe('rozmowa z Auto-Serwis Kowalski: chce stronę, budżet 2 tys., oddzwonić 2026-12-04 [oddzwonic]')
+    })
     it('kwoty: zapis i odczyt', () => {
         expect(naGrosze('1 240,5')).toBe(124050)
         expect(naGrosze('240.00 PLN')).toBe(24000)
