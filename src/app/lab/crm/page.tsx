@@ -246,7 +246,7 @@ export default function CRMDashboard() {
                                                     onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
                                                     aria-expanded={expandedId === item.id}
                                                     title={expandedId === item.id ? 'Zwiń' : 'Pokaż całość'}
-                                                    className={`text-left text-xs text-zinc-500 transition-colors hover:text-zinc-300 ${expandedId === item.id ? 'max-w-[420px] whitespace-pre-wrap break-words' : 'block max-w-[220px] truncate'}`}
+                                                    className={`text-left text-xs text-zinc-500 transition-colors hover:text-zinc-300 ${expandedId === item.id ? 'block max-h-96 max-w-[420px] overflow-y-auto whitespace-pre-wrap break-words' : 'block max-w-[220px] truncate'}`}
                                                 >
                                                     {item.details}
                                                 </button>
@@ -278,7 +278,7 @@ export default function CRMDashboard() {
                                                     </button>
                                                 )}
                                                 <Link
-                                                    href={`/lab/ai-studio?tab=quote&client=${encodeURIComponent(item.name)}&email=${encodeURIComponent(item.email)}&details=${encodeURIComponent(item.details || '')}&leadId=${item.id}`}
+                                                    href={`/lab/ai-studio?tab=quote&client=${encodeURIComponent(item.name)}&email=${encodeURIComponent(item.email)}&details=${encodeURIComponent((item.details || '').slice(0, 1500))}&leadId=${item.id}`}
                                                     className="flex items-center gap-1.5 rounded-full bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-zinc-200 opacity-0 transition group-hover:opacity-100"
                                                 >
                                                     <Calculator size={12} />

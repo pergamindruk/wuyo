@@ -40,7 +40,7 @@ export default function PrivacyPolicyEnPage() {
                             <li>The operator is the controller of your personal data provided voluntarily on the website.</li>
                             <li>The website uses personal data for the following purposes:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>handling enquiries sent through the contact form or by email,</li>
+                                    <li>handling enquiries sent through the contact form, the chat or by email,</li>
                                     <li>delivering ordered services,</li>
                                     <li>presenting the offer or information.</li>
                                 </ul>
@@ -69,9 +69,10 @@ export default function PrivacyPolicyEnPage() {
                             <li>To run the Website I use companies that process data on my behalf (Art. 28 GDPR). They process data only on my instructions and only as needed to provide their service:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li><strong>Vercel Inc.</strong> (USA): website hosting. All data sent through the website passes through its servers, including form content. Vercel also collects anonymous visit and performance statistics (Vercel Analytics, Speed Insights) without cookies.</li>
-                                    <li><strong>Supabase Inc.</strong> (servers in Ireland, EU): the database where I store enquiries from forms and the chat, and anonymous data on visited pages.</li>
+                                    <li><strong>Supabase Inc.</strong> (servers in Ireland, EU): the database where I store enquiries from forms, chat conversations in which you leave your contact details, and anonymous data on visited pages.</li>
                                     <li><strong>Resend</strong> (Plus Five Five Inc., USA): sending emails from the Website, i.e. notifications about your enquiry and confirmations sent to your address.</li>
-                                    <li><strong>Google</strong> (Vertex AI on Google Cloud): the chat on the website. Messages you type in the chat are sent to Google, which generates the reply. When Vertex AI is available, I use the paid Google Cloud service: Google processes messages on my instructions under the Cloud Data Processing Addendum and does not use them to train models without my permission or instruction. If Vertex AI configuration is unavailable, the app may use the Gemini API (Google AI Studio); data use in that route depends on the API plan, and the free plan may use content to improve Google's services. In both routes, messages may be processed outside the European Economic Area. I do not store the conversations themselves in the database. I only store your name and email if you give them in the chat, so I can reply. Do not enter sensitive data in the chat. If you prefer, email kontakt@wuyo.pl or use the contact form.</li>
+                                    <li><strong>Telegram</strong> (Dubai, United Arab Emirates, outside the EEA): notifications about new enquiries on my phone. Your name, email and the content of your enquiry go there, and for the chat, the beginning of the conversation.</li>
+                                    <li><strong>Google</strong> (Vertex AI on Google Cloud): the chat on the website. Messages you type in the chat are sent to Google, which generates the reply. When Vertex AI is available, I use the paid Google Cloud service: Google processes messages on my instructions under the Cloud Data Processing Addendum and does not use them to train models without my permission or instruction. If Vertex AI configuration is unavailable, the app may use the Gemini API (Google AI Studio); data use in that route depends on the API plan, and the free plan may use content to improve Google's services. In both routes, messages may be processed outside the European Economic Area. If you give your name and email in the chat, I store the whole conversation with them in the database (including messages you send later in the same chat window) and receive it by email. This way I know what you asked about and can reply to the point. I do not store conversations in which you leave no contact details. Do not enter sensitive data in the chat. If you prefer, email kontakt@wuyo.pl or use the contact form.</li>
                                     <li><strong>MailerLite</strong> (UAB MailerLite, Lithuania, EU): sending emails with tips and offers. Your name and email go there only if you tick the consent box for such emails in the contact form.</li>
                                     <li><strong>Google Ireland Limited</strong> and <strong>Meta Platforms Ireland Limited</strong>: statistics and ad measurement, only with your consent (see § 5).</li>
                                 </ul>
@@ -97,7 +98,7 @@ export default function PrivacyPolicyEnPage() {
                             </li>
                             <li>How long I keep data:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>enquiries that did not lead to cooperation: up to 12 months from the last contact,</li>
+                                    <li>enquiries that did not lead to cooperation (including chat conversations): up to 12 months from the last contact,</li>
                                     <li>client data: for the duration of cooperation, then until claims become time-barred,</li>
                                     <li>invoices and accounting records: 5 years from the end of the year in which the tax payment deadline passed,</li>
                                     <li>name and email on the tips and offers list: until you withdraw consent (reply “unsubscribe” or click the unsubscribe link in the email),</li>
@@ -144,7 +145,7 @@ export default function PrivacyPolicyEnPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Final provisions</h2>
                         <p>You always know where to find me. Email <strong>kontakt@wuyo.pl</strong> if you have any doubts or questions about your data.</p>
-                        <p className="mt-4 text-sm text-white/50">Last updated: 21 November 2026.</p>
+                        <p className="mt-4 text-sm text-white/50">Last updated: 27 November 2026.</p>
                     </AnimatedSection>
                 </div>
             </div>

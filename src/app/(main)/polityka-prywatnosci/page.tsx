@@ -34,7 +34,7 @@ export default function PrivacyPolicyPage() {
                             <li>Operator jest Administratorem Twoich danych osobowych w odniesieniu do danych podanych dobrowolnie w Serwisie.</li>
                             <li>Serwis wykorzystuje dane osobowe w następujących celach:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>obsługa zapytań przez formularz kontaktowy lub email,</li>
+                                    <li>obsługa zapytań przez formularz kontaktowy, czat lub e-mail,</li>
                                     <li>realizacja zamówionych usług,</li>
                                     <li>prezentacja oferty lub informacji.</li>
                                 </ul>
@@ -63,9 +63,10 @@ export default function PrivacyPolicyPage() {
                             <li>Do działania Serwisu korzystam z usług firm, którym powierzam przetwarzanie danych (art. 28 RODO). Przetwarzają one dane tylko na moje zlecenie i w zakresie potrzebnym do wykonania usługi:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
                                     <li><strong>Vercel Inc.</strong> (USA): hosting Serwisu. Przez jego serwery przechodzą wszystkie dane wysyłane przez stronę, w tym treść formularzy. Vercel zbiera też anonimowe statystyki odwiedzin i szybkości strony (Vercel Analytics, Speed Insights), bez plików cookies.</li>
-                                    <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy i czatu, adresy e-mail podane przy pobraniu plików oraz anonimowe dane o odwiedzanych podstronach: adres podstrony, skąd przyszło wejście (np. wyszukiwarka, Facebook, link z kampanii) i jednodniowy skrót technicznych danych przeglądarki. Skrótu nie da się odwrócić do adresu IP ani powiązać z Tobą między dniami. Nic nie zapisuję w Twojej przeglądarce.</li>
+                                    <li><strong>Supabase Inc.</strong> (serwery w Irlandii, UE): baza danych, w której zapisuję zapytania z formularzy, rozmowy z czatu, w których zostawisz kontakt, adresy e-mail podane przy pobraniu plików oraz anonimowe dane o odwiedzanych podstronach: adres podstrony, skąd przyszło wejście (np. wyszukiwarka, Facebook, link z kampanii) i jednodniowy skrót technicznych danych przeglądarki. Skrótu nie da się odwrócić do adresu IP ani powiązać z Tobą między dniami. Nic nie zapisuję w Twojej przeglądarce.</li>
                                     <li><strong>Resend</strong> (Plus Five Five Inc., USA): wysyłka wiadomości e-mail z Serwisu, czyli powiadomień o Twoim zapytaniu i potwierdzeń wysłanych na Twój adres.</li>
-                                    <li><strong>Google</strong> (Vertex AI w Google Cloud): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Gdy Vertex AI jest dostępny, korzystam z płatnej usługi Google Cloud: Google przetwarza wiadomości na moje zlecenie na podstawie Cloud Data Processing Addendum i nie używa ich do trenowania modeli bez mojej zgody lub instrukcji. Jeśli konfiguracja Vertex AI jest niedostępna, aplikacja może użyć Gemini API (Google AI Studio); zasady użycia danych w tym wariancie zależą od planu API, a bezpłatny plan może wykorzystywać treści do ulepszania usług Google. W obu wariantach wiadomości mogą być przetwarzane poza Europejskim Obszarem Gospodarczym. Samych rozmów nie zapisuję w bazie. Zapisuję tylko imię i e-mail, jeśli podasz je w czacie, żeby odpisać. Nie wpisuj w czacie danych wrażliwych. Jeśli wolisz, napisz na kontakt@wuyo.pl albo skorzystaj z formularza.</li>
+                                    <li><strong>Telegram</strong> (Dubaj, Zjednoczone Emiraty Arabskie, poza EOG): powiadomienia o nowych zapytaniach na mój telefon. Trafia tam imię, e-mail i treść zapytania, a przy czacie początek rozmowy.</li>
+                                    <li><strong>Google</strong> (Vertex AI w Google Cloud): czat na stronie. Treść wiadomości wpisanych w czacie trafia do Google, który generuje odpowiedź. Gdy Vertex AI jest dostępny, korzystam z płatnej usługi Google Cloud: Google przetwarza wiadomości na moje zlecenie na podstawie Cloud Data Processing Addendum i nie używa ich do trenowania modeli bez mojej zgody lub instrukcji. Jeśli konfiguracja Vertex AI jest niedostępna, aplikacja może użyć Gemini API (Google AI Studio); zasady użycia danych w tym wariancie zależą od planu API, a bezpłatny plan może wykorzystywać treści do ulepszania usług Google. W obu wariantach wiadomości mogą być przetwarzane poza Europejskim Obszarem Gospodarczym. Jeśli w czacie podasz imię i e-mail, zapisuję w bazie całą tę rozmowę razem z nimi (także wiadomości wysłane później w tym samym okienku) i dostaję ją mailem. Dzięki temu wiem, o co pytasz, i mogę odpisać na temat. Rozmów, w których nie zostawisz kontaktu, nie zapisuję. Nie wpisuj w czacie danych wrażliwych. Jeśli wolisz, napisz na kontakt@wuyo.pl albo skorzystaj z formularza.</li>
                                     <li><strong>MailerLite</strong> (UAB MailerLite, Litwa, UE): wysyłka maili z poradami i ofertami. Trafia tam Twoje imię i e-mail tylko wtedy, gdy w formularzu kontaktowym zaznaczysz zgodę na takie maile.</li>
                                     <li><strong>Google Ireland Limited</strong> i <strong>Meta Platforms Ireland Limited</strong>: statystyki i pomiar reklam, tylko po Twojej zgodzie (szczegóły w § 5).</li>
                                 </ul>
@@ -92,7 +93,7 @@ export default function PrivacyPolicyPage() {
                             </li>
                             <li>Jak długo przechowuję dane:
                                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li>zapytania, po których nie doszło do współpracy: do 12 miesięcy od ostatniego kontaktu,</li>
+                                    <li>zapytania, po których nie doszło do współpracy (także rozmowy z czatu): do 12 miesięcy od ostatniego kontaktu,</li>
                                     <li>dane klientów: przez czas współpracy, a potem do upływu terminu przedawnienia roszczeń,</li>
                                     <li>faktury i dokumenty księgowe: 5 lat od końca roku, w którym minął termin zapłaty podatku,</li>
                                     <li>e-mail podany przy pobraniu pliku bez zgody na maile: do 12 miesięcy,</li>
@@ -140,7 +141,7 @@ export default function PrivacyPolicyPage() {
                     <AnimatedSection delay={0.6}>
                         <h2 className="text-2xl font-bold text-white mb-4 border-b border-white/10 pb-4">§ 6 Postanowienia końcowe</h2>
                         <p>Zawsze wiesz gdzie mnie znaleźć. Napisz na maila <strong>kontakt@wuyo.pl</strong> jeśli masz jakiekolwiek wątpliwości lub pytania o swoje dane.</p>
-                        <p className="mt-4 text-sm text-white/50">Ostatnia aktualizacja: 21.11.2026.</p>
+                        <p className="mt-4 text-sm text-white/50">Ostatnia aktualizacja: 27.11.2026.</p>
                     </AnimatedSection>
                 </div>
             </div>

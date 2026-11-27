@@ -24,6 +24,17 @@ vi.mock("@/lib/supabase/admin", () => ({
     createAdminClient: vi.fn().mockReturnValue({ from: mockFrom }),
 }));
 
+// Zapis leada z rozmową ma własne testy (chat-lead.test.ts). Tu sprawdzamy tylko, czy czat go woła.
+const { mockSaveChatLead, mockUpdateTranscript } = vi.hoisted(() => ({
+    mockSaveChatLead: vi.fn().mockResolvedValue(undefined),
+    mockUpdateTranscript: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("@/lib/chat-lead", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("@/lib/chat-lead")>()),
+    saveChatLead: mockSaveChatLead,
+    updateChatTranscript: mockUpdateTranscript,
+}));
+
 vi.mock("@/lib/rate-limit", () => ({
     rateLimit: vi.fn().mockResolvedValue(true),
     getClientIp: vi.fn().mockReturnValue("127.0.0.1"),
@@ -121,19 +132,20 @@ describe("/api/chat", () => {
         expect(res.status).toBe(503);
     });
 
-    it("TC-7 wykrywa [LEAD:name:email] i usuwa go z odpowiedzi", async () => {
-        global.fetch = vi.fn()
-            .mockResolvedValueOnce({
-                ok: true,
-                status: 200,
-                json: async () => ({
-                    candidates: [{ content: { parts: [{ text: "Super! Przygotuję wycenę. [LEAD:Marek:marek@test.pl]" }] } }],
-                }),
-                text: async () => "",
-            } as unknown as Response)
-            .mockResolvedValueOnce({ ok: true } as Response);
+    it("TC-7 wykrywa [LEAD:name:email], usuwa go z odpowiedzi i zapisuje leada z rozmową", async () => {
+        global.fetch = vi.fn().mockResolvedValueOnce({
+            ok: true,
+            status: 200,
+            json: async () => ({
+                candidates: [{ content: { parts: [{ text: "Super! Przygotuję wycenę. [LEAD:Marek:marek@test.pl]" }] } }],
+            }),
+            text: async () => "",
+        } as unknown as Response);
 
-        const res = await POST(makeReq({ messages: [{ role: "user", content: "Marek, marek@test.pl" }] }));
+        const res = await POST(makeReq({
+            messages: [{ role: "user", content: "Marek, marek@test.pl" }],
+            chatId: "0f8fad5b-d9cb-469f-a165-70867728950e",
+        }));
         const body = await res.json();
 
         expect(res.status).toBe(200);
@@ -141,7 +153,39 @@ describe("/api/chat", () => {
         expect(body.message).toContain("Super!");
         expect(body.lead).toEqual({ name: "Marek", email: "marek@test.pl" });
         expect(mockAfter).toHaveBeenCalledTimes(1);
-        expect(global.fetch).toHaveBeenLastCalledWith("http://localhost/api/lead", expect.objectContaining({ method: "POST" }));
+        expect(mockSaveChatLead).toHaveBeenCalledWith(expect.objectContaining({
+            name: "Marek",
+            email: "marek@test.pl",
+            chatId: "0f8fad5b-d9cb-469f-a165-70867728950e",
+            messages: [
+                { role: "user", content: "Marek, marek@test.pl" },
+                { role: "assistant", content: "Super! Przygotuję wycenę." },
+            ],
+        }));
+        expect(mockUpdateTranscript).not.toHaveBeenCalled();
+    });
+
+    it("TC-8 bez [LEAD] dopisuje rozmowę do leada tego czatu", async () => {
+        const res = await POST(makeReq({
+            messages: [{ role: "user", content: "A ile trwa logo?" }],
+            chatId: "0f8fad5b-d9cb-469f-a165-70867728950e",
+        }));
+        expect(res.status).toBe(200);
+        expect(mockSaveChatLead).not.toHaveBeenCalled();
+        expect(mockUpdateTranscript).toHaveBeenCalledWith("0f8fad5b-d9cb-469f-a165-70867728950e", [
+            { role: "user", content: "A ile trwa logo?" },
+            { role: "assistant", content: "Logo od 800 zł!" },
+        ]);
+    });
+
+    it("TC-9 ignoruje chatId w złym formacie", async () => {
+        const res = await POST(makeReq({
+            messages: [{ role: "user", content: "Hej" }],
+            chatId: "x'; drop table leads;--",
+        }));
+        expect(res.status).toBe(200);
+        expect(mockUpdateTranscript).not.toHaveBeenCalled();
+        expect(mockAfter).not.toHaveBeenCalled();
     });
 });
 

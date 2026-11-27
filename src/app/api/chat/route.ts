@@ -3,6 +3,8 @@ import { CHAT_SYSTEM_PROMPT } from "@/lib/chat-prompt";
 import { rateLimit, getClientIp, LIMITS } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { geminiTarget, type GeminiTarget } from "@/lib/ai-endpoint";
+import { isChatId, saveChatLead, updateChatTranscript, type ChatMessage } from "@/lib/chat-lead";
+import { visitorId } from "@/lib/visitor";
 
 export const dynamic = "force-dynamic";
 
@@ -76,7 +78,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const { messages } = await req.json();
+        const { messages, chatId } = await req.json();
 
         if (!messages || !Array.isArray(messages) || messages.length === 0) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -145,24 +147,29 @@ export async function POST(req: NextRequest) {
         }
 
         const leadMatch = responseText.match(/\[LEAD:([^:]+):([^\]]+)\]/);
+        const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();
+
+        // Cała rozmowa razem z tą odpowiedzią: trafia do leada, żeby było widać, o co klient pytał.
+        const chat = isChatId(chatId) ? chatId : null;
+        const history: ChatMessage[] = [
+            ...messages.map((m: { role?: string; content?: unknown }) => ({
+                role: m.role === "assistant" ? "assistant" as const : "user" as const,
+                content: String(m.content ?? ""),
+            })),
+            { role: "assistant", content: cleanResponse },
+        ];
+
+        // after(): Vercel ubija funkcję po odpowiedzi, a zapis i mail muszą dojść.
+        // Skrót odwiedzającego liczymy tu, z żądania klienta, żeby lead dostał źródło wejścia.
         let lead = null;
         if (leadMatch) {
             lead = { name: leadMatch[1], email: leadMatch[2] };
-
-            // Jeden kanał: /api/lead obsługuje zapis do bazy i wysyłkę maila.
-            // after() — Vercel ubija funkcję po odpowiedzi, więc zwykłe "fetch bez await" potrafił zgubić leada.
-            const leadUrl = new URL("/api/lead", req.nextUrl.origin).toString();
-            const leadBody = JSON.stringify(lead);
-            after(() =>
-                fetch(leadUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: leadBody,
-                }).catch(err => console.error("Lead notification failed:", err))
-            );
+            const leadInput = { ...lead, chatId: chat, messages: history, visitor: visitorId(req), ip };
+            after(() => saveChatLead(leadInput).catch(err => console.error("Zapis leada z czatu nie wyszedł:", err)));
+        } else if (chat) {
+            after(() => updateChatTranscript(chat, history).catch(err => console.error("Dopisanie rozmowy nie wyszło:", err)));
         }
 
-        const cleanResponse = responseText.replace(/\[LEAD:[^\]]+\]/g, "").trim();
         // Nagłówek bez sekretów: pozwala sprawdzić, czy ruch idzie przez Vertex (kredyt GCP).
         return NextResponse.json({ message: cleanResponse, lead }, { headers: { "X-AI-Provider": target.provider } });
 

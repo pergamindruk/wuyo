@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { trackChatLead } from "@/lib/tracking";
 
@@ -17,7 +18,15 @@ const WELCOME_MESSAGE: Message = {
         "Hej! 👋 Zamiast tracić czas na szukanie, napisz wprost czego potrzebujesz. Logo, nowa strona, a może szybka wycena? Jak mogę pomóc Twojej marce zarabiać więcej?",
 };
 
+// Losowy identyfikator jednej rozmowy. Serwer po nim dopisuje dalsze wiadomości
+// do leada, gdy klient zostawi kontakt. Nic nie trafia do pamięci przeglądarki.
+function newChatId(): string {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 export default function ChatBot() {
+    const [chatId] = useState(newChatId);
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
     const [input, setInput] = useState("");
@@ -64,7 +73,7 @@ export default function ChatBot() {
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: newMessages }),
+                body: JSON.stringify({ messages: newMessages, chatId }),
                 signal: controller.signal,
             });
 
@@ -280,8 +289,11 @@ export default function ChatBot() {
                                         <Send size={14} color="#000" />
                                     </button>
                                 </div>
-                                <p className="text-center text-gray-600 text-xs mt-2">
-                                    Wuyo – dobra grafa ⚡
+                                <p className="text-center text-gray-500 text-xs mt-2">
+                                    Gdy zostawisz e-mail, zapiszę tę rozmowę, żeby odpisać.{" "}
+                                    <Link href="/polityka-prywatnosci" className="underline hover:text-gray-300">
+                                        Prywatność
+                                    </Link>
                                 </p>
                             </div>
                         </div>
