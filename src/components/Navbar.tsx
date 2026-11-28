@@ -414,8 +414,11 @@ export function Navbar() {
                     aria-modal="true"
                     aria-label={t.menuMobilne}
                     data-widoczny={menuAktywne ? "tak" : undefined}
-                    className="menu-mobilne fixed inset-0 z-40 bg-navy backdrop-blur-3xl pt-32 px-6 flex flex-col md:hidden border-b border-white/10"
+                    className="menu-mobilne fixed inset-0 z-[45] overflow-y-auto overscroll-contain bg-navy backdrop-blur-3xl pt-32 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] flex flex-col md:hidden border-b border-white/10"
                 >
+                    {/* z-[45]: nad paskiem kontaktu (z-40), pod nagłówkiem (z-50). Wcześniej
+                        pasek leżał na dole menu i zasłaniał Blog, a na niskim ekranie
+                        nie dało się przewinąć do końca listy. */}
                     <nav aria-label={t.menuMobilne} className="flex flex-col gap-6 text-xl font-medium text-white/90">
                         <a href={home} onClick={handleHomeClick} className="hover:text-gold transition-colors border-b border-white/5 pb-4 flex items-center gap-3">
                             <House size={20} aria-hidden="true" />
