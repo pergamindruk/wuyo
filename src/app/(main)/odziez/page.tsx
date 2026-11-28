@@ -189,6 +189,36 @@ export default function OdziezPage() {
                 </div>
             </section>
 
+            {/* ═══ DTF W RZESZOWIE ═══ */}
+            {/* Tekst pod frazy „koszulki z nadrukiem / druk DTF Rzeszów” — strona była
+                prawie samymi kartami produktów, Google nie miał czego czytać. */}
+            <section className="py-16 px-6 md:px-12">
+                <div className="max-w-3xl mx-auto">
+                    <AnimatedSection>
+                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">Druk DTF w Rzeszowie: jak to działa</h2>
+                        <div className="space-y-4 text-white/70 leading-relaxed">
+                            <p>
+                                DTF to nadruk z folii. Wzór w pełnym kolorze drukuje się na specjalnej folii, a ja wgrzewam go prasą
+                                w koszulkę, bluzę albo torbę. Nie płacisz za przygotowanie sit jak przy sitodruku, więc nawet jedna
+                                koszulka z nadrukiem ma sens. Liczba kolorów we wzorze nie zmienia ceny.
+                            </p>
+                            <p>
+                                Gotowe koszulki odbierzesz osobiście w Rzeszowie albo dostaniesz kurierem. Zwykle trwa to 2–4 dni
+                                robocze. Jeśli masz już swoją odzież, przynieś ją, a ja wprasuję nadruk w Twoim wzorze.
+                            </p>
+                            <p>
+                                Przy dużych ilościach, powyżej 100 sztuk, czasem taniej wychodzi sitodruk. Kiedy wybrać który,
+                                rozpisałem we wpisie{" "}
+                                <Link href="/blog/nadruk-na-koszulki-dtf-czy-sitodruk" className="text-gold hover:underline">
+                                    nadruk na koszulki: DTF czy sitodruk
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    </AnimatedSection>
+                </div>
+            </section>
+
             {/* ═══ CROSS-SELL ═══ */}
             <section className="py-12 px-6 md:px-12">
                 <div className="max-w-5xl mx-auto">
