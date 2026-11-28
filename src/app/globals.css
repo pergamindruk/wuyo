@@ -636,12 +636,22 @@ body {
   opacity: 0;
   transform: scale(0.5) translateY(20px);
   transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1.2, 0.36, 1),
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease, bottom 300ms ease;
 }
 
 .wskocz-na-gore[data-widoczny="tak"] {
   opacity: 1;
   transform: none;
+}
+
+/* Otwarte menu na telefonie (znacznik ustawia Navbar). Dymek czatu i „na górę"
+   mają z-50, więc leżały na menu (z-[45]) i zasłaniały przełącznik PL/EN. */
+html[data-menu-mobilne="otwarte"] .wskocz-na-gore,
+html[data-menu-mobilne="otwarte"] .dymek-czatu,
+html[data-menu-mobilne="otwarte"] .okno-czatu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Baner zgód — wjazd od dołu, ten sam czas i krzywa co wcześniej. */

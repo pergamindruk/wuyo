@@ -133,7 +133,7 @@ export default function ChatBot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        className="fixed right-20 z-50 w-[calc(100vw-6rem)] sm:w-[380px] max-w-[420px]"
+                        className="okno-czatu fixed right-20 z-50 w-[calc(100vw-6rem)] sm:w-[380px] max-w-[420px]"
                         style={{ top: "clamp(0.5rem, calc(50dvh - 260px), calc(100dvh - 530px))" }}
                     >
                         <div
@@ -304,7 +304,7 @@ export default function ChatBot() {
             {/* Floating Trigger Button */}
             <motion.button
                 onClick={() => setIsOpen((v) => !v)}
-                className="fixed right-4 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden p-1.5 sm:pr-4 gap-0 sm:gap-3 group"
+                className="dymek-czatu fixed right-4 sm:right-6 z-50 rounded-full flex items-center shadow-2xl overflow-hidden p-1.5 sm:pr-4 gap-0 sm:gap-3 group"
                 style={{
                     // Podnosi się nad pasek kontaktu, gdy ten jest widoczny na telefonie.
                     bottom: "calc(var(--chat-bottom) + var(--mobile-bar-h, 0px))",

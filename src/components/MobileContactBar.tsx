@@ -16,7 +16,7 @@ const WHATSAPP = "https://wa.me/48725182053";
  *
  * Pojawia się dopiero po opuszczeniu sekcji hero — na samej górze klient ma
  * przyciski w treści i nie warto mu zasłaniać ekranu. Znika przy formularzu
- * kontaktowym, żeby nie dublować tego, co i tak ma przed oczami.
+ * kontaktowym i przy stopce, żeby nie dublować tego, co i tak ma przed oczami.
  *
  * Pasek zgłasza swoją wysokość przez zmienną --mobile-bar-h, dzięki czemu
  * dymek chatbota podnosi się dokładnie o tyle, ile trzeba, zamiast chować się
@@ -29,18 +29,24 @@ export function MobileContactBar() {
 
     useEffect(() => {
         const kontakt = document.getElementById("kontakt");
+        const stopka = document.querySelector("footer");
+
+        const wZasiegu = (el: Element | null) => {
+            if (!el) return false;
+            const box = el.getBoundingClientRect();
+            return box.top < window.innerHeight && box.bottom > 0;
+        };
 
         const przelicz = () => {
             const poHero = window.scrollY > window.innerHeight * 0.9;
 
             // Formularz w zasięgu wzroku — pasek jest wtedy zbędny.
-            let przyFormularzu = false;
-            if (kontakt) {
-                const box = kontakt.getBoundingClientRect();
-                przyFormularzu = box.top < window.innerHeight && box.bottom > 0;
-            }
+            const przyFormularzu = wZasiegu(kontakt);
+            // Stopka ma własne WhatsApp, mail i telefon, a pasek leżał na jej
+            // ostatnim wierszu i zasłaniał „Politykę prywatności" i „Ustawienia ciasteczek".
+            const przyStopce = wZasiegu(stopka);
 
-            setWidoczny(poHero && !przyFormularzu);
+            setWidoczny(poHero && !przyFormularzu && !przyStopce);
         };
 
         przelicz();

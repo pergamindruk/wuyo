@@ -290,6 +290,18 @@ export function Navbar() {
 
     const hamburgerRef = useRef<HTMLButtonElement>(null);
 
+    // Znacznik na <html> dla elementów stałych spoza Navbara: dymek czatu
+    // i „na górę" leżały na dole otwartego menu i zasłaniały przełącznik PL/EN.
+    // Chowa je reguła w globals.css.
+    useEffect(() => {
+        if (!isMobileMenuOpen) return;
+        const root = document.documentElement;
+        root.dataset.menuMobilne = "otwarte";
+        return () => {
+            delete root.dataset.menuMobilne;
+        };
+    }, [isMobileMenuOpen]);
+
     useEffect(() => {
         if (!isMobileMenuOpen) return;
         const menu = document.getElementById("mobile-menu");
@@ -453,12 +465,14 @@ export function Navbar() {
                         >
                             {t.napisz}
                         </a>
-                        <LanguageSwitch locale={locale} onNavigate={closeMenu} />
+                        {/* min-h-11: 44 px pod palec — wcześniej 30 px. */}
+                        <LanguageSwitch locale={locale} onNavigate={closeMenu} className="min-h-11" />
                     </div>
                     {/* Kontakt wprost w menu: klienci szukali maila, a był tylko w stopce. */}
-                    <div className="mt-8 flex flex-col items-center gap-2 text-sm">
-                        <a href="mailto:kontakt@wuyo.pl" className="text-gold font-bold text-base hover:text-white transition-colors">kontakt@wuyo.pl</a>
-                        <a href="tel:+48725182053" className="text-white/70 hover:text-white transition-colors">+48 725 182 053</a>
+                    {/* py-2.5 zamiast odstępu: ten sam wygląd, a link ma 44 px wysokości pod palec. */}
+                    <div className="mt-6 flex flex-col items-center text-sm">
+                        <a href="mailto:kontakt@wuyo.pl" className="py-2.5 text-gold font-bold text-base hover:text-white transition-colors">kontakt@wuyo.pl</a>
+                        <a href="tel:+48725182053" className="py-3 text-white/70 hover:text-white transition-colors">+48 725 182 053</a>
                     </div>
                 </div>
             )}

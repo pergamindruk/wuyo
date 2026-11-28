@@ -103,7 +103,9 @@ export function Footer({ locale = "pl" }: { locale?: Locale }) {
                         <Image src="/ikonki/ikona-capcut.webp" alt="CapCut" width={20} height={20} className="hover:scale-125 transition-transform duration-300" />
                     </div>
 
-                    <div className="flex gap-6">
+                    {/* Na telefonie jeden pod drugim: w jednym wierszu „Ustawienia ciasteczek"
+                        sięgały prawego rogu, gdzie leżą dymek czatu i „na górę". */}
+                    <div className="flex flex-col items-center sm:flex-row sm:gap-6">
                         <Link href={r("privacy")} className="py-2 hover:text-white/60 transition-colors">{t.prywatnosc}</Link>
                         <ConsentSettingsLink className="cursor-pointer py-2 hover:text-white/60 transition-colors" label={locale === "en" ? "Cookie settings" : "Ustawienia ciasteczek"} />
                     </div>
